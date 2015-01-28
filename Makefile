@@ -8,7 +8,7 @@ all:
 clean:
 	$(MAKE) -C src realclean
 
-install:
+install: all
 	$(MAKE) -C src install-rt install-user
 	mkdir -p $(DESTDIR)$(EMC2_HOME)/share/linuxcnc-ethercat
 	cp -R examples $(DESTDIR)$(EMC2_HOME)/share/linuxcnc-ethercat
