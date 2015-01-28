@@ -1,0 +1,5 @@
+linuxcnc-ethercat (0.9.0-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Sascha Ittner <sascha.ittner@modusoft.de>  Mon, 12 Jan 2015 10:19:04 +0100
