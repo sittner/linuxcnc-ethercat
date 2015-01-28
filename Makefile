@@ -1,3 +1,7 @@
+MODINC=$(shell comp --print-modinc)
+
+include $(MODINC)
+
 all:
 	$(MAKE) -C src all
 
@@ -6,6 +10,6 @@ clean:
 
 install:
 	$(MAKE) -C src install-rt install-user
-	mkdir -p $(DESTDIR)/usr/share/linuxcnc-ethercat
-	cp -R examples $(DESTDIR)/usr/share/linuxcnc-ethercat
+	mkdir -p $(DESTDIR)$(EMC2_HOME)/share/linuxcnc-ethercat
+	cp -R examples $(DESTDIR)$(EMC2_HOME)/share/linuxcnc-ethercat
 
