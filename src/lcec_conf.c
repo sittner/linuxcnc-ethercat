@@ -1014,7 +1014,7 @@ void parsePdoEntryAttrs(const char **attr) {
     // parse bitLen
     if (strcmp(name, "bitLen") == 0) {
       tmp = atoi(val);
-      if (tmp <= 0 || tmp > 32) {
+      if (tmp <= 0 || tmp > 128) {
         fprintf(stderr, "%s: ERROR: Invalid pdoEntry bitLen %d\n", modname, tmp);
         XML_StopParser(parser, 0);
         return;
