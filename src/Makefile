@@ -31,6 +31,10 @@ lcec-objs := \
 
 include $(MODINC)
 
+# dirty workaround to get the RTAI directory
+RTAI_INCLUDE_DIR = $(subst /rtai.h,,$(firstword $(wildcard $(foreach i,$(subst -I,,$(filter -I%,$(RTFLAGS))), $(i)/rtai.h))))
+RTAI_DIR = $(RTAI_INCLUDE_DIR)/..
+
 user: lcec_conf
 
 lcec_conf: lcec_conf.c
@@ -41,7 +45,7 @@ install-user:
 	cp lcec_conf $(DESTDIR)$(EMC2_HOME)/bin
 
 rt:
-	$(MAKE) KBUILD_EXTRA_SYMBOLS="$(RTLIBDIR)/Module.symvers $(RTLIBDIR)/../ethercat/Module.symvers" -C $(KERNELDIR) SUBDIRS=`pwd` CC=$(CC) V=0 modules
+	$(MAKE) KBUILD_EXTRA_SYMBOLS="$(RTLIBDIR)/Module.symvers $(RTAI_DIR)/modules/ethercat/Module.symvers" -C $(KERNELDIR) SUBDIRS=`pwd` CC=$(CC) V=0 modules
 
 install-rt:
 	mkdir -p $(DESTDIR)$(RTLIBDIR)
