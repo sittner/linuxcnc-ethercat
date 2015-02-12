@@ -18,7 +18,7 @@
 #ifndef _LCEC_H_
 #define _LCEC_H_
 
-#include "lcnc_rtapi.h"
+#include "lcec_rtapi.h"
 
 #include "hal.h"
 

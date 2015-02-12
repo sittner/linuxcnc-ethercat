@@ -396,11 +396,10 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   // E02 : torque motor filterd (x 0,1 Nm)
   torque_raw = EC_READ_S16(&pd[hal_data->torque_mot_pdo_os]);
   torque = (double)torque_raw * STMDS5K_TORQUE_DIV;
-  *(hal_data->torque_fb_pct) = torque * 100.0;
+  *(hal_data->torque_fb_pct) = fabs(torque * 100.0);
   torque = torque * hal_data->torque_reference;
   *(hal_data->torque_fb) = torque;
-  torque = fabs(torque);
-  *(hal_data->torque_fb_abs) = torque;
+  *(hal_data->torque_fb_abs) = fabs(torque);
 
   // update raw position counter
   pos_cnt = EC_READ_S32(&pd[hal_data->pos_mot_pdo_os]);
