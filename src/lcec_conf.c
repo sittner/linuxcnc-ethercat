@@ -161,6 +161,7 @@ LCEC_CONF_SLAVE_T *currSlave;
 LCEC_CONF_SYNCMANAGER_T *currSyncManager;
 LCEC_CONF_PDO_T *currPdo;
 LCEC_CONF_SDOCONF_T *currSdoConf;
+LCEC_CONF_PDOENTRY_T *currSdoEntry;
 
 int shmem_id;
 
@@ -180,6 +181,7 @@ void parseSdoDataRawAttrs(const char **attr);
 void parseSyncManagerAttrs(const char **attr);
 void parsePdoAttrs(const char **attr);
 void parsePdoEntryAttrs(const char **attr);
+void parseComplexEntryAttrs(const char **attr);
 
 int parseSyncCycle(const char *nptr);
 
@@ -269,6 +271,7 @@ int main(int argc, char **argv) {
   currSyncManager = NULL;
   currPdo = NULL;
   currSdoConf = NULL;
+  currSdoEntry = NULL;
   for (done=0; !done;) {
     // read block
     int len = fread(buffer, 1, BUFFSIZE, file);
@@ -408,6 +411,13 @@ void xml_start_handler(void *data, const char *el, const char **attr) {
       if (strcmp(el, "pdoEntry") == 0) {
         currConfType = lcecConfTypePdoEntry;
         parsePdoEntryAttrs(attr);
+        return;
+      }
+      break;
+    case lcecConfTypePdoEntry:
+      if (strcmp(el, "complexEntry") == 0) {
+        currConfType = lcecConfTypeComplexEntry;
+        parseComplexEntryAttrs(attr);
         return;
       }
       break;
@@ -1019,7 +1029,7 @@ void parsePdoEntryAttrs(const char **attr) {
     // parse bitLen
     if (strcmp(name, "bitLen") == 0) {
       tmp = atoi(val);
-      if (tmp <= 0 || tmp > 32) {
+      if (tmp <= 0 || tmp > LCEC_CONF_GENERIC_MAX_SUBPINS) {
         fprintf(stderr, "%s: ERROR: Invalid pdoEntry bitLen %d\n", modname, tmp);
         XML_StopParser(parser, 0);
         return;
@@ -1035,20 +1045,27 @@ void parsePdoEntryAttrs(const char **attr) {
         continue;
       }
       if (strcasecmp(val, "s32") == 0) {
+        p->subType = lcecPdoEntTypeSimple;
         p->halType = HAL_S32;
         continue;
       }
       if (strcasecmp(val, "u32") == 0) {
+        p->subType = lcecPdoEntTypeSimple;
         p->halType = HAL_U32;
         continue;
       }
       if (strcasecmp(val, "float") == 0) {
+        p->subType = lcecPdoEntTypeFlaotSigned;
         p->halType = HAL_FLOAT;
         continue;
       }
       if (strcasecmp(val, "float-unsigned") == 0) {
+        p->subType = lcecPdoEntTypeFloatUnsigned;
         p->halType = HAL_FLOAT;
-        p->floatUnsigned = 1;
+        continue;
+      }
+      if (strcasecmp(val, "complex") == 0) {
+        p->subType = lcecPdoEntTypeComplex;
         continue;
       }
       fprintf(stderr, "%s: ERROR: Invalid pdoEntry halType %s\n", modname, val);
@@ -1104,6 +1121,12 @@ void parsePdoEntryAttrs(const char **attr) {
     return;
   }
 
+  // pin name must not be given for complex subtype
+  if (p->subType == lcecPdoEntTypeComplex && p->halPin[0] != 0) {
+    fprintf(stderr, "%s: ERROR: pdoEntry has halPin attributes but pin type is 'complex'\n", modname);
+    XML_StopParser(parser, 0);
+  }
+
   // check for float type if required
   if (floatReq && p->halType != HAL_FLOAT) {
     fprintf(stderr, "%s: ERROR: pdoEntry has scale/offset attributes but pin type is not 'float'\n", modname);
@@ -1116,6 +1139,106 @@ void parsePdoEntryAttrs(const char **attr) {
     (currSlave->pdoMappingCount)++;
   }
   (currPdo->pdoEntryCount)++;
+  currSdoEntry = p;
+}
+
+void parseComplexEntryAttrs(const char **attr) {
+  int tmp;
+  int floatReq;
+  LCEC_CONF_COMPLEXENTRY_T *p = getOutputBuffer(sizeof(LCEC_CONF_COMPLEXENTRY_T));
+  if (p == NULL) {
+    return;
+  }
+
+  floatReq = 0;
+  p->confType = lcecConfTypeComplexEntry;
+  p->floatScale = 1.0;
+  while (*attr) {
+    const char *name = *(attr++);
+    const char *val = *(attr++);
+
+    // parse bitLen
+    if (strcmp(name, "bitLen") == 0) {
+      tmp = atoi(val);
+      if (tmp <= 0 || tmp > LCEC_CONF_GENERIC_MAX_SUBPINS) {
+        fprintf(stderr, "%s: ERROR: Invalid complexEntry bitLen %d\n", modname, tmp);
+        XML_StopParser(parser, 0);
+        return;
+      }
+      p->bitLength = tmp;
+      continue;
+    }
+
+    // parse halType
+    if (strcmp(name, "halType") == 0) {
+      if (strcasecmp(val, "bit") == 0) {
+        p->subType = lcecPdoEntTypeSimple;
+        p->halType = HAL_BIT;
+        continue;
+      }
+      if (strcasecmp(val, "s32") == 0) {
+        p->subType = lcecPdoEntTypeSimple;
+        p->halType = HAL_S32;
+        continue;
+      }
+      if (strcasecmp(val, "u32") == 0) {
+        p->subType = lcecPdoEntTypeSimple;
+        p->halType = HAL_U32;
+        continue;
+      }
+      if (strcasecmp(val, "float") == 0) {
+        p->subType = lcecPdoEntTypeFloatSigned;
+        p->halType = HAL_FLOAT;
+        continue;
+      }
+      if (strcasecmp(val, "float-unsigned") == 0) {
+        p->subType = lcecPdoEntTypeFloatUnsigned;
+        p->halType = HAL_FLOAT;
+        continue;
+      }
+      fprintf(stderr, "%s: ERROR: Invalid complexEntry halType %s\n", modname, val);
+      XML_StopParser(parser, 0);
+      return;
+    }
+
+    // parse scale
+    if (strcmp(name, "scale") == 0) {
+      floatReq = 1;
+      p->floatScale = atof(val);
+    }
+
+    // parse offset
+    if (strcmp(name, "offset") == 0) {
+      floatReq = 1;
+      p->floatOffset = atof(val);
+    }
+
+    // parse halPin
+    if (strcmp(name, "halPin") == 0) {
+      strncpy(p->halPin, val, LCEC_CONF_STR_MAXLEN);
+      p->halPin[LCEC_CONF_STR_MAXLEN - 1] = 0;
+      continue;
+    }
+
+    // handle error
+    fprintf(stderr, "%s: ERROR: Invalid complexEntry attribute %s\n", modname, name);
+    XML_StopParser(parser, 0);
+    return;
+  }
+
+  // bitLen is required
+  if (p->bitLength == 0) {
+    fprintf(stderr, "%s: ERROR: complexEntry has no bitLen attribute\n", modname);
+    XML_StopParser(parser, 0);
+    return;
+  }
+
+  // check for float type if required
+  if (floatReq && p->halType != HAL_FLOAT) {
+    fprintf(stderr, "%s: ERROR: complexEntry has scale/offset attributes but pin type is not 'float'\n", modname);
+    XML_StopParser(parser, 0);
+    return;
+  }
 }
 
 int parseSyncCycle(const char *nptr) {
