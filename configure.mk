@@ -1,3 +1,5 @@
+COMP ?= comp
+
 .PHONY: configure
 configure:
 	@echo "BUILDSYS = $(BUILDSYS)"
@@ -16,7 +18,11 @@ configure:
 	@echo "prefix = $(prefix)"
 
 # include modinc
-MODINC=$(shell comp --print-modinc)
+MODINC=$(shell $(COMP) --print-modinc)
+ifeq (, $(MODINC))
+  $(error Unable to get modinc path)
+endif
+
 include $(MODINC)
 
 # dirty workaround to get the RTAI directory
