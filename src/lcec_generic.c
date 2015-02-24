@@ -55,7 +55,7 @@ int lcec_generic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
           *((hal_bit_t *) hal_data->pin[0]) = 0;
         } else {
           // bit pin array
-          for (j=0; j < LCEC_GENERIC_MAX_SUBPINS && j < hal_data->pdo_len; j++) {
+          for (j=0; j < LCEC_CONF_GENERIC_MAX_SUBPINS && j < hal_data->pdo_len; j++) {
             err = hal_pin_bit_newf(hal_data->dir, ((hal_bit_t **) &hal_data->pin[j]), comp_id, "%s.%s.%s.%s-%d", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name, j);
             if (err != 0) {
               rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.%s-%d failed\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name, j);
@@ -164,7 +164,7 @@ void lcec_generic_read(struct lcec_slave *slave, long period) {
     switch (hal_data->type) {
       case HAL_BIT:
         offset = hal_data->pdo_os << 3 | (hal_data->pdo_bp & 0x07);
-        for (j=0; j < LCEC_GENERIC_MAX_SUBPINS && hal_data->pin[j] != NULL; j++, offset++) {
+        for (j=0; j < LCEC_CONF_GENERIC_MAX_SUBPINS && hal_data->pin[j] != NULL; j++, offset++) {
           *((hal_bit_t *) hal_data->pin[j]) = EC_READ_BIT(&pd[offset >> 3], offset & 0x07);
         }
         break;
@@ -178,7 +178,7 @@ void lcec_generic_read(struct lcec_slave *slave, long period) {
         break;
 
       case HAL_FLOAT:
-        if (hal_data->floatUnsigned) {
+        if (hal_data->subType == lcecPdoEntTypeFloatUnsigned) {
           fval = lcec_generic_read_u32(pd, hal_data);
         } else {
           fval = lcec_generic_read_s32(pd, hal_data);
@@ -212,7 +212,7 @@ void lcec_generic_write(struct lcec_slave *slave, long period) {
     switch (hal_data->type) {
       case HAL_BIT:
         offset = hal_data->pdo_os << 3 | (hal_data->pdo_bp & 0x07);
-        for (j=0; j < LCEC_GENERIC_MAX_SUBPINS && hal_data->pin[j] != NULL; j++, offset++) {
+        for (j=0; j < LCEC_CONF_GENERIC_MAX_SUBPINS && hal_data->pin[j] != NULL; j++, offset++) {
           EC_WRITE_BIT(&pd[offset >> 3], offset & 0x07, *((hal_bit_t *) hal_data->pin[j]));
         }
         break;
@@ -230,7 +230,7 @@ void lcec_generic_write(struct lcec_slave *slave, long period) {
         fval += hal_data->floatOffset;
         fval *= hal_data->floatScale;
 
-        if (hal_data->floatUnsigned) {
+        if (hal_data->subType == lcecPdoEntTypeFloatUnsigned) {
           lcec_generic_write_u32(pd, hal_data, (hal_u32_t) fval);
         } else {
           lcec_generic_write_s32(pd, hal_data, (hal_s32_t) fval);

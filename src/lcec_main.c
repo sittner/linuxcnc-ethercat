@@ -373,6 +373,7 @@ int lcec_parse_config(void) {
   LCEC_CONF_SYNCMANAGER_T *sm_conf;
   LCEC_CONF_PDO_T *pdo_conf;
   LCEC_CONF_PDOENTRY_T *pe_conf;
+  LCEC_CONF_COMPLEXENTRY_T *ce_conf;
   LCEC_CONF_SDOCONF_T *sdo_conf;
   ec_pdo_entry_info_t *generic_pdo_entries;
   ec_pdo_info_t *generic_pdos;
@@ -739,7 +740,7 @@ int lcec_parse_config(void) {
           strncpy(generic_hal_data->name, pe_conf->halPin, LCEC_CONF_STR_MAXLEN);
           generic_hal_data->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
           generic_hal_data->type = pe_conf->halType;
-          generic_hal_data->floatUnsigned = pe_conf->floatUnsigned;
+          generic_hal_data->subType = pe_conf->subType;
           generic_hal_data->floatScale = pe_conf->floatScale;
           generic_hal_data->floatOffset = pe_conf->floatOffset;
           generic_hal_data->dir = generic_hal_dir;
@@ -751,6 +752,13 @@ int lcec_parse_config(void) {
 
         // next pdo entry
         generic_pdo_entries++;
+        break;
+
+      case lcecConfTypeComplexEntry:
+        // get config token
+        ce_conf = (LCEC_CONF_COMPLEXENTRY_T *)conf;
+        conf += sizeof(LCEC_CONF_COMPLEXENTRY_T);
+
         break;
 
       case lcecConfTypeSdoConfig:
