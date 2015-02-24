@@ -35,6 +35,8 @@
 #include "lcec_stmds5k.h"
 #include "lcec_deasda.h"
 
+#include "rtapi_app.h"
+
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Sascha Ittner <sascha.ittner@modusoft.de>");
 MODULE_DESCRIPTION("Driver for EtherCAT devices");
@@ -282,7 +284,7 @@ int rtapi_app_main(void) {
     }
 
     // initialize application time
-    RTAPI_GETTIMEOFDAY(&tv);
+    lcec_gettimeofday(&tv);
     master->app_time = EC_TIMEVAL2NANO(tv);
 
     // activating master
@@ -391,7 +393,7 @@ int lcec_parse_config(void) {
     rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "couldn't allocate user/RT shared memory\n");
     goto fail0;
   }
-  if (rtapi_shmem_getptr(shmem_id, &shmem_ptr) < 0 ) {
+  if (lcec_rtapi_shmem_getptr(shmem_id, &shmem_ptr) < 0 ) {
     rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "couldn't map user/RT shared memory\n");
     goto fail1;
   }
@@ -411,7 +413,7 @@ int lcec_parse_config(void) {
     rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "couldn't allocate user/RT shared memory\n");
     goto fail0;
   }
-  if (rtapi_shmem_getptr(shmem_id, &shmem_ptr) < 0 ) {
+  if (lcec_rtapi_shmem_getptr(shmem_id, &shmem_ptr) < 0 ) {
     rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "couldn't map user/RT shared memory\n");
     goto fail1;
   }
@@ -438,7 +440,7 @@ int lcec_parse_config(void) {
         conf += sizeof(LCEC_CONF_MASTER_T);
 
         // alloc master memory
-        master = kzalloc(sizeof(lcec_master_t), GFP_KERNEL);
+        master = lcec_zalloc(sizeof(lcec_master_t));
         if (master == NULL) {
           rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate master %d structure memory\n", master_conf->index);
           goto fail2;
@@ -481,7 +483,7 @@ int lcec_parse_config(void) {
         }
 
         // create new slave
-        slave = kzalloc(sizeof(lcec_slave_t), GFP_KERNEL);
+        slave = lcec_zalloc(sizeof(lcec_slave_t));
         if (slave == NULL) {
           rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s structure memory\n", master->name, slave_conf->name);
           goto fail2;
@@ -524,21 +526,21 @@ int lcec_parse_config(void) {
           memset(generic_hal_data, 0, sizeof(lcec_generic_pin_t) * slave_conf->pdoMappingCount);
 
           // alloc pdo entry memory
-          generic_pdo_entries = kzalloc(sizeof(ec_pdo_entry_info_t) * slave_conf->pdoEntryCount, GFP_KERNEL);
+          generic_pdo_entries = lcec_zalloc(sizeof(ec_pdo_entry_info_t) * slave_conf->pdoEntryCount);
           if (generic_pdo_entries == NULL) {
             rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic pdo entry memory\n", master->name, slave_conf->name);
             goto fail2;
           }
 
           // alloc pdo memory
-          generic_pdos = kzalloc(sizeof(ec_pdo_info_t) * slave_conf->pdoCount, GFP_KERNEL);
+          generic_pdos = lcec_zalloc(sizeof(ec_pdo_info_t) * slave_conf->pdoCount);
           if (generic_pdos == NULL) {
             rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic pdo memory\n", master->name, slave_conf->name);
             goto fail2;
           }
 
           // alloc sync manager memory
-          generic_sync_managers = kzalloc(sizeof(ec_sync_info_t) * (slave_conf->syncManagerCount + 1), GFP_KERNEL);
+          generic_sync_managers = lcec_zalloc(sizeof(ec_sync_info_t) * (slave_conf->syncManagerCount + 1));
           if (generic_sync_managers == NULL) {
             rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic sync manager memory\n", master->name, slave_conf->name);
             goto fail2;
@@ -548,7 +550,7 @@ int lcec_parse_config(void) {
 
         // alloc sdo config memory
         if (slave_conf->sdoConfigLength > 0) {
-          sdo_config = kzalloc(slave_conf->sdoConfigLength + sizeof(lcec_slave_sdoconf_t), GFP_KERNEL);
+          sdo_config = lcec_zalloc(slave_conf->sdoConfigLength + sizeof(lcec_slave_sdoconf_t));
           if (sdo_config == NULL) {
             rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic pdo entry memory\n", master->name, slave_conf->name);
             goto fail2;
@@ -591,7 +593,7 @@ int lcec_parse_config(void) {
         }
 
         // create new dc config
-        dc = kzalloc(sizeof(lcec_slave_dc_t), GFP_KERNEL);
+        dc = lcec_zalloc(sizeof(lcec_slave_dc_t));
         if (dc == NULL) {
           rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s dc config memory\n", master->name, slave->name);
           goto fail2;
@@ -626,7 +628,7 @@ int lcec_parse_config(void) {
         }
 
         // create new wd config
-        wd = kzalloc(sizeof(lcec_slave_watchdog_t), GFP_KERNEL);
+        wd = lcec_zalloc(sizeof(lcec_slave_watchdog_t));
         if (wd == NULL) {
           rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s watchdog config memory\n", master->name, slave->name);
           goto fail2;
@@ -781,7 +783,7 @@ int lcec_parse_config(void) {
 
   // allocate PDO entity memory
   for (master = first_master; master != NULL; master = master->next) {
-    pdo_entry_regs = kzalloc(sizeof(ec_pdo_entry_reg_t) * (master->pdo_entry_count + 1), GFP_KERNEL);
+    pdo_entry_regs = lcec_zalloc(sizeof(ec_pdo_entry_reg_t) * (master->pdo_entry_count + 1));
     if (pdo_entry_regs == NULL) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate master %s PDO entry memory\n", master->name);
       goto fail2;
@@ -820,24 +822,24 @@ void lcec_clear_config(void) {
 
       // free slave
       if (slave->sdo_config != NULL) {
-        kfree(slave->sdo_config);
+        lcec_free(slave->sdo_config);
       }
       if (slave->generic_pdo_entries != NULL) {
-        kfree(slave->generic_pdo_entries);
+        lcec_free(slave->generic_pdo_entries);
       }
       if (slave->generic_pdos != NULL) {
-        kfree(slave->generic_pdos);
+        lcec_free(slave->generic_pdos);
       }
       if (slave->generic_sync_managers != NULL) {
-        kfree(slave->generic_sync_managers);
+        lcec_free(slave->generic_sync_managers);
       }
       if (slave->dc_conf != NULL) {
-        kfree(slave->dc_conf);
+        lcec_free(slave->dc_conf);
       }
       if (slave->wd_conf != NULL) {
-        kfree(slave->wd_conf);
+        lcec_free(slave->wd_conf);
       }
-      kfree(slave);
+      lcec_free(slave);
       slave = prev_slave;
     }
 
@@ -848,11 +850,11 @@ void lcec_clear_config(void) {
 
     // free PDO entry memory
     if (master->pdo_entry_regs != NULL) {
-      kfree(master->pdo_entry_regs);
+      lcec_free(master->pdo_entry_regs);
     }
 
     // free master
-    kfree(master);
+    lcec_free(master);
     master = prev_master;
   }
 }
@@ -1086,7 +1088,7 @@ ec_sdo_request_t *lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_
   lcec_master_t *master = slave->master;
   ec_sdo_request_t *sdo;
   ec_request_state_t sdo_state;
-  unsigned long jiffies_start;
+  long ticks_start;
 
   // create request
   if (!(sdo = ecrt_slave_config_create_sdo_request(slave->config, index, subindex, size))) {
@@ -1101,9 +1103,9 @@ ec_sdo_request_t *lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_
   ecrt_sdo_request_read(sdo);
 
   // wait for completition (master's time out does not work here. why???)
-  jiffies_start = jiffies;
-  while ((sdo_state = ecrt_sdo_request_state(sdo)) == EC_REQUEST_BUSY && (jiffies -  jiffies_start) < (HZ * LCEC_SDO_REQ_TIMEOUT / 1000)) {
-    schedule();
+  ticks_start = lcec_get_ticks();
+  while ((sdo_state = ecrt_sdo_request_state(sdo)) == EC_REQUEST_BUSY && (lcec_get_ticks() -  ticks_start) < LCEC_SDO_REQ_TIMEOUT) {
+    lcec_schedule();
   }
 
   // check state

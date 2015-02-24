@@ -26,6 +26,7 @@
 #include "rtapi.h"
 #include "hal.h"
 
+#include "lcec_rtapi.h"
 #include "lcec_conf.h"
 
 #define BUFFSIZE 8192
@@ -297,7 +298,7 @@ int main(int argc, char **argv) {
     fprintf(stderr, "%s: ERROR: couldn't allocate user/RT shared memory\n", modname);
     goto fail4;
   }
-  if (rtapi_shmem_getptr(shmem_id, &shmem_ptr) < 0) {
+  if (lcec_rtapi_shmem_getptr(shmem_id, &shmem_ptr) < 0) {
     fprintf(stderr, "%s: ERROR: couldn't map user/RT shared memory\n", modname);
     goto fail5;
   }
