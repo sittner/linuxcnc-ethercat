@@ -6,16 +6,6 @@ cc-option = $(shell if $(CC) $(CFLAGS) $(1) -S -o /dev/null -xc /dev/null \
 
 .PHONY: all clean install
 
-all: $(module)
-
-clean::
-	rm -f $(module)
-	rm -f $(lcec-objs)
-
-install: $(module)
-	mkdir -p $(DESTDIR)$(RTLIBDIR)
-	cp $(module) $(DESTDIR)$(RTLIBDIR)/
-
 ifeq ($(BUILDSYS),kbuild)
 
 module = $(patsubst %.o,%.ko,$(obj-m))
@@ -33,19 +23,11 @@ clean::
 	rm -f modules.order Module.symvers
 	rm -rf .tmp_versions
 
-install: $(module)
-	mkdir -p $(DESTDIR)$(RTLIBDIR)
-	cp $(module) $(DESTDIR)$(RTLIBDIR)/
-
 else
 
 module = $(patsubst %.o,%.so,$(obj-m))
 
 EXTRA_CFLAGS := $(filter-out -Wframe-larger-than=%,$(EXTRA_CFLAGS))
-
-.PHONY: all clean install
-
-all: $(module)
 
 $(module): $(lcec-objs)
 	$(CC) -shared -o $@ $< -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat
@@ -54,4 +36,14 @@ $(module): $(lcec-objs)
 	$(CC) -o $@ $(EXTRA_CFLAGS) -Os -c $<
 
 endif
+
+all: $(module)
+
+clean::
+	rm -f $(module)
+	rm -f $(lcec-objs)
+
+install: $(module)
+	mkdir -p $(DESTDIR)$(RTLIBDIR)
+	cp $(module) $(DESTDIR)$(RTLIBDIR)/
 
