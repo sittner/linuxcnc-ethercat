@@ -1050,7 +1050,7 @@ void parsePdoEntryAttrs(const char **attr) {
         continue;
       }
       if (strcasecmp(val, "float") == 0) {
-        p->subType = lcecPdoEntTypeFlaotSigned;
+        p->subType = lcecPdoEntTypeFloatSigned;
         p->halType = HAL_FLOAT;
         continue;
       }
