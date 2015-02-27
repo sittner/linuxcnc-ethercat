@@ -489,6 +489,12 @@ void xml_end_handler(void *data, const char *el) {
         return;
       }
       break;
+    case lcecConfTypeComplexEntry:
+      if (strcmp(el, "complexEntry") == 0) {
+        currConfType = lcecConfTypePdoEntry;
+        return;
+      }
+      break;
   }
 
   fprintf(stderr, "%s: ERROR: unexpected close tag %s found\n", modname, el);
@@ -1205,12 +1211,14 @@ void parseComplexEntryAttrs(const char **attr) {
     if (strcmp(name, "scale") == 0) {
       floatReq = 1;
       p->floatScale = atof(val);
+      continue;
     }
 
     // parse offset
     if (strcmp(name, "offset") == 0) {
       floatReq = 1;
       p->floatOffset = atof(val);
+      continue;
     }
 
     // parse halPin
