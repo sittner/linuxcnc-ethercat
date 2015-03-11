@@ -22,9 +22,7 @@
 
 #include "hal.h"
 
-#include "rtapi.h"
 #include "rtapi_ctype.h"
-#include "rtapi_app.h"
 #include "rtapi_string.h"
 #include "rtapi_math.h"
 
@@ -64,7 +62,7 @@ do {                        \
 #define LCEC_DELTA_VID    0x000001dd
 
 // SDO request timeout (ms)
-#define LCEC_SDO_REQ_TIMEOUT 1000
+#define LCEC_SDO_REQ_TIMEOUT LCEC_MS_TO_TICKS(1000)
 
 struct lcec_master;
 struct lcec_slave;
