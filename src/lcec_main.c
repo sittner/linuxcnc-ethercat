@@ -437,6 +437,7 @@ int lcec_parse_config(void) {
   generic_hal_data = NULL;
   generic_hal_dir = 0;
   sdo_config = NULL;
+  pe_conf = NULL;
   while((conf_type = ((LCEC_CONF_NULL_T *)conf)->confType) != lcecConfTypeNone) {
     // get type
     switch (conf_type) {
@@ -750,6 +751,8 @@ int lcec_parse_config(void) {
           generic_hal_data->subType = pe_conf->subType;
           generic_hal_data->floatScale = pe_conf->floatScale;
           generic_hal_data->floatOffset = pe_conf->floatOffset;
+          generic_hal_data->bitOffset = 0;
+          generic_hal_data->bitLength = pe_conf->bitLength;
           generic_hal_data->dir = generic_hal_dir;
           generic_hal_data->pdo_idx = pe_conf->index;
           generic_hal_data->pdo_sidx = pe_conf->subindex;
@@ -766,6 +769,34 @@ int lcec_parse_config(void) {
         ce_conf = (LCEC_CONF_COMPLEXENTRY_T *)conf;
         conf += sizeof(LCEC_CONF_COMPLEXENTRY_T);
 
+        // check for pdoEntry
+        if (pe_conf == NULL) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "pdoEntry for generic device missing\n");
+          goto fail2;
+        }
+
+        // check for hal data
+        if (generic_hal_data == NULL) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "HAL data for generic device missing\n");
+          goto fail2;
+        }
+
+        // initialize hal data
+        if (ce_conf->halPin[0] != 0) {
+          strncpy(generic_hal_data->name, ce_conf->halPin, LCEC_CONF_STR_MAXLEN);
+          generic_hal_data->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
+          generic_hal_data->type = ce_conf->halType;
+          generic_hal_data->subType = ce_conf->subType;
+          generic_hal_data->floatScale = ce_conf->floatScale;
+          generic_hal_data->floatOffset = ce_conf->floatOffset;
+          generic_hal_data->bitOffset = ce_conf->bitOffset;
+          generic_hal_data->bitLength = ce_conf->bitLength;
+          generic_hal_data->dir = generic_hal_dir;
+          generic_hal_data->pdo_idx = pe_conf->index;
+          generic_hal_data->pdo_sidx = pe_conf->subindex;
+          generic_hal_data->pdo_len = pe_conf->bitLength;
+          generic_hal_data++;
+        }
         break;
 
       case lcecConfTypeSdoConfig:
