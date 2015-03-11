@@ -1,10 +1,18 @@
-all:
-	$(MAKE) -C src all
+.PHONY: all configure install clean
 
-clean:
-	$(MAKE) -C src realclean
+all: configure
+	@$(MAKE) -C src all
 
-install: all
-	$(MAKE) -C src install-rt install-user
-	$(MAKE) -C examples install-examples
+clean: configure
+	@$(MAKE) -C src clean
+	rm -f config.mk
+
+install: configure
+	@$(MAKE) -C src install
+	@$(MAKE) -C examples install-examples
+
+configure: config.mk
+
+config.mk: configure.mk
+	@$(MAKE) -s -f configure.mk > config.mk
 

@@ -16,22 +16,32 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
-#ifndef _LCEC_RTAPI_H_
-#define _LCEC_RTAPI_H_
+#ifndef _LCEC_RTAPI_USER_H_
+#define _LCEC_RTAPI_USER_H_
 
-#include <rtapi.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <sys/time.h>
+#include <sched.h>
 
-#ifdef __KERNEL__
-  #include "lcec_rtapi_kmod.h"
-#else
-  #include "lcec_rtapi_user.h"
-#endif
+static inline void *lcec_zalloc(size_t size) {
+  void *p = malloc(size);
+  if (p) memset(p, 0, size);
+  return p;
+}
+#define lcec_free(ptr) free(ptr)
 
-#if defined RTAPI_SERIAL && RTAPI_SERIAL >= 2
- #define lcec_rtapi_shmem_getptr(id, ptr) rtapi_shmem_getptr(id, ptr, NULL)
-#else
- #define lcec_rtapi_shmem_getptr(id, ptr) rtapi_shmem_getptr(id, ptr)
-#endif
+#define lcec_gettimeofday(x) gettimeofday(x, NULL)
+
+#define LCEC_MS_TO_TICKS(x) (x / 10)
+static inline long lcec_get_ticks(void) {
+  struct timespec tp;
+  clock_gettime(CLOCK_MONOTONIC, &tp);
+  return ((long)(tp.tv_sec * 100LL)) + (tp.tv_nsec / 10000000L);
+}
+
+#define lcec_schedule() sched_yield()
 
 #endif
 

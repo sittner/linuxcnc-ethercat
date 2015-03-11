@@ -16,22 +16,23 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
-#ifndef _LCEC_RTAPI_H_
-#define _LCEC_RTAPI_H_
+#ifndef _LCEC_RTAPI_KMOD_H_
+#define _LCEC_RTAPI_KMOD_H_
 
-#include <rtapi.h>
+#include <linux/slab.h>
+#include <linux/jiffies.h>
+#include <linux/time.h>
+#include <linux/sched.h>
 
-#ifdef __KERNEL__
-  #include "lcec_rtapi_kmod.h"
-#else
-  #include "lcec_rtapi_user.h"
-#endif
+#define lcec_zalloc(size) kzalloc(size, GFP_KERNEL)
+#define lcec_free(ptr) kfree(ptr)
 
-#if defined RTAPI_SERIAL && RTAPI_SERIAL >= 2
- #define lcec_rtapi_shmem_getptr(id, ptr) rtapi_shmem_getptr(id, ptr, NULL)
-#else
- #define lcec_rtapi_shmem_getptr(id, ptr) rtapi_shmem_getptr(id, ptr)
-#endif
+#define lcec_gettimeofday(x) do_gettimeofday(x) 
+
+#define LCEC_MS_TO_TICKS(x) (HZ * x / 1000)
+#define lcec_get_ticks() ((long) jiffies)
+
+#define lcec_schedule() schedule()
 
 #endif
 
