@@ -157,7 +157,8 @@ LCEC_CONF_SLAVE_T *currSlave;
 LCEC_CONF_SYNCMANAGER_T *currSyncManager;
 LCEC_CONF_PDO_T *currPdo;
 LCEC_CONF_SDOCONF_T *currSdoConf;
-LCEC_CONF_PDOENTRY_T *currSdoEntry;
+LCEC_CONF_PDOENTRY_T *currPdoEntry;
+uint8_t currComplexBitOffset;
 
 int shmem_id;
 
@@ -267,7 +268,8 @@ int main(int argc, char **argv) {
   currSyncManager = NULL;
   currPdo = NULL;
   currSdoConf = NULL;
-  currSdoEntry = NULL;
+  currPdoEntry = NULL;
+  currComplexBitOffset = 0;
   for (done=0; !done;) {
     // read block
     int len = fread(buffer, 1, BUFFSIZE, file);
@@ -1031,7 +1033,7 @@ void parsePdoEntryAttrs(const char **attr) {
     // parse bitLen
     if (strcmp(name, "bitLen") == 0) {
       tmp = atoi(val);
-      if (tmp <= 0 || tmp > LCEC_CONF_GENERIC_MAX_SUBPINS) {
+      if (tmp <= 0 || tmp > LCEC_CONF_GENERIC_MAX_BITLEN) {
         fprintf(stderr, "%s: ERROR: Invalid pdoEntry bitLen %d\n", modname, tmp);
         XML_StopParser(parser, 0);
         return;
@@ -1141,7 +1143,8 @@ void parsePdoEntryAttrs(const char **attr) {
     (currSlave->pdoMappingCount)++;
   }
   (currPdo->pdoEntryCount)++;
-  currSdoEntry = p;
+  currPdoEntry = p;
+  currComplexBitOffset = 0;
 }
 
 void parseComplexEntryAttrs(const char **attr) {
@@ -1154,6 +1157,7 @@ void parseComplexEntryAttrs(const char **attr) {
 
   floatReq = 0;
   p->confType = lcecConfTypeComplexEntry;
+  p->bitOffset = currComplexBitOffset;
   p->floatScale = 1.0;
   while (*attr) {
     const char *name = *(attr++);
@@ -1164,6 +1168,11 @@ void parseComplexEntryAttrs(const char **attr) {
       tmp = atoi(val);
       if (tmp <= 0 || tmp > LCEC_CONF_GENERIC_MAX_SUBPINS) {
         fprintf(stderr, "%s: ERROR: Invalid complexEntry bitLen %d\n", modname, tmp);
+        XML_StopParser(parser, 0);
+        return;
+      }
+      if ((currComplexBitOffset + tmp) > currPdoEntry->bitLength) {
+        fprintf(stderr, "%s: ERROR: complexEntry bitLen sum exceeded pdoEntry bitLen %d\n", modname, currPdoEntry->bitLength);
         XML_StopParser(parser, 0);
         return;
       }
@@ -1243,6 +1252,11 @@ void parseComplexEntryAttrs(const char **attr) {
     XML_StopParser(parser, 0);
     return;
   }
+
+  if (p->halPin[0] != 0) {
+    (currSlave->pdoMappingCount)++;
+  }
+  currComplexBitOffset += p->bitLength;
 }
 
 int parseSyncCycle(const char *nptr) {

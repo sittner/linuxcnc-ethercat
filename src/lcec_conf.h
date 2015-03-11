@@ -30,6 +30,7 @@
 
 #define LCEC_CONF_SDO_COMPLETE_SUBIDX -1
 #define LCEC_CONF_GENERIC_MAX_SUBPINS 32
+#define LCEC_CONF_GENERIC_MAX_BITLEN  255
 
 typedef enum {
   lcecConfTypeNone,
@@ -192,6 +193,7 @@ typedef struct {
 
 typedef struct {
   LCEC_CONF_TYPE_T confType;
+  uint8_t bitOffset;
   uint8_t bitLength;
   LCEC_PDOENT_TYPE_T subType;
   hal_type_t halType;

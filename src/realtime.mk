@@ -30,7 +30,7 @@ module = $(patsubst %.o,%.so,$(obj-m))
 EXTRA_CFLAGS := $(filter-out -Wframe-larger-than=%,$(EXTRA_CFLAGS))
 
 $(module): $(lcec-objs)
-	$(CC) -shared -o $@ $< -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat
+	$(CC) -shared -o $@ $(lcec-objs) -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat -lrt
 
 %.o: %.c
 	$(CC) -o $@ $(EXTRA_CFLAGS) -Os -c $<
