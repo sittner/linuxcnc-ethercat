@@ -25,7 +25,8 @@
 #define DEASDA_RPM_MUL              (60.0)
 #define DEASDA_RPM_DIV              (1.0 / 60.0)
 
-#define DEASDA_FAULT_AUTORESET_CYCLES 10
+#define DEASDA_FAULT_AUTORESET_CYCLES  100
+#define DEASDA_FAULT_AUTORESET_RETRIES 3
 
 typedef struct {
   int do_init;
@@ -76,6 +77,7 @@ typedef struct {
   hal_u32_t pprev;
   hal_s32_t home_raw;
   hal_u32_t fault_autoreset_cycles;
+  hal_u32_t fault_autoreset_retries;
 
   hal_float_t pos_scale_old;
   hal_u32_t pprev_old;
@@ -91,7 +93,10 @@ typedef struct {
 
   hal_bit_t last_switch_on;
   hal_bit_t internal_fault;
-  hal_u32_t fault_reset_pending;
+
+  hal_u32_t fault_reset_retry;
+  hal_u32_t fault_reset_state;
+  hal_u32_t fault_reset_cycle;
 
 } lcec_deasda_data_t;
 
@@ -334,6 +339,10 @@ int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s.%s.%s.srv-fault-autoreset-cycles failed\n", LCEC_MODULE_NAME, master->name, slave->name);
     return err;
   }
+  if ((err = hal_param_u32_newf(HAL_RW, &(hal_data->fault_autoreset_retries), comp_id, "%s.%s.%s.srv-fault-autoreset-retries", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s.%s.%s.srv-fault-autoreset-retries failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+    return err;
+  }
 
   // set default pin values
   *(hal_data->vel_fb) = 0.0;
@@ -377,6 +386,7 @@ int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   hal_data->extenc_scale = 1.0;
   hal_data->home_raw = 0;
   hal_data->fault_autoreset_cycles = DEASDA_FAULT_AUTORESET_CYCLES;
+  hal_data->fault_autoreset_retries = DEASDA_FAULT_AUTORESET_RETRIES;
   hal_data->pos_cnt = 0;
   hal_data->last_pos_cnt = 0;
   hal_data->extenc_cnt = 0;
@@ -388,7 +398,10 @@ int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   hal_data->pprev_old = hal_data->pprev + 1;
   hal_data->last_switch_on = 0;
   hal_data->internal_fault = 0;
-  hal_data->fault_reset_pending = 0;
+
+  hal_data->fault_reset_retry = 0;
+  hal_data->fault_reset_state = 0;
+  hal_data->fault_reset_cycle = 0;
 
   return 0;
 }
@@ -449,12 +462,20 @@ void lcec_deasda_read(struct lcec_slave *slave, long period) {
 
   // clear pending fault reset if no fault
   if (!hal_data->internal_fault) {
-    hal_data->fault_reset_pending = 0;
+    hal_data->fault_reset_retry = 0;
   }
 
   // generate gated fault
-  if (hal_data->fault_reset_pending > 0) {
-    hal_data->fault_reset_pending--;
+  if (hal_data->fault_reset_retry > 0) {
+    if (hal_data->fault_reset_cycle < hal_data->fault_autoreset_cycles) {
+      hal_data->fault_reset_cycle++;
+    } else {
+      hal_data->fault_reset_cycle = 0;
+      hal_data->fault_reset_state = !hal_data->fault_reset_state;
+      if (hal_data->fault_reset_state) {
+        hal_data->fault_reset_retry--;
+      }
+    }
     *(hal_data->fault) = 0;
   } else {
     *(hal_data->fault) = hal_data->internal_fault;
@@ -514,8 +535,10 @@ void lcec_deasda_write(struct lcec_slave *slave, long period) {
   hal_data->last_switch_on = *(hal_data->switch_on);
 
   // check for autoreset
-  if (hal_data->fault_autoreset_cycles > 0 && switch_on_edge && hal_data->internal_fault) {
-    hal_data->fault_reset_pending = hal_data->fault_autoreset_cycles;
+  if (hal_data->fault_autoreset_retries > 0 && hal_data->fault_autoreset_cycles > 0 && switch_on_edge && hal_data->internal_fault) {
+    hal_data->fault_reset_retry = hal_data->fault_autoreset_retries;
+    hal_data->fault_reset_state = 1;
+    hal_data->fault_reset_cycle = 0;
   }
 
   // check for change in scale value
@@ -535,8 +558,10 @@ void lcec_deasda_write(struct lcec_slave *slave, long period) {
   if (*(hal_data->halt)) {
     control |= (1 << 8);
   }
-  if (hal_data->fault_reset_pending > 0) {
-      control |= (1 << 7);
+  if (hal_data->fault_reset_retry > 0) {
+      if (hal_data->fault_reset_state) {
+        control |= (1 << 7);
+      }
   } else {
     if (*(hal_data->switch_on)) {
       control |= (1 << 0);
