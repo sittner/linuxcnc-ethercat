@@ -119,6 +119,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // pulse train (stepper) output
   { "EL2521", lcecSlaveTypeEL2521 },
 
+  // stepper
+  { "EL7041-1000", lcecSlaveTypeEL7041_1000 },
+
   // dc servo
   { "EL7342", lcecSlaveTypeEL7342 },
 
