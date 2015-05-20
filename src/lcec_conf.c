@@ -1060,12 +1060,14 @@ void parsePdoEntryAttrs(const char **attr) {
     if (strcmp(name, "scale") == 0) {
       floatReq = 1;
       p->floatScale = atof(val);
+      continue;
     }
 
     // parse offset
     if (strcmp(name, "offset") == 0) {
       floatReq = 1;
       p->floatOffset = atof(val);
+      continue;
     }
 
     // parse halPin
