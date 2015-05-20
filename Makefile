@@ -3,9 +3,9 @@
 all: configure
 	@$(MAKE) -C src all
 
-clean: configure
+clean:
 	@$(MAKE) -C src clean
-	rm -f config.mk
+	rm -f config.mk config.mk.tmp
 
 install: configure
 	@$(MAKE) -C src install
@@ -14,5 +14,6 @@ install: configure
 configure: config.mk
 
 config.mk: configure.mk
-	@$(MAKE) -s -f configure.mk > config.mk
+	@$(MAKE) -s -f configure.mk > config.mk.tmp
+	@mv config.mk.tmp config.mk
 

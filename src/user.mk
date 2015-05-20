@@ -6,9 +6,6 @@ EXTRA_CFLAGS := $(filter-out -Wframe-larger-than=%,$(EXTRA_CFLAGS))
 
 all: lcec_conf
 
-clean:
-	rm -f lcec_conf.o lcec_conf
-
 install: lcec_conf
 	mkdir -p $(DESTDIR)$(EMC2_HOME)/bin
 	cp lcec_conf $(DESTDIR)$(EMC2_HOME)/bin/
