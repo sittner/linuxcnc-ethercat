@@ -21,7 +21,7 @@
 #include "lcec.h"
 #include "lcec_conf.h"
 
-#define LCEC_GENERIC_MAX_SUBPINS 32
+#define LCEC_GENERIC_MAX_SUBPINS 128
 
 typedef struct {
   char name[LCEC_CONF_STR_MAXLEN];
