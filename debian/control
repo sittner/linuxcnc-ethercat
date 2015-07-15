@@ -2,10 +2,10 @@ Source: linuxcnc-ethercat
 Section: unknown
 Priority: extra
 Maintainer: linuxcnc <linuxcnc@localhost.localdomain>
-Build-Depends: debhelper (>= 8.0.0), linuxcnc-dev | machinekit-dev, etherlabmaster-dev
+Build-Depends: debhelper (>= 8.0.0), linuxcnc-dev | linuxcnc-sim-dev | machinekit-dev, etherlabmaster-dev
 Standards-Version: 3.9.3
 
 Package: linuxcnc-ethercat
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, linuxcnc | machinekit, etherlabmaster
+Depends: ${shlibs:Depends}, ${misc:Depends}, linuxcnc | linuxcnc-sim | machinekit, etherlabmaster
 Description: LinuxCNC EtherCAT HAL driver
