@@ -28,6 +28,10 @@
 
 #define LCEC_CONF_STR_MAXLEN 32
 
+#define LCEC_CONF_SDO_COMPLETE_SUBIDX -1
+#define LCEC_CONF_GENERIC_MAX_SUBPINS 32
+#define LCEC_CONF_GENERIC_MAX_BITLEN  255
+
 typedef enum {
   lcecConfTypeNone,
   lcecConfTypeMasters,
@@ -39,8 +43,16 @@ typedef enum {
   lcecConfTypePdo,
   lcecConfTypePdoEntry,
   lcecConfTypeSdoConfig,
-  lcecConfTypeSdoDataRaw
+  lcecConfTypeSdoDataRaw,
+  lcecConfTypeComplexEntry
 } LCEC_CONF_TYPE_T;
+
+typedef enum {
+  lcecPdoEntTypeSimple,
+  lcecPdoEntTypeFloatSigned,
+  lcecPdoEntTypeFloatUnsigned,
+  lcecPdoEntTypeComplex
+} LCEC_PDOENT_TYPE_T;
 
 typedef enum {
   lcecSlaveTypeInvalid,
@@ -174,8 +186,8 @@ typedef struct {
   uint16_t index;
   uint8_t subindex;
   uint8_t bitLength;
+  LCEC_PDOENT_TYPE_T subType;
   hal_type_t halType;
-  int floatUnsigned;
   hal_float_t floatScale;
   hal_float_t floatOffset;
   char halPin[LCEC_CONF_STR_MAXLEN];
@@ -183,9 +195,18 @@ typedef struct {
 
 typedef struct {
   LCEC_CONF_TYPE_T confType;
-} LCEC_CONF_NULL_T;
+  uint8_t bitOffset;
+  uint8_t bitLength;
+  LCEC_PDOENT_TYPE_T subType;
+  hal_type_t halType;
+  hal_float_t floatScale;
+  hal_float_t floatOffset;
+  char halPin[LCEC_CONF_STR_MAXLEN];
+} LCEC_CONF_COMPLEXENTRY_T;
 
-#define LCEC_CONF_SDO_COMPLETE_SUBIDX -1
+typedef struct {
+  LCEC_CONF_TYPE_T confType;
+} LCEC_CONF_NULL_T;
 
 typedef struct {
   LCEC_CONF_TYPE_T confType;

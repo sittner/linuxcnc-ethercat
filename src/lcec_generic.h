@@ -21,16 +21,16 @@
 #include "lcec.h"
 #include "lcec_conf.h"
 
-#define LCEC_GENERIC_MAX_SUBPINS 32
-
 typedef struct {
   char name[LCEC_CONF_STR_MAXLEN];
   hal_type_t type;
-  int floatUnsigned;
+  LCEC_PDOENT_TYPE_T subType;
   hal_float_t floatScale;
   hal_float_t floatOffset;
+  uint8_t bitOffset;
+  uint8_t bitLength;
   hal_pin_dir_t dir;
-  void *pin[LCEC_GENERIC_MAX_SUBPINS];
+  void *pin[LCEC_CONF_GENERIC_MAX_SUBPINS];
   uint16_t pdo_idx;
   uint8_t pdo_sidx;
   int pdo_len;
