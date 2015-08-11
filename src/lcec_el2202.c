@@ -24,29 +24,9 @@
 #include "lcec.h"
 #include "lcec_el2202.h"
 
-/* ------
-ec_pdo_entry_info_t slave_2_pdo_entries[] = {
-    {0x7000, 0x01, 1}, // Output 
-    {0x7000, 0x02, 1}, // TriState
-    {0x7010, 0x01, 1}, // Output 
-    {0x7010, 0x02, 1}, // TriState
-};
-
-ec_pdo_info_t slave_2_pdos[] = {
-    {0x1600, 2, slave_2_pdo_entries + 0}, // Channel 1 
-    {0x1601, 2, slave_2_pdo_entries + 2}, // Channel 2 
-};
-
-ec_sync_info_t slave_2_syncs[] = {
-    {0, EC_DIR_OUTPUT, 2, slave_2_pdos + 0, EC_WD_ENABLE},
-    {0xff}
-};
------- */
-
-
 typedef struct {
   hal_bit_t *out;
-  hal_bit_t tristate;
+  hal_bit_t *tristate;
   unsigned int pdo_os;
   unsigned int pdo_bp;
 } lcec_el2202_pin_t;
@@ -76,19 +56,20 @@ int lcec_el2202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     // initialize POD entry
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (i << 4), 0x01, &pin->pdo_os, &pin->pdo_bp);
 
-    // export pins
+    // export out pin
     if ((err = hal_pin_bit_newf(HAL_IN, &(pin->out), comp_id, "%s.%s.%s.dout-%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.dout-%02d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
       return err;
     }
-    if ((err = hal_param_bit_newf(HAL_IN, &(pin->tristate), comp_id, "%s.%s.%s.dout-%d-tristate", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.dout-%02d-tristate failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
+    // export tristate pin
+    if ((err = hal_pin_bit_newf(HAL_IN, &(pin->tristate), comp_id, "%s.%s.%s.tristate-%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
+      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.tristate-%02d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
       return err;
     }
 
     // initialize pins
     *(pin->out) = 0;
-    pin->tristate = 0;
+    *(pin->tristate) = 0;
   }
 
   return 0;
