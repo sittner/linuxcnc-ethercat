@@ -18,7 +18,10 @@
 //
 
 /**   \brief Linuxcnc and Machinekit HAL driver for Beckhoff EL2202
-      2-channel fast digital output terminal with tri-state 
+      2-channel fast digital output terminal with tri-state.
+      \details Voltage on Output terminal is controlled by the Output hal pin,
+      if the Tristate hal pin is activated the output value is placed in high 
+      impedence status. 
       http://www.beckhoff.com/english.asp?EtherCAT/el2202.htm%20 */
 
 #include "lcec.h"
@@ -98,7 +101,7 @@ int lcec_el2202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   for (i=0; i<LCEC_EL2202_CHANS; i++) {
     chan = &hal_data->chans[i];
 
-    // initialize POD entries     position      vend.id     prod.code   index              sindx  offset             bit pos
+    // initialize PDO entries     position      vend.id     prod.code   index              sindx  offset             bit pos
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (i << 4), 0x01, &chan->out_offs, &chan->out_bitp);
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (i << 4), 0x02, &chan->tristate_offs, &chan->tristate_bitp);
 

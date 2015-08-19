@@ -3,6 +3,7 @@ lcec-objs := \
     lcec_main.o \
     lcec_generic.o \
     lcec_el1xxx.o \
+    lcec_el1252.o \
     lcec_el2521.o \
     lcec_el2xxx.o \
     lcec_el2202.o \

@@ -20,6 +20,7 @@
 #include "lcec_generic.h"
 #include "lcec_ek1100.h"
 #include "lcec_el1xxx.h"
+#include "lcec_el1252.h"
 #include "lcec_el2xxx.h"
 #include "lcec_el2202.h"
 #include "lcec_el31x2.h"
@@ -73,7 +74,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL1124, LCEC_EL1xxx_VID, LCEC_EL1124_PID, LCEC_EL1124_PDOS, lcec_el1xxx_init},
   { lcecSlaveTypeEL1134, LCEC_EL1xxx_VID, LCEC_EL1134_PID, LCEC_EL1134_PDOS, lcec_el1xxx_init},
   { lcecSlaveTypeEL1144, LCEC_EL1xxx_VID, LCEC_EL1144_PID, LCEC_EL1144_PDOS, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1252, LCEC_EL1xxx_VID, LCEC_EL1252_PID, LCEC_EL1252_PDOS, lcec_el1xxx_init},
+  { lcecSlaveTypeEL1252, LCEC_EL1252_VID, LCEC_EL1252_PID, LCEC_EL1252_PDOS, lcec_el1252_init},  // 2 fast channels with timestamp
   { lcecSlaveTypeEL1808, LCEC_EL1xxx_VID, LCEC_EL1808_PID, LCEC_EL1808_PDOS, lcec_el1xxx_init},
   { lcecSlaveTypeEL1809, LCEC_EL1xxx_VID, LCEC_EL1809_PID, LCEC_EL1809_PDOS, lcec_el1xxx_init},
 
