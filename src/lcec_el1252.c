@@ -57,15 +57,13 @@ SM1: PhysAddr 0x09ae, DefaultSize    0, ControlRegister 0x00, Enable 4
     PDO entry 0x1d09:c0, 64 bit, "LatchPos2"
     PDO entry 0x1d09:c8, 64 bit, "LatchNeg2"
 SM2: PhysAddr 0x0910, DefaultSize    0, ControlRegister 0x00, Enable 4
-
 */
 
 ec_pdo_entry_info_t lcec_el1252_entries[] = {
+//   Index,  SIndx,Len
     {0x6000, 0x01, 1},  /* Input */
-
     {0x6000, 0x02, 1},  /* Input */
     {0x0000, 0x00, 6},  /* gap */
-
     {0x1d09, 0xae, 8},  /* Status1 */
     {0x1d09, 0xaf, 8},  /* Status2 */
     {0x1d09, 0xb0, 64}, /* LatchPos1 */
@@ -75,31 +73,41 @@ ec_pdo_entry_info_t lcec_el1252_entries[] = {
 };
 
 ec_pdo_info_t lcec_el1252_pdos[] = {
+//   Index,  n.PDOs, array of PDO entries
     {0x1a00, 1, lcec_el1252_entries + 0}, /* Channel 1 */
     {0x1a01, 2, lcec_el1252_entries + 1}, /* Channel 2 */
-    {0x1a02, 0, NULL}, /* Reserved */
-    {0x1a13, 6, lcec_el1252_entries + 3}, /* Latch */
+    {0x1a02, 0, NULL},                    /* Reserved */
+    {0x1a13, 6, lcec_el1252_entries + 3}, /* Status and Latches */
 };
 
 ec_sync_info_t lcec_el1252_syncs[] = {
+//  Indx, SM direction, n.PDOs, array of PDOs, WD mode
     {0, EC_DIR_INPUT, 3, lcec_el1252_pdos + 0, EC_WD_DISABLE},
     {1, EC_DIR_INPUT, 1, lcec_el1252_pdos + 3, EC_WD_DISABLE},
     {2, EC_DIR_INPUT, 0, NULL, EC_WD_DISABLE},
     {0xff}
 };
 
-/** \brief data structure of the device */
+/** \brief data structure of one channel of the device */
 typedef struct {
   // data exposed as PIN to Linuxcnc/Machinekit
-  hal_bit_t *in1;
-  hal_bit_t *in2;
-
+  hal_bit_t *in;
+  
   // OffSets and BitPositions used to access data in EC PDOs
-  unsigned int in1_offs;
-  unsigned int in1_bitp;
-  unsigned int in2_offs;
-  unsigned int in2_bitp;
+  unsigned int in_offs;
+  unsigned int in_bitp;
 
+  unsigned int Status_offs;
+  unsigned int Status_bitp;
+
+  unsigned int LatchPos_offs;
+  unsigned int LatchNeg_offs;
+
+} lcec_el1252_chan_t;
+
+/** \brief complete data structure for EL1252 */
+typedef struct {
+  lcec_el1252_chan_t chans[LCEC_EL1252_CHANS];
 } lcec_el1252_data_t;
 
 /** \brief callback for periodic IO data access*/ 
@@ -108,6 +116,7 @@ void lcec_el1252_read(struct lcec_slave *slave, long period);
 int lcec_el1252_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el1252_data_t *hal_data;
+  lcec_el1252_chan_t *chan;
 
   int err;
 
@@ -126,23 +135,32 @@ int lcec_el1252_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   slave->sync_info = lcec_el1252_syncs;
 
   // initialize PDO entries     position      vend.id     prod.code   index   sindx            offset               bit pos
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000, 0x01, &hal_data->in1_offs, &hal_data->in1_bitp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000, 0x02, &hal_data->in2_offs, &hal_data->in2_bitp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000, 0x01, &hal_data->chans[0].in_offs, &hal_data->chans[0].in_bitp);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000, 0x02, &hal_data->chans[1].in_offs, &hal_data->chans[1].in_bitp);
+
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x1d09, 0xae, &hal_data->chans[0].Status_offs,   NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x1d09, 0xaf, &hal_data->chans[1].Status_offs,   NULL);
+
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x1d09, 0xb0, &hal_data->chans[0].LatchPos_offs, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x1d09, 0xc0, &hal_data->chans[1].LatchPos_offs, NULL);
+
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x1d09, 0xb8, &hal_data->chans[0].LatchNeg_offs, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x1d09, 0xc8, &hal_data->chans[1].LatchNeg_offs, NULL);
 
   // export in1 pin
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->in1), comp_id, "%s.%s.%s.din-%d", LCEC_MODULE_NAME, master->name, slave->name, 0)) != 0) {
+  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->chans[0].in), comp_id, "%s.%s.%s.din-%d", LCEC_MODULE_NAME, master->name, slave->name, 0)) != 0) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.din-%02d failed\n", LCEC_MODULE_NAME, master->name, slave->name, 0);
     return err;
   }
   // export in2 pin
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->in2), comp_id, "%s.%s.%s.din-%d", LCEC_MODULE_NAME, master->name, slave->name, 1)) != 0) {
+  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->chans[1].in), comp_id, "%s.%s.%s.din-%d", LCEC_MODULE_NAME, master->name, slave->name, 1)) != 0) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.din-%02d failed\n", LCEC_MODULE_NAME, master->name, slave->name, 0);
     return err;
   }
 
   // initialize value of input pins
-  *(hal_data->in1) = 0;
-  *(hal_data->in2) = 0;
+  *(hal_data->chans[0].in) = 0;
+  *(hal_data->chans[1].in) = 0;
 
   return 0;
 }
@@ -154,7 +172,10 @@ void lcec_el1252_read(struct lcec_slave *slave, long period) {
   lcec_el1252_data_t *hal_data = (lcec_el1252_data_t *) slave->hal_data;
 
   // read inputs
-  *(hal_data->in1) = EC_READ_BIT(&pd[hal_data->in1_offs], hal_data->in1_bitp);
-  *(hal_data->in2) = EC_READ_BIT(&pd[hal_data->in1_offs], hal_data->in2_bitp);
+  *(hal_data->chans[0].in) = EC_READ_BIT(&pd[hal_data->chans[0].in_offs], hal_data->chans[0].in_bitp);
+  *(hal_data->chans[1].in) = EC_READ_BIT(&pd[hal_data->chans[1].in_offs], hal_data->chans[1].in_bitp);
+
+  /** \todo manage timestamps! */
+
 }
 
