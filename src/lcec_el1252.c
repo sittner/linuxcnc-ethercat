@@ -26,8 +26,8 @@
       StatusX.1 (bit 1) is set when a negative edge event (1->0) is detected on the inputX.
       StatusX capture bits are cleared by reading the corrisponding latch register.
 
-      \note This driver at the moment provides ONLY input data and discards 
-      timestamping infos.
+      \note This driver at the moment provides pins ONLY for input data,
+      timestamping infos is not exposed to HAL.
 
       http://www.beckhoff.com/english.asp?EtherCAT/el1252.htm */
 
@@ -93,13 +93,15 @@ typedef struct {
   // data exposed as PIN to Linuxcnc/Machinekit
   hal_bit_t *in;
   
+  uint8_t    Status;
+  uint64_t   LatchPos;
+  uint64_t   LatchNeg;
+  
   // OffSets and BitPositions used to access data in EC PDOs
   unsigned int in_offs;
   unsigned int in_bitp;
 
   unsigned int Status_offs;
-  unsigned int Status_bitp;
-
   unsigned int LatchPos_offs;
   unsigned int LatchNeg_offs;
 
@@ -134,7 +136,7 @@ int lcec_el1252_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   // initializer sync info
   slave->sync_info = lcec_el1252_syncs;
 
-  // initialize PDO entries     position      vend.id     prod.code   index   sindx            offset               bit pos
+  // initialize PDO entries     position      vend.id     prod.code   index   sindx                     offset                       bit pos
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000, 0x01, &hal_data->chans[0].in_offs, &hal_data->chans[0].in_bitp);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000, 0x02, &hal_data->chans[1].in_offs, &hal_data->chans[1].in_bitp);
 
@@ -175,7 +177,13 @@ void lcec_el1252_read(struct lcec_slave *slave, long period) {
   *(hal_data->chans[0].in) = EC_READ_BIT(&pd[hal_data->chans[0].in_offs], hal_data->chans[0].in_bitp);
   *(hal_data->chans[1].in) = EC_READ_BIT(&pd[hal_data->chans[1].in_offs], hal_data->chans[1].in_bitp);
 
-  /** \todo manage timestamps! */
+  /** \todo: do-something with timestamp data! */
+  hal_data->chans[0].Status = EC_READ_U8(&pd[hal_data->chans[0].Status_offs]);
+  hal_data->chans[1].Status = EC_READ_U8(&pd[hal_data->chans[1].Status_offs]);
 
+  hal_data->chans[0].LatchPos = EC_READ_U8(&pd[hal_data->chans[0].LatchPos_offs]);
+  hal_data->chans[1].LatchPos = EC_READ_U8(&pd[hal_data->chans[1].LatchPos_offs]);
+  hal_data->chans[0].LatchNeg = EC_READ_U8(&pd[hal_data->chans[0].LatchNeg_offs]);
+  hal_data->chans[1].LatchNeg = EC_READ_U8(&pd[hal_data->chans[1].LatchNeg_offs]);
 }
 
