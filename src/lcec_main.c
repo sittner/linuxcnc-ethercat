@@ -151,6 +151,9 @@ static const lcec_typelist_t types[] = {
   // Delta ASDA series
   { lcecSlaveTypeDeASDA, LCEC_DEASDA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, lcec_deasda_init},
 
+  // IIT ECMS4 - dual axis Ethercat Motion Supervisor
+  { lcecSlaveTypeECMS4, LCEC_ECMS4_VID, LCEC_ECMS4_PID, LCEC_ECMS4_PDOS, lcec_ecms4_init},
+
   { lcecSlaveTypeInvalid }
 };
 
