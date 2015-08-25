@@ -37,6 +37,7 @@
 #include "lcec_em7004.h"
 #include "lcec_stmds5k.h"
 #include "lcec_deasda.h"
+#include "lcec_ecms4.h"
 
 #include "rtapi_app.h"
 

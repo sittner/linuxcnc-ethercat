@@ -106,7 +106,7 @@ typedef struct {
   hal_bit_t *DriveEn;
   hal_s32_t *SetPoint;
   // outputs
-  hal_s32_t *Feedback
+  hal_s32_t *Feedback;
   hal_u32_t *Status;
   hal_u32_t *Error;
 
@@ -119,8 +119,8 @@ typedef struct {
   // Ethercat status word
   unsigned int ec_status;
   // 2FOC current process data values 
-  int ec_actual_Position;
-  int ec_actual_Velocity;
+  int ec_actual_position;
+  int ec_actual_velocity;
   int ec_actual_torque;
 
   // OffSets and BitPositions used to access data in PDOs
@@ -136,8 +136,8 @@ typedef struct {
   unsigned int ec_torque_offset_offs;
 
   unsigned int ec_status_offs;
-  unsigned int ec_actual_Position_offs;
-  unsigned int ec_actual_Velocity_offs;
+  unsigned int ec_actual_position_offs;
+  unsigned int ec_actual_velocity_offs;
   unsigned int ec_actual_torque_offs;
   
 } lcec_ecms4_chan_t;
@@ -175,38 +175,38 @@ int lcec_ecms4_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *p
 
   // init PDOs for each channel of ECMS4
   for (i=0; i<LCEC_ECMS4_CHANS ;i++) {
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6040, 0x00, hal_data->chans[i].ec_control_offs, NULL);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6071, 0x00, hal_data->chans[i].ec_target_torque_offs, NULL);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x60b2, 0x00, hal_data->chans[i].ec_torque_offset_offs, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6040, 0x00, &hal_data->chans[i].ec_control_offs, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6071, 0x00, &hal_data->chans[i].ec_target_torque_offs, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x60b2, 0x00, &hal_data->chans[i].ec_torque_offset_offs, NULL);
 
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6041, 0x00, hal_data->chans[i].ec_status_offs, NULL);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6064, 0x00, hal_data->chans[i].ec_actual_Position_offs, NULL);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x606c, 0x00, hal_data->chans[i].ec_actual_Velocity_offs, NULL);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6077, 0x00, hal_data->chans[i].ec_actual_torque_offs, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6041, 0x00, &hal_data->chans[i].ec_status_offs, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6064, 0x00, &hal_data->chans[i].ec_actual_position_offs, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x606c, 0x00, &hal_data->chans[i].ec_actual_velocity_offs, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6077, 0x00, &hal_data->chans[i].ec_actual_torque_offs, NULL);
 
     // export (component) input pins
-    if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->chans[i].EStop), comp_id, "%s.%s.%s.estop", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
+    if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->chans[i].EStop), comp_id, "%s.%s.%s.estop.%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.estop on channel %d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
       return err;
     }
-    if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->chans[i].DriveEn), comp_id, "%s.%s.%s.driveen", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
+    if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->chans[i].DriveEn), comp_id, "%s.%s.%s.driveen.%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.driveen on channel %d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
       return err;
     }
-    if ((err = hal_pin_s32_newf(HAL_in, &(hal_data->chans[i].SetPoint), comp_id, "%s.%s.%s.setpoint", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
+    if ((err = hal_pin_s32_newf(HAL_IN, &(hal_data->chans[i].SetPoint), comp_id, "%s.%s.%s.setpoint.%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.setpoint in channel %d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
       return err;
     }
     // export (component) output pins
-    if ((err = hal_pin_s32_newf(HAL_OUT, &(hal_data->chans[i].Feedback), comp_id, "%s.%s.%s.feedback", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
+    if ((err = hal_pin_s32_newf(HAL_OUT, &(hal_data->chans[i].Feedback), comp_id, "%s.%s.%s.feedback.%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.feedback in channel %d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
       return err;
     }
-    if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->chans[i].Status), comp_id, "%s.%s.%s.status", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
+    if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->chans[i].Status), comp_id, "%s.%s.%s.status.%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.status in channel %d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
       return err;
     }
-    if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->chans[i].Error), comp_id, "%s.%s.%s.error", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
+    if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->chans[i].Error), comp_id, "%s.%s.%s.error.%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.error in channel %d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
       return err;
     }
@@ -215,6 +215,7 @@ int lcec_ecms4_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *p
     *(hal_data->chans[i].EStop) = 1;
     *(hal_data->chans[i].DriveEn) = 0;
     *(hal_data->chans[i].SetPoint) = 0;
+
     *(hal_data->chans[i].Feedback) = 0;
     *(hal_data->chans[i].Status) = 0;
     *(hal_data->chans[i].Error) = 0;
@@ -223,14 +224,35 @@ int lcec_ecms4_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *p
   return 0;
 }
 
-void lcec_deasda_read(struct lcec_slave *slave, long period) {
+void lcec_ecms4_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
-  lcec_deasda_data_t *hal_data = (lcec_deasda_data_t *) slave->hal_data;
+  uint8_t *pd = master->process_data;
+  lcec_ecms4_data_t *hal_data = (lcec_ecms4_data_t *) slave->hal_data;
+  int i;
+
+  for (i=0; i<LCEC_ECMS4_CHANS ;i++) {
+    hal_data->chans[i].ec_status          = EC_READ_U16(&pd[hal_data->chans[i].ec_status_offs]);
+    hal_data->chans[i].ec_actual_position = EC_READ_S32(&pd[hal_data->chans[i].ec_actual_position_offs]);
+    hal_data->chans[i].ec_actual_velocity = EC_READ_S32(&pd[hal_data->chans[i].ec_actual_velocity_offs]);
+    hal_data->chans[i].ec_actual_torque   = EC_READ_S16(&pd[hal_data->chans[i].ec_actual_torque_offs]);
+
+    // update HAL pins
+    *(hal_data->chans[i].Feedback) = hal_data->chans[i].ec_actual_position;
+  }
 }
 
-void lcec_deasda_write(struct lcec_slave *slave, long period) {
+void lcec_ecms4_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
-  lcec_deasda_data_t *hal_data = (lcec_deasda_data_t *) slave->hal_data;
+  uint8_t *pd = master->process_data;
+  lcec_ecms4_data_t *hal_data = (lcec_ecms4_data_t *) slave->hal_data;
 
+  int i;
+
+  for (i=0; i<LCEC_ECMS4_CHANS ;i++) {
+    // set process data to the HAL pin value
+    hal_data->chans[i].ec_target_torque = *(hal_data->chans[i].SetPoint);
+    
+    EC_WRITE_U16(&pd[hal_data->chans[i].ec_target_torque_offs], hal_data->chans[i].ec_target_torque);
+  }
 }
 
