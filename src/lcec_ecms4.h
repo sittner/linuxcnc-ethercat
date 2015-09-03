@@ -29,7 +29,8 @@
 #define LCEC_ECMS4_PID 0x00001421
 
 /** \brief Number of channels */
-#define LCEC_ECMS4_CHANS 2
+// #define LCEC_ECMS4_CHANS 2 \todo: rimettere due canali
+#define LCEC_ECMS4_CHANS 1
 
 /** \brief Number of PDO */
 #define LCEC_ECMS4_PDOS (7 * LCEC_ECMS4_CHANS)
