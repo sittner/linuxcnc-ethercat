@@ -66,6 +66,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL1124", lcecSlaveTypeEL1124 },
   { "EL1134", lcecSlaveTypeEL1134 },
   { "EL1144", lcecSlaveTypeEL1144 },
+  { "EL1252", lcecSlaveTypeEL1252 },
   { "EL1808", lcecSlaveTypeEL1808 },
   { "EL1809", lcecSlaveTypeEL1809 },
 
@@ -81,6 +82,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL2084", lcecSlaveTypeEL2084 },
   { "EL2088", lcecSlaveTypeEL2088 },
   { "EL2124", lcecSlaveTypeEL2124 },
+  { "EL2202", lcecSlaveTypeEL2202 },
   { "EL2622", lcecSlaveTypeEL2622 },
   { "EL2808", lcecSlaveTypeEL2808 },
   { "EL2809", lcecSlaveTypeEL2809 },
