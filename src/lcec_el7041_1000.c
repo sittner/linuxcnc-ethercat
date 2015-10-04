@@ -306,7 +306,7 @@ int lcec_el7041_1000_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t 
 #undef pdo
 
 #define msg(H, format) \
-  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX, "exporting "#H" %s.%s.%s." format " failed\n", \
+  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting "#H" %s.%s.%s." format " failed\n", \
                   LCEC_MODULE_NAME, m->name, s->name)
 
 #define hal_pin_bit(IO, V, P)       hal_pin_bit_newf(IO, V, comp_id, "%s.%s.%s." P, LCEC_MODULE_NAME, m->name, s->name)
