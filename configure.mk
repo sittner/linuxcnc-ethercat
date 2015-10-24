@@ -1,4 +1,4 @@
-COMP ?= comp
+COMP ?= halcomp
 
 .PHONY: configure
 configure:
