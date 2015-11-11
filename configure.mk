@@ -1,7 +1,16 @@
-COMP ?= comp
+ifeq (, $(COMP))
+  COMP = $(shell which halcompile)
+endif
+ifeq (, $(COMP))
+  COMP = $(shell which comp)
+endif
+ifeq (, $(COMP))
+  $(error halcompile/comp executable not found or set)
+endif
 
 .PHONY: configure
 configure:
+	@echo "COMP = $(COMP)"
 	@echo "BUILDSYS = $(BUILDSYS)"
 	@echo "KERNELDIR = $(KERNELDIR)"
 	@echo "CC = $(CC)"
