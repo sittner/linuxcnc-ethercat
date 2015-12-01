@@ -26,7 +26,7 @@
 #define LCEC_CONF_SHMEM_KEY   0xACB572C7
 #define LCEC_CONF_SHMEM_MAGIC 0x036ED5A3
 
-#define LCEC_CONF_STR_MAXLEN 32
+#define LCEC_CONF_STR_MAXLEN 48
 
 #define LCEC_CONF_SDO_COMPLETE_SUBIDX -1
 #define LCEC_CONF_GENERIC_MAX_SUBPINS 32
@@ -92,6 +92,7 @@ typedef enum {
   lcecSlaveTypeEL2202,
   lcecSlaveTypeEL2622,
   lcecSlaveTypeEL2808,
+  lcecSlaveTypeEL2798,
   lcecSlaveTypeEL2809,
   lcecSlaveTypeEL3102,
   lcecSlaveTypeEL3112,
