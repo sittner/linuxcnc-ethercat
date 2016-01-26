@@ -41,6 +41,7 @@ typedef struct {
   hal_u32_t *pos_raw_hi;
   hal_u32_t *pos_raw_lo;
   hal_float_t *pos_fb;
+  hal_float_t *pos_fb_rel;
   hal_float_t *torque_fb;
   hal_float_t *torque_fb_abs;
   hal_float_t *torque_fb_pct;
@@ -59,6 +60,7 @@ typedef struct {
   hal_bit_t *index_ena;
   hal_bit_t *pos_reset;
   hal_s32_t *enc_raw;
+  hal_s32_t *enc_raw_rel;
   hal_bit_t *on_home_neg;
   hal_bit_t *on_home_pos;
 
@@ -178,6 +180,10 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-enc-raw failed\n", LCEC_MODULE_NAME, master->name, slave->name);
     return err;
   }
+  if ((err = hal_pin_s32_newf(HAL_OUT, &(hal_data->enc_raw_rel), comp_id, "%s.%s.%s.srv-enc-raw-rel", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-enc-raw-rel failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+    return err;
+  }
   if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->pos_raw_hi), comp_id, "%s.%s.%s.srv-pos-raw-hi", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-raw-hi failed\n", LCEC_MODULE_NAME, master->name, slave->name);
     return err;
@@ -188,6 +194,10 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   }
   if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->pos_fb), comp_id, "%s.%s.%s.srv-pos-fb", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-fb failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+    return err;
+  }
+  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->pos_fb_rel), comp_id, "%s.%s.%s.srv-pos-fb-rel", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-fb-rel failed\n", LCEC_MODULE_NAME, master->name, slave->name);
     return err;
   }
   if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->torque_fb), comp_id, "%s.%s.%s.srv-torque-fb", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
@@ -298,6 +308,7 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   *(hal_data->pos_raw_hi) = 0;
   *(hal_data->pos_raw_lo) = 0;
   *(hal_data->pos_fb) = 0.0;
+  *(hal_data->pos_fb_rel) = 0.0;
   *(hal_data->torque_fb) = 0.0;
   *(hal_data->torque_fb_abs) = 0.0;
   *(hal_data->torque_fb_pct) = 0.0;
@@ -316,6 +327,7 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   *(hal_data->index_ena) = 0;
   *(hal_data->pos_reset) = 0;
   *(hal_data->enc_raw) = 0;
+  *(hal_data->enc_raw_rel) = 0;
   *(hal_data->on_home_neg) = 0;
   *(hal_data->on_home_pos) = 0;
 
@@ -357,8 +369,8 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   lcec_stmds5k_data_t *hal_data = (lcec_stmds5k_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
   int32_t index_tmp;
-  int32_t pos_cnt, pos_cnt_diff;
-  long long net_count;
+  int32_t pos_cnt, pos_cnt_rel, pos_cnt_diff;
+  long long net_count, rel_count;
   uint8_t dev_state;
   uint16_t speed_state;
   int16_t speed_raw, torque_raw;
@@ -403,13 +415,18 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
 
   // update raw position counter
   pos_cnt = EC_READ_S32(&pd[hal_data->pos_mot_pdo_os]);
+  pos_cnt_rel = pos_cnt - hal_data->home_raw;
   *(hal_data->enc_raw) = pos_cnt;
-  *(hal_data->on_home_neg) = ((pos_cnt - hal_data->home_raw) <= 0);
-  *(hal_data->on_home_pos) = ((pos_cnt - hal_data->home_raw) >= 0);
+  *(hal_data->enc_raw_rel) = pos_cnt_rel;
+  *(hal_data->on_home_neg) = (pos_cnt_rel <= 0);
+  *(hal_data->on_home_pos) = (pos_cnt_rel >= 0);
+
   pos_cnt <<= 8;
   pos_cnt_diff = pos_cnt - hal_data->last_pos_cnt;
   hal_data->last_pos_cnt = pos_cnt;
   hal_data->pos_cnt += pos_cnt_diff;
+
+  rel_count = ((long long) pos_cnt_rel) << 8;
 
   // check for index edge
   if (*(hal_data->index_ena)) {
@@ -440,7 +457,8 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   *(hal_data->pos_raw_lo) = net_count & 0xffffffff;
 
   // scale count to make floating point position
-  *(hal_data->pos_fb) = net_count * hal_data->pos_scale_cnt;
+  *(hal_data->pos_fb) = ((double) net_count) * hal_data->pos_scale_cnt;
+  *(hal_data->pos_fb_rel) = ((double) rel_count) * hal_data->pos_scale_cnt;
 }
 
 void lcec_stmds5k_write(struct lcec_slave *slave, long period) {
