@@ -241,7 +241,7 @@ int lcec_el7041_1000_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t 
   lcec_master_t *m = s->master;
   lcec_el7041_1000_data_t *hd;
   int err;
-
+  int i;
   // initialize callbacks
   s->proc_read  = lcec_el7041_1000_read;
   s->proc_write = lcec_el7041_1000_write;
@@ -253,7 +253,20 @@ int lcec_el7041_1000_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t 
   }
   memset(hd, 0, sizeof(lcec_el7041_1000_data_t));
   s->hal_data = hd;
-
+  
+  for (i=0; i<LCEC_CONF_ATTR_MAX;i++){
+	  if (strcmp(s->attrs[i].attr,"maxCurrent")==0){
+		  if (ecrt_slave_config_sdo16(s->config, 0x8010, 0x01, s->attrs[i].val) != 0) {
+				rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo 8010 01\n", m->name, s->name);
+		  }
+	  }
+	  else if (strcmp(s->attrs[i].attr,"nomVoltage")==0){
+		  if (ecrt_slave_config_sdo16(s->config, 0x8010, 0x03, s->attrs[i].val) != 0) {
+				rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo 8010 03\n", m->name, s->name);
+		  }
+	  }
+  }
+  
   // initialize sync info
   s->sync_info = lcec_el7041_1000_syncs;
 

@@ -28,6 +28,8 @@
 
 #define LCEC_CONF_STR_MAXLEN 48
 
+#define LCEC_CONF_ATTR_MAX 3
+
 #define LCEC_CONF_SDO_COMPLETE_SUBIDX -1
 #define LCEC_CONF_GENERIC_MAX_SUBPINS 32
 #define LCEC_CONF_GENERIC_MAX_BITLEN  255
@@ -142,6 +144,11 @@ typedef struct {
 } LCEC_CONF_MASTER_T;
 
 typedef struct {
+  char attr[LCEC_CONF_STR_MAXLEN];
+  float val;
+} LCEC_CONF_ATTR_T;
+
+typedef struct {
   LCEC_CONF_TYPE_T confType;
   int index;
   LCEC_SLAVE_TYPE_T type;
@@ -154,6 +161,7 @@ typedef struct {
   unsigned int pdoMappingCount;
   size_t sdoConfigLength;
   char name[LCEC_CONF_STR_MAXLEN];
+  LCEC_CONF_ATTR_T attrs[LCEC_CONF_ATTR_MAX];
 } LCEC_CONF_SLAVE_T;
 
 typedef struct {

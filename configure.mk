@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-COMP ?= halcomp
-=======
 ifeq (, $(COMP))
   COMP = $(shell which halcompile)
 endif
@@ -10,7 +7,6 @@ endif
 ifeq (, $(COMP))
   $(error halcompile/comp executable not found or set)
 endif
->>>>>>> refs/remotes/sittner/master
 
 .PHONY: configure
 configure:
@@ -43,4 +39,3 @@ RTAIINCDIR = $(subst /rtai.h,,$(firstword $(wildcard $(foreach i,$(subst -I,,$(f
 ifneq ($(RTAIINCDIR),)
   RTAIDIR = $(realpath $(RTAIINCDIR)/..)
 endif
-
