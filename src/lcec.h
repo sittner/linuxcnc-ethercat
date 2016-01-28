@@ -155,6 +155,7 @@ typedef struct lcec_slave {
   ec_pdo_info_t *generic_pdos;
   ec_sync_info_t *generic_sync_managers;
   lcec_slave_sdoconf_t *sdo_config;
+  LCEC_CONF_ATTR_T attrs[LCEC_CONF_ATTR_MAX];
 } lcec_slave_t;
 
 ec_sdo_request_t *lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, size_t size);

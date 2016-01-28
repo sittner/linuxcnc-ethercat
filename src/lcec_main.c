@@ -393,6 +393,7 @@ int lcec_parse_config(void) {
   lcec_generic_pin_t *generic_hal_data;
   hal_pin_dir_t generic_hal_dir;
   lcec_slave_sdoconf_t *sdo_config;
+  int i;
 
   // initialize list
   first_master = NULL;
@@ -523,6 +524,18 @@ int lcec_parse_config(void) {
           slave->pid = type->pid;
           slave->pdo_entry_count = type->pdo_entry_count;
           slave->proc_init = type->proc_init;
+		  
+		  //copy attributes to slave
+		  for (i=0; i<LCEC_CONF_ATTR_MAX;i++){
+			  if (slave_conf->attrs[i].attr[0]!=0){
+				strncpy(slave->attrs[i].attr, slave_conf->attrs[i].attr, LCEC_CONF_STR_MAXLEN);
+				slave->attrs[i].attr[LCEC_CONF_STR_MAXLEN - 1] = 0;
+				slave->attrs[i].val=slave_conf->attrs[i].val;
+			  }
+			  else{
+				  strcpy(slave->attrs[i].attr,"");
+			  }
+		  }
         } else {
           // generic slave
           slave->vid = slave_conf->vid;

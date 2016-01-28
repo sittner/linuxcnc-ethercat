@@ -39,4 +39,3 @@ RTAIINCDIR = $(subst /rtai.h,,$(firstword $(wildcard $(foreach i,$(subst -I,,$(f
 ifneq ($(RTAIINCDIR),)
   RTAIDIR = $(realpath $(RTAIINCDIR)/..)
 endif
-

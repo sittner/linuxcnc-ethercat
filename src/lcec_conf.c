@@ -37,6 +37,12 @@ typedef struct {
 } LCEC_CONF_TYPELIST_T;
 
 typedef struct {
+  char *name;
+  LCEC_SLAVE_TYPE_T type;
+  char *attr[LCEC_CONF_ATTR_MAX];
+} LCEC_CONF_ATTRLIST_T;
+
+typedef struct {
   hal_u32_t *master_count;
   hal_u32_t *slave_count;
 } LCEC_CONF_HAL_T;
@@ -145,6 +151,12 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "DeASDA", lcecSlaveTypeDeASDA },
 
   { NULL }
+};
+
+static const LCEC_CONF_ATTRLIST_T slaveAttrs[] = {
+	{"DeASDA", lcecSlaveTypeDeASDA, "test","",""},
+	{"EL7041-1000", lcecSlaveTypeEL7041_1000, "maxCurrent","nomVoltage",""},
+	{NULL}
 };
 
 char *modname = "lcec_conf";
@@ -627,6 +639,8 @@ void parseMasterAttrs(const char **attr) {
 
 void parseSlaveAttrs(const char **attr) {
   LCEC_CONF_SLAVE_T *p = getOutputBuffer(sizeof(LCEC_CONF_SLAVE_T));
+  int i; 
+  int attrcont= -1 ;
   if (p == NULL) {
     return;
   }
@@ -687,7 +701,48 @@ void parseSlaveAttrs(const char **attr) {
         continue;
       }
     }
-
+	else { //Atributos adicionales para tipos no genericos, hay que comprobar si son validos y si no estan repetidos. 
+	//Additionals attributes for no generic type. It must check if they are valid and aren't repeated. 
+	  
+	  const LCEC_CONF_ATTRLIST_T *slaveAttr;
+	  for (slaveAttr = slaveAttrs; slaveAttr->name != NULL; slaveAttr++) { //recorremos lista con atributos validos por tipo de esclavo
+		if (p->type == slaveAttr->type){  //comprobamos si estamos en el esclavo correcto
+			for (i=0; i<LCEC_CONF_ATTR_MAX;i++){
+				if (strcmp(name, slaveAttr->attr[i]) == 0){
+					break; //vemos si el atributo es valido para el esclavo en cuestion
+				}
+			}
+			break;
+		}
+	  }
+	  if (slaveAttr->name == NULL) {  //si no ha encontrado el esclavo en la lista o no tenia los atributos validos
+		fprintf(stderr, "%s: ERROR: Invalid slave attribute %s\n", modname, name);
+		XML_StopParser(parser, 0);
+		return;
+	  }
+	  
+	  //hay que comprobar si no estaba repetido ya y guardarlo en el que este libre. 
+	  for (i=attrcont; i>=0; i--){ //comprobacion de repetido
+	    if (strcmp(name, p->attrs[i].attr) == 0){ //ya estaba definido y por tanto error
+			fprintf(stderr, "%s: ERROR: Duplicated slave attribute %s\n", modname, name);
+			XML_StopParser(parser, 0);
+			return;
+		}	
+	  }
+	  strncpy(p->attrs[attrcont+1].attr, name, LCEC_CONF_STR_MAXLEN);
+	  p->attrs[attrcont+1].attr[LCEC_CONF_STR_MAXLEN - 1] = 0;
+	  p->attrs[attrcont+1].val = atof(val);
+	  attrcont++;
+	  //POR seguridad y depuración comprobacion si pasa de LCEC_CONF_ATTR_MAX
+	  if (attrcont >= LCEC_CONF_ATTR_MAX){
+		  fprintf(stderr, "%s: ERROR: Mas de LCEC_CONF_ATTR_MAX atributos para el esclavo\n", modname);
+		  XML_StopParser(parser, 0);
+		  return;
+	  }
+	  
+	  continue;
+	  
+	}
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid slave attribute %s\n", modname, name);
     XML_StopParser(parser, 0);
