@@ -25,6 +25,7 @@
 #include "lcec_el40x1.h"
 #include "lcec_el40x2.h"
 #include "lcec_el41x2.h"
+#include "lcec_el41x4.h"
 #include "lcec_el5101.h"
 #include "lcec_el5151.h"
 #include "lcec_el5152.h"
@@ -110,6 +111,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL4012, LCEC_EL40x2_VID, LCEC_EL4012_PID, LCEC_EL40x2_PDOS, lcec_el40x2_init},
   { lcecSlaveTypeEL4022, LCEC_EL40x2_VID, LCEC_EL4022_PID, LCEC_EL40x2_PDOS, lcec_el40x2_init},
   { lcecSlaveTypeEL4032, LCEC_EL40x2_VID, LCEC_EL4032_PID, LCEC_EL40x2_PDOS, lcec_el40x2_init},
+
+  // analog out, 4ch, 16 bits
+  { lcecSlaveTypeEL4104, LCEC_EL41x4_VID, LCEC_EL4104_PID, LCEC_EL41x4_PDOS, lcec_el41x4_init},
 
   // analog out, 2ch, 16 bits
   { lcecSlaveTypeEL4102, LCEC_EL41x2_VID, LCEC_EL4102_PID, LCEC_EL41x2_PDOS, lcec_el41x2_init},
