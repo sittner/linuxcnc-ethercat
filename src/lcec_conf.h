@@ -29,7 +29,7 @@
 #define LCEC_CONF_STR_MAXLEN 48
 
 #define LCEC_CONF_SDO_COMPLETE_SUBIDX -1
-#define LCEC_CONF_GENERIC_MAX_SUBPINS 32
+#define LCEC_CONF_GENERIC_MAX_SUBPINS 48
 #define LCEC_CONF_GENERIC_MAX_BITLEN  255
 
 typedef enum {
@@ -112,6 +112,7 @@ typedef enum {
   lcecSlaveTypeEL4112,
   lcecSlaveTypeEL4122,
   lcecSlaveTypeEL4132,
+  lcecSlaveTypeEL4104,
   lcecSlaveTypeEL5101,
   lcecSlaveTypeEL5151,
   lcecSlaveTypeEL5152,
