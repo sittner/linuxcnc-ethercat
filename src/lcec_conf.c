@@ -155,9 +155,15 @@ int exitEvent;
 
 XML_Parser parser;
 int currConfType;
-void *outputBuffer;
+
+typedef struct LCEC_CONF_OUTBUF_ITEM {
+  size_t len;
+  struct LCEC_CONF_OUTBUF_ITEM *next;
+} LCEC_CONF_OUTBUF_ITEM_T;
+
+LCEC_CONF_OUTBUF_ITEM_T *outputBuffer;
+LCEC_CONF_OUTBUF_ITEM_T *outputBufferLast;
 size_t outputBufferLen;
-size_t outputBufferPos;
 
 LCEC_CONF_MASTER_T *currMaster;
 LCEC_CONF_SLAVE_T *currSlave;
@@ -172,7 +178,7 @@ int shmem_id;
 void xml_start_handler(void *data, const char *el, const char **attr);
 void xml_end_handler(void *data, const char *el);
 
-void *getOutputBuffer(size_t len);
+void *addOutputBuffer(size_t len);
 
 int parseHexdump(const char *str, uint8_t *buf);
 
@@ -205,6 +211,7 @@ int main(int argc, char **argv) {
   LCEC_CONF_NULL_T *end;
   void *shmem_ptr;
   LCEC_CONF_HEADER_T *header;
+  void *p;
   uint64_t u;
 
   // initialize component
@@ -268,8 +275,8 @@ int main(int argc, char **argv) {
 
   currConfType = lcecConfTypeNone;
   outputBuffer = NULL;
+  outputBufferLast = NULL;
   outputBufferLen = 0;
-  outputBufferPos = 0;
   currMaster = NULL;
   currSlave = NULL;
   currSyncManager = NULL;
@@ -298,14 +305,14 @@ int main(int argc, char **argv) {
   }
 
   // set end marker
-  end = getOutputBuffer(sizeof(LCEC_CONF_NULL_T));
+  end = addOutputBuffer(sizeof(LCEC_CONF_NULL_T));
   if (end == NULL) {
       goto fail4;
   }
   end->confType = lcecConfTypeNone;
 
   // setup shared mem for config
-  shmem_id = rtapi_shmem_new(LCEC_CONF_SHMEM_KEY, hal_comp_id, sizeof(LCEC_CONF_HEADER_T) + outputBufferPos);
+  shmem_id = rtapi_shmem_new(LCEC_CONF_SHMEM_KEY, hal_comp_id, sizeof(LCEC_CONF_HEADER_T) + outputBufferLen);
   if ( shmem_id < 0 ) {
     fprintf(stderr, "%s: ERROR: couldn't allocate user/RT shared memory\n", modname);
     goto fail4;
@@ -319,14 +326,16 @@ int main(int argc, char **argv) {
   header = shmem_ptr;
   shmem_ptr += sizeof(LCEC_CONF_HEADER_T);
   header->magic = LCEC_CONF_SHMEM_MAGIC;
-  header->length = outputBufferPos;
+  header->length = outputBufferLen;
 
-  // copy data
-  memcpy(shmem_ptr, outputBuffer, outputBufferPos);
-
-  // free build buffer
-  free(outputBuffer);
-  outputBuffer = NULL;
+  // copy data and free buffer
+  while (outputBuffer != NULL) {
+    p = outputBuffer;
+    memcpy(shmem_ptr, p + sizeof(LCEC_CONF_OUTBUF_ITEM_T), outputBuffer->len);
+    shmem_ptr += outputBuffer->len;
+    outputBuffer = outputBuffer->next;
+    free(p);
+  }
 
   // everything is fine
   ret = 0;
@@ -340,8 +349,10 @@ int main(int argc, char **argv) {
 fail5:
   rtapi_shmem_delete(shmem_id, hal_comp_id);
 fail4:
-  if (outputBuffer != NULL) {
-    free(outputBuffer);
+  while (outputBuffer != NULL) {
+    p = outputBuffer;
+    outputBuffer = outputBuffer->next;
+    free(p);
   }
   XML_ParserFree(parser);
 fail3:
@@ -506,25 +517,30 @@ void xml_end_handler(void *data, const char *el) {
   XML_StopParser(parser, 0);
 }
 
-void *getOutputBuffer(size_t len) {
-  void *p;
+void *addOutputBuffer(size_t len) {
 
-  // reallocate if len do not fit into current buffer
-  while ((outputBufferLen - outputBufferPos) < len) {
-    size_t new = outputBufferLen + BUFFSIZE;
-    outputBuffer = realloc(outputBuffer, new);
-    if (outputBuffer == NULL) {
-      fprintf(stderr, "%s: ERROR: Couldn't allocate memory for config token\n", modname);
-      XML_StopParser(parser, 0);
-      return NULL;
-    }
-    outputBufferLen = new;
+  void *p = calloc(1, sizeof(LCEC_CONF_OUTBUF_ITEM_T) + len);
+  if (p == NULL) {
+    fprintf(stderr, "%s: ERROR: Couldn't allocate memory for config token\n", modname);
+    XML_StopParser(parser, 0);
+    return NULL;
   }
 
-  // initialize memory
-  p = outputBuffer + outputBufferPos;
-  memset(p, 0, len);
-  outputBufferPos += len;
+  // setup header
+  LCEC_CONF_OUTBUF_ITEM_T *header = p;
+  p += sizeof(LCEC_CONF_OUTBUF_ITEM_T);
+  header->len = len;
+  outputBufferLen += len;
+
+  // update list
+  if (outputBuffer == NULL) {
+    outputBuffer = header;
+  }
+  if (outputBufferLast != NULL) {
+    outputBufferLast->next = header;
+  }
+  outputBufferLast = header;
+
   return p;
 }
 
@@ -575,7 +591,7 @@ int parseHexdump(const char *str, uint8_t *buf) {
 }
 
 void parseMasterAttrs(const char **attr) {
-  LCEC_CONF_MASTER_T *p = getOutputBuffer(sizeof(LCEC_CONF_MASTER_T));
+  LCEC_CONF_MASTER_T *p = addOutputBuffer(sizeof(LCEC_CONF_MASTER_T));
   if (p == NULL) {
     return;
   }
@@ -626,7 +642,7 @@ void parseMasterAttrs(const char **attr) {
 }
 
 void parseSlaveAttrs(const char **attr) {
-  LCEC_CONF_SLAVE_T *p = getOutputBuffer(sizeof(LCEC_CONF_SLAVE_T));
+  LCEC_CONF_SLAVE_T *p = addOutputBuffer(sizeof(LCEC_CONF_SLAVE_T));
   if (p == NULL) {
     return;
   }
@@ -711,7 +727,7 @@ void parseSlaveAttrs(const char **attr) {
 }
 
 void parseDcConfAttrs(const char **attr) {
-  LCEC_CONF_DC_T *p = getOutputBuffer(sizeof(LCEC_CONF_DC_T));
+  LCEC_CONF_DC_T *p = addOutputBuffer(sizeof(LCEC_CONF_DC_T));
   if (p == NULL) {
     return;
   }
@@ -759,7 +775,7 @@ void parseDcConfAttrs(const char **attr) {
 }
 
 void parseWatchdogAttrs(const char **attr) {
-  LCEC_CONF_WATCHDOG_T *p = getOutputBuffer(sizeof(LCEC_CONF_WATCHDOG_T));
+  LCEC_CONF_WATCHDOG_T *p = addOutputBuffer(sizeof(LCEC_CONF_WATCHDOG_T));
   if (p == NULL) {
     return;
   }
@@ -790,7 +806,7 @@ void parseWatchdogAttrs(const char **attr) {
 
 void parseSdoConfigAttrs(const char **attr) {
   int tmp;
-  LCEC_CONF_SDOCONF_T *p = getOutputBuffer(sizeof(LCEC_CONF_SDOCONF_T));
+  LCEC_CONF_SDOCONF_T *p = addOutputBuffer(sizeof(LCEC_CONF_SDOCONF_T));
   if (p == NULL) {
     return;
   }
@@ -871,7 +887,7 @@ void parseSdoDataRawAttrs(const char **attr) {
         return;
       }
       if (len > 0) {
-        p = (uint8_t *) getOutputBuffer(len);
+        p = (uint8_t *) addOutputBuffer(len);
         if (p != NULL) {
           parseHexdump(val, p);
           currSdoConf->length += len;
@@ -890,7 +906,7 @@ void parseSdoDataRawAttrs(const char **attr) {
 
 void parseSyncManagerAttrs(const char **attr) {
   int tmp;
-  LCEC_CONF_SYNCMANAGER_T *p = getOutputBuffer(sizeof(LCEC_CONF_SYNCMANAGER_T));
+  LCEC_CONF_SYNCMANAGER_T *p = addOutputBuffer(sizeof(LCEC_CONF_SYNCMANAGER_T));
   if (p == NULL) {
     return;
   }
@@ -955,7 +971,7 @@ void parseSyncManagerAttrs(const char **attr) {
 
 void parsePdoAttrs(const char **attr) {
   int tmp;
-  LCEC_CONF_PDO_T *p = getOutputBuffer(sizeof(LCEC_CONF_PDO_T));
+  LCEC_CONF_PDO_T *p = addOutputBuffer(sizeof(LCEC_CONF_PDO_T));
   if (p == NULL) {
     return;
   }
@@ -999,7 +1015,7 @@ void parsePdoAttrs(const char **attr) {
 void parsePdoEntryAttrs(const char **attr) {
   int tmp;
   int floatReq;
-  LCEC_CONF_PDOENTRY_T *p = getOutputBuffer(sizeof(LCEC_CONF_PDOENTRY_T));
+  LCEC_CONF_PDOENTRY_T *p = addOutputBuffer(sizeof(LCEC_CONF_PDOENTRY_T));
   if (p == NULL) {
     return;
   }
@@ -1157,7 +1173,7 @@ void parsePdoEntryAttrs(const char **attr) {
 void parseComplexEntryAttrs(const char **attr) {
   int tmp;
   int floatReq;
-  LCEC_CONF_COMPLEXENTRY_T *p = getOutputBuffer(sizeof(LCEC_CONF_COMPLEXENTRY_T));
+  LCEC_CONF_COMPLEXENTRY_T *p = addOutputBuffer(sizeof(LCEC_CONF_COMPLEXENTRY_T));
   if (p == NULL) {
     return;
   }
