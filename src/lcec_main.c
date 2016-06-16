@@ -761,7 +761,6 @@ int lcec_parse_config(void) {
           generic_hal_data->dir = generic_hal_dir;
           generic_hal_data->pdo_idx = pe_conf->index;
           generic_hal_data->pdo_sidx = pe_conf->subindex;
-          generic_hal_data->pdo_len = pe_conf->bitLength;
           generic_hal_data++;
         }
 
@@ -799,7 +798,6 @@ int lcec_parse_config(void) {
           generic_hal_data->dir = generic_hal_dir;
           generic_hal_data->pdo_idx = pe_conf->index;
           generic_hal_data->pdo_sidx = pe_conf->subindex;
-          generic_hal_data->pdo_len = pe_conf->bitLength;
           generic_hal_data++;
         }
         break;

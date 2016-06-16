@@ -33,7 +33,6 @@ typedef struct {
   void *pin[LCEC_CONF_GENERIC_MAX_SUBPINS];
   uint16_t pdo_idx;
   uint8_t pdo_sidx;
-  int pdo_len;
   unsigned int pdo_os;
   unsigned int pdo_bp;
 } lcec_generic_pin_t;
