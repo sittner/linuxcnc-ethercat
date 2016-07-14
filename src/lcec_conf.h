@@ -19,7 +19,7 @@
 #define _LCEC_CONF_H_
 
 #include "hal.h"
-#include "ecrt.h"
+#include <ethercat/ecrt.h>
 
 #define LCEC_MODULE_NAME "lcec"
 
