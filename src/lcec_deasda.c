@@ -18,6 +18,7 @@
 
 #include "lcec.h"
 #include "lcec_deasda.h"
+#include "math.h"
 
 #define DEASDA_PULSES_PER_REV_DEFLT (1280000)
 #define DEASDA_RPM_FACTOR           (0.1)
