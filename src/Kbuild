@@ -20,5 +20,6 @@ lcec-objs := \
     lcec_el95xx.o \
     lcec_em7004.o \
     lcec_stmds5k.o \
-    lcec_deasda.o
+    lcec_deasda.o \
+    lcec_ecms4.o
 

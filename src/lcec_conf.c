@@ -147,6 +147,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // Delta ASDA series
   { "DeASDA", lcecSlaveTypeDeASDA },
 
+  // IIT ECMS4 EtherCat Motion Supervisor
+  { "ECMS4", lcecSlaveTypeECMS4 },
+
   { NULL }
 };
 

@@ -126,7 +126,8 @@ typedef enum {
   lcecSlaveTypeEL9515,
   lcecSlaveTypeEM7004,
   lcecSlaveTypeStMDS5k,
-  lcecSlaveTypeDeASDA
+  lcecSlaveTypeDeASDA,
+  lcecSlaveTypeECMS4
 } LCEC_SLAVE_TYPE_T;
 
 typedef struct {
