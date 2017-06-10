@@ -18,6 +18,7 @@
 
 #include "lcec.h"
 #include "lcec_stmds5k.h"
+#include "math.h"
 
 #define STMDS5K_PCT_REG_FACTOR (0.5 * (double)0x7fff)
 #define STMDS5K_PCT_REG_DIV    (2.0 / (double)0x7fff)
