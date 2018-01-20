@@ -50,12 +50,6 @@ typedef struct {
   unsigned int ctrl_pdo_os;
   unsigned int freq_pdo_os;
 
-  ec_sdo_request_t *sdo_req_base_freq;
-  ec_sdo_request_t *sdo_req_max_freq;
-  ec_sdo_request_t *sdo_req_ramp_rise;
-  ec_sdo_request_t *sdo_req_ramp_fall;
-  ec_sdo_request_t *sdo_req_ramp_factor;
-
   uint32_t sdo_base_freq;
   uint16_t sdo_max_freq;
   uint16_t sdo_ramp_rise;
@@ -107,6 +101,7 @@ int lcec_el2521_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   lcec_el2521_data_t *hal_data;
   int err;
   double ramp_factor;
+  uint8_t sdo_buf[4];
 
   // initialize callbacks
   slave->proc_read = lcec_el2521_read;
@@ -121,26 +116,26 @@ int lcec_el2521_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   slave->hal_data = hal_data;
 
   // read sdos
-  if ((hal_data->sdo_req_base_freq = lcec_read_sdo(slave, 0x8001, 0x02, 4)) == NULL) {
+  if (lcec_read_sdo(slave, 0x8001, 0x02, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->sdo_base_freq = EC_READ_U32(ecrt_sdo_request_data(hal_data->sdo_req_base_freq));
-  if ((hal_data->sdo_req_ramp_rise = lcec_read_sdo(slave, 0x8001, 0x04, 2)) == NULL) {
+  hal_data->sdo_base_freq = EC_READ_U32(sdo_buf);
+  if (lcec_read_sdo(slave, 0x8001, 0x04, sdo_buf, 2)) {
     return -EIO;
   }
-  hal_data->sdo_ramp_rise = EC_READ_U16(ecrt_sdo_request_data(hal_data->sdo_req_ramp_rise));
-  if ((hal_data->sdo_req_ramp_fall = lcec_read_sdo(slave, 0x8001, 0x05, 2)) == NULL) {
+  hal_data->sdo_ramp_rise = EC_READ_U16(sdo_buf);
+  if (lcec_read_sdo(slave, 0x8001, 0x05, sdo_buf, 2)) {
     return -EIO;
   }
-  hal_data->sdo_ramp_fall = EC_READ_U16(ecrt_sdo_request_data(hal_data->sdo_req_ramp_fall));
-  if ((hal_data->sdo_req_ramp_factor = lcec_read_sdo(slave, 0x8000, 0x07, 2)) == NULL) {
+  hal_data->sdo_ramp_fall = EC_READ_U16(sdo_buf);
+  if (lcec_read_sdo(slave, 0x8000, 0x07, sdo_buf, 2)) {
     return -EIO;
   }
-  hal_data->sdo_ramp_factor = EC_READ_U16(ecrt_sdo_request_data(hal_data->sdo_req_ramp_factor));
-  if ((hal_data->sdo_req_max_freq = lcec_read_sdo(slave, 0x8800, 0x02, 2)) == NULL) {
+  hal_data->sdo_ramp_factor = EC_READ_U16(sdo_buf);
+  if (lcec_read_sdo(slave, 0x8800, 0x02, sdo_buf, 2)) {
     return -EIO;
   }
-  hal_data->sdo_max_freq = EC_READ_U16(ecrt_sdo_request_data(hal_data->sdo_req_max_freq));
+  hal_data->sdo_max_freq = EC_READ_U16(sdo_buf);
 
   // initializer sync info
   slave->sync_info = lcec_el2521_syncs;

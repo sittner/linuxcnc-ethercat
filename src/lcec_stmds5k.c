@@ -87,10 +87,6 @@ typedef struct {
   unsigned int speed_sp_rel_pdo_os;
   unsigned int torque_max_pdo_os;
 
-  ec_sdo_request_t *sdo_torque_reference;
-  ec_sdo_request_t *sdo_speed_max_rpm;
-  ec_sdo_request_t *sdo_speed_max_rpm_sp;
-
 } lcec_stmds5k_data_t;
 
 void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data);
@@ -102,6 +98,7 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   lcec_master_t *master = slave->master;
   lcec_stmds5k_data_t *hal_data;
   int err;
+  uint8_t sdo_buf[4];
 
   // initialize callbacks
   slave->proc_read = lcec_stmds5k_read;
@@ -117,20 +114,20 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
 
   // read sdos
   // B18 : torque reference
-  if ((hal_data->sdo_torque_reference = lcec_read_sdo(slave, 0x2212, 0x00, 4)) == NULL) {
+  if (lcec_read_sdo(slave, 0x2212, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->torque_reference = (double)EC_READ_S32(ecrt_sdo_request_data(hal_data->sdo_torque_reference)) * STMDS5K_TORQUE_REF_DIV;
+  hal_data->torque_reference = (double) EC_READ_S32(sdo_buf) * STMDS5K_TORQUE_REF_DIV;
   // C01 : max rpm
-  if ((hal_data->sdo_speed_max_rpm = lcec_read_sdo(slave, 0x2401, 0x00, 4)) == NULL) {
+  if (lcec_read_sdo(slave, 0x2401, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->speed_max_rpm = (double)EC_READ_S32(ecrt_sdo_request_data(hal_data->sdo_speed_max_rpm));
+  hal_data->speed_max_rpm = (double) EC_READ_S32(sdo_buf);
   // D02 : setpoint max rpm
-  if ((hal_data->sdo_speed_max_rpm_sp = lcec_read_sdo(slave, 0x2602, 0x00, 4)) == NULL) {
+  if (lcec_read_sdo(slave, 0x2602, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->speed_max_rpm_sp = (double)EC_READ_S32(ecrt_sdo_request_data(hal_data->sdo_speed_max_rpm_sp));
+  hal_data->speed_max_rpm_sp = (double) EC_READ_S32(sdo_buf);
   if (hal_data->speed_max_rpm_sp > 1e-20 || hal_data->speed_max_rpm_sp < -1e-20) {
     hal_data->speed_max_rpm_sp_rcpt = 1.0 / hal_data->speed_max_rpm_sp;
   } else {

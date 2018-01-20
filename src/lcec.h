@@ -157,7 +157,7 @@ typedef struct lcec_slave {
   lcec_slave_sdoconf_t *sdo_config;
 } lcec_slave_t;
 
-ec_sdo_request_t *lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, size_t size);
+int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, uint8_t *target, size_t size);
 
 #endif
 

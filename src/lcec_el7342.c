@@ -152,9 +152,6 @@ typedef struct {
   double dcm_old_scale;
   double dcm_scale_recip;
 
-  ec_sdo_request_t *sdo_info1_select;
-  ec_sdo_request_t *sdo_info2_select;
-
 } lcec_el7342_chan_t;
 
 typedef struct {
@@ -353,15 +350,13 @@ int lcec_el7342_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
 
     // read sdos
     // Info1 selector
-    if ((chan->sdo_info1_select = lcec_read_sdo(slave, 0x8022 + (i << 4), 0x11, 1)) == NULL) {
+    if (lcec_read_sdo(slave, 0x8022 + (i << 4), 0x11, &info1_select, 1)) {
       return -EIO;
     }
-    info1_select = EC_READ_U8(ecrt_sdo_request_data(chan->sdo_info1_select));
     // Info2 selector
-    if ((chan->sdo_info2_select = lcec_read_sdo(slave, 0x8022 + (i << 4), 0x19, 1)) == NULL) {
+    if (lcec_read_sdo(slave, 0x8022 + (i << 4), 0x19, &info2_select, 1)) {
       return -EIO;
     }
-    info2_select = EC_READ_U8(ecrt_sdo_request_data(chan->sdo_info2_select));
 
     // initialize POD entries
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x02, &chan->latch_ext_valid_pdo_os, &chan->latch_ext_valid_pdo_bp);

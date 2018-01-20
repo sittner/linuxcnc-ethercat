@@ -1137,36 +1137,24 @@ void lcec_write_master(void *arg, long period) {
   rtapi_mutex_give(&master->mutex);
 }
 
-ec_sdo_request_t *lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, size_t size) {
+int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, uint8_t *target, size_t size) {
   lcec_master_t *master = slave->master;
-  ec_sdo_request_t *sdo;
-  ec_request_state_t sdo_state;
-  long ticks_start;
+  int err;
+  size_t result_size;
+  uint32_t abort_code;
 
-  // create request
-  if (!(sdo = ecrt_slave_config_create_sdo_request(slave->config, index, subindex, size))) {
-  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to create SDO request (0x%04x:0x%02x)\n", master->name, slave->name, index, subindex);
-      return NULL;
+  if ((err = ecrt_master_sdo_upload(master->master, slave->index, index, subindex, target, size, &result_size, &abort_code))) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to execute SDO upload (0x%04x:0x%02x, error %d, abort_code %08x)\n",
+      master->name, slave->name, index, subindex, err, abort_code);
+    return -1;
   }
 
-  // set timeout
-  ecrt_sdo_request_timeout(sdo, LCEC_SDO_REQ_TIMEOUT);
-
-  // send request
-  ecrt_sdo_request_read(sdo);
-
-  // wait for completition (master's time out does not work here. why???)
-  ticks_start = lcec_get_ticks();
-  while ((sdo_state = ecrt_sdo_request_state(sdo)) == EC_REQUEST_BUSY && (lcec_get_ticks() -  ticks_start) < LCEC_SDO_REQ_TIMEOUT) {
-    lcec_schedule();
+  if (result_size != size) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Invalid result size on SDO upload (0x%04x:0x%02x, req: %ld, res: %ld)\n",
+      master->name, slave->name, index, subindex, size, result_size);
+    return -1;
   }
 
-  // check state
-  if (sdo_state != EC_REQUEST_SUCCESS) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to execute SDO request (0x%04x:0x%02x)\n", master->name, slave->name, index, subindex);
-    return NULL;
-  }
-
-  return sdo;
+  return 0;
 }
 
