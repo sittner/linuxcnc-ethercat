@@ -24,6 +24,7 @@
 #include "lcec_el2xxx.h"
 #include "lcec_el2202.h"
 #include "lcec_el31x2.h"
+#include "lcec_el3255.h"
 #include "lcec_el40x1.h"
 #include "lcec_el40x2.h"
 #include "lcec_el41x2.h"
@@ -96,6 +97,8 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL2798, LCEC_EL2xxx_VID, LCEC_EL2798_PID, LCEC_EL2798_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2809, LCEC_EL2xxx_VID, LCEC_EL2809_PID, LCEC_EL2809_PDOS, lcec_el2xxx_init},
 
+  { lcecSlaveTypeEP2028, LCEC_EL2xxx_VID, LCEC_EP2028_PID, LCEC_EP2028_PDOS, lcec_el2xxx_init},
+
   // analog in, 2ch, 16 bits
   { lcecSlaveTypeEL3102, LCEC_EL31x2_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
   { lcecSlaveTypeEL3112, LCEC_EL31x2_VID, LCEC_EL3112_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
@@ -103,6 +106,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL3142, LCEC_EL31x2_VID, LCEC_EL3142_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
   { lcecSlaveTypeEL3152, LCEC_EL31x2_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
   { lcecSlaveTypeEL3162, LCEC_EL31x2_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
+
+  // analog in, 5ch, 16 bits
+  { lcecSlaveTypeEL3255, LCEC_EL3255_VID, LCEC_EL3255_PID, LCEC_EL3255_PDOS, lcec_el3255_init},
 
   // analog out, 1ch, 12 bits
   { lcecSlaveTypeEL4001, LCEC_EL40x1_VID, LCEC_EL4001_PID, LCEC_EL40x1_PDOS, lcec_el40x1_init},
@@ -393,7 +399,6 @@ int lcec_parse_config(void) {
   lcec_generic_pin_t *generic_hal_data;
   hal_pin_dir_t generic_hal_dir;
   lcec_slave_sdoconf_t *sdo_config;
-  int i;
 
   // initialize list
   first_master = NULL;
@@ -465,6 +470,7 @@ int lcec_parse_config(void) {
         master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
         master->mutex = 0;
         master->app_time = 0;
+        master->reference_time = 0;
         master->app_time_period = master_conf->appTimePeriod;
         master->sync_ref_cnt = 0;
         master->sync_ref_cycles = master_conf->refClockSyncCycles;
@@ -524,18 +530,6 @@ int lcec_parse_config(void) {
           slave->pid = type->pid;
           slave->pdo_entry_count = type->pdo_entry_count;
           slave->proc_init = type->proc_init;
-		  
-		  //copy attributes to slave
-		  for (i=0; i<LCEC_CONF_ATTR_MAX;i++){
-			  if (slave_conf->attrs[i].attr[0]!=0){
-				strncpy(slave->attrs[i].attr, slave_conf->attrs[i].attr, LCEC_CONF_STR_MAXLEN);
-				slave->attrs[i].attr[LCEC_CONF_STR_MAXLEN - 1] = 0;
-				slave->attrs[i].val=slave_conf->attrs[i].val;
-			  }
-			  else{
-				  strcpy(slave->attrs[i].attr,"");
-			  }
-		  }
         } else {
           // generic slave
           slave->vid = slave_conf->vid;
@@ -774,7 +768,6 @@ int lcec_parse_config(void) {
           generic_hal_data->dir = generic_hal_dir;
           generic_hal_data->pdo_idx = pe_conf->index;
           generic_hal_data->pdo_sidx = pe_conf->subindex;
-          generic_hal_data->pdo_len = pe_conf->bitLength;
           generic_hal_data++;
         }
 
@@ -812,7 +805,6 @@ int lcec_parse_config(void) {
           generic_hal_data->dir = generic_hal_dir;
           generic_hal_data->pdo_idx = pe_conf->index;
           generic_hal_data->pdo_sidx = pe_conf->subindex;
-          generic_hal_data->pdo_len = pe_conf->bitLength;
           generic_hal_data++;
         }
         break;
@@ -1123,7 +1115,11 @@ void lcec_write_master(void *arg, long period) {
 
   // send process data
   rtapi_mutex_get(&master->mutex);
-
+  
+  
+  // update application time
+  master->app_time += master->app_time_period;
+/*
   // update application time
   master->app_time += master->app_time_period;
   ecrt_master_application_time(master->master, master->app_time);
@@ -1139,7 +1135,22 @@ void lcec_write_master(void *arg, long period) {
 
   // sync slaves to ref clock
   ecrt_master_sync_slave_clocks(master->master);
-
+*/if (master->reference_time == 0)
+  {
+    ecrt_master_reference_clock_time(master->master, &master->reference_time); //consigo el tiempo del reference clock y lo guardo en master->reference_time
+    master->app_time = master->reference_time; 
+  }
+  else
+  {
+      ecrt_master_reference_clock_time(master->master, &master->reference_time); //consigo el tiempo del reference clock y lo guardo en master->reference_time
+  }
+  ecrt_master_sync_slave_clocks(master->master); // sync slaves to ref clock
+  ecrt_master_application_time(master->master, master->reference_time+master->app_time_period); 
+  
+  
+  
+  
+  
   // send domain data
   ecrt_domain_queue(master->domain);
   ecrt_master_send(master->master);
