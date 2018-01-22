@@ -470,7 +470,6 @@ int lcec_parse_config(void) {
         master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
         master->mutex = 0;
         master->app_time = 0;
-        master->reference_time = 0;
         master->app_time_period = master_conf->appTimePeriod;
         master->sync_ref_cnt = 0;
         master->sync_ref_cycles = master_conf->refClockSyncCycles;
@@ -1115,11 +1114,7 @@ void lcec_write_master(void *arg, long period) {
 
   // send process data
   rtapi_mutex_get(&master->mutex);
-  
-  
-  // update application time
-  master->app_time += master->app_time_period;
-/*
+
   // update application time
   master->app_time += master->app_time_period;
   ecrt_master_application_time(master->master, master->app_time);
@@ -1135,22 +1130,7 @@ void lcec_write_master(void *arg, long period) {
 
   // sync slaves to ref clock
   ecrt_master_sync_slave_clocks(master->master);
-*/if (master->reference_time == 0)
-  {
-    ecrt_master_reference_clock_time(master->master, &master->reference_time); //consigo el tiempo del reference clock y lo guardo en master->reference_time
-    master->app_time = master->reference_time; 
-  }
-  else
-  {
-      ecrt_master_reference_clock_time(master->master, &master->reference_time); //consigo el tiempo del reference clock y lo guardo en master->reference_time
-  }
-  ecrt_master_sync_slave_clocks(master->master); // sync slaves to ref clock
-  ecrt_master_application_time(master->master, master->reference_time+master->app_time_period); 
-  
-  
-  
-  
-  
+
   // send domain data
   ecrt_domain_queue(master->domain);
   ecrt_master_send(master->master);
