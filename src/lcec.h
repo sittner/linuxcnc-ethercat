@@ -109,6 +109,7 @@ typedef struct lcec_master {
   uint32_t app_time_period;
   int sync_ref_cnt;
   int sync_ref_cycles;
+  uint32_t reference_time;
 } lcec_master_t;
 
 typedef struct {
