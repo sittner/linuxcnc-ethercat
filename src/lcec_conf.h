@@ -163,9 +163,9 @@ typedef struct {
   LCEC_CONF_TYPE_T confType;
   uint16_t assignActivate;
   uint32_t sync0Cycle;
-  uint32_t sync0Shift;
+  int32_t sync0Shift;
   uint32_t sync1Cycle;
-  uint32_t sync1Shift;
+  int32_t sync1Shift;
 } LCEC_CONF_DC_T;
 
 typedef struct {

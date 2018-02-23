@@ -114,9 +114,9 @@ typedef struct lcec_master {
 typedef struct {
   uint16_t assignActivate;
   uint32_t sync0Cycle;
-  uint32_t sync0Shift;
+  int32_t sync0Shift;
   uint32_t sync1Cycle;
-  uint32_t sync1Shift;
+  int32_t sync1Shift;
 } lcec_slave_dc_t;
 
 typedef struct {
