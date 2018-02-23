@@ -157,54 +157,54 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 };
 
 char *modname = "lcec_conf";
-int hal_comp_id;
-LCEC_CONF_HAL_T *conf_hal_data;
+static int hal_comp_id;
+static LCEC_CONF_HAL_T *conf_hal_data;
 
-int exitEvent;
+static int exitEvent;
 
-XML_Parser parser;
-int currConfType;
+static XML_Parser parser;
+static int currConfType;
 
 typedef struct LCEC_CONF_OUTBUF_ITEM {
   size_t len;
   struct LCEC_CONF_OUTBUF_ITEM *next;
 } LCEC_CONF_OUTBUF_ITEM_T;
 
-LCEC_CONF_OUTBUF_ITEM_T *outputBuffer;
-LCEC_CONF_OUTBUF_ITEM_T *outputBufferLast;
-size_t outputBufferLen;
+static LCEC_CONF_OUTBUF_ITEM_T *outputBuffer;
+static LCEC_CONF_OUTBUF_ITEM_T *outputBufferLast;
+static size_t outputBufferLen;
 
-LCEC_CONF_MASTER_T *currMaster;
-LCEC_CONF_SLAVE_T *currSlave;
-LCEC_CONF_SYNCMANAGER_T *currSyncManager;
-LCEC_CONF_PDO_T *currPdo;
-LCEC_CONF_SDOCONF_T *currSdoConf;
-LCEC_CONF_IDNCONF_T *currIdnConf;
-LCEC_CONF_PDOENTRY_T *currPdoEntry;
-uint8_t currComplexBitOffset;
+static LCEC_CONF_MASTER_T *currMaster;
+static LCEC_CONF_SLAVE_T *currSlave;
+static LCEC_CONF_SYNCMANAGER_T *currSyncManager;
+static LCEC_CONF_PDO_T *currPdo;
+static LCEC_CONF_SDOCONF_T *currSdoConf;
+static LCEC_CONF_IDNCONF_T *currIdnConf;
+static LCEC_CONF_PDOENTRY_T *currPdoEntry;
+static uint8_t currComplexBitOffset;
 
-int shmem_id;
+static int shmem_id;
 
-void xml_start_handler(void *data, const char *el, const char **attr);
-void xml_end_handler(void *data, const char *el);
+static void xml_start_handler(void *data, const char *el, const char **attr);
+static void xml_end_handler(void *data, const char *el);
 
 void *addOutputBuffer(size_t len);
 
-int parseHexdump(const char *str, uint8_t *buf);
+static int parseHexdump(const char *str, uint8_t *buf);
 
-void parseMasterAttrs(const char **attr);
-void parseSlaveAttrs(const char **attr);
-void parseDcConfAttrs(const char **attr);
-void parseWatchdogAttrs(const char **attr);
-void parseSdoConfigAttrs(const char **attr);
-void parseIdnConfigAttrs(const char **attr);
-void parseDataRawAttrs(const char **attr, int parentConfType);
-void parseSyncManagerAttrs(const char **attr);
-void parsePdoAttrs(const char **attr);
-void parsePdoEntryAttrs(const char **attr);
-void parseComplexEntryAttrs(const char **attr);
+static void parseMasterAttrs(const char **attr);
+static void parseSlaveAttrs(const char **attr);
+static void parseDcConfAttrs(const char **attr);
+static void parseWatchdogAttrs(const char **attr);
+static void parseSdoConfigAttrs(const char **attr);
+static void parseIdnConfigAttrs(const char **attr);
+static void parseDataRawAttrs(const char **attr, int parentConfType);
+static void parseSyncManagerAttrs(const char **attr);
+static void parsePdoAttrs(const char **attr);
+static void parsePdoEntryAttrs(const char **attr);
+static void parseComplexEntryAttrs(const char **attr);
 
-int parseSyncCycle(const char *nptr);
+static int parseSyncCycle(const char *nptr);
 
 static void exitHandler(int sig) {
   uint64_t u = 1;
@@ -377,7 +377,7 @@ fail0:
   return ret;
 }
 
-void xml_start_handler(void *data, const char *el, const char **attr) {
+static void xml_start_handler(void *data, const char *el, const char **attr) {
   switch (currConfType) {
     case lcecConfTypeNone:
       if (strcmp(el, "masters") == 0) {
@@ -467,7 +467,7 @@ void xml_start_handler(void *data, const char *el, const char **attr) {
   XML_StopParser(parser, 0);
 }
 
-void xml_end_handler(void *data, const char *el) {
+static void xml_end_handler(void *data, const char *el) {
   switch (currConfType) {
     case lcecConfTypeMasters:
       if (strcmp(el, "masters") == 0) {
@@ -558,7 +558,6 @@ void *addOutputBuffer(size_t len) {
   void *p = calloc(1, sizeof(LCEC_CONF_OUTBUF_ITEM_T) + len);
   if (p == NULL) {
     fprintf(stderr, "%s: ERROR: Couldn't allocate memory for config token\n", modname);
-    XML_StopParser(parser, 0);
     return NULL;
   }
 
@@ -580,7 +579,7 @@ void *addOutputBuffer(size_t len) {
   return p;
 }
 
-int parseHexdump(const char *str, uint8_t *buf) {
+static int parseHexdump(const char *str, uint8_t *buf) {
   char c;
   int len = 0;
   int nib = 0;
@@ -626,9 +625,10 @@ int parseHexdump(const char *str, uint8_t *buf) {
   }
 }
 
-void parseMasterAttrs(const char **attr) {
+static void parseMasterAttrs(const char **attr) {
   LCEC_CONF_MASTER_T *p = addOutputBuffer(sizeof(LCEC_CONF_MASTER_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -677,9 +677,10 @@ void parseMasterAttrs(const char **attr) {
   currMaster = p;
 }
 
-void parseSlaveAttrs(const char **attr) {
+static void parseSlaveAttrs(const char **attr) {
   LCEC_CONF_SLAVE_T *p = addOutputBuffer(sizeof(LCEC_CONF_SLAVE_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -762,9 +763,10 @@ void parseSlaveAttrs(const char **attr) {
   currSlave = p;
 }
 
-void parseDcConfAttrs(const char **attr) {
+static void parseDcConfAttrs(const char **attr) {
   LCEC_CONF_DC_T *p = addOutputBuffer(sizeof(LCEC_CONF_DC_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -810,9 +812,10 @@ void parseDcConfAttrs(const char **attr) {
   }
 }
 
-void parseWatchdogAttrs(const char **attr) {
+static void parseWatchdogAttrs(const char **attr) {
   LCEC_CONF_WATCHDOG_T *p = addOutputBuffer(sizeof(LCEC_CONF_WATCHDOG_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -840,10 +843,11 @@ void parseWatchdogAttrs(const char **attr) {
   }
 }
 
-void parseSdoConfigAttrs(const char **attr) {
+static void parseSdoConfigAttrs(const char **attr) {
   int tmp;
   LCEC_CONF_SDOCONF_T *p = addOutputBuffer(sizeof(LCEC_CONF_SDOCONF_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -906,10 +910,11 @@ void parseSdoConfigAttrs(const char **attr) {
   currSlave->sdoConfigLength += sizeof(LCEC_CONF_SDOCONF_T);
 }
 
-void parseIdnConfigAttrs(const char **attr) {
+static void parseIdnConfigAttrs(const char **attr) {
   int tmp;
   LCEC_CONF_IDNCONF_T *p = addOutputBuffer(sizeof(LCEC_CONF_IDNCONF_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -1020,7 +1025,7 @@ void parseIdnConfigAttrs(const char **attr) {
   currSlave->idnConfigLength += sizeof(LCEC_CONF_IDNCONF_T);
 }
 
-void parseDataRawAttrs(const char **attr, int parentConfType) {
+static void parseDataRawAttrs(const char **attr, int parentConfType) {
   int len;
   uint8_t *p;
 
@@ -1062,10 +1067,11 @@ void parseDataRawAttrs(const char **attr, int parentConfType) {
   }
 }
 
-void parseSyncManagerAttrs(const char **attr) {
+static void parseSyncManagerAttrs(const char **attr) {
   int tmp;
   LCEC_CONF_SYNCMANAGER_T *p = addOutputBuffer(sizeof(LCEC_CONF_SYNCMANAGER_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -1127,10 +1133,11 @@ void parseSyncManagerAttrs(const char **attr) {
   currSyncManager = p;
 }
 
-void parsePdoAttrs(const char **attr) {
+static void parsePdoAttrs(const char **attr) {
   int tmp;
   LCEC_CONF_PDO_T *p = addOutputBuffer(sizeof(LCEC_CONF_PDO_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -1170,11 +1177,12 @@ void parsePdoAttrs(const char **attr) {
   currPdo = p;
 }
 
-void parsePdoEntryAttrs(const char **attr) {
+static void parsePdoEntryAttrs(const char **attr) {
   int tmp;
   int floatReq;
   LCEC_CONF_PDOENTRY_T *p = addOutputBuffer(sizeof(LCEC_CONF_PDOENTRY_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -1328,11 +1336,12 @@ void parsePdoEntryAttrs(const char **attr) {
   currComplexBitOffset = 0;
 }
 
-void parseComplexEntryAttrs(const char **attr) {
+static void parseComplexEntryAttrs(const char **attr) {
   int tmp;
   int floatReq;
   LCEC_CONF_COMPLEXENTRY_T *p = addOutputBuffer(sizeof(LCEC_CONF_COMPLEXENTRY_T));
   if (p == NULL) {
+    XML_StopParser(parser, 0);
     return;
   }
 
@@ -1440,7 +1449,7 @@ void parseComplexEntryAttrs(const char **attr) {
   currComplexBitOffset += p->bitLength;
 }
 
-int parseSyncCycle(const char *nptr) {
+static int parseSyncCycle(const char *nptr) {
   // chack for master period multiples
   if (*nptr == '*') {
     nptr++;
