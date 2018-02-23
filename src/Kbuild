@@ -16,6 +16,7 @@ lcec-objs := \
     lcec_el5151.o \
     lcec_el5152.o \
     lcec_el7041_1000.o \
+    lcec_el7211.o \
     lcec_el7342.o \
     lcec_el95xx.o \
     lcec_em7004.o \
