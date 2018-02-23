@@ -10,8 +10,8 @@ install: lcec_conf
 	mkdir -p $(DESTDIR)$(EMC2_HOME)/bin
 	cp lcec_conf $(DESTDIR)$(EMC2_HOME)/bin/
 
-lcec_conf: lcec_conf.o
-	$(CC) -o $@ $< -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lexpat
+lcec_conf: lcec_conf.o lcec_conf_icmds.o
+	$(CC) -o $@ lcec_conf.o lcec_conf_icmds.o -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lexpat
 
 %.o: %.c
 	$(CC) -o $@ $(EXTRA_CFLAGS) -URTAPI -U__MODULE__ -DULAPI -Os -c $<

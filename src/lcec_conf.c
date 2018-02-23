@@ -199,12 +199,15 @@ static void parseWatchdogAttrs(const char **attr);
 static void parseSdoConfigAttrs(const char **attr);
 static void parseIdnConfigAttrs(const char **attr);
 static void parseDataRawAttrs(const char **attr, int parentConfType);
+static void parseInitCmdsAttrs(const char **attr);
 static void parseSyncManagerAttrs(const char **attr);
 static void parsePdoAttrs(const char **attr);
 static void parsePdoEntryAttrs(const char **attr);
 static void parseComplexEntryAttrs(const char **attr);
 
 static int parseSyncCycle(const char *nptr);
+
+extern int parseIcmds(LCEC_CONF_SLAVE_T *slave, const char *filename);
 
 static void exitHandler(int sig) {
   uint64_t u = 1;
@@ -420,6 +423,11 @@ static void xml_start_handler(void *data, const char *el, const char **attr) {
         parseIdnConfigAttrs(attr);
         return;
       }
+      if (strcmp(el, "initCmds") == 0) {
+        currConfType = lcecConfTypeInitCmds;
+        parseInitCmdsAttrs(attr);
+        return;
+      }
       if (currSlave->type == lcecSlaveTypeGeneric && strcmp(el, "syncManager") == 0) {
         currConfType = lcecConfTypeSyncManager;
         parseSyncManagerAttrs(attr);
@@ -523,6 +531,11 @@ static void xml_end_handler(void *data, const char *el) {
         return;
       }
       break;
+    case lcecConfTypeInitCmds:
+      if (strcmp(el, "initCmds") == 0) {
+        currConfType = lcecConfTypeSlave;
+        return;
+      }
     case lcecConfTypeSyncManager:
       if (strcmp(el, "syncManager") == 0) {
         currConfType = lcecConfTypeSlave;
@@ -1062,6 +1075,39 @@ static void parseDataRawAttrs(const char **attr, int parentConfType) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid pdoEntry attribute %s\n", modname, name);
+    XML_StopParser(parser, 0);
+    return;
+  }
+}
+
+static void parseInitCmdsAttrs(const char **attr) {
+  const char *filename = NULL;
+
+  while (*attr) {
+    const char *name = *(attr++);
+    const char *val = *(attr++);
+
+    // parse filename
+    if (strcmp(name, "filename") == 0) {
+      filename = val;
+      continue;
+    }
+
+    // handle error
+    fprintf(stderr, "%s: ERROR: Invalid syncManager attribute %s\n", modname, name);
+    XML_StopParser(parser, 0);
+    return;
+  }
+
+  // filename is required
+  if (filename == NULL || *filename == 0) {
+    fprintf(stderr, "%s: ERROR: initCmds has no filename attribute\n", modname);
+    XML_StopParser(parser, 0);
+    return;
+  }
+
+  // try to parse initCmds
+  if (parseIcmds(currSlave, filename)) {
     XML_StopParser(parser, 0);
     return;
   }

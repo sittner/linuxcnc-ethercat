@@ -46,6 +46,7 @@ typedef enum {
   lcecConfTypeSdoDataRaw,
   lcecConfTypeIdnConfig,
   lcecConfTypeIdnDataRaw,
+  lcecConfTypeInitCmds,
   lcecConfTypeComplexEntry
 } LCEC_CONF_TYPE_T;
 
