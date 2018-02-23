@@ -195,6 +195,7 @@ int rtapi_app_main(void) {
   char name[HAL_NAME_LEN + 1];
   ec_pdo_entry_reg_t *pdo_entry_regs;
   lcec_slave_sdoconf_t *sdo_config;
+  lcec_slave_idnconf_t *idn_config;
   struct timeval tv;
 
   // connect to the HAL
@@ -252,6 +253,16 @@ int rtapi_app_main(void) {
             if (ecrt_slave_config_sdo(slave->config, sdo_config->index, sdo_config->subindex, &sdo_config->data[0], sdo_config->length) != 0) {
               rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo %04x:%02x\n", master->name, slave->name, sdo_config->index, sdo_config->subindex);
             }
+          }
+        }
+      }
+
+      // initialize idns
+      if (slave->idn_config != NULL) {
+        for (idn_config = slave->idn_config; idn_config->state != 0; idn_config = (lcec_slave_idnconf_t *) &idn_config->data[idn_config->length]) {
+          if (ecrt_slave_config_idn(slave->config, idn_config->drive, idn_config->idn, idn_config->state, &idn_config->data[0], idn_config->length) != 0) {
+            rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s drive %d idn %c-%d-%d (state %d, length %d)\n", master->name, slave->name, idn_config->drive,
+              (idn_config->idn & 0x8000) ? 'P' : 'S', (idn_config->idn >> 12) & 0x0007, idn_config->idn & 0x0fff, idn_config->state, idn_config->length);
           }
         }
       }
@@ -397,12 +408,14 @@ int lcec_parse_config(void) {
   LCEC_CONF_PDOENTRY_T *pe_conf;
   LCEC_CONF_COMPLEXENTRY_T *ce_conf;
   LCEC_CONF_SDOCONF_T *sdo_conf;
+  LCEC_CONF_IDNCONF_T *idn_conf;
   ec_pdo_entry_info_t *generic_pdo_entries;
   ec_pdo_info_t *generic_pdos;
   ec_sync_info_t *generic_sync_managers;
   lcec_generic_pin_t *generic_hal_data;
   hal_pin_dir_t generic_hal_dir;
   lcec_slave_sdoconf_t *sdo_config;
+  lcec_slave_idnconf_t *idn_config;
 
   // initialize list
   first_master = NULL;
@@ -452,6 +465,7 @@ int lcec_parse_config(void) {
   generic_hal_data = NULL;
   generic_hal_dir = 0;
   sdo_config = NULL;
+  idn_config = NULL;
   pe_conf = NULL;
   while((conf_type = ((LCEC_CONF_NULL_T *)conf)->confType) != lcecConfTypeNone) {
     // get type
@@ -518,6 +532,7 @@ int lcec_parse_config(void) {
         generic_hal_data = NULL;
         generic_hal_dir = 0;
         sdo_config = NULL;
+        idn_config = NULL;
 
         slave->index = slave_conf->index;
         strncpy(slave->name, slave_conf->name, LCEC_CONF_STR_MAXLEN);
@@ -574,7 +589,16 @@ int lcec_parse_config(void) {
         if (slave_conf->sdoConfigLength > 0) {
           sdo_config = lcec_zalloc(slave_conf->sdoConfigLength + sizeof(lcec_slave_sdoconf_t));
           if (sdo_config == NULL) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic pdo entry memory\n", master->name, slave_conf->name);
+            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s sdo entry memory\n", master->name, slave_conf->name);
+            goto fail2;
+          }
+        }
+
+        // alloc idn config memory
+        if (slave_conf->idnConfigLength > 0) {
+          idn_config = lcec_zalloc(slave_conf->idnConfigLength + sizeof(lcec_slave_idnconf_t));
+          if (idn_config == NULL) {
+            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s idn entry memory\n", master->name, slave_conf->name);
             goto fail2;
           }
         }
@@ -587,6 +611,7 @@ int lcec_parse_config(void) {
           slave->sync_info = generic_sync_managers;
         }
         slave->sdo_config = sdo_config;
+        slave->idn_config = idn_config;
         slave->dc_conf = NULL;
         slave->wd_conf = NULL;
 
@@ -829,6 +854,23 @@ int lcec_parse_config(void) {
         sdo_config->index = 0xffff;
         break;
 
+      case lcecConfTypeIdnConfig:
+        // get config token
+        idn_conf = (LCEC_CONF_IDNCONF_T *)conf;
+        conf += sizeof(LCEC_CONF_IDNCONF_T) + idn_conf->length;
+
+        // copy attributes
+        idn_config->drive = idn_conf->drive;
+        idn_config->idn = idn_conf->idn;
+        idn_config->state = idn_conf->state;
+        idn_config->length = idn_conf->length;
+
+        // copy data
+        memcpy(idn_config->data, idn_conf->data, idn_config->length);
+
+        idn_config = (lcec_slave_idnconf_t *) &idn_config->data[idn_config->length];
+        break;
+
       default:
         rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unknown config item type\n");
         goto fail2;
@@ -880,6 +922,9 @@ void lcec_clear_config(void) {
       // free slave
       if (slave->sdo_config != NULL) {
         lcec_free(slave->sdo_config);
+      }
+      if (slave->idn_config != NULL) {
+        lcec_free(slave->idn_config);
       }
       if (slave->generic_pdo_entries != NULL) {
         lcec_free(slave->generic_pdo_entries);

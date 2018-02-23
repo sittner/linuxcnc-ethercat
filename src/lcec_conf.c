@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 #include <expat.h>
 #include <signal.h>
 #include <sys/eventfd.h>
@@ -178,6 +179,7 @@ LCEC_CONF_SLAVE_T *currSlave;
 LCEC_CONF_SYNCMANAGER_T *currSyncManager;
 LCEC_CONF_PDO_T *currPdo;
 LCEC_CONF_SDOCONF_T *currSdoConf;
+LCEC_CONF_IDNCONF_T *currIdnConf;
 LCEC_CONF_PDOENTRY_T *currPdoEntry;
 uint8_t currComplexBitOffset;
 
@@ -195,7 +197,8 @@ void parseSlaveAttrs(const char **attr);
 void parseDcConfAttrs(const char **attr);
 void parseWatchdogAttrs(const char **attr);
 void parseSdoConfigAttrs(const char **attr);
-void parseSdoDataRawAttrs(const char **attr);
+void parseIdnConfigAttrs(const char **attr);
+void parseDataRawAttrs(const char **attr, int parentConfType);
 void parseSyncManagerAttrs(const char **attr);
 void parsePdoAttrs(const char **attr);
 void parsePdoEntryAttrs(const char **attr);
@@ -290,6 +293,7 @@ int main(int argc, char **argv) {
   currSyncManager = NULL;
   currPdo = NULL;
   currSdoConf = NULL;
+  currIdnConf = NULL;
   currPdoEntry = NULL;
   currComplexBitOffset = 0;
   for (done=0; !done;) {
@@ -411,6 +415,11 @@ void xml_start_handler(void *data, const char *el, const char **attr) {
         parseSdoConfigAttrs(attr);
         return;
       }
+      if (strcmp(el, "idnConfig") == 0) {
+        currConfType = lcecConfTypeIdnConfig;
+        parseIdnConfigAttrs(attr);
+        return;
+      }
       if (currSlave->type == lcecSlaveTypeGeneric && strcmp(el, "syncManager") == 0) {
         currConfType = lcecConfTypeSyncManager;
         parseSyncManagerAttrs(attr);
@@ -420,7 +429,14 @@ void xml_start_handler(void *data, const char *el, const char **attr) {
     case lcecConfTypeSdoConfig:
       if (strcmp(el, "sdoDataRaw") == 0) {
         currConfType = lcecConfTypeSdoDataRaw;
-        parseSdoDataRawAttrs(attr);
+        parseDataRawAttrs(attr, lcecConfTypeSdoConfig);
+        return;
+      }
+      break;
+    case lcecConfTypeIdnConfig:
+      if (strcmp(el, "idnDataRaw") == 0) {
+        currConfType = lcecConfTypeIdnDataRaw;
+        parseDataRawAttrs(attr, lcecConfTypeIdnConfig);
         return;
       }
       break;
@@ -492,6 +508,18 @@ void xml_end_handler(void *data, const char *el) {
     case lcecConfTypeSdoDataRaw:
       if (strcmp(el, "sdoDataRaw") == 0) {
         currConfType = lcecConfTypeSdoConfig;
+        return;
+      }
+      break;
+    case lcecConfTypeIdnConfig:
+      if (strcmp(el, "idnConfig") == 0) {
+        currConfType = lcecConfTypeSlave;
+        return;
+      }
+      break;
+    case lcecConfTypeIdnDataRaw:
+      if (strcmp(el, "idnDataRaw") == 0) {
+        currConfType = lcecConfTypeIdnConfig;
         return;
       }
       break;
@@ -878,7 +906,121 @@ void parseSdoConfigAttrs(const char **attr) {
   currSlave->sdoConfigLength += sizeof(LCEC_CONF_SDOCONF_T);
 }
 
-void parseSdoDataRawAttrs(const char **attr) {
+void parseIdnConfigAttrs(const char **attr) {
+  int tmp;
+  LCEC_CONF_IDNCONF_T *p = addOutputBuffer(sizeof(LCEC_CONF_IDNCONF_T));
+  if (p == NULL) {
+    return;
+  }
+
+  p->confType = lcecConfTypeIdnConfig;
+  p->drive = 0;
+  p->idn = 0xffff;
+  p->state = 0;
+  while (*attr) {
+    const char *name = *(attr++);
+    const char *val = *(attr++);
+
+    // parse index
+    if (strcmp(name, "drive") == 0) {
+      tmp = atoi(val);
+      if (tmp < 0 || tmp > 7) {
+        fprintf(stderr, "%s: ERROR: Invalid idnConfig drive %d\n", modname, tmp);
+        XML_StopParser(parser, 0);
+        return;
+      }
+
+      p->drive = tmp;
+      continue;
+    }
+
+    // parse idn
+    if (strcmp(name, "idn") == 0) {
+      char pfx = val[0];
+      if (pfx == 0) {
+        fprintf(stderr, "%s: ERROR: Missing idnConfig idn value\n", modname);
+        XML_StopParser(parser, 0);
+        return;
+      }
+
+      pfx = toupper(pfx);
+
+      tmp = 0xffff;
+      if (pfx == 'S' || pfx == 'P') {
+        int set;
+        int block;
+	if (sscanf(val, "%c-%d-%d", &pfx, &set, &block) == 3) {
+          if (set < 0 || set >= (1 << 3)) {
+            fprintf(stderr, "%s: ERROR: Invalid idnConfig idn set %d\n", modname, set);
+            XML_StopParser(parser, 0);
+            return;
+          }
+
+          if (block < 0 || block >= (1 << 12)) {
+            fprintf(stderr, "%s: ERROR: Invalid idnConfig idn block %d\n", modname, block);
+            XML_StopParser(parser, 0);
+            return;
+          }
+
+          tmp = (set << 12) | block;
+          if (pfx == 'P') {
+            tmp |= (15 << 1);
+          }
+        }
+      } else if (pfx >= '0' && pfx <= '9') {
+        tmp = atoi(val);
+      }
+
+      if (tmp == 0xffff) {
+        fprintf(stderr, "%s: ERROR: Invalid idnConfig idn value '%s'\n", modname, val);
+        XML_StopParser(parser, 0);
+        return;
+      }
+
+      p->idn = tmp;
+      continue;
+    }
+
+    // parse state
+    if (strcmp(name, "drive") == 0) {
+      if (strcmp(val, "PREOP") == 0) {
+        p->state = EC_AL_STATE_PREOP;
+      } else if (strcmp(val, "SAFEOP") == 0) {
+        p->state = EC_AL_STATE_SAFEOP;
+      } else {
+        fprintf(stderr, "%s: ERROR: Invalid idnConfig state '%s'\n", modname, val);
+        XML_StopParser(parser, 0);
+        return;
+      }
+
+      continue;
+    }
+
+    // handle error
+    fprintf(stderr, "%s: ERROR: Invalid idnConfig attribute %s\n", modname, name);
+    XML_StopParser(parser, 0);
+    return;
+  }
+
+  // idn is required
+  if (p->idn == 0xffff) {
+    fprintf(stderr, "%s: ERROR: idnConfig has no idn attribute\n", modname);
+    XML_StopParser(parser, 0);
+    return;
+  }
+
+  // state is required
+  if (p->state == 0) {
+    fprintf(stderr, "%s: ERROR: idnConfig has no state attribute\n", modname);
+    XML_StopParser(parser, 0);
+    return;
+  }
+
+  currIdnConf = p;
+  currSlave->idnConfigLength += sizeof(LCEC_CONF_IDNCONF_T);
+}
+
+void parseDataRawAttrs(const char **attr, int parentConfType) {
   int len;
   uint8_t *p;
 
@@ -898,8 +1040,16 @@ void parseSdoDataRawAttrs(const char **attr) {
         p = (uint8_t *) addOutputBuffer(len);
         if (p != NULL) {
           parseHexdump(val, p);
-          currSdoConf->length += len;
-          currSlave->sdoConfigLength += len;
+          switch (parentConfType) {
+            case lcecConfTypeSdoConfig:
+              currSdoConf->length += len;
+              currSlave->sdoConfigLength += len;
+              break;
+            case lcecConfTypeIdnConfig:
+              currIdnConf->length += len;
+              currSlave->idnConfigLength += len;
+              break;
+          }
         }
       }
       continue;

@@ -44,6 +44,8 @@ typedef enum {
   lcecConfTypePdoEntry,
   lcecConfTypeSdoConfig,
   lcecConfTypeSdoDataRaw,
+  lcecConfTypeIdnConfig,
+  lcecConfTypeIdnDataRaw,
   lcecConfTypeComplexEntry
 } LCEC_CONF_TYPE_T;
 
@@ -156,6 +158,7 @@ typedef struct {
   unsigned int pdoEntryCount;
   unsigned int pdoMappingCount;
   size_t sdoConfigLength;
+  size_t idnConfigLength;
   char name[LCEC_CONF_STR_MAXLEN];
 } LCEC_CONF_SLAVE_T;
 
@@ -221,5 +224,14 @@ typedef struct {
   size_t length;
   uint8_t data[];
 } LCEC_CONF_SDOCONF_T;
+
+typedef struct {
+  LCEC_CONF_TYPE_T confType;
+  uint8_t drive;
+  uint16_t idn;
+  ec_al_state_t state;
+  size_t length;
+  uint8_t data[];
+} LCEC_CONF_IDNCONF_T;
 
 #endif
