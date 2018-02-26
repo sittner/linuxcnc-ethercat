@@ -114,9 +114,9 @@ typedef struct lcec_master {
 typedef struct {
   uint16_t assignActivate;
   uint32_t sync0Cycle;
-  uint32_t sync0Shift;
+  int32_t sync0Shift;
   uint32_t sync1Cycle;
-  uint32_t sync1Shift;
+  int32_t sync1Shift;
 } lcec_slave_dc_t;
 
 typedef struct {
@@ -130,6 +130,14 @@ typedef struct {
   size_t length;
   uint8_t data[];
 } lcec_slave_sdoconf_t;
+
+typedef struct {
+  uint8_t drive;
+  uint16_t idn;
+  ec_al_state_t state;
+  size_t length;
+  uint8_t data[];
+} lcec_slave_idnconf_t;
 
 typedef struct lcec_slave {
   struct lcec_slave *prev;
@@ -155,6 +163,7 @@ typedef struct lcec_slave {
   ec_pdo_info_t *generic_pdos;
   ec_sync_info_t *generic_sync_managers;
   lcec_slave_sdoconf_t *sdo_config;
+  lcec_slave_idnconf_t *idn_config;
 } lcec_slave_t;
 
 int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, uint8_t *target, size_t size);
