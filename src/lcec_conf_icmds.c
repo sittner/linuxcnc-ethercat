@@ -21,18 +21,12 @@
 #include <string.h>
 #include <ctype.h>
 #include <expat.h>
-#include <signal.h>
-#include <sys/eventfd.h>
 
 #include "lcec_conf.h"
-
-#define BUFFSIZE 8192
-
-extern char *modname;
-extern void *addOutputBuffer(size_t len);
+#include "lcec_conf_priv.h"
 
 typedef enum {
-  icmdTypeNone,
+  icmdTypeNone = 0,
   icmdTypeMailbox,
   icmdTypeCoe,
   icmdTypeCoeIcmds,
@@ -58,26 +52,59 @@ typedef enum {
   icmdTypeSoeIcmdData
 } LCEC_ICMD_TYPE_T;
 
-static LCEC_CONF_SLAVE_T *currSlave;
+typedef struct {
+  LCEC_CONF_XML_INST_T xml;
 
-static XML_Parser parser;
+  LCEC_CONF_SLAVE_T *currSlave;
+  LCEC_CONF_OUTBUF_T *outputBuf;
 
-static int currIcmdType;
-static LCEC_CONF_SDOCONF_T *currSdoConf;
-static LCEC_CONF_IDNCONF_T *currIdnConf;
+  LCEC_CONF_SDOCONF_T *currSdoConf;
+  LCEC_CONF_IDNCONF_T *currIdnConf;
+} LCEC_CONF_ICMDS_STATE_T;
 
-static long int parse_int(const char *s, int len, long int min, long int max);
-static int parse_data(const char *s, int len);
-
-static void xml_start_handler(void *data, const char *el, const char **attr);
-static void xml_end_handler(void *data, const char *el);
 static void xml_data_handler(void *data, const XML_Char *s, int len);
 
-int parseIcmds(LCEC_CONF_SLAVE_T *slave, const char *filename) {
+static void icmdTypeCoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void icmdTypeCoeIcmdEnd(LCEC_CONF_XML_INST_T *inst, int next);
+static void icmdTypeSoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void icmdTypeSoeIcmdEnd(LCEC_CONF_XML_INST_T *inst, int next);
+
+static const LCEC_CONF_XML_HANLDER_T xml_states[] = {
+  { "EtherCATMailbox", icmdTypeNone, icmdTypeMailbox, NULL, NULL },
+  { "CoE", icmdTypeMailbox, icmdTypeCoe, NULL, NULL },
+  { "InitCmds", icmdTypeCoe, icmdTypeCoeIcmds, NULL, NULL },
+  { "InitCmd", icmdTypeCoeIcmds, icmdTypeCoeIcmd, icmdTypeCoeIcmdStart, icmdTypeCoeIcmdEnd },
+  { "Transition", icmdTypeCoeIcmd, icmdTypeCoeIcmdTrans, NULL, NULL },
+  { "Comment", icmdTypeCoeIcmd, icmdTypeCoeIcmdComment, NULL, NULL },
+  { "Timeout", icmdTypeCoeIcmd, icmdTypeCoeIcmdTimeout, NULL, NULL },
+  { "Ccs", icmdTypeCoeIcmd, icmdTypeCoeIcmdCcs, NULL, NULL },
+  { "Index", icmdTypeCoeIcmd, icmdTypeCoeIcmdIndex, NULL, NULL },
+  { "SubIndex", icmdTypeCoeIcmd, icmdTypeCoeIcmdSubindex, NULL, NULL },
+  { "Data", icmdTypeCoeIcmd, icmdTypeCoeIcmdData, NULL, NULL },
+  { "SoE", icmdTypeMailbox, icmdTypeSoe, NULL, NULL },
+  { "InitCmds", icmdTypeSoe, icmdTypeSoeIcmds, NULL, NULL },
+  { "InitCmd", icmdTypeSoeIcmds, icmdTypeSoeIcmd, icmdTypeSoeIcmdStart, icmdTypeSoeIcmdEnd },
+  { "Transition", icmdTypeSoeIcmd, icmdTypeSoeIcmdTrans, NULL, NULL },
+  { "Comment", icmdTypeSoeIcmd, icmdTypeSoeIcmdComment, NULL, NULL },
+  { "Timeout", icmdTypeSoeIcmd, icmdTypeSoeIcmdTimeout, NULL, NULL },
+  { "OpCode", icmdTypeSoeIcmd, icmdTypeSoeIcmdOpcode, NULL, NULL },
+  { "DriveNo", icmdTypeSoeIcmd, icmdTypeSoeIcmdDriveno, NULL, NULL },
+  { "IDN", icmdTypeSoeIcmd, icmdTypeSoeIcmdIdn, NULL, NULL },
+  { "Elements", icmdTypeSoeIcmd, icmdTypeSoeIcmdElements, NULL, NULL },
+  { "Attribute", icmdTypeSoeIcmd, icmdTypeSoeIcmdAttribute, NULL, NULL },
+  { "Data", icmdTypeSoeIcmd, icmdTypeSoeIcmdData, NULL, NULL },
+  { "NULL", -1, -1, NULL, NULL }
+};
+
+static long int parse_int(LCEC_CONF_ICMDS_STATE_T *state, const char *s, int len, long int min, long int max);
+static int parse_data(LCEC_CONF_ICMDS_STATE_T *state, const char *s, int len);
+
+int parseIcmds(LCEC_CONF_SLAVE_T *slave, LCEC_CONF_OUTBUF_T *outputBuf, const char *filename) {
   int ret = 1;
   int done;
   char buffer[BUFFSIZE];
   FILE *file;
+  LCEC_CONF_ICMDS_STATE_T state;
 
   // open file
   file = fopen(filename, "r");
@@ -87,20 +114,17 @@ int parseIcmds(LCEC_CONF_SLAVE_T *slave, const char *filename) {
   }
 
   // create xml parser
-  parser = XML_ParserCreate(NULL);
-  if (parser == NULL) {
+  memset(&state, 0, sizeof(state));
+  if (initXmlInst((LCEC_CONF_XML_INST_T *) &state, xml_states)) {
     fprintf(stderr, "%s: ERROR: Couldn't allocate memory for parser\n", modname);
     goto fail2;
   }
 
   // setup handlers
-  XML_SetElementHandler(parser, xml_start_handler, xml_end_handler);
-  XML_SetCharacterDataHandler(parser, xml_data_handler);
+  XML_SetCharacterDataHandler(state.xml.parser, xml_data_handler);
 
-  currSlave = slave;
-  currIcmdType = icmdTypeNone;
-  currSdoConf = NULL;
-  currIdnConf = NULL;
+  state.currSlave = slave;
+  state.outputBuf = outputBuf;
   for (done=0; !done;) {
     // read block
     int len = fread(buffer, 1, BUFFSIZE, file);
@@ -113,10 +137,10 @@ int parseIcmds(LCEC_CONF_SLAVE_T *slave, const char *filename) {
     done = feof(file);
 
     // parse current block
-    if (!XML_Parse(parser, buffer, len, done)) {
+    if (!XML_Parse(state.xml.parser, buffer, len, done)) {
       fprintf(stderr, "%s: ERROR: Parse error at line %u: %s\n", modname,
-        (unsigned int)XML_GetCurrentLineNumber(parser),
-        XML_ErrorString(XML_GetErrorCode(parser)));
+        (unsigned int)XML_GetCurrentLineNumber(state.xml.parser),
+        XML_ErrorString(XML_GetErrorCode(state.xml.parser)));
       goto fail3;
     }
   }
@@ -125,27 +149,149 @@ int parseIcmds(LCEC_CONF_SLAVE_T *slave, const char *filename) {
   ret = 0;
 
 fail3:
-  XML_ParserFree(parser);
+  XML_ParserFree(state.xml.parser);
 fail2:
   fclose(file);
 fail1:
   return ret;
 }
 
-static long int parse_int(const char *s, int len, long int min, long int max) {
+static void xml_data_handler(void *data, const XML_Char *s, int len) {
+  LCEC_CONF_XML_INST_T *inst = (LCEC_CONF_XML_INST_T *) data;
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+
+  switch (inst->state) {
+    case icmdTypeCoeIcmdTrans:
+      if (len == 2) {
+        if (strncmp("PS", s, len) == 0) {
+          return;
+        }
+      }
+      fprintf(stderr, "%s: ERROR: Invalid Transition state\n", modname);
+      XML_StopParser(inst->parser, 0);
+      return;
+    case icmdTypeCoeIcmdIndex:
+      state->currSdoConf->index = parse_int(state, s, len, 0, 0xffff);
+      return;
+    case icmdTypeCoeIcmdSubindex:
+      state->currSdoConf->subindex = parse_int(state, s, len, 0, 0xff);
+      return;
+    case icmdTypeCoeIcmdData:
+      state->currSdoConf->length += parse_data(state, s, len);
+      return;
+
+    case icmdTypeSoeIcmdTrans:
+      if (len == 2) {
+        if (strncmp("IP", s, len) == 0) {
+          state->currIdnConf->state = EC_AL_STATE_PREOP;
+          return;
+        }
+        if (strncmp("PS", s, len) == 0) {
+          state->currIdnConf->state = EC_AL_STATE_PREOP;
+          return;
+        }
+        if (strncmp("SO", s, len) == 0) {
+          state->currIdnConf->state = EC_AL_STATE_SAFEOP;
+          return;
+        }
+      }
+      fprintf(stderr, "%s: ERROR: Invalid Transition state\n", modname);
+      XML_StopParser(inst->parser, 0);
+      return;
+    case icmdTypeSoeIcmdDriveno:
+      state->currIdnConf->drive = parse_int(state, s, len, 0, 7);
+      return;
+    case icmdTypeSoeIcmdIdn:
+      state->currIdnConf->idn = parse_int(state, s, len, 0, 0xffff);
+      return;
+    case icmdTypeSoeIcmdData:
+      state->currIdnConf->length += parse_data(state, s, len);
+      return;
+  }
+}
+
+static void icmdTypeCoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+
+  state->currSdoConf = addOutputBuffer(state->outputBuf, sizeof(LCEC_CONF_SDOCONF_T));
+
+  if (state->currSdoConf == NULL) {
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  state->currSdoConf->confType = lcecConfTypeSdoConfig;
+  state->currSdoConf->index = 0xffff;
+  state->currSdoConf->subindex = 0xff;
+}
+
+static void icmdTypeCoeIcmdEnd(LCEC_CONF_XML_INST_T *inst, int next) {
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+
+  if (state->currSdoConf->index == 0xffff) {
+    fprintf(stderr, "%s: ERROR: sdoConfig has no idx attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  if (state->currSdoConf->subindex == 0xff) {
+    fprintf(stderr, "%s: ERROR: sdoConfig has no subIdx attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  state->currSlave->sdoConfigLength += sizeof(LCEC_CONF_SDOCONF_T) + state->currSdoConf->length;
+}
+
+
+static void icmdTypeSoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+
+  state->currIdnConf = addOutputBuffer(state->outputBuf, sizeof(LCEC_CONF_IDNCONF_T));
+
+  if (state->currIdnConf == NULL) {
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  state->currIdnConf->confType = lcecConfTypeIdnConfig;
+  state->currIdnConf->drive = 0;
+  state->currIdnConf->idn = 0xffff;
+  state->currIdnConf->state = 0;
+}
+
+static void icmdTypeSoeIcmdEnd(LCEC_CONF_XML_INST_T *inst, int next) {
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+
+  if (state->currIdnConf->idn == 0xffff) {
+    fprintf(stderr, "%s: ERROR: idnConfig has no idn attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  if (state->currIdnConf->state == 0) {
+    fprintf(stderr, "%s: ERROR: idnConfig has no state attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  state->currSlave->idnConfigLength += sizeof(LCEC_CONF_IDNCONF_T) + state->currIdnConf->length;
+}
+
+static long int parse_int(LCEC_CONF_ICMDS_STATE_T *state, const char *s, int len, long int min, long int max) {
   char buf[32];
   char *end;
   long int ret;
 
   if (s == NULL || len == 0) {
     fprintf(stderr, "%s: ERROR: Missing number value\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(state->xml.parser, 0);
     return 0;
   }
 
   if (len >= sizeof(buf)) {
     fprintf(stderr, "%s: ERROR: Number value size exceeded\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(state->xml.parser, 0);
     return 0;
   }
 
@@ -155,415 +301,35 @@ static long int parse_int(const char *s, int len, long int min, long int max) {
   ret = strtol(buf, &end, 0);
   if (*end != 0 || ret < min || ret > max) {
     fprintf(stderr, "%s: ERROR: Invalid number value '%s'\n", modname, s);
-    XML_StopParser(parser, 0);
+    XML_StopParser(state->xml.parser, 0);
     return 0;
   }
 
   return ret;
 }
 
-static int parse_data(const char *s, int len) {
+static int parse_data(LCEC_CONF_ICMDS_STATE_T *state, const char *s, int len) {
   uint8_t *p;
   char c;
   int size;
 
-  // length must be modulo of 2
-  if (len & 1) {
-    fprintf(stderr, "%s: ERROR: Invalid data size\n", modname);
-    XML_StopParser(parser, 0);
+  // get size
+  size = parseHex(s, len, NULL);
+  if (size < 0) {
+    fprintf(stderr, "%s: ERROR: Invalid data\n", modname);
+    XML_StopParser(state->xml.parser, 0);
     return 0;
   }
-  size = len >> 1;
 
   // allocate memory
-  p = (uint8_t *) addOutputBuffer(size);
+  p = (uint8_t *) addOutputBuffer(state->outputBuf, size);
   if (p == NULL) {
-    XML_StopParser(parser, 0);
+    XML_StopParser(state->xml.parser, 0);
     return 0;
   }
 
-  while (len > 0) {
-    c = *(s++);
-
-    // get nibble value
-    if (c >= '0' && c <= '9') {
-      c = c - '0';
-    } else if (c >= 'a' && c <= 'f') {
-      c = c - 'a' + 10;
-    } else if (c >= 'A' && c <= 'F') {
-      c = c - 'A' + 10;
-    } else {
-      fprintf(stderr, "%s: ERROR: Non-hex value data\n", modname);
-      XML_StopParser(parser, 0);
-      return 0;
-    }
-
-    // alternate nibbles
-    if (!(len & 1)) {
-      *p = c << 4;
-    } else {
-      *p |= c & 0x0f;
-      p++;
-    }
-    len--;
-  }
-
+  // parse data
+  parseHex(s, len, p);
   return size;
-}
-
-static void xml_start_handler(void *data, const char *el, const char **attr) {
-  switch (currIcmdType) {
-    case icmdTypeNone:
-      if (strcmp(el, "EtherCATMailbox") == 0) {
-        currIcmdType = icmdTypeMailbox;
-        return;
-      }
-      break;
-    case icmdTypeMailbox:
-      if (strcmp(el, "CoE") == 0) {
-        currIcmdType = icmdTypeCoe;
-        return;
-      }
-      if (strcmp(el, "SoE") == 0) {
-        currIcmdType = icmdTypeSoe;
-        return;
-      }
-      break;
-
-    case icmdTypeCoe:
-      if (strcmp(el, "InitCmds") == 0) {
-        currIcmdType = icmdTypeCoeIcmds;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmds:
-      if (strcmp(el, "InitCmd") == 0) {
-        currIcmdType = icmdTypeCoeIcmd;
-        currSdoConf = addOutputBuffer(sizeof(LCEC_CONF_SDOCONF_T));
-        if (currSdoConf == NULL) {
-          XML_StopParser(parser, 0);
-          return;
-        }
-        currSdoConf->confType = lcecConfTypeSdoConfig;
-        currSdoConf->index = 0xffff;
-        currSdoConf->subindex = 0xff;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmd:
-      if (strcmp(el, "Transition") == 0) {
-        currIcmdType = icmdTypeCoeIcmdTrans;
-        return;
-      }
-      if (strcmp(el, "Comment") == 0) {
-        currIcmdType = icmdTypeCoeIcmdComment;
-        return;
-      }
-      if (strcmp(el, "Timeout") == 0) {
-        currIcmdType = icmdTypeCoeIcmdTimeout;
-        return;
-      }
-      if (strcmp(el, "Ccs") == 0) {
-        currIcmdType = icmdTypeCoeIcmdCcs;
-        return;
-      }
-      if (strcmp(el, "Index") == 0) {
-        currIcmdType = icmdTypeCoeIcmdIndex;
-        return;
-      }
-      if (strcmp(el, "SubIndex") == 0) {
-        currIcmdType = icmdTypeCoeIcmdSubindex;
-        return;
-      }
-      if (strcmp(el, "Data") == 0) {
-        currIcmdType = icmdTypeCoeIcmdData;
-        return;
-      }
-      break;
-
-    case icmdTypeSoe:
-      if (strcmp(el, "InitCmds") == 0) {
-        currIcmdType = icmdTypeSoeIcmds;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmds:
-      if (strcmp(el, "InitCmd") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        currIdnConf = addOutputBuffer(sizeof(LCEC_CONF_IDNCONF_T));
-        if (currIdnConf == NULL) {
-          XML_StopParser(parser, 0);
-          return;
-        }
-        currIdnConf->confType = lcecConfTypeIdnConfig;
-        currIdnConf->drive = 0;
-        currIdnConf->idn = 0xffff;
-        currIdnConf->state = 0;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmd:
-      if (strcmp(el, "Transition") == 0) {
-        currIcmdType = icmdTypeSoeIcmdTrans;
-        return;
-      }
-      if (strcmp(el, "Comment") == 0) {
-        currIcmdType = icmdTypeSoeIcmdComment;
-        return;
-      }
-      if (strcmp(el, "Timeout") == 0) {
-        currIcmdType = icmdTypeSoeIcmdTimeout;
-        return;
-      }
-      if (strcmp(el, "OpCode") == 0) {
-        currIcmdType = icmdTypeSoeIcmdOpcode;
-        return;
-      }
-      if (strcmp(el, "DriveNo") == 0) {
-        currIcmdType = icmdTypeSoeIcmdDriveno;
-        return;
-      }
-      if (strcmp(el, "IDN") == 0) {
-        currIcmdType = icmdTypeSoeIcmdIdn;
-        return;
-      }
-      if (strcmp(el, "Elements") == 0) {
-        currIcmdType = icmdTypeSoeIcmdElements;
-        return;
-      }
-      if (strcmp(el, "Attribute") == 0) {
-        currIcmdType = icmdTypeSoeIcmdAttribute;
-        return;
-      }
-      if (strcmp(el, "Data") == 0) {
-        currIcmdType = icmdTypeSoeIcmdData;
-        return;
-      }
-      break;
-  }
-
-  fprintf(stderr, "%s: ERROR: unexpected node %s found\n", modname, el);
-  XML_StopParser(parser, 0);
-}
-
-static void xml_end_handler(void *data, const char *el) {
-  switch (currIcmdType) {
-    case icmdTypeMailbox:
-      if (strcmp(el, "EtherCATMailbox") == 0) {
-        currIcmdType = icmdTypeNone;
-        return;
-      }
-      break;
-
-    case icmdTypeCoe:
-      if (strcmp(el, "CoE") == 0) {
-        currIcmdType = icmdTypeMailbox;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmds:
-      if (strcmp(el, "InitCmds") == 0) {
-        currIcmdType = icmdTypeCoe;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmd:
-      if (strcmp(el, "InitCmd") == 0) {
-        if (currSdoConf->index == 0xffff) {
-          fprintf(stderr, "%s: ERROR: sdoConfig has no idx attribute\n", modname);
-          XML_StopParser(parser, 0);
-          return;
-        }
-        if (currSdoConf->subindex == 0xff) {
-          fprintf(stderr, "%s: ERROR: sdoConfig has no subIdx attribute\n", modname);
-          XML_StopParser(parser, 0);
-          return;
-        }
-        currIcmdType = icmdTypeCoeIcmds;
-        currSlave->sdoConfigLength += sizeof(LCEC_CONF_SDOCONF_T) + currSdoConf->length;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmdTrans:
-      if (strcmp(el, "Transition") == 0) {
-        currIcmdType = icmdTypeCoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmdComment:
-      if (strcmp(el, "Comment") == 0) {
-        currIcmdType = icmdTypeCoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmdTimeout:
-      if (strcmp(el, "Timeout") == 0) {
-        currIcmdType = icmdTypeCoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmdCcs:
-      if (strcmp(el, "Ccs") == 0) {
-        currIcmdType = icmdTypeCoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmdIndex:
-      if (strcmp(el, "Index") == 0) {
-        currIcmdType = icmdTypeCoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmdSubindex:
-      if (strcmp(el, "SubIndex") == 0) {
-        currIcmdType = icmdTypeCoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeCoeIcmdData:
-      if (strcmp(el, "Data") == 0) {
-        currIcmdType = icmdTypeCoeIcmd;
-        return;
-      }
-      break;
-
-    case icmdTypeSoe:
-      if (strcmp(el, "SoE") == 0) {
-        currIcmdType = icmdTypeMailbox;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmds:
-      if (strcmp(el, "InitCmds") == 0) {
-        currIcmdType = icmdTypeSoe;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmd:
-      if (strcmp(el, "InitCmd") == 0) {
-        if (currIdnConf->idn == 0xffff) {
-          fprintf(stderr, "%s: ERROR: idnConfig has no idn attribute\n", modname);
-          XML_StopParser(parser, 0);
-          return;
-        }
-        if (currIdnConf->state == 0) {
-          fprintf(stderr, "%s: ERROR: idnConfig has no state attribute\n", modname);
-          XML_StopParser(parser, 0);
-          return;
-        }
-        currIcmdType = icmdTypeSoeIcmds;
-        currSlave->idnConfigLength += sizeof(LCEC_CONF_IDNCONF_T) + currIdnConf->length;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmdTrans:
-      if (strcmp(el, "Transition") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmdComment:
-      if (strcmp(el, "Comment") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmdTimeout:
-      if (strcmp(el, "Timeout") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmdOpcode:
-      if (strcmp(el, "OpCode") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmdDriveno:
-      if (strcmp(el, "DriveNo") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmdIdn:
-      if (strcmp(el, "IDN") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmdElements:
-      if (strcmp(el, "Elements") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmdAttribute:
-      if (strcmp(el, "Attribute") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        return;
-      }
-      break;
-    case icmdTypeSoeIcmdData:
-      if (strcmp(el, "Data") == 0) {
-        currIcmdType = icmdTypeSoeIcmd;
-        return;
-      }
-      break;
-  }
-
-  fprintf(stderr, "%s: ERROR: unexpected close tag %s found\n", modname, el);
-  XML_StopParser(parser, 0);
-}
-
-static void xml_data_handler(void *data, const XML_Char *s, int len) {
-  switch (currIcmdType) {
-    case icmdTypeCoeIcmdTrans:
-      if (len == 2) {
-        if (strncmp("PS", s, len) == 0) {
-          return;
-        }
-      }
-      fprintf(stderr, "%s: ERROR: Invalid Transition state\n", modname);
-      XML_StopParser(parser, 0);
-      return;
-    case icmdTypeCoeIcmdIndex:
-      currSdoConf->index = parse_int(s, len, 0, 0xffff);
-      return;
-    case icmdTypeCoeIcmdSubindex:
-      currSdoConf->subindex = parse_int(s, len, 0, 0xff);
-      return;
-    case icmdTypeCoeIcmdData:
-      currSdoConf->length += parse_data(s, len);
-      return;
-
-    case icmdTypeSoeIcmdTrans:
-      if (len == 2) {
-        if (strncmp("IP", s, len) == 0) {
-          currIdnConf->state = EC_AL_STATE_PREOP;
-          return;
-        }
-        if (strncmp("PS", s, len) == 0) {
-          currIdnConf->state = EC_AL_STATE_PREOP;
-          return;
-        }
-        if (strncmp("SO", s, len) == 0) {
-          currIdnConf->state = EC_AL_STATE_SAFEOP;
-          return;
-        }
-      }
-      fprintf(stderr, "%s: ERROR: Invalid Transition state\n", modname);
-      XML_StopParser(parser, 0);
-      return;
-    case icmdTypeSoeIcmdDriveno:
-      currIdnConf->drive = parse_int(s, len, 0, 7);
-      return;
-    case icmdTypeSoeIcmdIdn:
-      currIdnConf->idn = parse_int(s, len, 0, 0xffff);
-      return;
-    case icmdTypeSoeIcmdData:
-      currIdnConf->length += parse_data(s, len);
-      return;
-  }
 }
 

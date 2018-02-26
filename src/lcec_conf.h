@@ -33,7 +33,7 @@
 #define LCEC_CONF_GENERIC_MAX_BITLEN  255
 
 typedef enum {
-  lcecConfTypeNone,
+  lcecConfTypeNone = 0,
   lcecConfTypeMasters,
   lcecConfTypeMaster,
   lcecConfTypeSlave,
