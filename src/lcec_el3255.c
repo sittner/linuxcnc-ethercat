@@ -43,6 +43,19 @@ typedef struct {
   lcec_el3255_chan_t chans[LCEC_EL3255_CHANS];
 } lcec_el3255_data_t;
 
+static const lcec_pindesc_t slave_pins[] = {
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el3255_chan_t, overrange), "%s.%s.%s.pot-%d-overrange" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el3255_chan_t, underrange), "%s.%s.%s.pot-%d-underrange" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el3255_chan_t, error), "%s.%s.%s.pot-%d-error" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el3255_chan_t, sync_err), "%s.%s.%s.pot-%d-sync-err" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_el3255_chan_t, raw_val), "%s.%s.%s.pot-%d-raw" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el3255_chan_t, val), "%s.%s.%s.pot-%d-val" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3255_chan_t, scale), "%s.%s.%s.pot-%d-scale" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3255_chan_t, bias), "%s.%s.%s.pot-%d-bias" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
+
 static ec_pdo_entry_info_t lcec_el3255_channel1[] = {
     {0x6000, 0x01,  1}, // Underrange
     {0x6000, 0x02,  1}, // Overrange
@@ -164,48 +177,12 @@ int lcec_el3255_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x11, &chan->val_pdo_os, NULL);
 
     // export pins
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->overrange), comp_id, "%s.%s.%s.pot-%d-overrange", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.pot-%d-overrange failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->underrange), comp_id, "%s.%s.%s.pot-%d-underrange", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.pot-%d-underrange failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->error), comp_id, "%s.%s.%s.pot-%d-error", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.pot-%d-error failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->sync_err), comp_id, "%s.%s.%s.pot-%d-sync-err", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.pot-%d-sync-err failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_s32_newf(HAL_OUT, &(chan->raw_val), comp_id, "%s.%s.%s.pot-%d-raw", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.pot-%d-raw failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_float_newf(HAL_OUT, &(chan->val), comp_id, "%s.%s.%s.pot-%d-val", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.pot-%d-val failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_float_newf(HAL_IO, &(chan->scale), comp_id, "%s.%s.%s.pot-%d-scale", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.pot-%d-scale failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_float_newf(HAL_IO, &(chan->bias), comp_id, "%s.%s.%s.pot-%d-bias", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.pot-%d-bias failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
+    if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       return err;
     }
 
     // initialize pins
-    *(chan->overrange) = 0;
-    *(chan->underrange) = 0;
-    *(chan->error) = 0;
-    *(chan->sync_err) = 0;
-    *(chan->raw_val) = 0;
-    *(chan->val) = 0;
-    *(chan->scale) = 1;
-    *(chan->bias) = 0;
+    *(chan->scale) = 1.0;
   }
 
   return 0;

@@ -157,6 +157,60 @@ typedef struct {
 
 } lcec_el7041_1000_data_t;
 
+static const lcec_pindesc_t slave_pins[] = {
+  // encoder pins
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, reset),             "%s.%s.%s.enc-reset" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, ina),               "%s.%s.%s.enc-ina" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, inb),               "%s.%s.%s.enc-inb" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, inc),               "%s.%s.%s.enc-inc" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, inext),             "%s.%s.%s.enc-inext" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, sync_err),          "%s.%s.%s.enc-sync-error" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, expol_stall),       "%s.%s.%s.enc-expol-stall" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, tx_toggle),         "%s.%s.%s.enc-tx-toggle" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, count_overflow),    "%s.%s.%s.enc-count-overflow" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, count_underflow),   "%s.%s.%s.enc-count-underflow" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, latch_c_valid),     "%s.%s.%s.enc-latch-c-valid" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, latch_ext_valid),   "%s.%s.%s.enc-latch-ext-valid" },
+  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_1000_data_t, set_raw_count),     "%s.%s.%s.enc-set-raw-count" },
+  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_1000_data_t, ena_latch_c),       "%s.%s.%s.enc-latch-c-enable" },
+  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_1000_data_t, ena_latch_ext_pos), "%s.%s.%s.enc-index-ext-pos-enable" },
+  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_1000_data_t, ena_latch_ext_neg), "%s.%s.%s.enc-index-ext-neg-enable" },
+  { HAL_S32,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, set_raw_count_val), "%s.%s.%s.enc-set-raw-count-val" },
+  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, raw_count),         "%s.%s.%s.enc-raw-count" },
+  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, count),             "%s.%s.%s.enc-count" },
+  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, raw_latch),         "%s.%s.%s.enc-raw-latch" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7041_1000_data_t, pos),               "%s.%s.%s.enc-pos" },
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, pos_scale),         "%s.%s.%s.enc-pos-scale" },
+
+  // servo pins
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, dcm_scale),     "%s.%s.%s.srv-scale" },
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, dcm_offset),    "%s.%s.%s.srv-offset" },
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, dcm_min_dc),    "%s.%s.%s.srv-min-dc" },
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, dcm_max_dc),    "%s.%s.%s.srv-max-dc" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_curr_dc),   "%s.%s.%s.srv-curr-dc" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_enable),    "%s.%s.%s.srv-enable" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_absmode),   "%s.%s.%s.srv-absmode" },
+  { HAL_FLOAT, HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_value),     "%s.%s.%s.srv-cmd" },
+  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_raw_val),   "%s.%s.%s.srv-raw-cmd" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_reset),     "%s.%s.%s.srv-reset" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_reduce_torque), "%s.%s.%s.srv-reduce-torque" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_ready_to_enable), "%s.%s.%s.srv-ready-to-enable" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_ready),     "%s.%s.%s.srv-ready" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_warning),   "%s.%s.%s.srv-warning" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_error),     "%s.%s.%s.srv-error" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_move_pos),  "%s.%s.%s.srv-move-pos" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_move_neg),  "%s.%s.%s.srv-move-neg" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_torque_reduced), "%s.%s.%s.srv-torque-reduced" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_din1),      "%s.%s.%s.srv-din1" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_din2),      "%s.%s.%s.srv-din2" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_sync_err),  "%s.%s.%s.srv-sync-error" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_tx_toggle), "%s.%s.%s.srv-tx-toggle" },
+
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, fault),       "%s.%s.%s.srv-fault" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, fault_reset), "%s.%s.%s.srv-fault-reset" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
 static ec_pdo_entry_info_t lcec_el7041_1000_channel1_enc_out[] = {
     {0x7000, 0x01,  1}, /* Enable latch C */
     {0x7000, 0x02,  1}, /* Enable latch extern on positive edge */
@@ -261,168 +315,56 @@ int lcec_el7041_1000_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t 
   hd->last_operational = 0;
 
   // initialize PDO entries
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x7000, 0x01, &hd->ena_latch_c_pdo_os,         &hd->ena_latch_c_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x7000, 0x02, &hd->ena_latch_ext_pos_pdo_os,   &hd->ena_latch_ext_pos_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x7000, 0x03, &hd->set_count_pdo_os,           &hd->set_count_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x7000, 0x04, &hd->ena_latch_ext_neg_pdo_os,   &hd->ena_latch_ext_neg_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x7000, 0x11, &hd->set_count_val_pdo_os,       NULL);
 
-#define pdo(...) LCEC_PDO_INIT(r, s->index, s->vid, s->pid, ##__VA_ARGS__)
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x7010, 0x01, &hd->dcm_ena_pdo_os,             &hd->dcm_ena_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x7010, 0x02, &hd->dcm_reset_pdo_os,           &hd->dcm_reset_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x7010, 0x03, &hd->dcm_reduce_torque_pdo_os,   &hd->dcm_reduce_torque_pdo_bp);
 
-  pdo(0x7000, 0x01, &hd->ena_latch_c_pdo_os,         &hd->ena_latch_c_pdo_bp);
-  pdo(0x7000, 0x02, &hd->ena_latch_ext_pos_pdo_os,   &hd->ena_latch_ext_pos_pdo_bp);
-  pdo(0x7000, 0x03, &hd->set_count_pdo_os,           &hd->set_count_pdo_bp);
-  pdo(0x7000, 0x04, &hd->ena_latch_ext_neg_pdo_os,   &hd->ena_latch_ext_neg_pdo_bp);
-  pdo(0x7000, 0x11, &hd->set_count_val_pdo_os,       NULL);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x7010, 0x21, &hd->dcm_velo_pdo_os, NULL);
 
-  pdo(0x7010, 0x01, &hd->dcm_ena_pdo_os,             &hd->dcm_ena_pdo_bp);
-  pdo(0x7010, 0x02, &hd->dcm_reset_pdo_os,           &hd->dcm_reset_pdo_bp);
-  pdo(0x7010, 0x03, &hd->dcm_reduce_torque_pdo_os,   &hd->dcm_reduce_torque_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x01, &hd->latch_c_valid_pdo_os,   &hd->latch_c_valid_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x02, &hd->latch_ext_valid_pdo_os, &hd->latch_ext_valid_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x03, &hd->set_count_done_pdo_os,  &hd->set_count_done_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x04, &hd->count_underflow_pdo_os, &hd->count_overflow_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x05, &hd->count_overflow_pdo_os,  &hd->count_underflow_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x08, &hd->expol_stall_pdo_os,     &hd->expol_stall_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x09, &hd->ina_pdo_os,             &hd->ina_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x0a, &hd->inb_pdo_os,             &hd->inb_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x0b, &hd->inc_pdo_os,             &hd->inc_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x0d, &hd->inext_pdo_os,           &hd->inext_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x0e, &hd->sync_err_pdo_os,        &hd->sync_err_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x10, &hd->tx_toggle_pdo_os,       &hd->tx_toggle_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x11, &hd->count_pdo_os, NULL);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6000, 0x12, &hd->latch_pdo_os, NULL);
 
-  pdo(0x7010, 0x21, &hd->dcm_velo_pdo_os, NULL);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x01, &hd->dcm_ready_to_enable_pdo_os, &hd->dcm_ready_to_enable_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x02, &hd->dcm_ready_pdo_os,           &hd->dcm_ready_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x03, &hd->dcm_warning_pdo_os,         &hd->dcm_warning_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x04, &hd->dcm_error_pdo_os,           &hd->dcm_error_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x05, &hd->dcm_move_pos_pdo_os,        &hd->dcm_move_pos_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x06, &hd->dcm_move_neg_pdo_os,        &hd->dcm_move_neg_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x07, &hd->dcm_torque_reduced_pdo_os,  &hd->dcm_torque_reduced_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x0c, &hd->dcm_din1_pdo_os,            &hd->dcm_din1_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x0d, &hd->dcm_din2_pdo_os,            &hd->dcm_din2_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x0e, &hd->dcm_sync_err_pdo_os,        &hd->dcm_sync_err_pdo_bp);
+  LCEC_PDO_INIT(r, s->index, s->vid, s->pid, 0x6010, 0x10, &hd->dcm_tx_toggle_pdo_os,       &hd->dcm_tx_toggle_pdo_bp);
 
-  pdo(0x6000, 0x01, &hd->latch_c_valid_pdo_os,   &hd->latch_c_valid_pdo_bp);
-  pdo(0x6000, 0x02, &hd->latch_ext_valid_pdo_os, &hd->latch_ext_valid_pdo_bp);
-  pdo(0x6000, 0x03, &hd->set_count_done_pdo_os,  &hd->set_count_done_pdo_bp);
-  pdo(0x6000, 0x04, &hd->count_underflow_pdo_os, &hd->count_overflow_pdo_bp);
-  pdo(0x6000, 0x05, &hd->count_overflow_pdo_os,  &hd->count_underflow_pdo_bp);
-  pdo(0x6000, 0x08, &hd->expol_stall_pdo_os,     &hd->expol_stall_pdo_bp);
-  pdo(0x6000, 0x09, &hd->ina_pdo_os,             &hd->ina_pdo_bp);
-  pdo(0x6000, 0x0a, &hd->inb_pdo_os,             &hd->inb_pdo_bp);
-  pdo(0x6000, 0x0b, &hd->inc_pdo_os,             &hd->inc_pdo_bp);
-  pdo(0x6000, 0x0d, &hd->inext_pdo_os,           &hd->inext_pdo_bp);
-  pdo(0x6000, 0x0e, &hd->sync_err_pdo_os,        &hd->sync_err_pdo_bp);
-  pdo(0x6000, 0x10, &hd->tx_toggle_pdo_os,       &hd->tx_toggle_pdo_bp);
-  pdo(0x6000, 0x11, &hd->count_pdo_os, NULL);
-  pdo(0x6000, 0x12, &hd->latch_pdo_os, NULL);
-
-  pdo(0x6010, 0x01, &hd->dcm_ready_to_enable_pdo_os, &hd->dcm_ready_to_enable_pdo_bp);
-  pdo(0x6010, 0x02, &hd->dcm_ready_pdo_os,           &hd->dcm_ready_pdo_bp);
-  pdo(0x6010, 0x03, &hd->dcm_warning_pdo_os,         &hd->dcm_warning_pdo_bp);
-  pdo(0x6010, 0x04, &hd->dcm_error_pdo_os,           &hd->dcm_error_pdo_bp);
-  pdo(0x6010, 0x05, &hd->dcm_move_pos_pdo_os,        &hd->dcm_move_pos_pdo_bp);
-  pdo(0x6010, 0x06, &hd->dcm_move_neg_pdo_os,        &hd->dcm_move_neg_pdo_bp);
-  pdo(0x6010, 0x07, &hd->dcm_torque_reduced_pdo_os,  &hd->dcm_torque_reduced_pdo_bp);
-  pdo(0x6010, 0x0c, &hd->dcm_din1_pdo_os,            &hd->dcm_din1_pdo_bp);
-  pdo(0x6010, 0x0d, &hd->dcm_din2_pdo_os,            &hd->dcm_din2_pdo_bp);
-  pdo(0x6010, 0x0e, &hd->dcm_sync_err_pdo_os,        &hd->dcm_sync_err_pdo_bp);
-  pdo(0x6010, 0x10, &hd->dcm_tx_toggle_pdo_os,       &hd->dcm_tx_toggle_pdo_bp);
-
-#undef pdo
-
-#define msg(H, format) \
-  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting "#H" %s.%s.%s." format " failed\n", \
-                  LCEC_MODULE_NAME, m->name, s->name)
-
-#define hal_pin_bit(IO, V, P)       hal_pin_bit_newf(IO, V, comp_id, "%s.%s.%s." P, LCEC_MODULE_NAME, m->name, s->name)
-#define hal_pin_s32(IO, V, P)       hal_pin_s32_newf(IO, V, comp_id, "%s.%s.%s." P, LCEC_MODULE_NAME, m->name, s->name)
-#define hal_pin_u32(IO, V, P)       hal_pin_u32_newf(IO, V, comp_id, "%s.%s.%s." P, LCEC_MODULE_NAME, m->name, s->name)
-#define hal_pin_flt(IO, V, P)     hal_pin_float_newf(IO, V, comp_id, "%s.%s.%s." P, LCEC_MODULE_NAME, m->name, s->name)
-
-#define e(H, T, IO, V, N) if ((err = hal_##H##_##T(IO, V, N)) != 0) { msg(#H, N); return err; }
-
-  // export encoder pins
-  e(pin, bit, HAL_IN,  &(hd->reset),             "enc-reset");
-  e(pin, bit, HAL_OUT, &(hd->ina),               "enc-ina");
-  e(pin, bit, HAL_OUT, &(hd->inb),               "enc-inb");
-  e(pin, bit, HAL_OUT, &(hd->inc),               "enc-inc");
-  e(pin, bit, HAL_OUT, &(hd->inext),             "enc-inext");
-  e(pin, bit, HAL_OUT, &(hd->sync_err),          "enc-sync-error");
-  e(pin, bit, HAL_OUT, &(hd->expol_stall),       "enc-expol-stall");
-  e(pin, bit, HAL_OUT, &(hd->tx_toggle),         "enc-tx-toggle");
-  e(pin, bit, HAL_OUT, &(hd->count_overflow),    "enc-count-overflow");
-  e(pin, bit, HAL_OUT, &(hd->count_underflow),   "enc-count-underflow");
-  e(pin, bit, HAL_OUT, &(hd->latch_c_valid),     "enc-latch-c-valid");
-  e(pin, bit, HAL_OUT, &(hd->latch_ext_valid),   "enc-latch-ext-valid");
-  e(pin, bit, HAL_IO,  &(hd->set_raw_count),     "enc-set-raw-count");
-  e(pin, bit, HAL_IO,  &(hd->ena_latch_c),       "enc-latch-c-enable");
-  e(pin, bit, HAL_IO,  &(hd->ena_latch_ext_pos), "enc-index-ext-pos-enable");
-  e(pin, bit, HAL_IO,  &(hd->ena_latch_ext_neg), "enc-index-ext-neg-enable");
-  e(pin, s32, HAL_IN,  &(hd->set_raw_count_val), "enc-set-raw-count-val");
-  e(pin, s32, HAL_OUT, &(hd->raw_count),         "enc-raw-count");
-  e(pin, s32, HAL_OUT, &(hd->count),             "enc-count");
-  e(pin, s32, HAL_OUT, &(hd->raw_latch),         "enc-raw-latch");
-  e(pin, flt, HAL_OUT, &(hd->pos),               "enc-pos");
-  e(pin, flt, HAL_IO,  &(hd->pos_scale),         "enc-pos-scale");
-
-  // export servo pins
-  e(pin, flt, HAL_IO,  &(hd->dcm_scale),     "srv-scale");
-  e(pin, flt, HAL_IO,  &(hd->dcm_offset),    "srv-offset");
-  e(pin, flt, HAL_IO,  &(hd->dcm_min_dc),    "srv-min-dc");
-  e(pin, flt, HAL_IO,  &(hd->dcm_max_dc),    "srv-max-dc");
-  e(pin, flt, HAL_OUT, &(hd->dcm_curr_dc),   "srv-curr-dc");
-  e(pin, bit, HAL_IN,  &(hd->dcm_enable),    "srv-enable");
-  e(pin, bit, HAL_IN,  &(hd->dcm_absmode),   "srv-absmode");
-  e(pin, flt, HAL_IN,  &(hd->dcm_value),     "srv-cmd");
-  e(pin, s32, HAL_OUT, &(hd->dcm_raw_val),   "srv-raw-cmd");
-  e(pin, bit, HAL_IN,  &(hd->dcm_reset),     "srv-reset");
-  e(pin, bit, HAL_IN,  &(hd->dcm_reduce_torque), "srv-reduce-torque");
-  e(pin, bit, HAL_OUT, &(hd->dcm_ready_to_enable), "srv-ready-to-enable");
-  e(pin, bit, HAL_OUT, &(hd->dcm_ready),     "srv-ready");
-  e(pin, bit, HAL_OUT, &(hd->dcm_warning),   "srv-warning");
-  e(pin, bit, HAL_OUT, &(hd->dcm_error),     "srv-error");
-  e(pin, bit, HAL_OUT, &(hd->dcm_move_pos),  "srv-move-pos");
-  e(pin, bit, HAL_OUT, &(hd->dcm_move_neg),  "srv-move-neg");
-  e(pin, bit, HAL_OUT, &(hd->dcm_torque_reduced), "srv-torque-reduced");
-  e(pin, bit, HAL_OUT, &(hd->dcm_din1),      "srv-din1");
-  e(pin, bit, HAL_OUT, &(hd->dcm_din2),      "srv-din2");
-  e(pin, bit, HAL_OUT, &(hd->dcm_sync_err),  "srv-sync-error");
-  e(pin, bit, HAL_OUT, &(hd->dcm_tx_toggle), "srv-tx-toggle");
-
-  e(pin, bit, HAL_OUT, &(hd->fault),       "srv-fault");
-  e(pin, bit, HAL_IN,  &(hd->fault_reset), "srv-fault-reset");
-
-#undef msg
-#undef hal_pin_bit
-#undef hal_pin_s32
-#undef hal_pin_u32
-#undef hal_pin_flt
-#undef e
+  // export pins
+  if ((err = lcec_pin_newf_list(hd, slave_pins, LCEC_MODULE_NAME, m->name, s->name)) != 0) {
+    return err;
+  }
 
   // initialize pins
-  *(hd->reset) = 0;
-  *(hd->ina) = 0;
-  *(hd->inb) = 0;
-  *(hd->inc) = 0;
-  *(hd->inext) = 0;
-  *(hd->sync_err) = 0;
-  *(hd->expol_stall) = 0;
-  *(hd->tx_toggle) = 0;
-  *(hd->count_overflow) = 0;
-  *(hd->count_underflow) = 0;
-  *(hd->latch_c_valid) = 0;
-  *(hd->latch_ext_valid) = 0;
-  *(hd->ena_latch_c) = 0;
-  *(hd->ena_latch_ext_pos) = 0;
-  *(hd->ena_latch_ext_neg) = 0;
-  *(hd->set_raw_count) = 0;
-  *(hd->set_raw_count_val) = 0;
-  *(hd->raw_count) = 0;
-  *(hd->raw_latch) = 0;
-  *(hd->count) = 0;
-  *(hd->pos) = 0;
   *(hd->pos_scale) = 1.0;
 
   *(hd->dcm_scale) = 1.0;
-  *(hd->dcm_offset) = 0.0;
   *(hd->dcm_min_dc) = -1.0;
   *(hd->dcm_max_dc) = 1.0;
-  *(hd->dcm_curr_dc) = 0.0;
-  *(hd->dcm_enable) = 0;
-  *(hd->dcm_absmode) = 0;
-  *(hd->dcm_value) = 0.0;
-  *(hd->dcm_raw_val) = 0;
-  *(hd->dcm_reset) = 0;
-  *(hd->dcm_reduce_torque) = 0;
-  *(hd->dcm_ready_to_enable) = 0;
-  *(hd->dcm_ready) = 0;
-  *(hd->dcm_warning) = 0;
-  *(hd->dcm_error) = 0;
-  *(hd->dcm_move_pos) = 0;
-  *(hd->dcm_move_neg) = 0;
-  *(hd->dcm_torque_reduced) = 0;
-  *(hd->dcm_din1) = 0;
-  *(hd->dcm_din2) = 0;
-  *(hd->dcm_sync_err) = 0;
-  *(hd->dcm_tx_toggle) = 0;
-
-  *(hd->fault) = 0;
-  *(hd->fault_reset) = 0;
 
   // initialize variables
   hd->enc_do_init = 1;

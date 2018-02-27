@@ -28,6 +28,12 @@ typedef struct {
   unsigned int overload_pdo_bp;
 } lcec_el95xx_data_t;
 
+static const lcec_pindesc_t slave_pins[] = {
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el95xx_data_t, power_ok), "%s.%s.%s.power-ok" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el95xx_data_t, overload), "%s.%s.%s.overload" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
 void lcec_el95xx_read(struct lcec_slave *slave, long period);
 
 int lcec_el95xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
@@ -51,18 +57,9 @@ int lcec_el95xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000, 0x02, &hal_data->overload_pdo_os, &hal_data->overload_pdo_bp);
 
   // export pins
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->power_ok), comp_id, "%s.%s.%s.power-ok", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.power-ok failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+  if ((err = lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
     return err;
   }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->overload), comp_id, "%s.%s.%s.overload", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.overload failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-
-  // initialize pins
-  *(hal_data->power_ok) = 0;
-  *(hal_data->overload) = 0;
 
   return 0;
 }

@@ -165,6 +165,27 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeInvalid }
 };
 
+static const lcec_pindesc_t master_pins[] = {
+  { HAL_U32, HAL_OUT, offsetof(lcec_master_data_t, slaves_responding), "%s.slaves-responding" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, state_init), "%s.state-init" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, state_preop), "%s.state-preop" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, state_safeop), "%s.state-safeop" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, state_op), "%s.state-op" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, link_up), "%s.link-up" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, all_op), "%s.all-op" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
+static const lcec_pindesc_t slave_pins[] = {
+  { HAL_BIT, HAL_OUT, offsetof(lcec_slave_state_t, online), "%s.%s.%s.slave-online" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_slave_state_t, operational), "%s.%s.%s.slave-oper" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_slave_state_t, state_init), "%s.%s.%s.slave-state-init" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_slave_state_t, state_preop), "%s.%s.%s.slave-state-preop" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_slave_state_t, state_safeop), "%s.%s.%s.slave-state-safeop" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_slave_state_t, state_op), "%s.%s.%s.slave-state-op" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
 static lcec_master_t *first_master = NULL;
 static lcec_master_t *last_master = NULL;
 static int comp_id = -1;
@@ -187,6 +208,9 @@ void lcec_read_all(void *arg, long period);
 void lcec_write_all(void *arg, long period);
 void lcec_read_master(void *arg, long period);
 void lcec_write_master(void *arg, long period);
+
+static int lcec_pin_newfv(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, const char *fmt, va_list ap);
+static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, va_list ap);
 
 int rtapi_app_main(void) {
   int slave_count;
@@ -982,43 +1006,9 @@ lcec_master_data_t *lcec_init_master_hal(const char *pfx) {
   memset(hal_data, 0, sizeof(lcec_master_data_t));
 
   // export pins
-  if (hal_pin_u32_newf(HAL_OUT, &(hal_data->slaves_responding), comp_id, "%s.slaves-responding", pfx) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.slaves-responding failed\n", pfx);
+  if (lcec_pin_newf_list(hal_data, master_pins, pfx) != 0) {
     return NULL;
   }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->state_init), comp_id, "%s.state-init", pfx) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.state-init failed\n", pfx);
-    return NULL;
-  }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->state_preop), comp_id, "%s.state-preop", pfx) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.state-preop failed\n", pfx);
-    return NULL;
-  }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->state_safeop), comp_id, "%s.state-safeop", pfx) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.state-safeop failed\n", pfx);
-    return NULL;
-  }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->state_op), comp_id, "%s.state-op", pfx) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.state-op failed\n", pfx);
-    return NULL;
-  }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->link_up), comp_id, "%s.link-up", pfx) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.link-up failed\n", pfx);
-    return NULL;
-  }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->all_op), comp_id, "%s.all-op", pfx) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.all-op failed\n", pfx);
-    return NULL;
-  }
-
-  // initialize pins
-  *(hal_data->slaves_responding) = 0;
-  *(hal_data->state_init) = 0;
-  *(hal_data->state_preop) = 0;
-  *(hal_data->state_safeop) = 0;
-  *(hal_data->state_op) = 0;
-  *(hal_data->link_up) = 0;
-  *(hal_data->all_op) = 0;
 
   return hal_data;
 }
@@ -1034,38 +1024,9 @@ lcec_slave_state_t *lcec_init_slave_state_hal(char *master_name, char *slave_nam
   memset(hal_data, 0, sizeof(lcec_master_data_t));
 
   // export pins
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->online), comp_id, "%s.%s.%s.slave-online", LCEC_MODULE_NAME, master_name, slave_name) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.slaves-online failed\n", LCEC_MODULE_NAME, master_name, slave_name);
+  if (lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master_name, slave_name) != 0) {
     return NULL;
   }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->operational), comp_id, "%s.%s.%s.slave-oper", LCEC_MODULE_NAME, master_name, slave_name) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.slaves-oper failed\n", LCEC_MODULE_NAME, master_name, slave_name);
-    return NULL;
-  }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->state_init), comp_id, "%s.%s.%s.slave-state-init", LCEC_MODULE_NAME, master_name, slave_name) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.state-state-init failed\n", LCEC_MODULE_NAME, master_name, slave_name);
-    return NULL;
-  }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->state_preop), comp_id, "%s.%s.%s.slave-state-preop", LCEC_MODULE_NAME, master_name, slave_name) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.state-state-preop failed\n", LCEC_MODULE_NAME, master_name, slave_name);
-    return NULL;
-  }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->state_safeop), comp_id, "%s.%s.%s.slave-state-safeop", LCEC_MODULE_NAME, master_name, slave_name) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.state-state-safeop failed\n", LCEC_MODULE_NAME, master_name, slave_name);
-    return NULL;
-  }
-  if (hal_pin_bit_newf(HAL_OUT, &(hal_data->state_op), comp_id, "%s.%s.%s.slave-state-op", LCEC_MODULE_NAME, master_name, slave_name) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.state-state-op failed\n", LCEC_MODULE_NAME, master_name, slave_name);
-    return NULL;
-  }
-
-  // initialize pins
-  *(hal_data->online) = 0;
-  *(hal_data->operational) = 0;
-  *(hal_data->state_init) = 0;
-  *(hal_data->state_preop) = 0;
-  *(hal_data->state_safeop) = 0;
-  *(hal_data->state_op) = 0;
 
   return hal_data;
 }
@@ -1202,6 +1163,132 @@ int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, ui
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Invalid result size on SDO upload (0x%04x:0x%02x, req: %ld, res: %ld)\n",
       master->name, slave->name, index, subindex, size, result_size);
     return -1;
+  }
+
+  return 0;
+}
+
+static int lcec_pin_newfv(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, const char *fmt, va_list ap) {
+  char name[HAL_NAME_LEN + 1];
+  int sz;
+  int err;
+
+  sz = rtapi_vsnprintf(name, sizeof(name), fmt, ap);
+  if(sz == -1 || sz > HAL_NAME_LEN) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "length %d too long for name starting '%s'\n", sz, name);
+    return -ENOMEM;
+  }
+
+  err = hal_pin_new(name, type, dir, data_ptr_addr, comp_id);
+  if (err) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s failed\n", name);
+    return err;
+  }
+
+  switch (type) {
+    case HAL_BIT:
+      **((hal_bit_t **) data_ptr_addr) = 0;
+      break;
+    case HAL_FLOAT:
+      **((hal_float_t **) data_ptr_addr) = 0.0;
+      break;
+    case HAL_S32:
+      **((hal_s32_t **) data_ptr_addr) = 0;
+      break;
+    case HAL_U32:
+      **((hal_u32_t **) data_ptr_addr) = 0;
+      break;
+  }
+
+  return 0;
+}
+
+int lcec_pin_newf(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, const char *fmt, ...) {
+  va_list ap;
+  int err;
+
+  va_start(ap, fmt);
+  err = lcec_pin_newfv(type, dir, data_ptr_addr, fmt, ap);
+  va_end(ap);
+
+  return err;
+}
+
+int lcec_pin_newf_list(void *base, const lcec_pindesc_t *list, ...) {
+  va_list ap;
+  int err;
+  const lcec_pindesc_t *p;
+
+  for (p = list; p->type != HAL_TYPE_UNSPECIFIED; p++) {
+    va_start(ap, list);
+    err = lcec_pin_newfv(p->type, p->dir, (void **) (base + p->offset), p->fmt, ap); 
+    va_end(ap);
+    if (err) {
+      return err;
+    }
+  }
+
+  return 0;
+}
+
+static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, va_list ap) {
+  char name[HAL_NAME_LEN + 1];
+  int sz;
+  int err;
+
+  sz = rtapi_vsnprintf(name, sizeof(name), fmt, ap);
+  if(sz == -1 || sz > HAL_NAME_LEN) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "length %d too long for name starting '%s'\n", sz, name);
+    return -ENOMEM;
+  }
+
+  err = hal_param_new(name, type, dir, data_addr, comp_id);
+  if (err) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s failed\n", name);
+    return err;
+  }
+
+  switch (type) {
+    case HAL_BIT:
+      *((hal_bit_t *) data_addr) = 0;
+      break;
+    case HAL_FLOAT:
+      *((hal_float_t *) data_addr) = 0.0;
+      break;
+    case HAL_S32:
+      *((hal_s32_t *) data_addr) = 0;
+      break;
+    case HAL_U32:
+      *((hal_u32_t *) data_addr) = 0;
+      break;
+  }
+
+  return 0;
+}
+
+int lcec_param_newf(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, ...) {
+  va_list ap;
+  int err;
+
+  va_start(ap, fmt);
+  err = lcec_param_newfv(type, dir, data_addr, fmt, ap);
+  va_end(ap);
+
+  return err;
+}
+
+int lcec_param_newf_list(void *base, const lcec_pindesc_t *list, ...) {
+  va_list ap;
+  int err;
+  const lcec_pindesc_t *p;
+
+  for (p = list; p->type != HAL_TYPE_UNSPECIFIED; p++) {
+    va_start(ap, list);
+    err = lcec_param_newfv(p->type, p->dir, (void *) (base + p->offset), p->fmt, ap); 
+    va_end(ap);
+    if (err) {
+      return err;
+    }
   }
 
   return 0;
