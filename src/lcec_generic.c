@@ -46,79 +46,48 @@ int lcec_generic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
       case HAL_BIT:
         if (hal_data->bitLength == 1) {
           // single bit pin
-          err = hal_pin_bit_newf(hal_data->dir, ((hal_bit_t **) &hal_data->pin[0]), comp_id, "%s.%s.%s.%s", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
+          err = lcec_pin_newf(hal_data->type, hal_data->dir, &hal_data->pin[0], "%s.%s.%s.%s", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
           if (err != 0) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.%s failed\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
             return err;
           }
-
-          *((hal_bit_t *) hal_data->pin[0]) = 0;
         } else {
           // bit pin array
           for (j=0; j < LCEC_CONF_GENERIC_MAX_SUBPINS && j < hal_data->bitLength; j++) {
-            err = hal_pin_bit_newf(hal_data->dir, ((hal_bit_t **) &hal_data->pin[j]), comp_id, "%s.%s.%s.%s-%d", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name, j);
+            err = lcec_pin_newf(hal_data->type, hal_data->dir, &hal_data->pin[j], "%s.%s.%s.%s-%d", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name, j);
             if (err != 0) {
-              rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.%s-%d failed\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name, j);
               return err;
             }
-
-            *((hal_bit_t *) hal_data->pin[j]) = 0;
           }
         }
         break;
 
       case HAL_S32:
-        // check data size
-        if (hal_data->bitLength > 32) {
-          rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "unable to export S32 pin %s.%s.%s.%s: invalid process data bitlen!\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
-          continue;
-        }
-
-        // export pin
-        err = hal_pin_s32_newf(hal_data->dir, ((hal_s32_t **) &hal_data->pin[0]), comp_id, "%s.%s.%s.%s", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
-        if (err != 0) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.%s failed\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
-          return err;
-        }
-
-        // initialize data
-        *((hal_s32_t *) hal_data->pin[0]) = 0;
-        break;
-
       case HAL_U32:
         // check data size
         if (hal_data->bitLength > 32) {
-          rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "unable to export U32 pin %s.%s.%s.%s: invalid process data bitlen!\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
+          rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "unable to export pin %s.%s.%s.%s: invalid process data bitlen!\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
           continue;
         }
 
         // export pin
-        err = hal_pin_u32_newf(hal_data->dir, ((hal_u32_t **) &hal_data->pin[0]), comp_id, "%s.%s.%s.%s", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
+        err = lcec_pin_newf(hal_data->type, hal_data->dir, &hal_data->pin[0], "%s.%s.%s.%s", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
         if (err != 0) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.%s failed\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
           return err;
         }
-
-        // initialize data
-        *((hal_u32_t *) hal_data->pin[0]) = 0;
         break;
 
       case HAL_FLOAT:
         // check data size
         if (hal_data->bitLength > 32) {
-          rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "unable to export FLOAT pin %s.%s.%s.%s: invalid process data bitlen!\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
+          rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "unable to export pin %s.%s.%s.%s: invalid process data bitlen!\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
           continue;
         }
 
         // export pin
-        err = hal_pin_float_newf(hal_data->dir, ((hal_float_t **) &hal_data->pin[0]), comp_id, "%s.%s.%s.%s", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
+        err = lcec_pin_newf(hal_data->type, hal_data->dir, &hal_data->pin[0], "%s.%s.%s.%s", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
         if (err != 0) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.%s failed\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
           return err;
         }
-
-        // initialize data
-        *((hal_float_t *) hal_data->pin[0]) = 0.0;
         break;
 
       default:

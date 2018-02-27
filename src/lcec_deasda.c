@@ -100,6 +100,53 @@ typedef struct {
 
 } lcec_deasda_data_t;
 
+static const lcec_pindesc_t slave_pins[] = {
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_deasda_data_t, vel_fb), "%s.%s.%s.srv-vel-fb" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_deasda_data_t, vel_fb_rpm), "%s.%s.%s.srv-vel-fb-rpm" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_deasda_data_t, vel_fb_rpm_abs), "%s.%s.%s.srv-vel-fb-rpm-abs" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_deasda_data_t, vel_rpm), "%s.%s.%s.srv-vel-rpm" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, ready), "%s.%s.%s.srv-ready" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, switched_on), "%s.%s.%s.srv-switched-on" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, oper_enabled), "%s.%s.%s.srv-oper-enabled" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, fault), "%s.%s.%s.srv-fault" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, volt_enabled), "%s.%s.%s.srv-volt-enabled" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, quick_stoped), "%s.%s.%s.srv-quick-stoped" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, on_disabled), "%s.%s.%s.srv-on-disabled" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, warning), "%s.%s.%s.srv-warning" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, remote), "%s.%s.%s.srv-remote" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, at_speed), "%s.%s.%s.srv-at-speed" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, limit_active), "%s.%s.%s.srv-limit-active" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, zero_speed), "%s.%s.%s.srv-zero-speed" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_deasda_data_t, enc_raw), "%s.%s.%s.srv-enc-raw" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_deasda_data_t, pos_raw_hi), "%s.%s.%s.srv-pos-raw-hi" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_deasda_data_t, pos_raw_lo), "%s.%s.%s.srv-pos-raw-lo" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_deasda_data_t, extenc_raw), "%s.%s.%s.srv-extenc-raw" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_deasda_data_t, extenc_raw_hi), "%s.%s.%s.srv-extenc-raw-hi" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_deasda_data_t, extenc_raw_lo), "%s.%s.%s.srv-extenc-raw-lo" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_deasda_data_t, pos_fb), "%s.%s.%s.srv-pos-fb" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_deasda_data_t, pos_extenc), "%s.%s.%s.srv-pos-extenc" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, on_home_neg), "%s.%s.%s.srv-on-home-neg" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, on_home_pos), "%s.%s.%s.srv-on-home-pos" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, pos_reset), "%s.%s.%s.srv-pos-reset" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, switch_on), "%s.%s.%s.srv-switch-on" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, enable_volt), "%s.%s.%s.srv-enable-volt" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, quick_stop), "%s.%s.%s.srv-quick-stop" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, enable), "%s.%s.%s.srv-enable" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, fault_reset), "%s.%s.%s.srv-fault-reset" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, halt), "%s.%s.%s.srv-halt" },
+  { HAL_FLOAT, HAL_IN, offsetof(lcec_deasda_data_t, vel_cmd), "%s.%s.%s.srv-vel-cmd" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
+static const lcec_pindesc_t slave_params[] = {
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_deasda_data_t, pos_scale), "%s.%s.%s.srv-pos-scale" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_deasda_data_t, extenc_scale), "%s.%s.%s.srv-extenc-scale" },
+  { HAL_U32, HAL_RW, offsetof(lcec_deasda_data_t, pprev), "%s.%s.%s.srv-pulses-per-rev" },
+  { HAL_S32, HAL_RW, offsetof(lcec_deasda_data_t, home_raw), "%s.%s.%s.srv-home-raw" },
+  { HAL_U32, HAL_RW, offsetof(lcec_deasda_data_t, fault_autoreset_cycles), "%s.%s.%s.srv-fault-autoreset-cycles" },
+  { HAL_U32, HAL_RW, offsetof(lcec_deasda_data_t, fault_autoreset_retries), "%s.%s.%s.srv-fault-autoreset-retries" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
 
 static ec_pdo_entry_info_t lcec_deasda_in[] = {
    {0x6041, 0x00, 16}, // Status Word
@@ -181,204 +228,14 @@ int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x60FF, 0x00, &hal_data->cmdvel_pdo_os, NULL);
 
   // export pins
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->vel_fb), comp_id, "%s.%s.%s.srv-vel-fb", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-fb failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->vel_fb_rpm), comp_id, "%s.%s.%s.srv-vel-fb-rpm", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-fb-rpm failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->vel_fb_rpm_abs), comp_id, "%s.%s.%s.srv-vel-fb-rpm-abs", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-fb-rpm-abs failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->vel_rpm), comp_id, "%s.%s.%s.srv-vel-rpm", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-rpm failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->ready), comp_id, "%s.%s.%s.srv-ready", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-ready failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->switched_on), comp_id, "%s.%s.%s.srv-switched-on", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-switched-on failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->oper_enabled), comp_id, "%s.%s.%s.srv-oper-enabled", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-oper-enabled failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->fault), comp_id, "%s.%s.%s.srv-fault", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-fault failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->volt_enabled), comp_id, "%s.%s.%s.srv-volt-enabled", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-volt-enabled failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->quick_stoped), comp_id, "%s.%s.%s.srv-quick-stoped", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-quick-stoped failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->on_disabled), comp_id, "%s.%s.%s.srv-on-disabled", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-on-disabled failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->warning), comp_id, "%s.%s.%s.srv-warning", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-warning failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->remote), comp_id, "%s.%s.%s.srv-remote", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-remote failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->at_speed), comp_id, "%s.%s.%s.srv-at-speed", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-at-speed failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->limit_active), comp_id, "%s.%s.%s.srv-limit-active", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-limit-active failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->zero_speed), comp_id, "%s.%s.%s.srv-zero-speed", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-zero-speed failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_s32_newf(HAL_OUT, &(hal_data->enc_raw), comp_id, "%s.%s.%s.srv-enc-raw", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-enc-raw failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->pos_raw_hi), comp_id, "%s.%s.%s.srv-pos-raw-hi", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-raw-hi failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->pos_raw_lo), comp_id, "%s.%s.%s.srv-pos-raw-lo", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-raw-lo failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_s32_newf(HAL_OUT, &(hal_data->extenc_raw), comp_id, "%s.%s.%s.srv-extenc-raw", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-extenc-raw failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->extenc_raw_hi), comp_id, "%s.%s.%s.srv-extenc-raw-hi", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-extenc-raw-hi failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->extenc_raw_lo), comp_id, "%s.%s.%s.srv-extenc-raw-lo", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-extenc-raw-lo failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->pos_fb), comp_id, "%s.%s.%s.srv-pos-fb", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-fb failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->pos_extenc), comp_id, "%s.%s.%s.srv-pos-extenc", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-extenc failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->on_home_neg), comp_id, "%s.%s.%s.srv-on-home-neg", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-on-home-neg failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->on_home_pos), comp_id, "%s.%s.%s.srv-on-home-pos", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-on-home-pos failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->pos_reset), comp_id, "%s.%s.%s.srv-pos-reset", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-reset failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->switch_on), comp_id, "%s.%s.%s.srv-switch-on", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-switch-on failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->enable_volt), comp_id, "%s.%s.%s.srv-enable-volt", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-enable-volt failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->quick_stop), comp_id, "%s.%s.%s.srv-quick-stop", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-quick-stop failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->enable), comp_id, "%s.%s.%s.srv-enable", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-enable failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->fault_reset), comp_id, "%s.%s.%s.srv-fault-reset", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-fault-reset failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->halt), comp_id, "%s.%s.%s.srv-halt", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-halt failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_IN, &(hal_data->vel_cmd), comp_id, "%s.%s.%s.srv-vel-cmd", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-cmd failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+  if ((err = lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
     return err;
   }
 
   // export parameters
-  if ((err = hal_param_float_newf(HAL_RW, &(hal_data->pos_scale), comp_id, "%s.%s.%s.srv-pos-scale", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s.%s.%s.srv-pos-scale failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+  if ((err = lcec_param_newf_list(hal_data, slave_params, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
     return err;
   }
-  if ((err = hal_param_float_newf(HAL_RW, &(hal_data->extenc_scale), comp_id, "%s.%s.%s.srv-extenc-scale", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s.%s.%s.srv-extenc-scale failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_param_u32_newf(HAL_RW, &(hal_data->pprev), comp_id, "%s.%s.%s.srv-pulses-per-rev", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s.%s.%s.srv-pulses-per-rev failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_param_s32_newf(HAL_RW, &(hal_data->home_raw), comp_id, "%s.%s.%s.srv-home-raw", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s.%s.%s.srv-home-raw failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_param_u32_newf(HAL_RW, &(hal_data->fault_autoreset_cycles), comp_id, "%s.%s.%s.srv-fault-autoreset-cycles", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s.%s.%s.srv-fault-autoreset-cycles failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_param_u32_newf(HAL_RW, &(hal_data->fault_autoreset_retries), comp_id, "%s.%s.%s.srv-fault-autoreset-retries", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s.%s.%s.srv-fault-autoreset-retries failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-
-  // set default pin values
-  *(hal_data->vel_fb) = 0.0;
-  *(hal_data->vel_fb_rpm) = 0.0;
-  *(hal_data->vel_fb_rpm_abs) = 0.0;
-  *(hal_data->vel_rpm) = 0.0;
-  *(hal_data->ready) = 0;
-  *(hal_data->switched_on) = 0;
-  *(hal_data->oper_enabled) = 0;
-  *(hal_data->fault) = 0;
-  *(hal_data->volt_enabled) = 0;
-  *(hal_data->quick_stoped) = 0;
-  *(hal_data->on_disabled) = 0;
-  *(hal_data->warning) = 0;
-  *(hal_data->remote) = 0;
-  *(hal_data->at_speed) = 0;
-  *(hal_data->limit_active) = 0;
-  *(hal_data->zero_speed) = 0;
-  *(hal_data->enc_raw) = 0;
-  *(hal_data->pos_raw_hi) = 0;
-  *(hal_data->pos_raw_lo) = 0;
-  *(hal_data->extenc_raw) = 0;
-  *(hal_data->extenc_raw_hi) = 0;
-  *(hal_data->extenc_raw_lo) = 0;
-  *(hal_data->pos_fb) = 0.0;
-  *(hal_data->pos_extenc) = 0.0;
-  *(hal_data->on_home_neg) = 0;
-  *(hal_data->on_home_pos) = 0;
-  *(hal_data->pos_reset) = 0;
-  *(hal_data->switch_on) = 0;
-  *(hal_data->enable_volt) = 0;
-  *(hal_data->quick_stop) = 0;
-  *(hal_data->enable) = 0;
-  *(hal_data->fault_reset) = 0;
-  *(hal_data->halt) = 0;
-  *(hal_data->vel_cmd) = 0.0;
 
   // initialize variables
   hal_data->do_init = 1;

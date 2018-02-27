@@ -52,12 +52,10 @@ int lcec_el2xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (i << 4), 0x01, &pin->pdo_os, &pin->pdo_bp);
 
     // export pins
-    if ((err = hal_pin_bit_newf(HAL_IN, &(pin->out), comp_id, "%s.%s.%s.dout-%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.dout-%02d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
+    if ((err = lcec_pin_newf(HAL_BIT, HAL_IN, (void **) &(pin->out), "%s.%s.%s.dout-%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       return err;
     }
-    if ((err = hal_param_bit_newf(HAL_RW, &(pin->invert), comp_id, "%s.%s.%s.dout-%d-invert", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.dout-%02d-invert failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
+    if ((err = lcec_param_newf(HAL_BIT, HAL_RW, (void *) &(pin->invert), "%s.%s.%s.dout-%d-invert", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       return err;
     }
 

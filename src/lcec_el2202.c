@@ -71,6 +71,12 @@ typedef struct {
   lcec_el2202_chan_t chans[LCEC_EL2202_CHANS];
 } lcec_el2202_data_t;
 
+static const lcec_pindesc_t slave_pins[] = {
+  { HAL_BIT, HAL_IN, offsetof(lcec_el2202_chan_t, out), "%s.%s.%s.dout-%d" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_el2202_chan_t, tristate), "%s.%s.%s.tristate-%d" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
 /** \brief callback for periodic IO data access*/ 
 void lcec_el2202_write(struct lcec_slave *slave, long period);
 
@@ -105,20 +111,10 @@ int lcec_el2202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (i << 4), 0x01, &chan->out_offs, &chan->out_bitp);
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (i << 4), 0x02, &chan->tristate_offs, &chan->tristate_bitp);
 
-    // export out pin
-    if ((err = hal_pin_bit_newf(HAL_IN, &(chan->out), comp_id, "%s.%s.%s.dout-%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.dout-%02d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
+    // export pins
+    if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       return err;
     }
-    // export tristate pin
-    if ((err = hal_pin_bit_newf(HAL_IN, &(chan->tristate), comp_id, "%s.%s.%s.tristate-%d", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.tristate-%02d failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-
-    // initialize pins
-    *(chan->out) = 0;
-    *(chan->tristate) = 0;
   }
 
   return 0;

@@ -36,6 +36,22 @@ typedef struct {
   unsigned int val_pdo_os;
 } lcec_el40x1_data_t;
 
+static const lcec_pindesc_t slave_pins[] = {
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el40x1_data_t, scale), "%s.%s.%s.aout-scale" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el40x1_data_t, offset), "%s.%s.%s.aout-offset" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el40x1_data_t, min_dc), "%s.%s.%s.aout-min-dc" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el40x1_data_t, max_dc), "%s.%s.%s.aout-max-dc" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el40x1_data_t, curr_dc), "%s.%s.%s.aout-curr-dc" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_el40x1_data_t, enable), "%s.%s.%s.aout-enable" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_el40x1_data_t, absmode), "%s.%s.%s.aout-absmode" },
+  { HAL_FLOAT, HAL_IN, offsetof(lcec_el40x1_data_t, value), "%s.%s.%s.aout-value" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_el40x1_data_t, raw_val), "%s.%s.%s.aout-raw" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el40x1_data_t, pos), "%s.%s.%s.aout-pos" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el40x1_data_t, neg), "%s.%s.%s.aout-neg" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
+
 static ec_pdo_entry_info_t lcec_el40x1_channel[] = {
     {0x7000, 1, 16}  // output
 };
@@ -75,68 +91,15 @@ int lcec_el40x1_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   // initialize POD entries
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000, 0x01, &hal_data->val_pdo_os, NULL);
 
-  // export paramameters
-  if ((err = hal_pin_float_newf(HAL_IO, &(hal_data->scale), comp_id, "%s.%s.%s.aout-scale", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-scale failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_IO, &(hal_data->offset), comp_id, "%s.%s.%s.aout-offset", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-offset failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_IO, &(hal_data->min_dc), comp_id, "%s.%s.%s.aout-min-dc", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-min-dc failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_IO, &(hal_data->max_dc), comp_id, "%s.%s.%s.aout-max-dc", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-max-dc failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->curr_dc), comp_id, "%s.%s.%s.aout-curr-dc", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-curr-dc failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-
   // export pins
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->enable), comp_id, "%s.%s.%s.aout-enable", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-enable failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->absmode), comp_id, "%s.%s.%s.aout-absmode", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-absmode failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_IN, &(hal_data->value), comp_id, "%s.%s.%s.aout-value", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-value failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_s32_newf(HAL_OUT, &(hal_data->raw_val), comp_id, "%s.%s.%s.aout-raw", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-raw failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-
-  // export UP/DOWN pins
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->pos), comp_id, "%s.%s.%s.aout-pos", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-pos failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->neg), comp_id, "%s.%s.%s.aout-neg", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.aout-neg failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+  if ((err = lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
     return err;
   }
 
   // set default pin values
   *(hal_data->scale) = 1.0;
-  *(hal_data->offset) = 0.0;
   *(hal_data->min_dc) = -1.0;
   *(hal_data->max_dc) = 1.0;
-  *(hal_data->curr_dc) = 0.0;
-  *(hal_data->enable) = 0;
-  *(hal_data->absmode) = 0;
-  *(hal_data->value) = 0.0;
-  *(hal_data->raw_val) = 0.0;
-  *(hal_data->pos) = 0;
-  *(hal_data->neg) = 0;
 
   // init other fields
   hal_data->old_scale = *(hal_data->scale) + 1.0;
