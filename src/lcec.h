@@ -166,7 +166,19 @@ typedef struct lcec_slave {
   lcec_slave_idnconf_t *idn_config;
 } lcec_slave_t;
 
+typedef struct {
+  hal_type_t type;
+  hal_pin_dir_t dir;
+  int offset;
+  const char *fmt;
+} lcec_pindesc_t;
+
 int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, uint8_t *target, size_t size);
+
+int lcec_pin_newf(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, const char *fmt, ...);
+int lcec_pin_newf_list(void *base, const lcec_pindesc_t *list, ...);
+int lcec_param_newf(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, ...);
+int lcec_param_newf_list(void *base, const lcec_pindesc_t *list, ...);
 
 #endif
 
