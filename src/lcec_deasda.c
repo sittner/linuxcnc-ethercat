@@ -19,6 +19,8 @@
 #include "lcec.h"
 #include "lcec_deasda.h"
 
+#include "lcec_class_enc.h"
+
 #define DEASDA_PULSES_PER_REV_DEFLT (1280000)
 #define DEASDA_RPM_FACTOR           (0.1)
 #define DEASDA_RPM_RCPT             (1.0 / DEASDA_RPM_FACTOR)
@@ -29,14 +31,6 @@
 #define DEASDA_FAULT_AUTORESET_RETRIES 3
 
 typedef struct {
-  int do_init;
-
-  long long pos_cnt;
-  int32_t last_pos_cnt;
-
-  long long extenc_cnt;
-  int32_t last_extenc_cnt;
-
   hal_float_t *vel_fb;
   hal_float_t *vel_fb_rpm;
   hal_float_t *vel_fb_rpm_abs;
@@ -53,17 +47,6 @@ typedef struct {
   hal_bit_t *at_speed;
   hal_bit_t *limit_active;
   hal_bit_t *zero_speed;
-  hal_s32_t *enc_raw;
-  hal_s32_t *extenc_raw;
-  hal_u32_t *pos_raw_hi;
-  hal_u32_t *pos_raw_lo;
-  hal_u32_t *extenc_raw_hi;
-  hal_u32_t *extenc_raw_lo;
-  hal_float_t *pos_fb;
-  hal_float_t *pos_extenc;
-  hal_bit_t *on_home_neg;
-  hal_bit_t *on_home_pos;
-  hal_bit_t *pos_reset;
   hal_bit_t *switch_on;
   hal_bit_t *enable_volt;
   hal_bit_t *quick_stop;
@@ -75,14 +58,14 @@ typedef struct {
   hal_float_t pos_scale;
   hal_float_t extenc_scale;
   hal_u32_t pprev;
-  hal_s32_t home_raw;
   hal_u32_t fault_autoreset_cycles;
   hal_u32_t fault_autoreset_retries;
 
+  lcec_class_enc_data_t enc;
+  lcec_class_enc_data_t extenc;
+
   hal_float_t pos_scale_old;
-  hal_u32_t pprev_old;
   double pos_scale_rcpt;
-  double pos_scale_cnt;
 
   unsigned int status_pdo_os;
   unsigned int currpos_pdo_os;
@@ -117,17 +100,6 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, at_speed), "%s.%s.%s.srv-at-speed" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, limit_active), "%s.%s.%s.srv-limit-active" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, zero_speed), "%s.%s.%s.srv-zero-speed" },
-  { HAL_S32, HAL_OUT, offsetof(lcec_deasda_data_t, enc_raw), "%s.%s.%s.srv-enc-raw" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_deasda_data_t, pos_raw_hi), "%s.%s.%s.srv-pos-raw-hi" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_deasda_data_t, pos_raw_lo), "%s.%s.%s.srv-pos-raw-lo" },
-  { HAL_S32, HAL_OUT, offsetof(lcec_deasda_data_t, extenc_raw), "%s.%s.%s.srv-extenc-raw" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_deasda_data_t, extenc_raw_hi), "%s.%s.%s.srv-extenc-raw-hi" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_deasda_data_t, extenc_raw_lo), "%s.%s.%s.srv-extenc-raw-lo" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_deasda_data_t, pos_fb), "%s.%s.%s.srv-pos-fb" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_deasda_data_t, pos_extenc), "%s.%s.%s.srv-pos-extenc" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, on_home_neg), "%s.%s.%s.srv-on-home-neg" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_deasda_data_t, on_home_pos), "%s.%s.%s.srv-on-home-pos" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, pos_reset), "%s.%s.%s.srv-pos-reset" },
   { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, switch_on), "%s.%s.%s.srv-switch-on" },
   { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, enable_volt), "%s.%s.%s.srv-enable-volt" },
   { HAL_BIT, HAL_IN, offsetof(lcec_deasda_data_t, quick_stop), "%s.%s.%s.srv-quick-stop" },
@@ -139,10 +111,9 @@ static const lcec_pindesc_t slave_pins[] = {
 };
 
 static const lcec_pindesc_t slave_params[] = {
-  { HAL_FLOAT, HAL_RW, offsetof(lcec_deasda_data_t, pos_scale), "%s.%s.%s.srv-pos-scale" },
-  { HAL_FLOAT, HAL_RW, offsetof(lcec_deasda_data_t, extenc_scale), "%s.%s.%s.srv-extenc-scale" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_deasda_data_t, pos_scale), "%s.%s.%s.pos-scale" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_deasda_data_t, extenc_scale), "%s.%s.%s.extenc-scale" },
   { HAL_U32, HAL_RW, offsetof(lcec_deasda_data_t, pprev), "%s.%s.%s.srv-pulses-per-rev" },
-  { HAL_S32, HAL_RW, offsetof(lcec_deasda_data_t, home_raw), "%s.%s.%s.srv-home-raw" },
   { HAL_U32, HAL_RW, offsetof(lcec_deasda_data_t, fault_autoreset_cycles), "%s.%s.%s.srv-fault-autoreset-cycles" },
   { HAL_U32, HAL_RW, offsetof(lcec_deasda_data_t, fault_autoreset_retries), "%s.%s.%s.srv-fault-autoreset-retries" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
@@ -237,22 +208,23 @@ int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     return err;
   }
 
+  // init subclasses
+  if ((err = class_enc_init(slave, &hal_data->enc, 32, "enc")) != 0) {
+    return err;
+  }
+  // init subclasses
+  if ((err = class_enc_init(slave, &hal_data->extenc, 32, "extenc")) != 0) {
+    return err;
+  }
+
   // initialize variables
-  hal_data->do_init = 1;
   hal_data->pos_scale = 1.0;
   hal_data->extenc_scale = 1.0;
-  hal_data->home_raw = 0;
   hal_data->fault_autoreset_cycles = DEASDA_FAULT_AUTORESET_CYCLES;
   hal_data->fault_autoreset_retries = DEASDA_FAULT_AUTORESET_RETRIES;
-  hal_data->pos_cnt = 0;
-  hal_data->last_pos_cnt = 0;
-  hal_data->extenc_cnt = 0;
-  hal_data->last_extenc_cnt = 0;
   hal_data->pos_scale_old = hal_data->pos_scale + 1.0;
   hal_data->pos_scale_rcpt = 1.0;
-  hal_data->pos_scale_cnt = 1.0;
   hal_data->pprev = DEASDA_PULSES_PER_REV_DEFLT;
-  hal_data->pprev_old = hal_data->pprev + 1;
   hal_data->last_switch_on = 0;
   hal_data->internal_fault = 0;
 
@@ -265,7 +237,7 @@ int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
 
 void lcec_deasda_check_scales(lcec_deasda_data_t *hal_data) {
   // check for change in scale value
-  if (hal_data->pos_scale != hal_data->pos_scale_old || hal_data->pprev != hal_data->pprev_old) {
+  if (hal_data->pos_scale != hal_data->pos_scale_old) {
 
     // scale value has changed, test and update it
     if ((hal_data->pos_scale < 1e-20) && (hal_data->pos_scale > -1e-20)) {
@@ -275,13 +247,9 @@ void lcec_deasda_check_scales(lcec_deasda_data_t *hal_data) {
 
     // save new scale to detect future changes
     hal_data->pos_scale_old = hal_data->pos_scale;
-    hal_data->pprev_old = hal_data->pprev;
 
     // we actually want the reciprocal
     hal_data->pos_scale_rcpt = 1.0 / hal_data->pos_scale;
-
-    // scale for counter
-    hal_data->pos_scale_cnt = hal_data->pos_scale / ((double) hal_data->pprev);
   }
 }
 
@@ -292,7 +260,7 @@ void lcec_deasda_read(struct lcec_slave *slave, long period) {
   uint16_t status;
   int32_t speed_raw;
   double rpm;
-  int32_t pos_cnt, pos_cnt_diff;
+  uint32_t pos_cnt;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
@@ -346,37 +314,12 @@ void lcec_deasda_read(struct lcec_slave *slave, long period) {
   *(hal_data->vel_fb) = rpm * DEASDA_RPM_DIV * hal_data->pos_scale;
 
   // update raw position counter
-  pos_cnt = EC_READ_S32(&pd[hal_data->currpos_pdo_os]);
-  *(hal_data->enc_raw) = pos_cnt;
-  *(hal_data->on_home_neg) = (pos_cnt <= hal_data->home_raw);
-  *(hal_data->on_home_pos) = (pos_cnt >= hal_data->home_raw);
-  pos_cnt_diff = pos_cnt - hal_data->last_pos_cnt;
-  hal_data->last_pos_cnt = pos_cnt;
-  hal_data->pos_cnt += pos_cnt_diff;
+  pos_cnt = EC_READ_U32(&pd[hal_data->currpos_pdo_os]);
+  class_enc_update(&hal_data->enc, hal_data->pprev, hal_data->pos_scale, pos_cnt, 0, false);
 
   // update external encoder counter
-  pos_cnt = EC_READ_S32(&pd[hal_data->extenc_pdo_os]);
-  *(hal_data->extenc_raw) = pos_cnt;
-  pos_cnt_diff = pos_cnt - hal_data->last_extenc_cnt;
-  hal_data->last_extenc_cnt = pos_cnt;
-  hal_data->extenc_cnt += pos_cnt_diff;
-
-  // handle initialization
-  if (hal_data->do_init || *(hal_data->pos_reset)) {
-    hal_data->do_init = 0;
-    hal_data->pos_cnt = 0;
-    hal_data->extenc_cnt = 0;
-  }
-
-  // update raw counter pins
-  *(hal_data->pos_raw_hi) = (hal_data->pos_cnt >> 32) & 0xffffffff;
-  *(hal_data->pos_raw_lo) = (hal_data->pos_cnt) & 0xffffffff;
-  *(hal_data->extenc_raw_hi) = (hal_data->extenc_cnt >> 32) & 0xffffffff;
-  *(hal_data->extenc_raw_lo) = (hal_data->extenc_cnt) & 0xffffffff;
-
-  // scale count to make floating point position
-  *(hal_data->pos_fb) = (double)(hal_data->pos_cnt) * hal_data->pos_scale_cnt;
-  *(hal_data->pos_extenc) = (double)(hal_data->extenc_cnt) * hal_data->extenc_scale;
+  pos_cnt = EC_READ_U32(&pd[hal_data->extenc_pdo_os]);
+  class_enc_update(&hal_data->extenc, 1, hal_data->extenc_scale, pos_cnt, 0, false);
 }
 
 void lcec_deasda_write(struct lcec_slave *slave, long period) {

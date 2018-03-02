@@ -21,6 +21,8 @@
 #include "lcec.h"
 #include "lcec_el7211.h"
 
+#include "lcec_class_enc.h"
+
 #define FAULT_RESET_PERIOD_NS  100000000
 
 typedef struct {
@@ -40,24 +42,15 @@ typedef struct {
   hal_float_t *vel_fb;
   hal_float_t *vel_fb_rpm;
   hal_float_t *vel_fb_rpm_abs;
-  hal_float_t *pos_fb;
-  hal_float_t *pos_fb_rel;
 
   hal_s32_t *vel_fb_raw;
-  hal_s32_t *pos_fb_raw;
-  hal_s32_t *pos_fb_raw_rel;
-
-  hal_bit_t *index_ena;
-  hal_bit_t *pos_reset;
-  hal_bit_t *on_home_neg;
-  hal_bit_t *on_home_pos;
 
   hal_float_t scale;
-  hal_s32_t home_raw;
 
   hal_u32_t vel_resolution;
   hal_u32_t pos_resolution;
-  hal_u32_t singleturn_bits;
+
+  lcec_class_enc_data_t enc;
 
   unsigned int pos_fb_pdo_os;
   unsigned int status_pdo_os;
@@ -67,22 +60,10 @@ typedef struct {
 
   double vel_scale;
   double vel_rcpt;
-  double pos_rcpt;
 
   double scale_old;
   double scale_rcpt;
   double vel_out_scale;
-  double pos_in_scale;
-
-  int do_init;
-
-  int pos_cnt_shift;
-  long long pos_cnt;
-  long long index_cnt;
-  int32_t last_pos_cnt;
-
-  int last_index_ena;
-  int32_t index_ref;
 
   long fault_reset_timer;
 
@@ -103,15 +84,7 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb), "%s.%s.%s.velo-fb" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb_rpm), "%s.%s.%s.velo-fb-rpm" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb_rpm_abs), "%s.%s.%s.velo-fb-rpm-abs" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, pos_fb), "%s.%s.%s.pos-fb" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, pos_fb_rel), "%s.%s.%s.pos-fb-rel" },
   { HAL_S32, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb_raw), "%s.%s.%s.velo-fb-raw" },
-  { HAL_S32, HAL_OUT, offsetof(lcec_el7211_data_t, pos_fb_raw), "%s.%s.%s.pos-fb-raw" },
-  { HAL_S32, HAL_OUT, offsetof(lcec_el7211_data_t, pos_fb_raw_rel), "%s.%s.%s.pos-fb-raw-rel" },
-  { HAL_BIT, HAL_IO, offsetof(lcec_el7211_data_t, index_ena), "%s.%s.%s.index-ena" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_el7211_data_t, pos_reset), "%s.%s.%s.pos-reset" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, on_home_neg), "%s.%s.%s.on-home-neg" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, on_home_pos), "%s.%s.%s.on-home-pos" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -119,8 +92,6 @@ static const lcec_pindesc_t slave_params[] = {
   { HAL_FLOAT, HAL_RW, offsetof(lcec_el7211_data_t, scale), "%s.%s.%s.scale" },
   { HAL_U32, HAL_RO, offsetof(lcec_el7211_data_t, vel_resolution), "%s.%s.%s.vel-resolution" },
   { HAL_U32, HAL_RO, offsetof(lcec_el7211_data_t, pos_resolution), "%s.%s.%s.pos-resolution" },
-  { HAL_U32, HAL_RO, offsetof(lcec_el7211_data_t, singleturn_bits), "%s.%s.%s.singleturn-bits" },
-  { HAL_S32, HAL_RW, offsetof(lcec_el7211_data_t, home_raw), "%s.%s.%s.home-raw" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -176,7 +147,6 @@ int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   uint8_t sdo_buf[4];
   uint32_t sdo_vel_resolution;
   uint32_t sdo_pos_resolution;
-  uint8_t sdo_singleturn_bits;
 
   // initialize callbacks
   slave->proc_read = lcec_el7211_read;
@@ -199,10 +169,6 @@ int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     return -EIO;
   }
   sdo_pos_resolution = EC_READ_U32(sdo_buf);
-  if (lcec_read_sdo(slave, 0x8000, 0x12, sdo_buf, 1)) {
-    return -EIO;
-  }
-  sdo_singleturn_bits = EC_READ_U8(sdo_buf);
 
   // initialize sync info
   slave->sync_info = lcec_el7211_syncs;
@@ -224,12 +190,15 @@ int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     return err;
   }
 
+  // init subclasses
+  if ((err = class_enc_init(slave, &hal_data->enc, 32, "enc")) != 0) {
+    return err;
+  }
+
   // init parameters
   hal_data->scale = 1.0;
-  hal_data->home_raw = 0;
   hal_data->vel_resolution = sdo_vel_resolution;
   hal_data->pos_resolution = sdo_pos_resolution;
-  hal_data->singleturn_bits = sdo_singleturn_bits;
 
   // initialize variables
   if (sdo_vel_resolution > 0) {
@@ -239,22 +208,9 @@ int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     hal_data->vel_scale = 0.0;
     hal_data->vel_rcpt = 0.0;
   }
-  if (sdo_pos_resolution > 0) {
-    hal_data->pos_rcpt = 1.0 / ((double) sdo_pos_resolution);
-  } else {
-    hal_data->pos_rcpt = 0.0;
-  }
   hal_data->scale_old = hal_data->scale + 1.0;
   hal_data->scale_rcpt = 0.0;
   hal_data->vel_out_scale = 0.0;
-  hal_data->pos_in_scale = 0.0;
-  hal_data->do_init = 1;
-  hal_data->pos_cnt_shift = 32 - sdo_singleturn_bits;
-  hal_data->pos_cnt = 0;
-  hal_data->index_cnt = 0;
-  hal_data->last_pos_cnt = 0;
-  hal_data->last_index_ena = 0;
-  hal_data->index_ref = 0;
   hal_data->fault_reset_timer = 0;
 
   return 0;
@@ -274,8 +230,6 @@ void lcec_el7211_check_scales(lcec_el7211_data_t *hal_data) {
     hal_data->scale_rcpt = 1.0 / hal_data->scale;
     // calculate velo output scale
     hal_data->vel_out_scale = hal_data->vel_scale * hal_data->scale;
-    // calculate pos input scale
-    hal_data->pos_in_scale = hal_data->pos_rcpt * hal_data->scale_rcpt;
   }
 }
 
@@ -286,9 +240,7 @@ void lcec_el7211_read(struct lcec_slave *slave, long period) {
   uint16_t status;
   int32_t vel_raw;
   double vel;
-  int32_t pos_cnt, pos_cnt_rel, pos_cnt_diff;
-  int32_t index_tmp;
-  long long net_count;
+  uint32_t pos_cnt;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
@@ -329,50 +281,9 @@ void lcec_el7211_read(struct lcec_slave *slave, long period) {
   *(hal_data->vel_fb_rpm) = vel;
   *(hal_data->vel_fb_rpm_abs) = fabs(vel);
 
-  // update raw position counter
-  pos_cnt = EC_READ_S32(&pd[hal_data->pos_fb_pdo_os]);
-  pos_cnt_rel = pos_cnt - hal_data->home_raw;
-  *(hal_data->pos_fb_raw) = pos_cnt;
-  *(hal_data->pos_fb_raw_rel) = pos_cnt_rel;
-  *(hal_data->on_home_neg) = (pos_cnt_rel <= 0);
-  *(hal_data->on_home_pos) = (pos_cnt_rel >= 0);
-
-  // update relative position feedback
-  *(hal_data->pos_fb_rel) = ((double) pos_cnt_rel) * hal_data->pos_in_scale;
-
-  // enhance counter width
-  pos_cnt <<= hal_data->pos_cnt_shift;
-  pos_cnt_diff = pos_cnt - hal_data->last_pos_cnt;
-  hal_data->last_pos_cnt = pos_cnt;
-  hal_data->pos_cnt += pos_cnt_diff;
-
-  // check for index edge
-  if (*(hal_data->index_ena)) {
-    index_tmp = (hal_data->pos_cnt >> 32) & 0xffffffff;
-    if (hal_data->do_init || !hal_data->last_index_ena) {
-      hal_data->index_ref = index_tmp;
-    } else if (index_tmp > hal_data->index_ref) {
-      hal_data->index_cnt = (long long)index_tmp << 32;
-      *(hal_data->index_ena) = 0;
-    } else if (index_tmp  < hal_data->index_ref) {
-      hal_data->index_cnt = (long long)hal_data->index_ref << 32;
-      *(hal_data->index_ena) = 0;
-    }
-  }
-  hal_data->last_index_ena = *(hal_data->index_ena);
-
-  // handle initialization
-  if (hal_data->do_init || *(hal_data->pos_reset)) {
-    hal_data->do_init = 0;
-    hal_data->index_cnt = hal_data->pos_cnt;
-  }
-
-  // compute net counts
-  net_count = hal_data->pos_cnt - hal_data->index_cnt;
-  net_count >>= hal_data->pos_cnt_shift;
-
-  // scale count to make floating point position
-  *(hal_data->pos_fb) = ((double) net_count) * hal_data->pos_in_scale;
+  // update position feedback
+  pos_cnt = EC_READ_U32(&pd[hal_data->pos_fb_pdo_os]);
+  class_enc_update(&hal_data->enc, hal_data->pos_resolution, hal_data->scale_rcpt, pos_cnt, 0, false);
 }
 
 void lcec_el7211_write(struct lcec_slave *slave, long period) {
