@@ -210,7 +210,9 @@ void lcec_read_master(void *arg, long period);
 void lcec_write_master(void *arg, long period);
 
 static int lcec_pin_newfv(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, const char *fmt, va_list ap);
+static int lcec_pin_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap);
 static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, va_list ap);
+static int lcec_param_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap);
 
 int rtapi_app_main(void) {
   int slave_count;
@@ -1214,21 +1216,32 @@ int lcec_pin_newf(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, cons
   return err;
 }
 
-int lcec_pin_newf_list(void *base, const lcec_pindesc_t *list, ...) {
-  va_list ap;
+static int lcec_pin_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap) {
+  va_list ac;
   int err;
   const lcec_pindesc_t *p;
 
   for (p = list; p->type != HAL_TYPE_UNSPECIFIED; p++) {
-    va_start(ap, list);
-    err = lcec_pin_newfv(p->type, p->dir, (void **) (base + p->offset), p->fmt, ap); 
-    va_end(ap);
+    va_copy(ac, ap);
+    err = lcec_pin_newfv(p->type, p->dir, (void **) (base + p->offset), p->fmt, ac);
+    va_end(ac);
     if (err) {
       return err;
     }
   }
 
   return 0;
+}
+
+int lcec_pin_newf_list(void *base, const lcec_pindesc_t *list, ...) {
+  va_list ap;
+  int err;
+
+  va_start(ap, list);
+  err = lcec_pin_newfv_list(base, list, ap);
+  va_end(ap);
+
+  return err;
 }
 
 static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, va_list ap) {
@@ -1277,20 +1290,31 @@ int lcec_param_newf(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const c
   return err;
 }
 
-int lcec_param_newf_list(void *base, const lcec_pindesc_t *list, ...) {
-  va_list ap;
+static int lcec_param_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap) {
+  va_list ac;
   int err;
   const lcec_pindesc_t *p;
 
   for (p = list; p->type != HAL_TYPE_UNSPECIFIED; p++) {
-    va_start(ap, list);
-    err = lcec_param_newfv(p->type, p->dir, (void *) (base + p->offset), p->fmt, ap); 
-    va_end(ap);
+    va_copy(ac, ap);
+    err = lcec_param_newfv(p->type, p->dir, (void *) (base + p->offset), p->fmt, ac);
+    va_end(ac);
     if (err) {
       return err;
     }
   }
 
   return 0;
+}
+
+int lcec_param_newf_list(void *base, const lcec_pindesc_t *list, ...) {
+  va_list ap;
+  int err;
+
+  va_start(ap, list);
+  err = lcec_param_newfv_list(base, list, ap);
+  va_end(ap);
+
+  return err;
 }
 
