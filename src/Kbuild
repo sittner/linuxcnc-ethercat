@@ -1,6 +1,7 @@
 obj-m += lcec.o
 lcec-objs := \
     lcec_main.o \
+    lcec_class_enc.o \
     lcec_generic.o \
     lcec_el1xxx.o \
     lcec_el1252.o \
