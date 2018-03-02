@@ -132,6 +132,39 @@ static const lcec_pindesc_t slave_params[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
+static ec_pdo_entry_info_t lcec_stmds5k_out_ch1[] = {
+   {0x20b4, 0x00, 8},  // A180 Device Control Byte
+   {0x26e6, 0x00, 16}, // D230 n-Soll Relativ
+   {0x24e6, 0x00, 16}  // C230 M-Max
+};
+
+static ec_pdo_entry_info_t lcec_stmds5k_in_ch1[] = {
+   {0x28c8, 0x00, 8},  // E200 Device Status Byte
+   {0x2864, 0x00, 16}, // E100 n-Motor
+   {0x2802, 0x00, 16}, // E02 M-Motor gefiltert
+   {0x26c8, 0x00, 16}  // D200 Drehzahlsollwert-Statuswort
+};
+
+static ec_pdo_entry_info_t lcec_stmds5k_in_ch2[] = {
+   {0x2809, 0x00, 32}, // E09 Rotorlage
+};
+
+static ec_pdo_info_t lcec_stmds5k_pdos_out[] = {
+    {0x1600,  3, lcec_stmds5k_out_ch1}
+};
+
+static ec_pdo_info_t lcec_stmds5k_pdos_in[] = {
+    {0x1a00, 4, lcec_stmds5k_in_ch1},
+    {0x1a01, 1, lcec_stmds5k_in_ch2}
+};
+
+static ec_sync_info_t lcec_stmds5k_syncs[] = {
+    {0, EC_DIR_OUTPUT, 0, NULL},
+    {1, EC_DIR_INPUT,  0, NULL},
+    {2, EC_DIR_OUTPUT, 1, lcec_stmds5k_pdos_out},
+    {3, EC_DIR_INPUT,  2, lcec_stmds5k_pdos_in},
+    {0xff}
+};
 
 void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data);
 
@@ -177,6 +210,9 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   } else {
     hal_data->speed_max_rpm_sp_rcpt = 0.0;
   }
+
+  // initialize sync info
+  slave->sync_info = lcec_stmds5k_syncs;
 
   // initialize POD entries
   // E200 : device state byte
