@@ -514,6 +514,7 @@ int lcec_parse_config(void) {
         master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
         master->mutex = 0;
         master->app_time_base = 0;
+        master->app_time_period = master_conf->appTimePeriod;
         master->sync_ref_cnt = 0;
         master->sync_ref_cycles = master_conf->refClockSyncCycles;
 
