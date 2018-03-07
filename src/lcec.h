@@ -64,6 +64,12 @@ do {                        \
 // SDO request timeout (ms)
 #define LCEC_SDO_REQ_TIMEOUT LCEC_MS_TO_TICKS(1000)
 
+// IDN builder
+#define LCEC_IDN_TYPE_P 0x8000
+#define LCEC_IDN_TYPE_S 0x0000
+
+#define LCEC_IDN(type, set, block) (type | ((set & 0x07) << 12) | (block & 0x0fff))
+
 struct lcec_master;
 struct lcec_slave;
 
@@ -174,6 +180,7 @@ typedef struct {
 } lcec_pindesc_t;
 
 int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, uint8_t *target, size_t size);
+int lcec_read_idn(struct lcec_slave *slave, uint8_t drive_no, uint16_t idn, uint8_t *target, size_t size);
 
 int lcec_pin_newf(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, const char *fmt, ...);
 int lcec_pin_newf_list(void *base, const lcec_pindesc_t *list, ...);

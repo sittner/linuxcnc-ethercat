@@ -19,6 +19,7 @@
 #include "lcec.h"
 #include "lcec_generic.h"
 #include "lcec_ek1100.h"
+#include "lcec_ax5200.h"
 #include "lcec_el1xxx.h"
 #include "lcec_el1252.h"
 #include "lcec_el2xxx.h"
@@ -57,6 +58,9 @@ typedef struct lcec_typelist {
 static const lcec_typelist_t types[] = {
   // bus coupler
   { lcecSlaveTypeEK1100, LCEC_EK1100_VID, LCEC_EK1100_PID, LCEC_EK1100_PDOS, NULL},
+
+  // AX5000 servo drives
+  { lcecSlaveTypeAX5206, LCEC_AX5200_VID, LCEC_AX5206_PID, LCEC_AX5200_PDOS, lcec_ax5200_init},
 
   // digital in
   { lcecSlaveTypeEL1002, LCEC_EL1xxx_VID, LCEC_EL1002_PID, LCEC_EL1002_PDOS, lcec_el1xxx_init},
@@ -1164,6 +1168,27 @@ int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, ui
   if (result_size != size) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Invalid result size on SDO upload (0x%04x:0x%02x, req: %ld, res: %ld)\n",
       master->name, slave->name, index, subindex, size, result_size);
+    return -1;
+  }
+
+  return 0;
+}
+
+int lcec_read_idn(struct lcec_slave *slave, uint8_t drive_no, uint16_t idn, uint8_t *target, size_t size) {
+  lcec_master_t *master = slave->master;
+  int err;
+  size_t result_size;
+  uint16_t error_code;
+
+  if ((err = ecrt_master_read_idn(master->master, slave->index, drive_no, idn, target, size, &result_size, &error_code))) {  
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to execute IDN read (drive %d idn %c-%d-%d, error %d, error_code %08x)\n",
+      master->name, slave->name, (idn & 0x8000) ? 'P' : 'S', (idn >> 12) & 0x0007, idn & 0x0fff, err, error_code);
+    return -1;
+  }
+
+  if (result_size != size) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Invalid result size on IDN read (drive %d idn %c-%d-%d, req: %ld, res: %ld)\n",
+      master->name, slave->name, (idn & 0x8000) ? 'P' : 'S', (idn >> 12) & 0x0007, idn & 0x0fff, size, result_size);
     return -1;
   }
 
