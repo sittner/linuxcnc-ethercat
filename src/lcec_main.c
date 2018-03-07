@@ -342,7 +342,7 @@ int rtapi_app_main(void) {
 
     // initialize application time
     lcec_gettimeofday(&tv);
-    master->app_time = EC_TIMEVAL2NANO(tv);
+    master->app_time_base = EC_TIMEVAL2NANO(tv) - rtapi_get_time();
 
     // activating master
     if (ecrt_master_activate(master->master)) {
@@ -513,8 +513,7 @@ int lcec_parse_config(void) {
         strncpy(master->name, master_conf->name, LCEC_CONF_STR_MAXLEN);
         master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
         master->mutex = 0;
-        master->app_time = 0;
-        master->app_time_period = master_conf->appTimePeriod;
+        master->app_time_base = 0;
         master->sync_ref_cnt = 0;
         master->sync_ref_cycles = master_conf->refClockSyncCycles;
 
@@ -1126,10 +1125,10 @@ void lcec_write_master(void *arg, long period) {
 
   // send process data
   rtapi_mutex_get(&master->mutex);
+  ecrt_domain_queue(master->domain);
 
   // update application time
-  master->app_time += master->app_time_period;
-  ecrt_master_application_time(master->master, master->app_time);
+  ecrt_master_application_time(master->master, master->app_time_base + rtapi_get_time());
 
   // sync ref clock to master
   if (master->sync_ref_cycles > 0) {
@@ -1144,7 +1143,6 @@ void lcec_write_master(void *arg, long period) {
   ecrt_master_sync_slave_clocks(master->master);
 
   // send domain data
-  ecrt_domain_queue(master->domain);
   ecrt_master_send(master->master);
   rtapi_mutex_give(&master->mutex);
 }
