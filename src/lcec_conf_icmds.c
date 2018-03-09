@@ -310,7 +310,6 @@ static long int parse_int(LCEC_CONF_ICMDS_STATE_T *state, const char *s, int len
 
 static int parse_data(LCEC_CONF_ICMDS_STATE_T *state, const char *s, int len) {
   uint8_t *p;
-  char c;
   int size;
 
   // get size
