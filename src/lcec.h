@@ -26,7 +26,6 @@
 #include "rtapi_string.h"
 #include "rtapi_math.h"
 
-#include "ecrt.h"
 #include "lcec_conf.h"
 
 // list macros
