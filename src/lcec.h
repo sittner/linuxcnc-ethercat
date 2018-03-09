@@ -79,10 +79,12 @@ typedef struct lcec_master_data {
   hal_bit_t *state_op;
   hal_bit_t *link_up;
   hal_bit_t *all_op;
+#ifdef RTAPI_TASK_PLL_SUPPORT
   hal_s32_t *pll_err;
   hal_s32_t *pll_out;
   hal_float_t pll_p;
   hal_float_t pll_i;
+#endif
 } lcec_master_data_t;
 
 typedef struct lcec_slave_state {
@@ -112,13 +114,17 @@ typedef struct lcec_master {
   uint64_t app_time;  
   uint64_t app_time_base;
   uint32_t app_time_period;
-  int app_time_period_check;
+  long period_last;
   int sync_ref_cnt;
   int sync_ref_cycles;
+  long long state_update_timer;
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  double periodfp;
   uint64_t dc_ref;
   uint32_t dc_time_last;
-  long long state_update_timer;
+  int32_t pll_limit;
   double pll_isum;
+#endif
 } lcec_master_t;
 
 typedef struct {

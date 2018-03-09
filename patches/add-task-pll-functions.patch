@@ -5,9 +5,9 @@ diff -urNp linuxcnc-2.7.11.orig/src/rtapi/rtapi.h linuxcnc-2.7.11/src/rtapi/rtap
  */
      extern int rtapi_task_self(void);
  
-+#ifdef USPACE
++#if defined(RTAPI_USPACE) || defined(USPACE)
 +
-+#define RTAPI_HAS_TASK_PLL_SUPPORT
++#define RTAPI_TASK_PLL_SUPPORT
 +
 +/** 'rtapi_task_pll_get_reference()' gets the reference timestamp
 +    for the start of the current cycle.
