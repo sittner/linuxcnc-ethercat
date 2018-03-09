@@ -358,15 +358,13 @@ int rtapi_app_main(void) {
 
     // initialize application time
     lcec_gettimeofday(&tv);
-    master->app_time = EC_TIMEVAL2NANO(tv);
+    master->app_time_base = EC_TIMEVAL2NANO(tv);
 #ifdef RTAPI_TASK_PLL_SUPPORT
     if (master->sync_ref_cycles >= 0) {
-      master->app_time_base = master->app_time - rtapi_get_time();
-    } else {
-      master->app_time_base = master->app_time;
+      master->app_time_base -= rtapi_get_time();
     }
 #else
-    master->app_time_base = master->app_time - rtapi_get_time();
+    master->app_time_base = EC_TIMEVAL2NANO(tv) - rtapi_get_time();
     if (master->sync_ref_cycles < 0) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "unable to sync master %s cycle to reference clock, RTAPI_TASK_PLL_SUPPORT not present\n", master->name);
     }
@@ -1188,9 +1186,9 @@ void lcec_read_master(void *arg, long period) {
 void lcec_write_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
   lcec_slave_t *slave;
+  uint64_t app_time;
 #ifdef RTAPI_TASK_PLL_SUPPORT
   long long ref, now;
-  uint64_t app_time_last;
   uint32_t dc_time;
   int dc_time_valid;
   lcec_master_data_t *hal_data;
@@ -1206,7 +1204,6 @@ void lcec_write_master(void *arg, long period) {
 #ifdef RTAPI_TASK_PLL_SUPPORT
   // get reference time
   ref = rtapi_task_pll_get_reference();
-  app_time_last = master->app_time;
 #endif
 
   // send process data
@@ -1217,16 +1214,16 @@ void lcec_write_master(void *arg, long period) {
 #ifdef RTAPI_TASK_PLL_SUPPORT
   now = rtapi_get_time();
   if (master->sync_ref_cycles >= 0) {
-    master->app_time = master->app_time_base + now;
+    app_time = master->app_time_base + now;
   } else {
     master->dc_ref += period;
-    master->app_time = master->app_time_base + master->dc_ref + (now - ref);
+    app_time = master->app_time_base + master->dc_ref + (now - ref);
   }
 #else
-  master->app_time = master->app_time_base + rtapi_get_time();
+  app_time = master->app_time_base + rtapi_get_time();
 #endif
 
-  ecrt_master_application_time(master->master, master->app_time);
+  ecrt_master_application_time(master->master, app_time);
 
   // sync ref clock to master
   if (master->sync_ref_cycles > 0) {
@@ -1263,7 +1260,7 @@ void lcec_write_master(void *arg, long period) {
   *(hal_data->pll_out) = 0;
   if (dc_time_valid) {
     if (master->dc_time_last != 0 || dc_time != 0) {
-      *(hal_data->pll_err) = (((uint32_t) app_time_last) - dc_time);
+      *(hal_data->pll_err) = master->app_time_last - dc_time;
       if ((*(hal_data->pll_err) > 0 && *(hal_data->pll_out) < master->pll_limit) || (*(hal_data->pll_err) < 0 && *(hal_data->pll_out) > -(master->pll_limit))) {
         master->pll_isum += (double) *(hal_data->pll_err);
       }
@@ -1276,6 +1273,7 @@ void lcec_write_master(void *arg, long period) {
   }
 
   rtapi_task_pll_set_correction(*(hal_data->pll_out));
+  master->app_time_last = (uint32_t) app_time;
 #endif
 }
 
