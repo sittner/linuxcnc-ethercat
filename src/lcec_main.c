@@ -358,8 +358,8 @@ int rtapi_app_main(void) {
 
     // initialize application time
     lcec_gettimeofday(&tv);
-    master->app_time_base = EC_TIMEVAL2NANO(tv);
 #ifdef RTAPI_TASK_PLL_SUPPORT
+    master->app_time_base = EC_TIMEVAL2NANO(tv);
     if (master->sync_ref_cycles >= 0) {
       master->app_time_base -= rtapi_get_time();
     }
