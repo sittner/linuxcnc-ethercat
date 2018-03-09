@@ -143,7 +143,6 @@ int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   lcec_master_t *master = slave->master;
   lcec_el7211_data_t *hal_data;
   int err;
-  double ramp_factor;
   uint8_t sdo_buf[4];
   uint32_t sdo_vel_resolution;
   uint32_t sdo_pos_resolution;
