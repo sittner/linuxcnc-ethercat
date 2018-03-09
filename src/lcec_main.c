@@ -29,6 +29,7 @@
 #include "lcec_el40x1.h"
 #include "lcec_el40x2.h"
 #include "lcec_el41x2.h"
+#include "lcec_el41x4.h"
 #include "lcec_el5101.h"
 #include "lcec_el5151.h"
 #include "lcec_el5152.h"
@@ -132,6 +133,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL4112, LCEC_EL41x2_VID, LCEC_EL4112_PID, LCEC_EL41x2_PDOS, lcec_el41x2_init},
   { lcecSlaveTypeEL4122, LCEC_EL41x2_VID, LCEC_EL4122_PID, LCEC_EL41x2_PDOS, lcec_el41x2_init},
   { lcecSlaveTypeEL4132, LCEC_EL41x2_VID, LCEC_EL4132_PID, LCEC_EL41x2_PDOS, lcec_el41x2_init},
+
+  // analog out, 4ch, 16 bits
+  { lcecSlaveTypeEL4104, LCEC_EL41x2_VID, LCEC_EL4104_PID, LCEC_EL41x4_PDOS, lcec_el41x2_init},
 
   // encoder inputs
   { lcecSlaveTypeEL5101, LCEC_EL5101_VID, LCEC_EL5101_PID, LCEC_EL5101_PDOS, lcec_el5101_init},
@@ -291,7 +295,7 @@ int rtapi_app_main(void) {
       if (slave->idn_config != NULL) {
         for (idn_config = slave->idn_config; idn_config->state != 0; idn_config = (lcec_slave_idnconf_t *) &idn_config->data[idn_config->length]) {
           if (ecrt_slave_config_idn(slave->config, idn_config->drive, idn_config->idn, idn_config->state, &idn_config->data[0], idn_config->length) != 0) {
-            rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s drive %d idn %c-%d-%d (state %d, length %d)\n", master->name, slave->name, idn_config->drive,
+            rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s drive %d idn %c-%d-%d (state %d, length %lu)\n", master->name, slave->name, idn_config->drive,
               (idn_config->idn & 0x8000) ? 'P' : 'S', (idn_config->idn >> 12) & 0x0007, idn_config->idn & 0x0fff, idn_config->state, idn_config->length);
           }
         }
@@ -1225,6 +1229,8 @@ static int lcec_pin_newfv(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_ad
     case HAL_U32:
       **((hal_u32_t **) data_ptr_addr) = 0;
       break;
+    default:
+      break;
   }
 
   return 0;
@@ -1298,6 +1304,8 @@ static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr,
       break;
     case HAL_U32:
       *((hal_u32_t *) data_addr) = 0;
+      break;
+    default:
       break;
   }
 

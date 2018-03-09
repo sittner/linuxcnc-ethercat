@@ -123,6 +123,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL4122", lcecSlaveTypeEL4122 },
   { "EL4132", lcecSlaveTypeEL4132 },
 
+  // analog out, 4ch, 16 bits
+  { "EL4104", lcecSlaveTypeEL4104 },
+
   // encoder inputs
   { "EL5101", lcecSlaveTypeEL5101 },
   { "EL5151", lcecSlaveTypeEL5151 },
