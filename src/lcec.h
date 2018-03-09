@@ -111,7 +111,7 @@ typedef struct lcec_master {
   struct lcec_slave *first_slave;
   struct lcec_slave *last_slave;
   lcec_master_data_t *hal_data;
-  uint64_t app_time;  
+  uint64_t app_time;
   uint64_t app_time_base;
   uint32_t app_time_period;
   long period_last;
