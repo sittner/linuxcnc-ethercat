@@ -6,6 +6,9 @@
 **.o
 **.o.cmd
 **.swp
+**.sym
+**.ver
+**.tmp
 
 # generic files
 **/.tmp_versions/
