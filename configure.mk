@@ -11,11 +11,11 @@ endif
 .PHONY: configure
 configure:
 	@echo "COMP = $(COMP)"
+	@echo "MODINC = $(MODINC)"
 	@echo "BUILDSYS = $(BUILDSYS)"
 	@echo "KERNELDIR = $(KERNELDIR)"
 	@echo "CC = $(CC)"
 	@echo "RTAI = $(RTAI)"
-	@echo "RTAIDIR = $(RTAIDIR)"
 	@echo "RTFLAGS = $(RTFLAGS)"
 	@echo "KERNELRELEASE = $(KERNELRELEASE)"
 	@echo "EXTRA_CFLAGS = $(EXTRA_CFLAGS)"
@@ -33,10 +33,4 @@ ifeq (, $(MODINC))
 endif
 
 include $(MODINC)
-
-# dirty workaround to get the RTAI directory
-RTAIINCDIR = $(subst /rtai.h,,$(firstword $(wildcard $(foreach i,$(subst -I,,$(filter -I%,$(RTFLAGS))), $(i)/rtai.h))))
-ifneq ($(RTAIINCDIR),)
-  RTAIDIR = $(realpath $(RTAIINCDIR)/..)
-endif
 
