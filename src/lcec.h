@@ -123,6 +123,7 @@ typedef struct lcec_master {
   int sync_ref_cnt;
   int sync_ref_cycles;
   long long state_update_timer;
+  ec_master_state_t ms;
 #ifdef RTAPI_TASK_PLL_SUPPORT
   double periodfp;
   uint64_t dc_ref;
