@@ -61,8 +61,8 @@ do {                        \
 #define LCEC_STOEBER_VID  0x000000b9
 #define LCEC_DELTA_VID    0x000001dd
 
-// SDO request timeout (ms)
-#define LCEC_SDO_REQ_TIMEOUT LCEC_MS_TO_TICKS(1000)
+// State update period (ns)
+#define LCEC_STATE_UPDATE_PERIOD 1000000000LL
 
 // IDN builder
 #define LCEC_IDN_TYPE_P 0x8000
@@ -85,6 +85,12 @@ typedef struct lcec_master_data {
   hal_bit_t *state_op;
   hal_bit_t *link_up;
   hal_bit_t *all_op;
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  hal_s32_t *pll_err;
+  hal_s32_t *pll_out;
+  hal_float_t pll_p;
+  hal_float_t pll_i;
+#endif
 } lcec_master_data_t;
 
 typedef struct lcec_slave_state {
@@ -111,10 +117,20 @@ typedef struct lcec_master {
   struct lcec_slave *first_slave;
   struct lcec_slave *last_slave;
   lcec_master_data_t *hal_data;
-  uint64_t app_time;
+  uint64_t app_time_base;
   uint32_t app_time_period;
+  long period_last;
   int sync_ref_cnt;
   int sync_ref_cycles;
+  long long state_update_timer;
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  double periodfp;
+  uint64_t dc_ref;
+  uint32_t dc_time_last;
+  uint32_t app_time_last;
+  int32_t pll_limit;
+  double pll_isum;
+#endif
 } lcec_master_t;
 
 typedef struct {

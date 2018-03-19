@@ -173,7 +173,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeInvalid }
 };
 
-static const lcec_pindesc_t master_pins[] = {
+static const lcec_pindesc_t master_global_pins[] = {
   { HAL_U32, HAL_OUT, offsetof(lcec_master_data_t, slaves_responding), "%s.slaves-responding" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, state_init), "%s.state-init" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, state_preop), "%s.state-preop" },
@@ -181,6 +181,22 @@ static const lcec_pindesc_t master_pins[] = {
   { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, state_op), "%s.state-op" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, link_up), "%s.link-up" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, all_op), "%s.all-op" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
+static const lcec_pindesc_t master_pins[] = {
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  { HAL_S32, HAL_OUT, offsetof(lcec_master_data_t, pll_err), "%s.pll-err" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_master_data_t, pll_out), "%s.pll-out" },
+#endif
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
+static const lcec_pindesc_t master_params[] = {
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_master_data_t, pll_p), "%s.pll-p" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_master_data_t, pll_i), "%s.pll-i" },
+#endif
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -207,7 +223,7 @@ void lcec_clear_config(void);
 void lcec_request_lock(void *data);
 void lcec_release_lock(void *data);
 
-lcec_master_data_t *lcec_init_master_hal(const char *pfx);
+lcec_master_data_t *lcec_init_master_hal(const char *pfx, int global);
 lcec_slave_state_t *lcec_init_slave_state_hal(char *master_name, char *slave_name);
 void lcec_update_master_hal(lcec_master_data_t *hal_data, ec_master_state_t *ms);
 void lcec_update_slave_state_hal(lcec_slave_state_t *hal_data, ec_slave_config_state_t *ss);
@@ -244,7 +260,7 @@ int rtapi_app_main(void) {
   }
 
   // init global hal data
-  if ((global_hal_data = lcec_init_master_hal(LCEC_MODULE_NAME)) == NULL) {
+  if ((global_hal_data = lcec_init_master_hal(LCEC_MODULE_NAME, 1)) == NULL) {
     goto fail2;
   }
 
@@ -350,7 +366,17 @@ int rtapi_app_main(void) {
 
     // initialize application time
     lcec_gettimeofday(&tv);
-    master->app_time = EC_TIMEVAL2NANO(tv);
+#ifdef RTAPI_TASK_PLL_SUPPORT
+    master->app_time_base = EC_TIMEVAL2NANO(tv);
+    if (master->sync_ref_cycles >= 0) {
+      master->app_time_base -= rtapi_get_time();
+    }
+#else
+    master->app_time_base = EC_TIMEVAL2NANO(tv) - rtapi_get_time();
+    if (master->sync_ref_cycles < 0) {
+      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "unable to sync master %s cycle to reference clock, RTAPI_TASK_PLL_SUPPORT not present\n", master->name);
+    }
+#endif
 
     // activating master
     if (ecrt_master_activate(master->master)) {
@@ -364,7 +390,7 @@ int rtapi_app_main(void) {
 
     // init hal data
     rtapi_snprintf(name, HAL_NAME_LEN, "%s.%s", LCEC_MODULE_NAME, master->name);
-    if ((master->hal_data = lcec_init_master_hal(name)) == NULL) {
+    if ((master->hal_data = lcec_init_master_hal(name, 0)) == NULL) {
       goto fail2;
     }
 
@@ -520,11 +546,11 @@ int lcec_parse_config(void) {
         master->index = master_conf->index;
         strncpy(master->name, master_conf->name, LCEC_CONF_STR_MAXLEN);
         master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
-        master->mutex = 0;
-        master->app_time = 0;
         master->app_time_period = master_conf->appTimePeriod;
-        master->sync_ref_cnt = 0;
         master->sync_ref_cycles = master_conf->refClockSyncCycles;
+#ifdef RTAPI_TASK_PLL_SUPPORT
+        master->pll_isum = 0.0;
+#endif
 
         // add master to list
         LCEC_LIST_APPEND(first_master, last_master, master);
@@ -1005,7 +1031,7 @@ void lcec_release_lock(void *data) {
   rtapi_mutex_give(&master->mutex);
 }
 
-lcec_master_data_t *lcec_init_master_hal(const char *pfx) {
+lcec_master_data_t *lcec_init_master_hal(const char *pfx, int global) {
   lcec_master_data_t *hal_data;
 
   // alloc hal data
@@ -1016,8 +1042,20 @@ lcec_master_data_t *lcec_init_master_hal(const char *pfx) {
   memset(hal_data, 0, sizeof(lcec_master_data_t));
 
   // export pins
-  if (lcec_pin_newf_list(hal_data, master_pins, pfx) != 0) {
+  if (lcec_pin_newf_list(hal_data, master_global_pins, pfx) != 0) {
     return NULL;
+  }
+  if (!global) {
+    if (lcec_pin_newf_list(hal_data, master_pins, pfx) != 0) {
+      return NULL;
+    }
+    if (lcec_param_newf_list(hal_data, master_params, pfx) != 0) {
+      return NULL;
+    }
+#ifdef RTAPI_TASK_PLL_SUPPORT
+    hal_data->pll_p = 0.005;
+    hal_data->pll_i = 0.01;
+#endif
   }
 
   return hal_data;
@@ -1090,29 +1128,61 @@ void lcec_read_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
   lcec_slave_t *slave;
   ec_master_state_t ms;
+  int check_states;
+
+  // check period
+  if (period != master->period_last) {
+    master->period_last = period;
+#ifdef RTAPI_TASK_PLL_SUPPORT
+    master->periodfp = (double) period * 0.000000001;
+    // allow max +/-1% of period
+    master->pll_limit = period / 100;
+#endif
+    if (master->app_time_period != period) {
+      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Invalid appTimePeriod of %u for master %s (should be %ld).\n",
+        master->app_time_period, master->name, period);
+    }
+  }
+
+  // get state check flag
+  if (master->state_update_timer > 0) {
+    check_states = 0;
+    master->state_update_timer -= period;
+  } else {
+    check_states = 1;
+    master->state_update_timer = LCEC_STATE_UPDATE_PERIOD;
+  }
 
   // receive process data & master state
   rtapi_mutex_get(&master->mutex);
   ecrt_master_receive(master->master);
   ecrt_domain_process(master->domain);
-  ecrt_master_state(master->master, &ms);
+  if (check_states) {
+    ecrt_master_state(master->master, &ms);
+  }
   rtapi_mutex_give(&master->mutex);
 
-  // update state pins
-  lcec_update_master_hal(master->hal_data, &ms);
+  if (check_states) {
+    // update state pins
+    lcec_update_master_hal(master->hal_data, &ms);
 
-  // update global state
-  global_ms.slaves_responding += ms.slaves_responding;
-  global_ms.al_states |= ms.al_states;
-  global_ms.link_up = global_ms.link_up && ms.link_up;
+    // update global state
+    global_ms.slaves_responding += ms.slaves_responding;
+    global_ms.al_states |= ms.al_states;
+    global_ms.link_up = global_ms.link_up && ms.link_up;
+  }
 
   // process slaves
   for (slave = master->first_slave; slave != NULL; slave = slave->next) {
     // get slaves state
     rtapi_mutex_get(&master->mutex);
-    ecrt_slave_config_state(slave->config, &slave->state);
+    if (check_states) {
+      ecrt_slave_config_state(slave->config, &slave->state);
+    }
     rtapi_mutex_give(&master->mutex);
-    lcec_update_slave_state_hal(slave->hal_state_data, &slave->state);
+    if (check_states) {
+      lcec_update_slave_state_hal(slave->hal_state_data, &slave->state);
+    }
 
     // process read function
     if (slave->proc_read != NULL) {
@@ -1124,6 +1194,13 @@ void lcec_read_master(void *arg, long period) {
 void lcec_write_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
   lcec_slave_t *slave;
+  uint64_t app_time;
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  long long ref, now;
+  uint32_t dc_time;
+  int dc_time_valid;
+  lcec_master_data_t *hal_data;
+#endif
 
   // process slaves
   for (slave = master->first_slave; slave != NULL; slave = slave->next) {
@@ -1132,12 +1209,29 @@ void lcec_write_master(void *arg, long period) {
     }
   }
 
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  // get reference time
+  ref = rtapi_task_pll_get_reference();
+#endif
+
   // send process data
   rtapi_mutex_get(&master->mutex);
+  ecrt_domain_queue(master->domain);
 
   // update application time
-  master->app_time += master->app_time_period;
-  ecrt_master_application_time(master->master, master->app_time);
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  now = rtapi_get_time();
+  if (master->sync_ref_cycles >= 0) {
+    app_time = master->app_time_base + now;
+  } else {
+    master->dc_ref += period;
+    app_time = master->app_time_base + master->dc_ref + (now - ref);
+  }
+#else
+  app_time = master->app_time_base + rtapi_get_time();
+#endif
+
+  ecrt_master_application_time(master->master, app_time);
 
   // sync ref clock to master
   if (master->sync_ref_cycles > 0) {
@@ -1148,13 +1242,47 @@ void lcec_write_master(void *arg, long period) {
     master->sync_ref_cnt--;
   }
 
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  // sync master to ref clock
+  dc_time = 0;
+  if (master->sync_ref_cycles < 0) {
+    // get reference clock time to synchronize master cycle
+    dc_time_valid = (ecrt_master_reference_clock_time(master->master, &dc_time) == 0);
+  } else {
+    dc_time_valid = 0;
+  }
+#endif
+
   // sync slaves to ref clock
   ecrt_master_sync_slave_clocks(master->master);
 
   // send domain data
-  ecrt_domain_queue(master->domain);
   ecrt_master_send(master->master);
   rtapi_mutex_give(&master->mutex);
+
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  // PI controller for master thread PLL sync
+  // this part is done after ecrt_master_send() to reduce jitter
+  hal_data = master->hal_data;
+  *(hal_data->pll_err) = 0;
+  *(hal_data->pll_out) = 0;
+  if (dc_time_valid) {
+    if (master->dc_time_last != 0 || dc_time != 0) {
+      *(hal_data->pll_err) = master->app_time_last - dc_time;
+      if ((*(hal_data->pll_err) > 0 && *(hal_data->pll_out) < master->pll_limit) || (*(hal_data->pll_err) < 0 && *(hal_data->pll_out) > -(master->pll_limit))) {
+        master->pll_isum += (double) *(hal_data->pll_err);
+      }
+      *(hal_data->pll_out) = (int32_t) (hal_data->pll_p * (double) *(hal_data->pll_err) + hal_data->pll_i * master->pll_isum * master->periodfp);
+    }
+    master->dc_time_last = dc_time;
+  } else {
+    master->dc_time_last = 0;
+    master->pll_isum = 0.0;
+  }
+
+  rtapi_task_pll_set_correction(*(hal_data->pll_out));
+  master->app_time_last = (uint32_t) app_time;
+#endif
 }
 
 int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, uint8_t *target, size_t size) {
