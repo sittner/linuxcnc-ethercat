@@ -1123,7 +1123,6 @@ void lcec_write_all(void *arg, long period) {
 void lcec_read_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
   lcec_slave_t *slave;
-  ec_master_state_t ms;
   int check_states;
 
   // check period
@@ -1154,19 +1153,17 @@ void lcec_read_master(void *arg, long period) {
   ecrt_master_receive(master->master);
   ecrt_domain_process(master->domain);
   if (check_states) {
-    ecrt_master_state(master->master, &ms);
+    ecrt_master_state(master->master, &master->ms);
   }
   rtapi_mutex_give(&master->mutex);
 
-  if (check_states) {
-    // update state pins
-    lcec_update_master_hal(master->hal_data, &ms);
+  // update state pins
+  lcec_update_master_hal(master->hal_data, &master->ms);
 
-    // update global state
-    global_ms.slaves_responding += ms.slaves_responding;
-    global_ms.al_states |= ms.al_states;
-    global_ms.link_up = global_ms.link_up && ms.link_up;
-  }
+  // update global state
+  global_ms.slaves_responding += master->ms.slaves_responding;
+  global_ms.al_states |= master->ms.al_states;
+  global_ms.link_up = global_ms.link_up && master->ms.link_up;
 
   // process slaves
   for (slave = master->first_slave; slave != NULL; slave = slave->next) {
