@@ -24,17 +24,17 @@
 typedef struct {
   hal_bit_t *enable;
   hal_bit_t *enabled;
+  hal_bit_t *halted;
   hal_bit_t *fault;
 
   hal_bit_t *halt;
   hal_bit_t *drive_off;
-  hal_bit_t *restart;
 
   hal_float_t *velo_cmd;
 
   hal_u32_t *status;
   hal_s32_t *pos_fb;
-  hal_s32_t *torque_fb;
+  hal_float_t *torque_fb_pct;
 
   unsigned int status_pdo_os;
   unsigned int pos_fb_pdo_os;
@@ -43,9 +43,7 @@ typedef struct {
   unsigned int vel_cmd_pdo_os;
 
   hal_float_t scale;
-
   hal_float_t vel_scale;
-
   hal_u32_t pos_resolution;
 
   lcec_class_enc_data_t enc;
@@ -65,15 +63,15 @@ typedef struct {
 static const lcec_pindesc_t slave_pins[] = {
   { HAL_BIT, HAL_IN, offsetof(lcec_ax5200_chan_t, enable), "%s.%s.%s.ch%d.srv-enable" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_ax5200_chan_t, enabled), "%s.%s.%s.ch%d.srv-enabled" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_ax5200_chan_t, halted), "%s.%s.%s.ch%d.srv-halted" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_ax5200_chan_t, fault), "%s.%s.%s.ch%d.srv-fault" },
   { HAL_BIT, HAL_IN, offsetof(lcec_ax5200_chan_t, halt), "%s.%s.%s.ch%d.srv-halt" },
   { HAL_BIT, HAL_IN, offsetof(lcec_ax5200_chan_t, drive_off), "%s.%s.%s.ch%d.srv-drive-off" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_ax5200_chan_t, restart), "%s.%s.%s.ch%d.srv-restart" },
   { HAL_FLOAT, HAL_IN, offsetof(lcec_ax5200_chan_t, velo_cmd), "%s.%s.%s.ch%d.srv-velo-cmd" },
 
   { HAL_U32, HAL_IN, offsetof(lcec_ax5200_chan_t, status), "%s.%s.%s.ch%d.srv-status" },
   { HAL_S32, HAL_IN, offsetof(lcec_ax5200_chan_t, pos_fb), "%s.%s.%s.ch%d.srv-pos-fb" },
-  { HAL_S32, HAL_IN, offsetof(lcec_ax5200_chan_t, torque_fb), "%s.%s.%s.ch%d.srv-torque-fb" },
+  { HAL_FLOAT, HAL_IN, offsetof(lcec_ax5200_chan_t, torque_fb_pct), "%s.%s.%s.ch%d.srv-torque-fb-pct" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -175,7 +173,6 @@ int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     }
     idn_vel_exp = EC_READ_S16(idn_buf);
 
-
     // initialize POD entries
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0087, 0x01 + i, &chan->status_pdo_os, NULL);
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0033, 0x01 + i, &chan->pos_fb_pdo_os, NULL);
@@ -242,6 +239,9 @@ void lcec_ax5200_read(struct lcec_slave *slave, long period) {
     for (i=0; i<LCEC_AX5200_CHANS; i++) {
       chan = &hal_data->chans[i];
       chan->enc.do_init = 1;
+      *(chan->fault) = 1;
+      *(chan->enabled) = 0;
+      *(chan->halted) = 0;
     } 
     return;
   }
@@ -254,7 +254,22 @@ void lcec_ax5200_read(struct lcec_slave *slave, long period) {
 
     *(chan->status) = EC_READ_U16(&pd[chan->status_pdo_os]);
     *(chan->pos_fb) = EC_READ_S32(&pd[chan->pos_fb_pdo_os]);
-    *(chan->torque_fb) = EC_READ_S16(&pd[chan->torque_fb_pdo_os]);
+    *(chan->torque_fb_pct) = ((double) EC_READ_S16(&pd[chan->torque_fb_pdo_os])) * 0.1;
+
+    // check fault
+    *(chan->fault) = 0;
+    // check error shut off status
+    if (((*(chan->status) >> 13) & 1) != 0) {
+      *(chan->fault) = 1;
+    }
+    // check ready-to-operate value
+    if (((*(chan->status) >> 14) & 3) == 0) {
+      *(chan->fault) = 1;
+    }
+
+    // check status
+    *(chan->enabled) = (((*(chan->status) >> 14) & 3) == 3);
+    *(chan->halted) = (((*(chan->status) >> 3) & 1) != 1);
 
     // update position feedback
     pos_cnt = EC_READ_U32(&pd[chan->pos_fb_pdo_os]);
@@ -280,18 +295,18 @@ void lcec_ax5200_write(struct lcec_slave *slave, long period) {
       ctrl |= (1 << 10); // sync
     }
     if (*(chan->enable)) {
-      if (!*(chan->halt)) {
+      if (!(*(chan->halt))) {
         ctrl |= (1 << 13); // halt/restart
       }
       ctrl |= (1 << 14); // enable
-      if (!*(chan->drive_off)) {
+      if (!(*(chan->drive_off))) {
         ctrl |= (1 << 15); // drive on
       }
     }
     EC_WRITE_U16(&pd[chan->ctrl_pdo_os], ctrl);
 
     // set velo command
-    velo_cmd_raw = *(chan->velo_cmd) * chan->scale_rcpt * chan->vel_output_scale;
+    velo_cmd_raw = *(chan->velo_cmd) * chan->scale * chan->vel_output_scale;
     if (velo_cmd_raw > (double)0x7fffffff) {
       velo_cmd_raw = (double)0x7fffffff;
     }
@@ -302,10 +317,5 @@ void lcec_ax5200_write(struct lcec_slave *slave, long period) {
 
     chan->toggle = !chan->toggle;
   }
-
-
-
-
-
 }
 
