@@ -1,5 +1,5 @@
 //
-//    Copyright (C) 2012 Sascha Ittner <sascha.ittner@modusoft.de>
+//    Copyright (C) 2018 Sascha Ittner <sascha.ittner@modusoft.de>
 //
 //    This program is free software; you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -137,7 +137,7 @@ int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   uint32_t idn_pos_resolution;
   uint16_t idn_vel_scale;
   int16_t idn_vel_exp;
-  char pfx[HAL_NAME_LEN + 1];
+  char pfx[HAL_NAME_LEN];
 
   // initialize callbacks
   slave->proc_read = lcec_ax5200_read;
