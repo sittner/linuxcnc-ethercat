@@ -292,6 +292,13 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
 
   // wait for slave to be operational
   if (!slave->state.operational) {
+    *(hal_data->ready) = 0;
+    *(hal_data->error) = 1;
+    *(hal_data->loc_ena) = 0;
+    *(hal_data->toggle) = 0;
+    *(hal_data->stopped) = 0;
+    *(hal_data->at_speed) = 0;
+    *(hal_data->overload) = 0;
     return;
   }
 
