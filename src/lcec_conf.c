@@ -49,6 +49,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // generic device
   { "generic", lcecSlaveTypeGeneric },
 
+  // AX5000 servo drives
+  { "AX5206", lcecSlaveTypeAX5206 },
+
   // digital in
   { "EL1002", lcecSlaveTypeEL1002 },
   { "EL1004", lcecSlaveTypeEL1004 },
@@ -255,8 +258,8 @@ int main(int argc, char **argv) {
     fprintf(stderr, "%s: ERROR: unable to register pin %s.conf.slave-count\n", modname, LCEC_MODULE_NAME);
     goto fail1;
   }
-  *conf_hal_data->master_count = 0;
-  *conf_hal_data->slave_count = 0;
+  *(conf_hal_data->master_count) = 0;
+  *(conf_hal_data->slave_count) = 0;
 
   // initialize signal handling
   exitEvent = eventfd(0, 0);

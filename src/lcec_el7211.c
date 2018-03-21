@@ -243,6 +243,14 @@ void lcec_el7211_read(struct lcec_slave *slave, long period) {
 
   // wait for slave to be operational
   if (!slave->state.operational) {
+    *(hal_data->status_ready) = 0;
+    *(hal_data->status_switched_on) = 0;
+    *(hal_data->status_operation) = 0;
+    *(hal_data->status_fault) = 1;
+    *(hal_data->status_disabled) = 0;
+    *(hal_data->status_warning) = 0;
+    *(hal_data->status_limit_active) = 0;
+    *(hal_data->enabled) = 0;
     return;
   }
 

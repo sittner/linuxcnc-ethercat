@@ -92,7 +92,8 @@ void class_enc_update(lcec_class_enc_data_t *hal_data, uint32_t pprev, double sc
   hal_data->pprev_last = pprev;
 
   // init last encoder value to last known position
-  // this could be used for persitent extrapolated mutiturn tracking 
+  // this could be used to retain extrapolated multiturn tracking
+  // IMPORTANT: hi/lo values need to be stored atomic
   if (hal_data->do_init) {
     *(hal_data->raw) = *(hal_data->ext_lo) & hal_data->raw_mask;
   }

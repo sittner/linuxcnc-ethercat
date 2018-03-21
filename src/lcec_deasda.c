@@ -264,6 +264,18 @@ void lcec_deasda_read(struct lcec_slave *slave, long period) {
 
   // wait for slave to be operational
   if (!slave->state.operational) {
+    *(hal_data->ready)        = 0;
+    *(hal_data->switched_on)  = 0;
+    *(hal_data->oper_enabled) = 0;
+    *(hal_data->fault)        = 1;
+    *(hal_data->volt_enabled) = 0;
+    *(hal_data->quick_stoped) = 0;
+    *(hal_data->on_disabled)  = 0;
+    *(hal_data->warning)      = 0;
+    *(hal_data->remote)       = 0;
+    *(hal_data->at_speed)     = 0;
+    *(hal_data->limit_active) = 0;
+    *(hal_data->zero_speed)   = 0;
     return;
   }
 
