@@ -176,6 +176,9 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   lcec_stmds5k_data_t *hal_data;
   int err;
   uint8_t sdo_buf[4];
+  double sdo_torque_reference;
+  double sdo_speed_max_rpm;
+  double sdo_speed_max_rpm_sp;
 
   // initialize callbacks
   slave->proc_read = lcec_stmds5k_read;
@@ -194,19 +197,19 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   if (lcec_read_sdo(slave, 0x2212, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->torque_reference = (double) EC_READ_S32(sdo_buf) * STMDS5K_TORQUE_REF_DIV;
+  sdo_torque_reference = (double) EC_READ_S32(sdo_buf) * STMDS5K_TORQUE_REF_DIV;
   // C01 : max rpm
   if (lcec_read_sdo(slave, 0x2401, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->speed_max_rpm = (double) EC_READ_S32(sdo_buf);
+  sdo_speed_max_rpm = (double) EC_READ_S32(sdo_buf);
   // D02 : setpoint max rpm
   if (lcec_read_sdo(slave, 0x2602, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->speed_max_rpm_sp = (double) EC_READ_S32(sdo_buf);
-  if (hal_data->speed_max_rpm_sp > 1e-20 || hal_data->speed_max_rpm_sp < -1e-20) {
-    hal_data->speed_max_rpm_sp_rcpt = 1.0 / hal_data->speed_max_rpm_sp;
+  sdo_speed_max_rpm_sp = (double) EC_READ_S32(sdo_buf);
+  if (sdo_speed_max_rpm_sp > 1e-20 || sdo_speed_max_rpm_sp < -1e-20) {
+    hal_data->speed_max_rpm_sp_rcpt = 1.0 / sdo_speed_max_rpm_sp;
   } else {
     hal_data->speed_max_rpm_sp_rcpt = 0.0;
   }
@@ -246,6 +249,9 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   *(hal_data->torque_lim) = 1.0;
 
   // initialize variables
+  hal_data->torque_reference = sdo_torque_reference;
+  hal_data->speed_max_rpm = sdo_speed_max_rpm;
+  hal_data->speed_max_rpm_sp = sdo_speed_max_rpm_sp;
   hal_data->pos_scale = 1.0;
   hal_data->do_init = 1;
   hal_data->pos_cnt = 0;
