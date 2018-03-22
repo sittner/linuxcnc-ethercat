@@ -31,10 +31,18 @@
 #include "lcec_conf.h"
 #include "lcec_conf_priv.h"
 
+#include "lcec_stmds5k.h"
 
 typedef struct {
-  char *name;
+  const char *name;
+  int id;
+  hal_type_t type;
+} LCEC_CONF_MODPARAM_DESC_T;
+
+typedef struct {
+  const char *name;
   LCEC_SLAVE_TYPE_T type;
+  const LCEC_CONF_MODPARAM_DESC_T *modParams;
 } LCEC_CONF_TYPELIST_T;
 
 typedef struct {
@@ -42,122 +50,127 @@ typedef struct {
   hal_u32_t *slave_count;
 } LCEC_CONF_HAL_T;
 
+static const LCEC_CONF_MODPARAM_DESC_T slaveStMDS5kParams[] = {
+  { "isMultiturn", LCEC_STMDS5K_PARAM_MULTITURN, HAL_BIT } ,
+  { NULL }
+};
+
 static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // bus coupler
-  { "EK1100", lcecSlaveTypeEK1100 },
+  { "EK1100", lcecSlaveTypeEK1100, NULL },
 
   // generic device
-  { "generic", lcecSlaveTypeGeneric },
+  { "generic", lcecSlaveTypeGeneric, NULL },
 
   // AX5000 servo drives
-  { "AX5206", lcecSlaveTypeAX5206 },
+  { "AX5206", lcecSlaveTypeAX5206, NULL },
 
   // digital in
-  { "EL1002", lcecSlaveTypeEL1002 },
-  { "EL1004", lcecSlaveTypeEL1004 },
-  { "EL1008", lcecSlaveTypeEL1008 },
-  { "EL1012", lcecSlaveTypeEL1012 },
-  { "EL1014", lcecSlaveTypeEL1014 },
-  { "EL1018", lcecSlaveTypeEL1018 },
-  { "EL1024", lcecSlaveTypeEL1024 },
-  { "EL1034", lcecSlaveTypeEL1034 },
-  { "EL1084", lcecSlaveTypeEL1084 },
-  { "EL1088", lcecSlaveTypeEL1088 },
-  { "EL1094", lcecSlaveTypeEL1094 },
-  { "EL1098", lcecSlaveTypeEL1098 },
-  { "EL1104", lcecSlaveTypeEL1104 },
-  { "EL1114", lcecSlaveTypeEL1114 },
-  { "EL1124", lcecSlaveTypeEL1124 },
-  { "EL1134", lcecSlaveTypeEL1134 },
-  { "EL1144", lcecSlaveTypeEL1144 },
-  { "EL1252", lcecSlaveTypeEL1252 },
-  { "EL1808", lcecSlaveTypeEL1808 },
-  { "EL1809", lcecSlaveTypeEL1809 },
+  { "EL1002", lcecSlaveTypeEL1002, NULL },
+  { "EL1004", lcecSlaveTypeEL1004, NULL },
+  { "EL1008", lcecSlaveTypeEL1008, NULL },
+  { "EL1012", lcecSlaveTypeEL1012, NULL },
+  { "EL1014", lcecSlaveTypeEL1014, NULL },
+  { "EL1018", lcecSlaveTypeEL1018, NULL },
+  { "EL1024", lcecSlaveTypeEL1024, NULL },
+  { "EL1034", lcecSlaveTypeEL1034, NULL },
+  { "EL1084", lcecSlaveTypeEL1084, NULL },
+  { "EL1088", lcecSlaveTypeEL1088, NULL },
+  { "EL1094", lcecSlaveTypeEL1094, NULL },
+  { "EL1098", lcecSlaveTypeEL1098, NULL },
+  { "EL1104", lcecSlaveTypeEL1104, NULL },
+  { "EL1114", lcecSlaveTypeEL1114, NULL },
+  { "EL1124", lcecSlaveTypeEL1124, NULL },
+  { "EL1134", lcecSlaveTypeEL1134, NULL },
+  { "EL1144", lcecSlaveTypeEL1144, NULL },
+  { "EL1252", lcecSlaveTypeEL1252, NULL },
+  { "EL1808", lcecSlaveTypeEL1808, NULL },
+  { "EL1809", lcecSlaveTypeEL1809, NULL },
 
   // digital out
-  { "EL2002", lcecSlaveTypeEL2002 },
-  { "EL2004", lcecSlaveTypeEL2004 },
-  { "EL2008", lcecSlaveTypeEL2008 },
-  { "EL2022", lcecSlaveTypeEL2022 },
-  { "EL2024", lcecSlaveTypeEL2024 },
-  { "EL2032", lcecSlaveTypeEL2032 },
-  { "EL2034", lcecSlaveTypeEL2034 },
-  { "EL2042", lcecSlaveTypeEL2042 },
-  { "EL2084", lcecSlaveTypeEL2084 },
-  { "EL2088", lcecSlaveTypeEL2088 },
-  { "EL2124", lcecSlaveTypeEL2124 },
-  { "EL2202", lcecSlaveTypeEL2202 },
-  { "EL2622", lcecSlaveTypeEL2622 },
-  { "EL2808", lcecSlaveTypeEL2808 },
-  { "EL2798", lcecSlaveTypeEL2798 },
-  { "EL2809", lcecSlaveTypeEL2809 },
+  { "EL2002", lcecSlaveTypeEL2002, NULL },
+  { "EL2004", lcecSlaveTypeEL2004, NULL },
+  { "EL2008", lcecSlaveTypeEL2008, NULL },
+  { "EL2022", lcecSlaveTypeEL2022, NULL },
+  { "EL2024", lcecSlaveTypeEL2024, NULL },
+  { "EL2032", lcecSlaveTypeEL2032, NULL },
+  { "EL2034", lcecSlaveTypeEL2034, NULL },
+  { "EL2042", lcecSlaveTypeEL2042, NULL },
+  { "EL2084", lcecSlaveTypeEL2084, NULL },
+  { "EL2088", lcecSlaveTypeEL2088, NULL },
+  { "EL2124", lcecSlaveTypeEL2124, NULL },
+  { "EL2202", lcecSlaveTypeEL2202, NULL },
+  { "EL2622", lcecSlaveTypeEL2622, NULL },
+  { "EL2808", lcecSlaveTypeEL2808, NULL },
+  { "EL2798", lcecSlaveTypeEL2798, NULL },
+  { "EL2809", lcecSlaveTypeEL2809, NULL },
 
-  { "EP2028", lcecSlaveTypeEP2028 },
+  { "EP2028", lcecSlaveTypeEP2028, NULL },
 
   // analog in, 2ch, 16 bits
-  { "EL3102", lcecSlaveTypeEL3102 },
-  { "EL3112", lcecSlaveTypeEL3112 },
-  { "EL3122", lcecSlaveTypeEL3122 },
-  { "EL3142", lcecSlaveTypeEL3142 },
-  { "EL3152", lcecSlaveTypeEL3152 },
-  { "EL3162", lcecSlaveTypeEL3162 },
+  { "EL3102", lcecSlaveTypeEL3102, NULL },
+  { "EL3112", lcecSlaveTypeEL3112, NULL },
+  { "EL3122", lcecSlaveTypeEL3122, NULL },
+  { "EL3142", lcecSlaveTypeEL3142, NULL },
+  { "EL3152", lcecSlaveTypeEL3152, NULL },
+  { "EL3162", lcecSlaveTypeEL3162, NULL },
 
   // analog in, 5ch, 16 bits
-  { "EL3255", lcecSlaveTypeEL3255 },
+  { "EL3255", lcecSlaveTypeEL3255, NULL },
 
   // analog out, 1ch, 12 bits
-  { "EL4001", lcecSlaveTypeEL4001 },
-  { "EL4011", lcecSlaveTypeEL4011 },
-  { "EL4021", lcecSlaveTypeEL4021 },
-  { "EL4031", lcecSlaveTypeEL4031 },
+  { "EL4001", lcecSlaveTypeEL4001, NULL },
+  { "EL4011", lcecSlaveTypeEL4011, NULL },
+  { "EL4021", lcecSlaveTypeEL4021, NULL },
+  { "EL4031", lcecSlaveTypeEL4031, NULL },
 
   // analog out, 2ch, 12 bits
-  { "EL4002", lcecSlaveTypeEL4002 },
-  { "EL4012", lcecSlaveTypeEL4012 },
-  { "EL4022", lcecSlaveTypeEL4022 },
-  { "EL4032", lcecSlaveTypeEL4032 },
+  { "EL4002", lcecSlaveTypeEL4002, NULL },
+  { "EL4012", lcecSlaveTypeEL4012, NULL },
+  { "EL4022", lcecSlaveTypeEL4022, NULL },
+  { "EL4032", lcecSlaveTypeEL4032, NULL },
 
   // analog out, 2ch, 16 bits
-  { "EL4102", lcecSlaveTypeEL4102 },
-  { "EL4112", lcecSlaveTypeEL4112 },
-  { "EL4122", lcecSlaveTypeEL4122 },
-  { "EL4132", lcecSlaveTypeEL4132 },
+  { "EL4102", lcecSlaveTypeEL4102, NULL },
+  { "EL4112", lcecSlaveTypeEL4112, NULL },
+  { "EL4122", lcecSlaveTypeEL4122, NULL },
+  { "EL4132", lcecSlaveTypeEL4132, NULL },
 
   // analog out, 4ch, 16 bits
-  { "EL4104", lcecSlaveTypeEL4104 },
+  { "EL4104", lcecSlaveTypeEL4104, NULL },
 
   // encoder inputs
-  { "EL5101", lcecSlaveTypeEL5101 },
-  { "EL5151", lcecSlaveTypeEL5151 },
-  { "EL5152", lcecSlaveTypeEL5152 },
+  { "EL5101", lcecSlaveTypeEL5101, NULL },
+  { "EL5151", lcecSlaveTypeEL5151, NULL },
+  { "EL5152", lcecSlaveTypeEL5152, NULL },
 
   // pulse train (stepper) output
-  { "EL2521", lcecSlaveTypeEL2521 },
+  { "EL2521", lcecSlaveTypeEL2521, NULL },
 
   // stepper
-  { "EL7041-1000", lcecSlaveTypeEL7041_1000 },
+  { "EL7041-1000", lcecSlaveTypeEL7041_1000, NULL },
 
   // ac servo
-  { "EL7211", lcecSlaveTypeEL7211 },
+  { "EL7211", lcecSlaveTypeEL7211, NULL },
 
   // dc servo
-  { "EL7342", lcecSlaveTypeEL7342 },
+  { "EL7342", lcecSlaveTypeEL7342, NULL },
 
   // power suppply
-  { "EL9505", lcecSlaveTypeEL9505 },
-  { "EL9508", lcecSlaveTypeEL9508 },
-  { "EL9510", lcecSlaveTypeEL9510 },
-  { "EL9512", lcecSlaveTypeEL9512 },
-  { "EL9515", lcecSlaveTypeEL9515 },
+  { "EL9505", lcecSlaveTypeEL9505, NULL },
+  { "EL9508", lcecSlaveTypeEL9508, NULL },
+  { "EL9510", lcecSlaveTypeEL9510, NULL },
+  { "EL9512", lcecSlaveTypeEL9512, NULL },
+  { "EL9515", lcecSlaveTypeEL9515, NULL },
 
   // multi axis interface
-  { "EM7004", lcecSlaveTypeEM7004 },
+  { "EM7004", lcecSlaveTypeEM7004, NULL },
 
   // stoeber MDS5000 series
-  { "StMDS5k", lcecSlaveTypeStMDS5k },
+  { "StMDS5k", lcecSlaveTypeStMDS5k, slaveStMDS5kParams },
 
   // Delta ASDA series
-  { "DeASDA", lcecSlaveTypeDeASDA },
+  { "DeASDA", lcecSlaveTypeDeASDA, NULL },
 
   { NULL }
 };
@@ -172,6 +185,7 @@ typedef struct {
   LCEC_CONF_XML_INST_T xml;
 
   LCEC_CONF_MASTER_T *currMaster;
+  const LCEC_CONF_TYPELIST_T *currSlaveType;
   LCEC_CONF_SLAVE_T *currSlave;
   LCEC_CONF_SYNCMANAGER_T *currSyncManager;
   LCEC_CONF_PDO_T *currPdo;
@@ -195,6 +209,7 @@ static void parseSyncManagerAttrs(LCEC_CONF_XML_INST_T *inst, int next, const ch
 static void parsePdoAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
 static void parsePdoEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
 static void parseComplexEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
 
 static const LCEC_CONF_XML_HANLDER_T xml_states[] = {
   { "masters", lcecConfTypeNone, lcecConfTypeMasters, NULL, NULL },
@@ -211,6 +226,7 @@ static const LCEC_CONF_XML_HANLDER_T xml_states[] = {
   { "pdo", lcecConfTypeSyncManager, lcecConfTypePdo, parsePdoAttrs, NULL },
   { "pdoEntry", lcecConfTypePdo, lcecConfTypePdoEntry, parsePdoEntryAttrs, NULL },
   { "complexEntry", lcecConfTypePdoEntry, lcecConfTypeComplexEntry, parseComplexEntryAttrs, NULL },
+  { "modParam", lcecConfTypeSlave, lcecConfTypeModParam, parseModParamAttrs, NULL },
   { "NULL", -1, -1, NULL, NULL }
 };
 
@@ -426,6 +442,7 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
     return;
   }
 
+  const LCEC_CONF_TYPELIST_T *slaveType = NULL;
   p->confType = lcecConfTypeSlave;
   p->type = lcecSlaveTypeInvalid;
   while (*attr) {
@@ -440,7 +457,6 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
 
     // parse slave type
     if (strcmp(name, "type") == 0) {
-      const LCEC_CONF_TYPELIST_T *slaveType;
       for (slaveType = slaveTypes; slaveType->name != NULL; slaveType++) {
         if (strcmp(val, slaveType->name) == 0) {
           break;
@@ -502,6 +518,7 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
   }
 
   (*(conf_hal_data->slave_count))++;
+  state->currSlaveType = slaveType;
   state->currSlave = p;
 }
 
@@ -1251,6 +1268,125 @@ static void parseComplexEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const c
     (state->currSlave->pdoMappingCount)++;
   }
   state->currComplexBitOffset += p->bitLength;
+}
+
+static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
+  const char *pname, *pval;
+  const LCEC_CONF_MODPARAM_DESC_T *modParams;
+
+  if (state->currSlaveType->modParams == NULL) {
+    fprintf(stderr, "%s: ERROR: modParam not allowed for this slave\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  LCEC_CONF_MODPARAM_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_MODPARAM_T));
+  if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  p->confType = lcecConfTypeModParam;
+
+  pname = NULL;
+  pval = NULL;
+  while (*attr) {
+    const char *name = *(attr++);
+    const char *val = *(attr++);
+
+    // get name
+    if (strcmp(name, "name") == 0) {
+      pname = val;
+      continue;
+    }
+
+    // get value
+    if (strcmp(name, "value") == 0) {
+      pval = val;
+      continue;
+    }
+
+    // handle error
+    fprintf(stderr, "%s: ERROR: Invalid modParam attribute %s\n", modname, name);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // name is required
+  if (pname == NULL || pname[0] == 0) {
+    fprintf(stderr, "%s: ERROR: modParam has no name attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // value is required
+  if (pval == NULL || pval[0] == 0) {
+    fprintf(stderr, "%s: ERROR: modParam has no value attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // search for matching param name
+  for (modParams = state->currSlaveType->modParams; modParams->name != NULL; modParams++) {
+    if (strcmp(pname, modParams->name) == 0) {
+      break;
+    }
+  }
+  if (modParams->name == NULL) {
+    fprintf(stderr, "%s: ERROR: Invalid modParam '%s'\n", modname, pname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // set id
+  p->id = modParams->id;
+
+  // try to parse value
+  char *s = NULL;
+  switch (modParams->type) {
+    case HAL_BIT:
+      if ((strcmp("1", pval) == 0) || (strcasecmp("TRUE", pval) == 0)) {
+        p->value.bit = 1;
+      } else if ((strcmp("0", pval) == 0) || (strcasecmp("FALSE", pval)) == 0) {
+        p->value.bit = 0;
+      } else {
+        fprintf(stderr, "%s: ERROR: Invalid modParam bit value '%s' for param '%s'\n", modname, pval, pname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      break;
+    case HAL_U32:
+      p->value.u32 = strtoul(pval, &s, 0);
+      if (*s != 0) {
+        fprintf(stderr, "%s: ERROR: Invalid modParam u32 value '%s' for param '%s'\n", modname, pval, pname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      break;
+    case HAL_S32:
+      p->value.s32 = strtol(pval, &s, 0);
+      if (*s != 0) {
+        fprintf(stderr, "%s: ERROR: Invalid modParam s32 value '%s' for param '%s'\n", modname, pval, pname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      break;
+    case HAL_FLOAT:
+      p->value.flt = strtod(pval, &s);
+      if (*s != 0) {
+        fprintf(stderr, "%s: ERROR: Invalid modParam float value '%s' for param '%s'\n", modname, pval, pname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      break;
+    default:
+      p->value.u32 = 0;
+      break;
+  }
+
+  (state->currSlave->modParamCount)++;
 }
 
 static int parseSyncCycle(LCEC_CONF_XML_STATE_T *state, const char *nptr) {

@@ -469,6 +469,7 @@ int lcec_parse_config(void) {
   LCEC_CONF_COMPLEXENTRY_T *ce_conf;
   LCEC_CONF_SDOCONF_T *sdo_conf;
   LCEC_CONF_IDNCONF_T *idn_conf;
+  LCEC_CONF_MODPARAM_T *modparam_conf;
   ec_pdo_entry_info_t *generic_pdo_entries;
   ec_pdo_info_t *generic_pdos;
   ec_sync_info_t *generic_sync_managers;
@@ -476,6 +477,7 @@ int lcec_parse_config(void) {
   hal_pin_dir_t generic_hal_dir;
   lcec_slave_sdoconf_t *sdo_config;
   lcec_slave_idnconf_t *idn_config;
+  lcec_slave_modparam_t *modparams;
 
   // initialize list
   first_master = NULL;
@@ -527,6 +529,7 @@ int lcec_parse_config(void) {
   sdo_config = NULL;
   idn_config = NULL;
   pe_conf = NULL;
+  modparams = NULL;
   while((conf_type = ((LCEC_CONF_NULL_T *)conf)->confType) != lcecConfTypeNone) {
     // get type
     switch (conf_type) {
@@ -593,6 +596,7 @@ int lcec_parse_config(void) {
         generic_hal_dir = 0;
         sdo_config = NULL;
         idn_config = NULL;
+        modparams = NULL;
 
         slave->index = slave_conf->index;
         strncpy(slave->name, slave_conf->name, LCEC_CONF_STR_MAXLEN);
@@ -663,6 +667,16 @@ int lcec_parse_config(void) {
           }
         }
 
+        // alloc modparam memory
+        if (slave_conf->modParamCount > 0) {
+          modparams = lcec_zalloc(sizeof(lcec_slave_modparam_t) * (slave_conf->modParamCount + 1));
+          if (modparams == NULL) {
+            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s modparam memory\n", master->name, slave_conf->name);
+            goto fail2;
+          }
+          modparams[slave_conf->modParamCount].id = -1;
+        }
+
         slave->hal_data = generic_hal_data;
         slave->generic_pdo_entries = generic_pdo_entries;
         slave->generic_pdos = generic_pdos;
@@ -672,6 +686,7 @@ int lcec_parse_config(void) {
         }
         slave->sdo_config = sdo_config;
         slave->idn_config = idn_config;
+        slave->modparams = modparams;
         slave->dc_conf = NULL;
         slave->wd_conf = NULL;
 
@@ -931,6 +946,25 @@ int lcec_parse_config(void) {
         idn_config = (lcec_slave_idnconf_t *) &idn_config->data[idn_config->length];
         break;
 
+      case lcecConfTypeModParam:
+        // get config token
+        modparam_conf = (LCEC_CONF_MODPARAM_T *)conf;
+        conf += sizeof(LCEC_CONF_MODPARAM_T);
+
+        // check for slave
+        if (slave == NULL) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Slave node for modparam config missing\n");
+          goto fail2;
+        }
+
+        // copy attributes
+        modparams->id = modparam_conf->id;
+        modparams->value = modparam_conf->value;
+
+        // next entry
+        modparams++;
+        break;
+
       default:
         rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unknown config item type\n");
         goto fail2;
@@ -980,6 +1014,9 @@ void lcec_clear_config(void) {
       }
 
       // free slave
+      if (slave->modparams != NULL) {
+        lcec_free(slave->modparams);
+      }
       if (slave->sdo_config != NULL) {
         lcec_free(slave->sdo_config);
       }
@@ -1474,5 +1511,21 @@ int lcec_param_newf_list(void *base, const lcec_pindesc_t *list, ...) {
   va_end(ap);
 
   return err;
+}
+
+LCEC_CONF_MODPARAM_VAL_T *lcec_modparam_get(struct lcec_slave *slave, int id) {
+  lcec_slave_modparam_t *p;
+
+  if (slave->modparams == NULL) {
+    return NULL;
+  }
+
+  for (p = slave->modparams; p->id >= 0; p++) {
+    if (p->id == id) {
+      return &p->value;
+    }
+  }
+
+  return NULL;
 }
 

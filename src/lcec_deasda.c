@@ -212,7 +212,6 @@ int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   if ((err = class_enc_init(slave, &hal_data->enc, 32, "enc")) != 0) {
     return err;
   }
-  // init subclasses
   if ((err = class_enc_init(slave, &hal_data->extenc, 32, "extenc")) != 0) {
     return err;
   }

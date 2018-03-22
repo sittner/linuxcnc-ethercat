@@ -19,29 +19,22 @@
 #include "lcec.h"
 #include "lcec_stmds5k.h"
 
+#include "lcec_class_enc.h"
+
 #define STMDS5K_PCT_REG_FACTOR (0.5 * (double)0x7fff)
 #define STMDS5K_PCT_REG_DIV    (2.0 / (double)0x7fff)
 #define STMDS5K_TORQUE_DIV     (8.0 / (double)0x7fff)
 #define STMDS5K_TORQUE_REF_DIV (0.01)
 #define STMDS5K_RPM_FACTOR     (60.0)
 #define STMDS5K_RPM_DIV        (1.0 / 60.0)
+#define STMDS5K_PPREV          0x1000000
 
 typedef struct {
-  int do_init;
-
-  long long pos_cnt;
-  long long index_cnt;
-  int32_t last_pos_cnt;
-
   hal_float_t *vel_cmd;
   hal_float_t *vel_fb;
   hal_float_t *vel_fb_rpm;
   hal_float_t *vel_fb_rpm_abs;
   hal_float_t *vel_rpm;
-  hal_u32_t *pos_raw_hi;
-  hal_u32_t *pos_raw_lo;
-  hal_float_t *pos_fb;
-  hal_float_t *pos_fb_rel;
   hal_float_t *torque_fb;
   hal_float_t *torque_fb_abs;
   hal_float_t *torque_fb_pct;
@@ -57,26 +50,17 @@ typedef struct {
   hal_bit_t *err_reset;
   hal_bit_t *fast_ramp;
   hal_bit_t *brake;
-  hal_bit_t *index_ena;
-  hal_bit_t *pos_reset;
-  hal_s32_t *enc_raw;
-  hal_s32_t *enc_raw_rel;
-  hal_bit_t *on_home_neg;
-  hal_bit_t *on_home_pos;
 
   hal_float_t speed_max_rpm;
   hal_float_t speed_max_rpm_sp;
   hal_float_t torque_reference;
   hal_float_t pos_scale;
-  hal_s32_t home_raw;
   double speed_max_rpm_sp_rcpt;
 
   double pos_scale_old;
   double pos_scale_rcpt;
-  double pos_scale_cnt;
 
-  int last_index_ena;
-  int32_t index_ref;
+  lcec_class_enc_data_t enc;
 
   unsigned int dev_state_pdo_os;
   unsigned int speed_mot_pdo_os;
@@ -95,12 +79,6 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, vel_fb_rpm), "%s.%s.%s.srv-vel-fb-rpm" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, vel_fb_rpm_abs), "%s.%s.%s.srv-vel-fb-rpm-abs" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, vel_rpm), "%s.%s.%s.srv-vel-rpm" },
-  { HAL_S32, HAL_OUT, offsetof(lcec_stmds5k_data_t, enc_raw), "%s.%s.%s.srv-enc-raw" },
-  { HAL_S32, HAL_OUT, offsetof(lcec_stmds5k_data_t, enc_raw_rel), "%s.%s.%s.srv-enc-raw-rel" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_stmds5k_data_t, pos_raw_hi), "%s.%s.%s.srv-pos-raw-hi" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_stmds5k_data_t, pos_raw_lo), "%s.%s.%s.srv-pos-raw-lo" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, pos_fb), "%s.%s.%s.srv-pos-fb" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, pos_fb_rel), "%s.%s.%s.srv-pos-fb-rel" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, torque_fb), "%s.%s.%s.srv-torque-fb" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, torque_fb_abs), "%s.%s.%s.srv-torque-fb-abs" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, torque_fb_pct), "%s.%s.%s.srv-torque-fb-pct" },
@@ -116,10 +94,6 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_BIT, HAL_IN, offsetof(lcec_stmds5k_data_t, err_reset), "%s.%s.%s.srv-err-reset" },
   { HAL_BIT, HAL_IN, offsetof(lcec_stmds5k_data_t, fast_ramp), "%s.%s.%s.srv-fast-ramp" },
   { HAL_BIT, HAL_IN, offsetof(lcec_stmds5k_data_t, brake), "%s.%s.%s.srv-brake" },
-  { HAL_BIT, HAL_IO, offsetof(lcec_stmds5k_data_t, index_ena), "%s.%s.%s.srv-index-ena" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_stmds5k_data_t, pos_reset), "%s.%s.%s.srv-pos-reset" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_stmds5k_data_t, on_home_neg), "%s.%s.%s.srv-on-home-neg" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_stmds5k_data_t, on_home_pos), "%s.%s.%s.srv-on-home-pos" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -128,7 +102,6 @@ static const lcec_pindesc_t slave_params[] = {
   { HAL_FLOAT, HAL_RO, offsetof(lcec_stmds5k_data_t, torque_reference), "%s.%s.%s.srv-torque-ref" },
   { HAL_FLOAT, HAL_RO, offsetof(lcec_stmds5k_data_t, speed_max_rpm), "%s.%s.%s.srv-max-rpm" },
   { HAL_FLOAT, HAL_RO, offsetof(lcec_stmds5k_data_t, speed_max_rpm_sp), "%s.%s.%s.srv-max-rpm-sp" },
-  { HAL_S32, HAL_RW, offsetof(lcec_stmds5k_data_t, home_raw), "%s.%s.%s.srv-home-raw" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -176,6 +149,11 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   lcec_stmds5k_data_t *hal_data;
   int err;
   uint8_t sdo_buf[4];
+  double sdo_torque_reference;
+  double sdo_speed_max_rpm;
+  double sdo_speed_max_rpm_sp;
+  LCEC_CONF_MODPARAM_VAL_T *pval;
+  int enc_bits;
 
   // initialize callbacks
   slave->proc_read = lcec_stmds5k_read;
@@ -194,19 +172,19 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   if (lcec_read_sdo(slave, 0x2212, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->torque_reference = (double) EC_READ_S32(sdo_buf) * STMDS5K_TORQUE_REF_DIV;
+  sdo_torque_reference = (double) EC_READ_S32(sdo_buf) * STMDS5K_TORQUE_REF_DIV;
   // C01 : max rpm
   if (lcec_read_sdo(slave, 0x2401, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->speed_max_rpm = (double) EC_READ_S32(sdo_buf);
+  sdo_speed_max_rpm = (double) EC_READ_S32(sdo_buf);
   // D02 : setpoint max rpm
   if (lcec_read_sdo(slave, 0x2602, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->speed_max_rpm_sp = (double) EC_READ_S32(sdo_buf);
-  if (hal_data->speed_max_rpm_sp > 1e-20 || hal_data->speed_max_rpm_sp < -1e-20) {
-    hal_data->speed_max_rpm_sp_rcpt = 1.0 / hal_data->speed_max_rpm_sp;
+  sdo_speed_max_rpm_sp = (double) EC_READ_S32(sdo_buf);
+  if (sdo_speed_max_rpm_sp > 1e-20 || sdo_speed_max_rpm_sp < -1e-20) {
+    hal_data->speed_max_rpm_sp_rcpt = 1.0 / sdo_speed_max_rpm_sp;
   } else {
     hal_data->speed_max_rpm_sp_rcpt = 0.0;
   }
@@ -242,21 +220,28 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
     return err;
   }
 
+  // set encoder bits
+  enc_bits = 24;
+  pval = lcec_modparam_get(slave, LCEC_STMDS5K_PARAM_MULTITURN);
+  if (pval != NULL && pval->bit) {
+    enc_bits = 32;
+  }
+
+  // init subclasses
+  if ((err = class_enc_init(slave, &hal_data->enc, enc_bits, "enc")) != 0) {
+    return err;
+  }
+
   // set default pin values
   *(hal_data->torque_lim) = 1.0;
 
   // initialize variables
+  hal_data->torque_reference = sdo_torque_reference;
+  hal_data->speed_max_rpm = sdo_speed_max_rpm;
+  hal_data->speed_max_rpm_sp = sdo_speed_max_rpm_sp;
   hal_data->pos_scale = 1.0;
-  hal_data->do_init = 1;
-  hal_data->pos_cnt = 0;
-  hal_data->index_cnt = 0;
-  hal_data->last_pos_cnt = 0;
   hal_data->pos_scale_old = hal_data->pos_scale + 1.0;
   hal_data->pos_scale_rcpt = 1.0;
-  hal_data->pos_scale_cnt = 1.0;
-  hal_data->last_index_ena = 0;
-  hal_data->index_ref = 0;
-  hal_data->home_raw = 0;
 
   return 0;
 }
@@ -273,8 +258,6 @@ void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data) {
     hal_data->pos_scale_old = hal_data->pos_scale;
     // we actually want the reciprocal
     hal_data->pos_scale_rcpt = 1.0 / hal_data->pos_scale;
-    // scale for counter
-    hal_data->pos_scale_cnt = hal_data->pos_scale_rcpt / (double)(0x100000000LL);
   }
 }
 
@@ -282,13 +265,11 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_stmds5k_data_t *hal_data = (lcec_stmds5k_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
-  int32_t index_tmp;
-  int32_t pos_cnt, pos_cnt_rel, pos_cnt_diff;
-  long long net_count, rel_count;
   uint8_t dev_state;
   uint16_t speed_state;
   int16_t speed_raw, torque_raw;
   double rpm, torque;
+  uint32_t pos_cnt;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
@@ -334,52 +315,9 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   *(hal_data->torque_fb) = torque;
   *(hal_data->torque_fb_abs) = fabs(torque);
 
-  // update raw position counter
+  // update position feedback
   pos_cnt = EC_READ_S32(&pd[hal_data->pos_mot_pdo_os]);
-  pos_cnt_rel = pos_cnt - hal_data->home_raw;
-  *(hal_data->enc_raw) = pos_cnt;
-  *(hal_data->enc_raw_rel) = pos_cnt_rel;
-  *(hal_data->on_home_neg) = (pos_cnt_rel <= 0);
-  *(hal_data->on_home_pos) = (pos_cnt_rel >= 0);
-
-  pos_cnt <<= 8;
-  pos_cnt_diff = pos_cnt - hal_data->last_pos_cnt;
-  hal_data->last_pos_cnt = pos_cnt;
-  hal_data->pos_cnt += pos_cnt_diff;
-
-  rel_count = ((long long) pos_cnt_rel) << 8;
-
-  // check for index edge
-  if (*(hal_data->index_ena)) {
-    index_tmp = (hal_data->pos_cnt >> 32) & 0xffffffff;
-    if (hal_data->do_init || !hal_data->last_index_ena) {
-      hal_data->index_ref = index_tmp;
-    } else if (index_tmp > hal_data->index_ref) {
-      hal_data->index_cnt = (long long)index_tmp << 32;
-      *(hal_data->index_ena) = 0;
-    } else if (index_tmp  < hal_data->index_ref) {
-      hal_data->index_cnt = (long long)hal_data->index_ref << 32;
-      *(hal_data->index_ena) = 0;
-    }
-  }
-  hal_data->last_index_ena = *(hal_data->index_ena);
-
-  // handle initialization
-  if (hal_data->do_init || *(hal_data->pos_reset)) {
-    hal_data->do_init = 0;
-    hal_data->index_cnt = hal_data->pos_cnt;
-  }
-
-  // compute net counts
-  net_count = hal_data->pos_cnt - hal_data->index_cnt;
-
-  // update raw counter pins
-  *(hal_data->pos_raw_hi) = (net_count >> 32) & 0xffffffff;
-  *(hal_data->pos_raw_lo) = net_count & 0xffffffff;
-
-  // scale count to make floating point position
-  *(hal_data->pos_fb) = ((double) net_count) * hal_data->pos_scale_cnt;
-  *(hal_data->pos_fb_rel) = ((double) rel_count) * hal_data->pos_scale_cnt;
+  class_enc_update(&hal_data->enc, STMDS5K_PPREV, hal_data->pos_scale_rcpt, pos_cnt, 0, false);
 }
 
 void lcec_stmds5k_write(struct lcec_slave *slave, long period) {
