@@ -1171,8 +1171,8 @@ void lcec_read_master(void *arg, long period) {
     master->period_last = period;
 #ifdef RTAPI_TASK_PLL_SUPPORT
     master->periodfp = (double) period * 0.000000001;
-    // allow max +/-1% of period
-    master->pll_limit = period / 100;
+    // allow max +/-0.1% of period
+    master->pll_limit = period / 1000;
 #endif
     if (master->app_time_period != period) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Invalid appTimePeriod of %u for master %s (should be %ld).\n",
