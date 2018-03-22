@@ -152,6 +152,8 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   double sdo_torque_reference;
   double sdo_speed_max_rpm;
   double sdo_speed_max_rpm_sp;
+  LCEC_CONF_MODPARAM_VAL_T *pval;
+  int enc_bits;
 
   // initialize callbacks
   slave->proc_read = lcec_stmds5k_read;
@@ -218,8 +220,15 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
     return err;
   }
 
+  // set encoder bits
+  enc_bits = 24;
+  pval = lcec_modparam_get(slave, LCEC_STMDS5K_PARAM_MULTITURN);
+  if (pval != NULL && pval->bit) {
+    enc_bits = 32;
+  }
+
   // init subclasses
-  if ((err = class_enc_init(slave, &hal_data->enc, 32, "enc")) != 0) {
+  if ((err = class_enc_init(slave, &hal_data->enc, enc_bits, "enc")) != 0) {
     return err;
   }
 

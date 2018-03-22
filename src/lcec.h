@@ -162,6 +162,11 @@ typedef struct {
   uint8_t data[];
 } lcec_slave_idnconf_t;
 
+typedef struct {
+  int id;
+  LCEC_CONF_MODPARAM_VAL_T value;
+} lcec_slave_modparam_t;
+
 typedef struct lcec_slave {
   struct lcec_slave *prev;
   struct lcec_slave *next;
@@ -187,6 +192,7 @@ typedef struct lcec_slave {
   ec_sync_info_t *generic_sync_managers;
   lcec_slave_sdoconf_t *sdo_config;
   lcec_slave_idnconf_t *idn_config;
+  lcec_slave_modparam_t *modparams;
 } lcec_slave_t;
 
 typedef struct {
@@ -203,6 +209,8 @@ int lcec_pin_newf(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, cons
 int lcec_pin_newf_list(void *base, const lcec_pindesc_t *list, ...);
 int lcec_param_newf(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, ...);
 int lcec_param_newf_list(void *base, const lcec_pindesc_t *list, ...);
+
+LCEC_CONF_MODPARAM_VAL_T *lcec_modparam_get(struct lcec_slave *slave, int id);
 
 #endif
 
