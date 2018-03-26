@@ -54,7 +54,7 @@ typedef struct {
   uint16_t sdo_max_freq;
   uint16_t sdo_ramp_rise;
   uint16_t sdo_ramp_fall;
-  uint16_t sdo_ramp_factor;
+  uint8_t sdo_ramp_factor;
 
   double freqscale;
   double freqscale_recip;
@@ -151,10 +151,10 @@ int lcec_el2521_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     return -EIO;
   }
   hal_data->sdo_ramp_fall = EC_READ_U16(sdo_buf);
-  if (lcec_read_sdo(slave, 0x8000, 0x07, sdo_buf, 2)) {
+  if (lcec_read_sdo(slave, 0x8000, 0x07, sdo_buf, 1)) {
     return -EIO;
   }
-  hal_data->sdo_ramp_factor = EC_READ_U16(sdo_buf);
+  hal_data->sdo_ramp_factor = EC_READ_U8(sdo_buf);
   if (lcec_read_sdo(slave, 0x8800, 0x02, sdo_buf, 2)) {
     return -EIO;
   }
