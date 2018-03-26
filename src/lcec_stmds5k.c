@@ -139,6 +139,36 @@ static ec_sync_info_t lcec_stmds5k_syncs[] = {
     {0xff}
 };
 
+typedef struct {
+  uint16_t pdo_index;
+  uint32_t pprev;
+  int used_bits;
+  int shift_bits;
+} extenc_conf_t;
+
+static extenc_conf_t extenc_conf[] {
+  // 0: E154, multiturn EnDat/SSI
+  { 0x289a, 0x000fffff, 32, 0 },
+  // 0: E154, singelturn EnDat/Resolver
+  { 0x289a, 0x0000ffff, 16, 0 },
+  // 0: E154, incremental encoder
+  { 0x289a, 0x00000000, 16, 0 },
+  // 0: E155, multiturn EnDat/SSI
+  { 0x289b, 0x000fffff, 32, 0 },
+  // 0: E155, singelturn EnDat/Resolver
+  { 0x289b, 0xffffffff, 32, 0 },
+  // 0: E155, incremental encoder
+  { 0x289b, 0x00000000, 16, 16 },
+  // 0: E156, multiturn EnDat/SSI
+  { 0x289c, 0x000fffff, 32, 0 },
+  // 0: E156, singelturn EnDat/Resolver
+  { 0x289c, 0xffffffff, 32, 0 },
+  // 0: E156, incremental encoder
+  { 0x289c, 0x00000000, 16, 16 },
+
+  { 0 }
+};
+
 void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data);
 
 void lcec_stmds5k_read(struct lcec_slave *slave, long period);
