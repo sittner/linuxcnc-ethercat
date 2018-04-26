@@ -1106,7 +1106,7 @@ lcec_slave_state_t *lcec_init_slave_state_hal(char *master_name, char *slave_nam
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for %s.%s.%s failed\n", LCEC_MODULE_NAME, master_name, slave_name);
     return NULL;
   }
-  memset(hal_data, 0, sizeof(lcec_master_data_t));
+  memset(hal_data, 0, sizeof(lcec_slave_state_t));
 
   // export pins
   if (lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master_name, slave_name) != 0) {
