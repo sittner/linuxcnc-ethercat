@@ -23,6 +23,7 @@
 #include <linux/jiffies.h>
 #include <linux/time.h>
 #include <linux/sched.h>
+#include <linux/math64.h>
 
 #define lcec_zalloc(size) kzalloc(size, GFP_KERNEL)
 #define lcec_free(ptr) kfree(ptr)
@@ -33,6 +34,12 @@
 #define lcec_get_ticks() ((long) jiffies)
 
 #define lcec_schedule() schedule()
+
+static inline long long lcec_mod_64(long long val, unsigned long div) {
+  s32 rem;
+  div_s64_rem(val, div, &rem);
+  return rem;
+}
 
 #endif
 

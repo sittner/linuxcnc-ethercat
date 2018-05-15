@@ -162,17 +162,17 @@ static void set_ref(lcec_class_enc_data_t *hal_data, long long ref) {
 }
 
 static long long signed_mod_64(long long val, unsigned long div) {
-  val %= div;
+  long long rem = lcec_mod_64(val, div);
 
-  if (val < 0) {
-    val += div;
+  if (rem < 0) {
+    rem += div;
   }
 
-  if (val > (div >> 1)) {
-    val -= div;
+  if (rem > (div >> 1)) {
+    rem -= div;
   }
 
-  return val;
+  return rem;
 }
 
 
