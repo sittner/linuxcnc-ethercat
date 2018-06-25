@@ -70,6 +70,8 @@ do {                        \
 
 #define LCEC_IDN(type, set, block) (type | ((set & 0x07) << 12) | (block & 0x0fff))
 
+#define LCEC_FSOE_MSG_LEN 6
+
 struct lcec_master;
 struct lcec_slave;
 
@@ -193,6 +195,8 @@ typedef struct lcec_slave {
   lcec_slave_sdoconf_t *sdo_config;
   lcec_slave_idnconf_t *idn_config;
   lcec_slave_modparam_t *modparams;
+  int fsoe_slave_offset;
+  int fsoe_master_offset;
 } lcec_slave_t;
 
 typedef struct {

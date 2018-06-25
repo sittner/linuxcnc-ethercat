@@ -34,6 +34,9 @@
 #include "lcec_el5151.h"
 #include "lcec_el5152.h"
 #include "lcec_el2521.h"
+#include "lcec_el6900.h"
+#include "lcec_el1904.h"
+#include "lcec_el2904.h"
 #include "lcec_el7041_1000.h"
 #include "lcec_el7211.h"
 #include "lcec_el7342.h"
@@ -160,6 +163,12 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL9510, LCEC_EL95xx_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
   { lcecSlaveTypeEL9512, LCEC_EL95xx_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
   { lcecSlaveTypeEL9515, LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
+
+  // FSoE devices
+  // TODO: PDO count
+  { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, -1, lcec_el6900_init},
+  { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, lcec_el1904_init},
+  { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, lcec_el2904_init},
 
   // multi axis interface
   { lcecSlaveTypeEM7004, LCEC_EM7004_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, lcec_em7004_init},
@@ -610,7 +619,11 @@ int lcec_parse_config(void) {
           // normal slave
           slave->vid = type->vid;
           slave->pid = type->pid;
-          slave->pdo_entry_count = type->pdo_entry_count;
+          if (type->pdo_entry_count >= 0) {
+            slave->pdo_entry_count = type->pdo_entry_count;
+          } else {
+            slave->pdo_entry_count = slave_conf->pdoMappingCount;
+          }
           slave->proc_init = type->proc_init;
         } else {
           // generic slave
@@ -689,6 +702,8 @@ int lcec_parse_config(void) {
         slave->modparams = modparams;
         slave->dc_conf = NULL;
         slave->wd_conf = NULL;
+	slave->fsoe_slave_offset = -1;
+	slave->fsoe_master_offset = -1;
 
         // update master's POD entry count
         master->pdo_entry_count += slave->pdo_entry_count;

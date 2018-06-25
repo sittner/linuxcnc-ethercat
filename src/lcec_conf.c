@@ -163,6 +163,11 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL9512", lcecSlaveTypeEL9512, NULL },
   { "EL9515", lcecSlaveTypeEL9515, NULL },
 
+  // FSoE devices
+  { "EL6900", lcecSlaveTypeEL6900, NULL },
+  { "EL1904", lcecSlaveTypeEL1904, NULL },
+  { "EL2904", lcecSlaveTypeEL2904, NULL },
+
   // multi axis interface
   { "EM7004", lcecSlaveTypeEM7004, NULL },
 
