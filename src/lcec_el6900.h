@@ -24,6 +24,11 @@
 
 #define LCEC_EL6900_PID 0x1AF43052
 
+#define LCEC_EL6900_PDOS 23
+
+#define LCEC_EL6900_PARAM_SLAVEID 1
+#define LCEC_EL6900_PARAM_SLAVEID_PDOS 8
+
 int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
