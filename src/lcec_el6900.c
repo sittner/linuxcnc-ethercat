@@ -261,9 +261,6 @@ int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     }
   }
 
-  // initialize pins
-  *(hal_data->std_in_1) = 1;
-
   return 0;
 }
 
