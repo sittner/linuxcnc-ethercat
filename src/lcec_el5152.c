@@ -64,6 +64,25 @@ typedef struct {
   int last_operational;
 } lcec_el5152_data_t;
 
+static const lcec_pindesc_t slave_pins[] = {
+  { HAL_BIT, HAL_IN, offsetof(lcec_el5152_chan_t, index), "%s.%s.%s.enc-%d-index" },
+  { HAL_BIT, HAL_IO, offsetof(lcec_el5152_chan_t, index_ena), "%s.%s.%s.enc-%d-index-enable" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_el5152_chan_t, reset), "%s.%s.%s.enc-%d-reset" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el5152_chan_t, ina), "%s.%s.%s.enc-%d-ina" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el5152_chan_t, inb), "%s.%s.%s.enc-%d-inb" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el5152_chan_t, expol_stall), "%s.%s.%s.enc-%d-expol-stall" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el5152_chan_t, tx_toggle), "%s.%s.%s.enc-%d-tx-toggle" },
+  { HAL_BIT, HAL_IO, offsetof(lcec_el5152_chan_t, set_raw_count), "%s.%s.%s.enc-%d-set-raw-count" },
+  { HAL_S32, HAL_IN, offsetof(lcec_el5152_chan_t, set_raw_count_val), "%s.%s.%s.enc-%d-set-raw-count-val" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_el5152_chan_t, raw_count), "%s.%s.%s.enc-%d-raw-count" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_el5152_chan_t, count), "%s.%s.%s.enc-%d-count" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_el5152_chan_t, raw_period), "%s.%s.%s.enc-%d-raw-period" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el5152_chan_t, pos), "%s.%s.%s.enc-%d-pos" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el5152_chan_t, period), "%s.%s.%s.enc-%d-period" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el5152_chan_t, pos_scale), "%s.%s.%s.enc-%d-pos-scale" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
 static ec_pdo_entry_info_t lcec_el5152_channel1_in[] = {
    {0x0000, 0x00, 2}, // Gap
    {0x6000, 0x03, 1}, // Set counter done
@@ -185,82 +204,11 @@ int lcec_el5152_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (i << 4), 0x11, &chan->set_count_val_pdo_os, NULL);
 
     // export pins
-    if ((err = hal_pin_bit_newf(HAL_IN, &(chan->index), comp_id, "%s.%s.%s.enc-%d-index", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-index failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_IO, &(chan->index_ena), comp_id, "%s.%s.%s.enc-%d-index-enable", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-index-enable failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_IN, &(chan->reset), comp_id, "%s.%s.%s.enc-%d-reset", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-reset failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->ina), comp_id, "%s.%s.%s.enc-%d-ina", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-ina failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->inb), comp_id, "%s.%s.%s.enc-%d-inb", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-inb failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->expol_stall), comp_id, "%s.%s.%s.enc-%d-expol-stall", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-expol-stall failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->tx_toggle), comp_id, "%s.%s.%s.enc-%d-tx-toggle", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-tx-toggle failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_IO, &(chan->set_raw_count), comp_id, "%s.%s.%s.enc-%d-set-raw-count", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-set-raw-count failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_s32_newf(HAL_IN, &(chan->set_raw_count_val), comp_id, "%s.%s.%s.enc-%d-set-raw-count-val", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-set-raw-count-val failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_s32_newf(HAL_OUT, &(chan->raw_count), comp_id, "%s.%s.%s.enc-%d-raw-count", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-raw-count failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_s32_newf(HAL_OUT, &(chan->count), comp_id, "%s.%s.%s.enc-%d-count", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-count failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_u32_newf(HAL_OUT, &(chan->raw_period), comp_id, "%s.%s.%s.enc-%d-raw-period", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-raw-period failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_float_newf(HAL_OUT, &(chan->pos), comp_id, "%s.%s.%s.enc-%d-pos", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-pos failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_float_newf(HAL_OUT, &(chan->period), comp_id, "%s.%s.%s.enc-%d-period", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-period failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_float_newf(HAL_IO, &(chan->pos_scale), comp_id, "%s.%s.%s.enc-%d-pos-scale", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.enc-%d-scale failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
+    if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       return err;
     }
 
     // initialize pins
-    *(chan->index) = 0;
-    *(chan->index_ena) = 0;
-    *(chan->reset) = 0;
-    *(chan->ina) = 0;
-    *(chan->inb) = 0;
-    *(chan->expol_stall) = 0;
-    *(chan->tx_toggle) = 0;
-    *(chan->set_raw_count) = 0;
-    *(chan->set_raw_count_val) = 0;
-    *(chan->raw_count) = 0;
-    *(chan->raw_period) = 0;
-    *(chan->count) = 0;
-    *(chan->pos) = 0;
-    *(chan->period) = 0;
     *(chan->pos_scale) = 1.0;
 
     // initialize variables

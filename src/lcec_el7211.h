@@ -1,5 +1,5 @@
 //
-//    Copyright (C) 2015 Sascha Ittner <sascha.ittner@modusoft.de>
+//    Copyright (C) 2018 Sascha Ittner <sascha.ittner@modusoft.de>
 //
 //    This program is free software; you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -15,31 +15,17 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+#ifndef _LCEC_EL7211_H_
+#define _LCEC_EL7211_H_
 
-#ifndef _LCEC_RTAPI_KMOD_H_
-#define _LCEC_RTAPI_KMOD_H_
+#include "lcec.h"
 
-#include <linux/slab.h>
-#include <linux/jiffies.h>
-#include <linux/time.h>
-#include <linux/sched.h>
-#include <linux/math64.h>
+#define LCEC_EL7211_VID LCEC_BECKHOFF_VID
+#define LCEC_EL7211_PID 0x1C2B3052
 
-#define lcec_zalloc(size) kzalloc(size, GFP_KERNEL)
-#define lcec_free(ptr) kfree(ptr)
+#define LCEC_EL7211_PDOS  5
 
-#define lcec_gettimeofday(x) do_gettimeofday(x) 
-
-#define LCEC_MS_TO_TICKS(x) (HZ * x / 1000)
-#define lcec_get_ticks() ((long) jiffies)
-
-#define lcec_schedule() schedule()
-
-static inline long long lcec_mod_64(long long val, unsigned long div) {
-  s32 rem;
-  div_s64_rem(val, div, &rem);
-  return rem;
-}
+int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
 

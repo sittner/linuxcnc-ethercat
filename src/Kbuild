@@ -1,7 +1,9 @@
 obj-m += lcec.o
 lcec-objs := \
     lcec_main.o \
+    lcec_class_enc.o \
     lcec_generic.o \
+    lcec_ax5200.o \
     lcec_el1xxx.o \
     lcec_el1252.o \
     lcec_el2521.o \
@@ -12,10 +14,12 @@ lcec-objs := \
     lcec_el40x1.o \
     lcec_el40x2.o \
     lcec_el41x2.o \
+    lcec_el41x4.o \
     lcec_el5101.o \
     lcec_el5151.o \
     lcec_el5152.o \
     lcec_el7041_1000.o \
+    lcec_el7211.o \
     lcec_el7342.o \
     lcec_el95xx.o \
     lcec_em7004.o \

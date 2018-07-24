@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <ctype.h>
 #include <expat.h>
 #include <signal.h>
 #include <sys/eventfd.h>
@@ -28,12 +29,20 @@
 
 #include "lcec_rtapi.h"
 #include "lcec_conf.h"
+#include "lcec_conf_priv.h"
 
-#define BUFFSIZE 8192
+#include "lcec_stmds5k.h"
 
 typedef struct {
-  char *name;
+  const char *name;
+  int id;
+  hal_type_t type;
+} LCEC_CONF_MODPARAM_DESC_T;
+
+typedef struct {
+  const char *name;
   LCEC_SLAVE_TYPE_T type;
+  const LCEC_CONF_MODPARAM_DESC_T *modParams;
 } LCEC_CONF_TYPELIST_T;
 
 typedef struct {
@@ -41,164 +50,187 @@ typedef struct {
   hal_u32_t *slave_count;
 } LCEC_CONF_HAL_T;
 
+static const LCEC_CONF_MODPARAM_DESC_T slaveStMDS5kParams[] = {
+  { "isMultiturn", LCEC_STMDS5K_PARAM_MULTITURN, HAL_BIT } ,
+  { NULL }
+};
+
 static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // bus coupler
-  { "EK1100", lcecSlaveTypeEK1100 },
+  { "EK1100", lcecSlaveTypeEK1100, NULL },
 
   // generic device
-  { "generic", lcecSlaveTypeGeneric },
+  { "generic", lcecSlaveTypeGeneric, NULL },
+
+  // AX5000 servo drives
+  { "AX5206", lcecSlaveTypeAX5206, NULL },
 
   // digital in
-  { "EL1002", lcecSlaveTypeEL1002 },
-  { "EL1004", lcecSlaveTypeEL1004 },
-  { "EL1008", lcecSlaveTypeEL1008 },
-  { "EL1012", lcecSlaveTypeEL1012 },
-  { "EL1014", lcecSlaveTypeEL1014 },
-  { "EL1018", lcecSlaveTypeEL1018 },
-  { "EL1024", lcecSlaveTypeEL1024 },
-  { "EL1034", lcecSlaveTypeEL1034 },
-  { "EL1084", lcecSlaveTypeEL1084 },
-  { "EL1088", lcecSlaveTypeEL1088 },
-  { "EL1094", lcecSlaveTypeEL1094 },
-  { "EL1098", lcecSlaveTypeEL1098 },
-  { "EL1104", lcecSlaveTypeEL1104 },
-  { "EL1114", lcecSlaveTypeEL1114 },
-  { "EL1124", lcecSlaveTypeEL1124 },
-  { "EL1134", lcecSlaveTypeEL1134 },
-  { "EL1144", lcecSlaveTypeEL1144 },
-  { "EL1252", lcecSlaveTypeEL1252 },
-  { "EL1808", lcecSlaveTypeEL1808 },
-  { "EL1809", lcecSlaveTypeEL1809 },
+  { "EL1002", lcecSlaveTypeEL1002, NULL },
+  { "EL1004", lcecSlaveTypeEL1004, NULL },
+  { "EL1008", lcecSlaveTypeEL1008, NULL },
+  { "EL1012", lcecSlaveTypeEL1012, NULL },
+  { "EL1014", lcecSlaveTypeEL1014, NULL },
+  { "EL1018", lcecSlaveTypeEL1018, NULL },
+  { "EL1024", lcecSlaveTypeEL1024, NULL },
+  { "EL1034", lcecSlaveTypeEL1034, NULL },
+  { "EL1084", lcecSlaveTypeEL1084, NULL },
+  { "EL1088", lcecSlaveTypeEL1088, NULL },
+  { "EL1094", lcecSlaveTypeEL1094, NULL },
+  { "EL1098", lcecSlaveTypeEL1098, NULL },
+  { "EL1104", lcecSlaveTypeEL1104, NULL },
+  { "EL1114", lcecSlaveTypeEL1114, NULL },
+  { "EL1124", lcecSlaveTypeEL1124, NULL },
+  { "EL1134", lcecSlaveTypeEL1134, NULL },
+  { "EL1144", lcecSlaveTypeEL1144, NULL },
+  { "EL1252", lcecSlaveTypeEL1252, NULL },
+  { "EL1808", lcecSlaveTypeEL1808, NULL },
+  { "EL1809", lcecSlaveTypeEL1809, NULL },
 
   // digital out
-  { "EL2002", lcecSlaveTypeEL2002 },
-  { "EL2004", lcecSlaveTypeEL2004 },
-  { "EL2008", lcecSlaveTypeEL2008 },
-  { "EL2022", lcecSlaveTypeEL2022 },
-  { "EL2024", lcecSlaveTypeEL2024 },
-  { "EL2032", lcecSlaveTypeEL2032 },
-  { "EL2034", lcecSlaveTypeEL2034 },
-  { "EL2042", lcecSlaveTypeEL2042 },
-  { "EL2084", lcecSlaveTypeEL2084 },
-  { "EL2088", lcecSlaveTypeEL2088 },
-  { "EL2124", lcecSlaveTypeEL2124 },
-  { "EL2202", lcecSlaveTypeEL2202 },
-  { "EL2622", lcecSlaveTypeEL2622 },
-  { "EL2808", lcecSlaveTypeEL2808 },
-  { "EL2798", lcecSlaveTypeEL2798 },
-  { "EL2809", lcecSlaveTypeEL2809 },
+  { "EL2002", lcecSlaveTypeEL2002, NULL },
+  { "EL2004", lcecSlaveTypeEL2004, NULL },
+  { "EL2008", lcecSlaveTypeEL2008, NULL },
+  { "EL2022", lcecSlaveTypeEL2022, NULL },
+  { "EL2024", lcecSlaveTypeEL2024, NULL },
+  { "EL2032", lcecSlaveTypeEL2032, NULL },
+  { "EL2034", lcecSlaveTypeEL2034, NULL },
+  { "EL2042", lcecSlaveTypeEL2042, NULL },
+  { "EL2084", lcecSlaveTypeEL2084, NULL },
+  { "EL2088", lcecSlaveTypeEL2088, NULL },
+  { "EL2124", lcecSlaveTypeEL2124, NULL },
+  { "EL2202", lcecSlaveTypeEL2202, NULL },
+  { "EL2622", lcecSlaveTypeEL2622, NULL },
+  { "EL2808", lcecSlaveTypeEL2808, NULL },
+  { "EL2798", lcecSlaveTypeEL2798, NULL },
+  { "EL2809", lcecSlaveTypeEL2809, NULL },
 
-  { "EP2028", lcecSlaveTypeEP2028 },
+  { "EP2028", lcecSlaveTypeEP2028, NULL },
 
   // analog in, 2ch, 16 bits
-  { "EL3102", lcecSlaveTypeEL3102 },
-  { "EL3112", lcecSlaveTypeEL3112 },
-  { "EL3122", lcecSlaveTypeEL3122 },
-  { "EL3142", lcecSlaveTypeEL3142 },
-  { "EL3152", lcecSlaveTypeEL3152 },
-  { "EL3162", lcecSlaveTypeEL3162 },
+  { "EL3102", lcecSlaveTypeEL3102, NULL },
+  { "EL3112", lcecSlaveTypeEL3112, NULL },
+  { "EL3122", lcecSlaveTypeEL3122, NULL },
+  { "EL3142", lcecSlaveTypeEL3142, NULL },
+  { "EL3152", lcecSlaveTypeEL3152, NULL },
+  { "EL3162", lcecSlaveTypeEL3162, NULL },
 
   // analog in, 5ch, 16 bits
-  { "EL3255", lcecSlaveTypeEL3255 },
+  { "EL3255", lcecSlaveTypeEL3255, NULL },
 
   // analog out, 1ch, 12 bits
-  { "EL4001", lcecSlaveTypeEL4001 },
-  { "EL4011", lcecSlaveTypeEL4011 },
-  { "EL4021", lcecSlaveTypeEL4021 },
-  { "EL4031", lcecSlaveTypeEL4031 },
+  { "EL4001", lcecSlaveTypeEL4001, NULL },
+  { "EL4011", lcecSlaveTypeEL4011, NULL },
+  { "EL4021", lcecSlaveTypeEL4021, NULL },
+  { "EL4031", lcecSlaveTypeEL4031, NULL },
 
   // analog out, 2ch, 12 bits
-  { "EL4002", lcecSlaveTypeEL4002 },
-  { "EL4012", lcecSlaveTypeEL4012 },
-  { "EL4022", lcecSlaveTypeEL4022 },
-  { "EL4032", lcecSlaveTypeEL4032 },
+  { "EL4002", lcecSlaveTypeEL4002, NULL },
+  { "EL4012", lcecSlaveTypeEL4012, NULL },
+  { "EL4022", lcecSlaveTypeEL4022, NULL },
+  { "EL4032", lcecSlaveTypeEL4032, NULL },
 
   // analog out, 2ch, 16 bits
-  { "EL4102", lcecSlaveTypeEL4102 },
-  { "EL4112", lcecSlaveTypeEL4112 },
-  { "EL4122", lcecSlaveTypeEL4122 },
-  { "EL4132", lcecSlaveTypeEL4132 },
+  { "EL4102", lcecSlaveTypeEL4102, NULL },
+  { "EL4112", lcecSlaveTypeEL4112, NULL },
+  { "EL4122", lcecSlaveTypeEL4122, NULL },
+  { "EL4132", lcecSlaveTypeEL4132, NULL },
+
+  // analog out, 4ch, 16 bits
+  { "EL4104", lcecSlaveTypeEL4104, NULL },
 
   // encoder inputs
-  { "EL5101", lcecSlaveTypeEL5101 },
-  { "EL5151", lcecSlaveTypeEL5151 },
-  { "EL5152", lcecSlaveTypeEL5152 },
+  { "EL5101", lcecSlaveTypeEL5101, NULL },
+  { "EL5151", lcecSlaveTypeEL5151, NULL },
+  { "EL5152", lcecSlaveTypeEL5152, NULL },
 
   // pulse train (stepper) output
-  { "EL2521", lcecSlaveTypeEL2521 },
+  { "EL2521", lcecSlaveTypeEL2521, NULL },
 
   // stepper
-  { "EL7041-1000", lcecSlaveTypeEL7041_1000 },
+  { "EL7041-1000", lcecSlaveTypeEL7041_1000, NULL },
+
+  // ac servo
+  { "EL7211", lcecSlaveTypeEL7211, NULL },
 
   // dc servo
-  { "EL7342", lcecSlaveTypeEL7342 },
+  { "EL7342", lcecSlaveTypeEL7342, NULL },
 
   // power suppply
-  { "EL9505", lcecSlaveTypeEL9505 },
-  { "EL9508", lcecSlaveTypeEL9508 },
-  { "EL9510", lcecSlaveTypeEL9510 },
-  { "EL9512", lcecSlaveTypeEL9512 },
-  { "EL9515", lcecSlaveTypeEL9515 },
+  { "EL9505", lcecSlaveTypeEL9505, NULL },
+  { "EL9508", lcecSlaveTypeEL9508, NULL },
+  { "EL9510", lcecSlaveTypeEL9510, NULL },
+  { "EL9512", lcecSlaveTypeEL9512, NULL },
+  { "EL9515", lcecSlaveTypeEL9515, NULL },
 
   // multi axis interface
-  { "EM7004", lcecSlaveTypeEM7004 },
+  { "EM7004", lcecSlaveTypeEM7004, NULL },
 
   // stoeber MDS5000 series
-  { "StMDS5k", lcecSlaveTypeStMDS5k },
+  { "StMDS5k", lcecSlaveTypeStMDS5k, slaveStMDS5kParams },
 
   // Delta ASDA series
-  { "DeASDA", lcecSlaveTypeDeASDA },
+  { "DeASDA", lcecSlaveTypeDeASDA, NULL },
 
   { NULL }
 };
 
-char *modname = "lcec_conf";
-int hal_comp_id;
-LCEC_CONF_HAL_T *conf_hal_data;
+static int hal_comp_id;
+static LCEC_CONF_HAL_T *conf_hal_data;
+static int shmem_id;
 
-int exitEvent;
+static int exitEvent;
 
-XML_Parser parser;
-int currConfType;
+typedef struct {
+  LCEC_CONF_XML_INST_T xml;
 
-typedef struct LCEC_CONF_OUTBUF_ITEM {
-  size_t len;
-  struct LCEC_CONF_OUTBUF_ITEM *next;
-} LCEC_CONF_OUTBUF_ITEM_T;
+  LCEC_CONF_MASTER_T *currMaster;
+  const LCEC_CONF_TYPELIST_T *currSlaveType;
+  LCEC_CONF_SLAVE_T *currSlave;
+  LCEC_CONF_SYNCMANAGER_T *currSyncManager;
+  LCEC_CONF_PDO_T *currPdo;
+  LCEC_CONF_SDOCONF_T *currSdoConf;
+  LCEC_CONF_IDNCONF_T *currIdnConf;
+  LCEC_CONF_PDOENTRY_T *currPdoEntry;
+  uint8_t currComplexBitOffset;
 
-LCEC_CONF_OUTBUF_ITEM_T *outputBuffer;
-LCEC_CONF_OUTBUF_ITEM_T *outputBufferLast;
-size_t outputBufferLen;
+  LCEC_CONF_OUTBUF_T outputBuf;
+} LCEC_CONF_XML_STATE_T;
 
-LCEC_CONF_MASTER_T *currMaster;
-LCEC_CONF_SLAVE_T *currSlave;
-LCEC_CONF_SYNCMANAGER_T *currSyncManager;
-LCEC_CONF_PDO_T *currPdo;
-LCEC_CONF_SDOCONF_T *currSdoConf;
-LCEC_CONF_PDOENTRY_T *currPdoEntry;
-uint8_t currComplexBitOffset;
+static void parseMasterAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseDcConfAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseWatchdogAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseSdoConfigAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseIdnConfigAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseDataRawAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseInitCmdsAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseSyncManagerAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parsePdoAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parsePdoEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseComplexEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
+static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr);
 
-int shmem_id;
+static const LCEC_CONF_XML_HANLDER_T xml_states[] = {
+  { "masters", lcecConfTypeNone, lcecConfTypeMasters, NULL, NULL },
+  { "master", lcecConfTypeMasters, lcecConfTypeMaster, parseMasterAttrs, NULL },
+  { "slave", lcecConfTypeMaster, lcecConfTypeSlave, parseSlaveAttrs, NULL },
+  { "dcConf", lcecConfTypeSlave, lcecConfTypeDcConf, parseDcConfAttrs, NULL },
+  { "watchdog", lcecConfTypeSlave, lcecConfTypeWatchdog, parseWatchdogAttrs, NULL },
+  { "sdoConfig", lcecConfTypeSlave, lcecConfTypeSdoConfig, parseSdoConfigAttrs, NULL },
+  { "sdoDataRaw", lcecConfTypeSdoConfig, lcecConfTypeSdoDataRaw, parseDataRawAttrs, NULL },
+  { "idnConfig", lcecConfTypeSlave, lcecConfTypeIdnConfig, parseIdnConfigAttrs, NULL },
+  { "idnDataRaw", lcecConfTypeIdnConfig, lcecConfTypeIdnDataRaw, parseDataRawAttrs, NULL },
+  { "initCmds", lcecConfTypeSlave, lcecConfTypeInitCmds, parseInitCmdsAttrs, NULL },
+  { "syncManager", lcecConfTypeSlave, lcecConfTypeSyncManager, parseSyncManagerAttrs, NULL },
+  { "pdo", lcecConfTypeSyncManager, lcecConfTypePdo, parsePdoAttrs, NULL },
+  { "pdoEntry", lcecConfTypePdo, lcecConfTypePdoEntry, parsePdoEntryAttrs, NULL },
+  { "complexEntry", lcecConfTypePdoEntry, lcecConfTypeComplexEntry, parseComplexEntryAttrs, NULL },
+  { "modParam", lcecConfTypeSlave, lcecConfTypeModParam, parseModParamAttrs, NULL },
+  { "NULL", -1, -1, NULL, NULL }
+};
 
-void xml_start_handler(void *data, const char *el, const char **attr);
-void xml_end_handler(void *data, const char *el);
-
-void *addOutputBuffer(size_t len);
-
-int parseHexdump(const char *str, uint8_t *buf);
-
-void parseMasterAttrs(const char **attr);
-void parseSlaveAttrs(const char **attr);
-void parseDcConfAttrs(const char **attr);
-void parseWatchdogAttrs(const char **attr);
-void parseSdoConfigAttrs(const char **attr);
-void parseSdoDataRawAttrs(const char **attr);
-void parseSyncManagerAttrs(const char **attr);
-void parsePdoAttrs(const char **attr);
-void parsePdoEntryAttrs(const char **attr);
-void parseComplexEntryAttrs(const char **attr);
-
-int parseSyncCycle(const char *nptr);
+static int parseSyncCycle(LCEC_CONF_XML_STATE_T *state, const char *nptr);
 
 static void exitHandler(int sig) {
   uint64_t u = 1;
@@ -216,8 +248,8 @@ int main(int argc, char **argv) {
   LCEC_CONF_NULL_T *end;
   void *shmem_ptr;
   LCEC_CONF_HEADER_T *header;
-  void *p;
   uint64_t u;
+  LCEC_CONF_XML_STATE_T state;
 
   // initialize component
   hal_comp_id = hal_init(modname);
@@ -242,8 +274,8 @@ int main(int argc, char **argv) {
     fprintf(stderr, "%s: ERROR: unable to register pin %s.conf.slave-count\n", modname, LCEC_MODULE_NAME);
     goto fail1;
   }
-  *conf_hal_data->master_count = 0;
-  *conf_hal_data->slave_count = 0;
+  *(conf_hal_data->master_count) = 0;
+  *(conf_hal_data->slave_count) = 0;
 
   // initialize signal handling
   exitEvent = eventfd(0, 0);
@@ -269,26 +301,13 @@ int main(int argc, char **argv) {
   }
 
   // create xml parser
-  parser = XML_ParserCreate(NULL);
-  if (parser == NULL) {
+  memset(&state, 0, sizeof(state));
+  if (initXmlInst((LCEC_CONF_XML_INST_T *) &state, xml_states)) {
     fprintf(stderr, "%s: ERROR: Couldn't allocate memory for parser\n", modname);
     goto fail3;
   }
 
-  // setup handlers
-  XML_SetElementHandler(parser, xml_start_handler, xml_end_handler);
-
-  currConfType = lcecConfTypeNone;
-  outputBuffer = NULL;
-  outputBufferLast = NULL;
-  outputBufferLen = 0;
-  currMaster = NULL;
-  currSlave = NULL;
-  currSyncManager = NULL;
-  currPdo = NULL;
-  currSdoConf = NULL;
-  currPdoEntry = NULL;
-  currComplexBitOffset = 0;
+  initOutputBuffer(&state.outputBuf);
   for (done=0; !done;) {
     // read block
     int len = fread(buffer, 1, BUFFSIZE, file);
@@ -301,23 +320,23 @@ int main(int argc, char **argv) {
     done = feof(file);
 
     // parse current block
-    if (!XML_Parse(parser, buffer, len, done)) {
+    if (!XML_Parse(state.xml.parser, buffer, len, done)) {
       fprintf(stderr, "%s: ERROR: Parse error at line %u: %s\n", modname,
-        (unsigned int)XML_GetCurrentLineNumber(parser),
-        XML_ErrorString(XML_GetErrorCode(parser)));
+        (unsigned int)XML_GetCurrentLineNumber(state.xml.parser),
+        XML_ErrorString(XML_GetErrorCode(state.xml.parser)));
       goto fail4;
     }
   }
 
   // set end marker
-  end = addOutputBuffer(sizeof(LCEC_CONF_NULL_T));
+  end = addOutputBuffer(&state.outputBuf, sizeof(LCEC_CONF_NULL_T));
   if (end == NULL) {
       goto fail4;
   }
   end->confType = lcecConfTypeNone;
 
   // setup shared mem for config
-  shmem_id = rtapi_shmem_new(LCEC_CONF_SHMEM_KEY, hal_comp_id, sizeof(LCEC_CONF_HEADER_T) + outputBufferLen);
+  shmem_id = rtapi_shmem_new(LCEC_CONF_SHMEM_KEY, hal_comp_id, sizeof(LCEC_CONF_HEADER_T) + state.outputBuf.len);
   if ( shmem_id < 0 ) {
     fprintf(stderr, "%s: ERROR: couldn't allocate user/RT shared memory\n", modname);
     goto fail4;
@@ -331,16 +350,10 @@ int main(int argc, char **argv) {
   header = shmem_ptr;
   shmem_ptr += sizeof(LCEC_CONF_HEADER_T);
   header->magic = LCEC_CONF_SHMEM_MAGIC;
-  header->length = outputBufferLen;
+  header->length = state.outputBuf.len;
 
   // copy data and free buffer
-  while (outputBuffer != NULL) {
-    p = outputBuffer;
-    memcpy(shmem_ptr, p + sizeof(LCEC_CONF_OUTBUF_ITEM_T), outputBuffer->len);
-    shmem_ptr += outputBuffer->len;
-    outputBuffer = outputBuffer->next;
-    free(p);
-  }
+  copyFreeOutputBuffer(&state.outputBuf, shmem_ptr);
 
   // everything is fine
   ret = 0;
@@ -354,12 +367,8 @@ int main(int argc, char **argv) {
 fail5:
   rtapi_shmem_delete(shmem_id, hal_comp_id);
 fail4:
-  while (outputBuffer != NULL) {
-    p = outputBuffer;
-    outputBuffer = outputBuffer->next;
-    free(p);
-  }
-  XML_ParserFree(parser);
+  copyFreeOutputBuffer(&state.outputBuf, NULL);
+  XML_ParserFree(state.xml.parser);
 fail3:
   fclose(file);
 fail2:
@@ -370,234 +379,12 @@ fail0:
   return ret;
 }
 
-void xml_start_handler(void *data, const char *el, const char **attr) {
-  switch (currConfType) {
-    case lcecConfTypeNone:
-      if (strcmp(el, "masters") == 0) {
-        currConfType = lcecConfTypeMasters;
-        return;
-      }
-      break;
-    case lcecConfTypeMasters:
-      if (strcmp(el, "master") == 0) {
-        currConfType = lcecConfTypeMaster;
-        parseMasterAttrs(attr);
-        return;
-      }
-      break;
-    case lcecConfTypeMaster:
-      if (strcmp(el, "slave") == 0) {
-        currConfType = lcecConfTypeSlave;
-        parseSlaveAttrs(attr);
-        return;
-      }
-      break;
-    case lcecConfTypeSlave:
-      if (strcmp(el, "dcConf") == 0) {
-        currConfType = lcecConfTypeDcConf;
-        parseDcConfAttrs(attr);
-        return;
-      }
-      if (strcmp(el, "watchdog") == 0) {
-        currConfType = lcecConfTypeWatchdog;
-        parseWatchdogAttrs(attr);
-        return;
-      }
-      if (strcmp(el, "sdoConfig") == 0) {
-        currConfType = lcecConfTypeSdoConfig;
-        parseSdoConfigAttrs(attr);
-        return;
-      }
-      if (currSlave->type == lcecSlaveTypeGeneric && strcmp(el, "syncManager") == 0) {
-        currConfType = lcecConfTypeSyncManager;
-        parseSyncManagerAttrs(attr);
-        return;
-      }
-      break;
-    case lcecConfTypeSdoConfig:
-      if (strcmp(el, "sdoDataRaw") == 0) {
-        currConfType = lcecConfTypeSdoDataRaw;
-        parseSdoDataRawAttrs(attr);
-        return;
-      }
-      break;
-    case lcecConfTypeSyncManager:
-      if (strcmp(el, "pdo") == 0) {
-        currConfType = lcecConfTypePdo;
-        parsePdoAttrs(attr);
-        return;
-      }
-      break;
-    case lcecConfTypePdo:
-      if (strcmp(el, "pdoEntry") == 0) {
-        currConfType = lcecConfTypePdoEntry;
-        parsePdoEntryAttrs(attr);
-        return;
-      }
-      break;
-    case lcecConfTypePdoEntry:
-      if (strcmp(el, "complexEntry") == 0) {
-        currConfType = lcecConfTypeComplexEntry;
-        parseComplexEntryAttrs(attr);
-        return;
-      }
-      break;
-  }
+static void parseMasterAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
 
-  fprintf(stderr, "%s: ERROR: unexpected node %s found\n", modname, el);
-  XML_StopParser(parser, 0);
-}
-
-void xml_end_handler(void *data, const char *el) {
-  switch (currConfType) {
-    case lcecConfTypeMasters:
-      if (strcmp(el, "masters") == 0) {
-        currConfType = lcecConfTypeNone;
-        return;
-      }
-      break;
-    case lcecConfTypeMaster:
-      if (strcmp(el, "master") == 0) {
-        currConfType = lcecConfTypeMasters;
-        return;
-      }
-      break;
-    case lcecConfTypeSlave:
-      if (strcmp(el, "slave") == 0) {
-        currConfType = lcecConfTypeMaster;
-        return;
-      }
-      break;
-    case lcecConfTypeDcConf:
-      if (strcmp(el, "dcConf") == 0) {
-        currConfType = lcecConfTypeSlave;
-        return;
-      }
-      break;
-    case lcecConfTypeWatchdog:
-      if (strcmp(el, "watchdog") == 0) {
-        currConfType = lcecConfTypeSlave;
-        return;
-      }
-      break;
-    case lcecConfTypeSdoConfig:
-      if (strcmp(el, "sdoConfig") == 0) {
-        currConfType = lcecConfTypeSlave;
-        return;
-      }
-      break;
-    case lcecConfTypeSdoDataRaw:
-      if (strcmp(el, "sdoDataRaw") == 0) {
-        currConfType = lcecConfTypeSdoConfig;
-        return;
-      }
-      break;
-    case lcecConfTypeSyncManager:
-      if (strcmp(el, "syncManager") == 0) {
-        currConfType = lcecConfTypeSlave;
-        return;
-      }
-      break;
-    case lcecConfTypePdo:
-      if (strcmp(el, "pdo") == 0) {
-        currConfType = lcecConfTypeSyncManager;
-        return;
-      }
-      break;
-    case lcecConfTypePdoEntry:
-      if (strcmp(el, "pdoEntry") == 0) {
-        currConfType = lcecConfTypePdo;
-        return;
-      }
-      break;
-    case lcecConfTypeComplexEntry:
-      if (strcmp(el, "complexEntry") == 0) {
-        currConfType = lcecConfTypePdoEntry;
-        return;
-      }
-      break;
-  }
-
-  fprintf(stderr, "%s: ERROR: unexpected close tag %s found\n", modname, el);
-  XML_StopParser(parser, 0);
-}
-
-void *addOutputBuffer(size_t len) {
-
-  void *p = calloc(1, sizeof(LCEC_CONF_OUTBUF_ITEM_T) + len);
+  LCEC_CONF_MASTER_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_MASTER_T));
   if (p == NULL) {
-    fprintf(stderr, "%s: ERROR: Couldn't allocate memory for config token\n", modname);
-    XML_StopParser(parser, 0);
-    return NULL;
-  }
-
-  // setup header
-  LCEC_CONF_OUTBUF_ITEM_T *header = p;
-  p += sizeof(LCEC_CONF_OUTBUF_ITEM_T);
-  header->len = len;
-  outputBufferLen += len;
-
-  // update list
-  if (outputBuffer == NULL) {
-    outputBuffer = header;
-  }
-  if (outputBufferLast != NULL) {
-    outputBufferLast->next = header;
-  }
-  outputBufferLast = header;
-
-  return p;
-}
-
-int parseHexdump(const char *str, uint8_t *buf) {
-  char c;
-  int len = 0;
-  int nib = 0;
-  uint8_t val = 0;
-
-  while (1) {
-    c = *(str++);
-
-    // check for seperator or end of string
-    if (c == 0 || c == ' ') {
-      if (nib > 0) {
-        if (buf != NULL) {
-          *(buf++) = val;
-        }
-        len++;
-        nib = 0;
-        val = 0;
-      }
-      if (c == 0) {
-        return len;
-      }
-      continue;
-    }
-
-    // get nibble value
-    if (c >= '0' && c <= '9') {
-      c = c - '0';
-    } else if (c >= 'a' && c <= 'f') {
-      c = c - 'a' + 10;
-    } else if (c >= 'A' && c <= 'F') {
-      c = c - 'A' + 10;
-    } else {
-      return -1;
-    }
-
-    // allow only byte length
-    if (nib >= 2) {
-      return -1;
-    }
-
-    val = (val << 4) + c;
-    nib++;
-  }
-}
-
-void parseMasterAttrs(const char **attr) {
-  LCEC_CONF_MASTER_T *p = addOutputBuffer(sizeof(LCEC_CONF_MASTER_T));
-  if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
@@ -633,7 +420,7 @@ void parseMasterAttrs(const char **attr) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid master attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
@@ -643,15 +430,19 @@ void parseMasterAttrs(const char **attr) {
   }
 
   (*(conf_hal_data->master_count))++;
-  currMaster = p;
+  state->currMaster = p;
 }
 
-void parseSlaveAttrs(const char **attr) {
-  LCEC_CONF_SLAVE_T *p = addOutputBuffer(sizeof(LCEC_CONF_SLAVE_T));
+static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
+  LCEC_CONF_SLAVE_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_SLAVE_T));
   if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
+  const LCEC_CONF_TYPELIST_T *slaveType = NULL;
   p->confType = lcecConfTypeSlave;
   p->type = lcecSlaveTypeInvalid;
   while (*attr) {
@@ -666,7 +457,6 @@ void parseSlaveAttrs(const char **attr) {
 
     // parse slave type
     if (strcmp(name, "type") == 0) {
-      const LCEC_CONF_TYPELIST_T *slaveType;
       for (slaveType = slaveTypes; slaveType->name != NULL; slaveType++) {
         if (strcmp(val, slaveType->name) == 0) {
           break;
@@ -674,7 +464,7 @@ void parseSlaveAttrs(const char **attr) {
       }
       if (slaveType->name == NULL) {
         fprintf(stderr, "%s: ERROR: Invalid slave type %s\n", modname, val);
-        XML_StopParser(parser, 0);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       p->type = slaveType->type;
@@ -711,7 +501,7 @@ void parseSlaveAttrs(const char **attr) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid slave attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
@@ -723,17 +513,21 @@ void parseSlaveAttrs(const char **attr) {
   // type is required
   if (p->type == lcecSlaveTypeInvalid) {
     fprintf(stderr, "%s: ERROR: Slave has no type attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   (*(conf_hal_data->slave_count))++;
-  currSlave = p;
+  state->currSlaveType = slaveType;
+  state->currSlave = p;
 }
 
-void parseDcConfAttrs(const char **attr) {
-  LCEC_CONF_DC_T *p = addOutputBuffer(sizeof(LCEC_CONF_DC_T));
+static void parseDcConfAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
+  LCEC_CONF_DC_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_DC_T));
   if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
@@ -750,7 +544,7 @@ void parseDcConfAttrs(const char **attr) {
 
     // parse sync0Cycle
     if (strcmp(name, "sync0Cycle") == 0) {
-      p->sync0Cycle = parseSyncCycle(val);
+      p->sync0Cycle = parseSyncCycle(state, val);
       continue;
     }
 
@@ -762,7 +556,7 @@ void parseDcConfAttrs(const char **attr) {
 
     // parse sync1Cycle
     if (strcmp(name, "sync1Cycle") == 0) {
-      p->sync1Cycle = parseSyncCycle(val);
+      p->sync1Cycle = parseSyncCycle(state, val);
       continue;
     }
 
@@ -774,14 +568,17 @@ void parseDcConfAttrs(const char **attr) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid dcConfig attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 }
 
-void parseWatchdogAttrs(const char **attr) {
-  LCEC_CONF_WATCHDOG_T *p = addOutputBuffer(sizeof(LCEC_CONF_WATCHDOG_T));
+static void parseWatchdogAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
+  LCEC_CONF_WATCHDOG_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_WATCHDOG_T));
   if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
@@ -804,15 +601,18 @@ void parseWatchdogAttrs(const char **attr) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid watchdog attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 }
 
-void parseSdoConfigAttrs(const char **attr) {
+static void parseSdoConfigAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
   int tmp;
-  LCEC_CONF_SDOCONF_T *p = addOutputBuffer(sizeof(LCEC_CONF_SDOCONF_T));
+  LCEC_CONF_SDOCONF_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_SDOCONF_T));
   if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
@@ -828,7 +628,7 @@ void parseSdoConfigAttrs(const char **attr) {
       tmp = strtol(val, NULL, 16);
       if (tmp < 0 || tmp >= 0xffff) {
         fprintf(stderr, "%s: ERROR: Invalid sdoConfig idx %d\n", modname, tmp);
-        XML_StopParser(parser, 0);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       p->index = tmp;
@@ -844,7 +644,7 @@ void parseSdoConfigAttrs(const char **attr) {
       tmp = strtol(val, NULL, 16);
       if (tmp < 0 || tmp >= 0xff) {
         fprintf(stderr, "%s: ERROR: Invalid sdoConfig subIdx %d\n", modname, tmp);
-        XML_StopParser(parser, 0);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       p->subindex = tmp;
@@ -853,29 +653,148 @@ void parseSdoConfigAttrs(const char **attr) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid sdoConfig attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // idx is required
   if (p->index == 0xffff) {
     fprintf(stderr, "%s: ERROR: sdoConfig has no idx attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // subIdx is required
   if (p->subindex == 0xff) {
     fprintf(stderr, "%s: ERROR: sdoConfig has no subIdx attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
-  currSdoConf = p;
-  currSlave->sdoConfigLength += sizeof(LCEC_CONF_SDOCONF_T);
+  state->currSdoConf = p;
+  state->currSlave->sdoConfigLength += sizeof(LCEC_CONF_SDOCONF_T);
 }
 
-void parseSdoDataRawAttrs(const char **attr) {
+static void parseIdnConfigAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
+  int tmp;
+  LCEC_CONF_IDNCONF_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_IDNCONF_T));
+  if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  p->confType = lcecConfTypeIdnConfig;
+  p->drive = 0;
+  p->idn = 0xffff;
+  p->state = 0;
+  while (*attr) {
+    const char *name = *(attr++);
+    const char *val = *(attr++);
+
+    // parse index
+    if (strcmp(name, "drive") == 0) {
+      tmp = atoi(val);
+      if (tmp < 0 || tmp > 7) {
+        fprintf(stderr, "%s: ERROR: Invalid idnConfig drive %d\n", modname, tmp);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+
+      p->drive = tmp;
+      continue;
+    }
+
+    // parse idn
+    if (strcmp(name, "idn") == 0) {
+      char pfx = val[0];
+      if (pfx == 0) {
+        fprintf(stderr, "%s: ERROR: Missing idnConfig idn value\n", modname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+
+      pfx = toupper(pfx);
+
+      tmp = 0xffff;
+      if (pfx == 'S' || pfx == 'P') {
+        int set;
+        int block;
+	if (sscanf(val, "%c-%d-%d", &pfx, &set, &block) == 3) {
+          if (set < 0 || set >= (1 << 3)) {
+            fprintf(stderr, "%s: ERROR: Invalid idnConfig idn set %d\n", modname, set);
+            XML_StopParser(inst->parser, 0);
+            return;
+          }
+
+          if (block < 0 || block >= (1 << 12)) {
+            fprintf(stderr, "%s: ERROR: Invalid idnConfig idn block %d\n", modname, block);
+            XML_StopParser(inst->parser, 0);
+            return;
+          }
+
+          tmp = (set << 12) | block;
+          if (pfx == 'P') {
+            tmp |= (15 << 1);
+          }
+        }
+      } else if (pfx >= '0' && pfx <= '9') {
+        tmp = atoi(val);
+      }
+
+      if (tmp == 0xffff) {
+        fprintf(stderr, "%s: ERROR: Invalid idnConfig idn value '%s'\n", modname, val);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+
+      p->idn = tmp;
+      continue;
+    }
+
+    // parse state
+    if (strcmp(name, "drive") == 0) {
+      if (strcmp(val, "PREOP") == 0) {
+        p->state = EC_AL_STATE_PREOP;
+      } else if (strcmp(val, "SAFEOP") == 0) {
+        p->state = EC_AL_STATE_SAFEOP;
+      } else {
+        fprintf(stderr, "%s: ERROR: Invalid idnConfig state '%s'\n", modname, val);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+
+      continue;
+    }
+
+    // handle error
+    fprintf(stderr, "%s: ERROR: Invalid idnConfig attribute %s\n", modname, name);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // idn is required
+  if (p->idn == 0xffff) {
+    fprintf(stderr, "%s: ERROR: idnConfig has no idn attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // state is required
+  if (p->state == 0) {
+    fprintf(stderr, "%s: ERROR: idnConfig has no state attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  state->currIdnConf = p;
+  state->currSlave->idnConfigLength += sizeof(LCEC_CONF_IDNCONF_T);
+}
+
+static void parseDataRawAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
   int len;
   uint8_t *p;
 
@@ -885,18 +804,26 @@ void parseSdoDataRawAttrs(const char **attr) {
 
     // parse data
     if (strcmp(name, "data") == 0) {
-      len = parseHexdump(val, NULL);
+      len = parseHex(val, -1, NULL);
       if (len < 0) {
-        fprintf(stderr, "%s: ERROR: Invalid sdoDataRaw data\n", modname);
-        XML_StopParser(parser, 0);
+        fprintf(stderr, "%s: ERROR: Invalid dataRaw data\n", modname);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       if (len > 0) {
-        p = (uint8_t *) addOutputBuffer(len);
+        p = (uint8_t *) addOutputBuffer(&state->outputBuf, len);
         if (p != NULL) {
-          parseHexdump(val, p);
-          currSdoConf->length += len;
-          currSlave->sdoConfigLength += len;
+          parseHex(val, -1, p);
+          switch (inst->state) {
+            case lcecConfTypeSdoConfig:
+              state->currSdoConf->length += len;
+              state->currSlave->sdoConfigLength += len;
+              break;
+            case lcecConfTypeIdnConfig:
+              state->currIdnConf->length += len;
+              state->currSlave->idnConfigLength += len;
+              break;
+          }
         }
       }
       continue;
@@ -904,15 +831,62 @@ void parseSdoDataRawAttrs(const char **attr) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid pdoEntry attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 }
 
-void parseSyncManagerAttrs(const char **attr) {
+static void parseInitCmdsAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
+  const char *filename = NULL;
+
+  while (*attr) {
+    const char *name = *(attr++);
+    const char *val = *(attr++);
+
+    // parse filename
+    if (strcmp(name, "filename") == 0) {
+      filename = val;
+      continue;
+    }
+
+    // handle error
+    fprintf(stderr, "%s: ERROR: Invalid syncManager attribute %s\n", modname, name);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // filename is required
+  if (filename == NULL || *filename == 0) {
+    fprintf(stderr, "%s: ERROR: initCmds has no filename attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // try to parse initCmds
+  if (parseIcmds(state->currSlave, &state->outputBuf, filename)) {
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+}
+
+static void parseSyncManagerAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
   int tmp;
-  LCEC_CONF_SYNCMANAGER_T *p = addOutputBuffer(sizeof(LCEC_CONF_SYNCMANAGER_T));
+  LCEC_CONF_SYNCMANAGER_T *p;
+
+  // only allowed on generic slave
+  if (state->currSlave->type != lcecSlaveTypeGeneric) {
+    fprintf(stderr, "%s: ERROR: syncManager is only allowed on generic slaves\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_SYNCMANAGER_T));
   if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
@@ -928,7 +902,7 @@ void parseSyncManagerAttrs(const char **attr) {
       tmp = atoi(val);
       if (tmp < 0 || tmp >= EC_MAX_SYNC_MANAGERS) {
         fprintf(stderr, "%s: ERROR: Invalid syncManager idx %d\n", modname, tmp);
-        XML_StopParser(parser, 0);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       p->index = tmp;
@@ -946,38 +920,41 @@ void parseSyncManagerAttrs(const char **attr) {
         continue;
       }
       fprintf(stderr, "%s: ERROR: Invalid syncManager dir %s\n", modname, val);
-      XML_StopParser(parser, 0);
+      XML_StopParser(inst->parser, 0);
       return;
     }
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid syncManager attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // idx is required
   if (p->index == 0xff) {
     fprintf(stderr, "%s: ERROR: syncManager has no idx attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // dir is required
   if (p->dir == EC_DIR_INVALID) {
     fprintf(stderr, "%s: ERROR: syncManager has no dir attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
-  (currSlave->syncManagerCount)++;
-  currSyncManager = p;
+  (state->currSlave->syncManagerCount)++;
+  state->currSyncManager = p;
 }
 
-void parsePdoAttrs(const char **attr) {
+static void parsePdoAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
   int tmp;
-  LCEC_CONF_PDO_T *p = addOutputBuffer(sizeof(LCEC_CONF_PDO_T));
+  LCEC_CONF_PDO_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_PDO_T));
   if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
@@ -992,7 +969,7 @@ void parsePdoAttrs(const char **attr) {
       tmp = strtol(val, NULL, 16);
       if (tmp < 0 || tmp >= 0xffff) {
         fprintf(stderr, "%s: ERROR: Invalid pdo idx %d\n", modname, tmp);
-        XML_StopParser(parser, 0);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       p->index = tmp;
@@ -1001,27 +978,30 @@ void parsePdoAttrs(const char **attr) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid pdo attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // idx is required
   if (p->index == 0xffff) {
     fprintf(stderr, "%s: ERROR: pdo has no idx attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
-  (currSlave->pdoCount)++;
-  (currSyncManager->pdoCount)++;
-  currPdo = p;
+  (state->currSlave->pdoCount)++;
+  (state->currSyncManager->pdoCount)++;
+  state->currPdo = p;
 }
 
-void parsePdoEntryAttrs(const char **attr) {
+static void parsePdoEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
   int tmp;
   int floatReq;
-  LCEC_CONF_PDOENTRY_T *p = addOutputBuffer(sizeof(LCEC_CONF_PDOENTRY_T));
+  LCEC_CONF_PDOENTRY_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_PDOENTRY_T));
   if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
@@ -1039,7 +1019,7 @@ void parsePdoEntryAttrs(const char **attr) {
       tmp = strtol(val, NULL, 16);
       if (tmp < 0 || tmp >= 0xffff) {
         fprintf(stderr, "%s: ERROR: Invalid pdoEntry idx %d\n", modname, tmp);
-        XML_StopParser(parser, 0);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       p->index = tmp;
@@ -1051,7 +1031,7 @@ void parsePdoEntryAttrs(const char **attr) {
       tmp = strtol(val, NULL, 16);
       if (tmp < 0 || tmp >= 0xff) {
         fprintf(stderr, "%s: ERROR: Invalid pdoEntry subIdx %d\n", modname, tmp);
-        XML_StopParser(parser, 0);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       p->subindex = tmp;
@@ -1063,7 +1043,7 @@ void parsePdoEntryAttrs(const char **attr) {
       tmp = atoi(val);
       if (tmp <= 0 || tmp > LCEC_CONF_GENERIC_MAX_BITLEN) {
         fprintf(stderr, "%s: ERROR: Invalid pdoEntry bitLen %d\n", modname, tmp);
-        XML_StopParser(parser, 0);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       p->bitLength = tmp;
@@ -1101,7 +1081,7 @@ void parsePdoEntryAttrs(const char **attr) {
         continue;
       }
       fprintf(stderr, "%s: ERROR: Invalid pdoEntry halType %s\n", modname, val);
-      XML_StopParser(parser, 0);
+      XML_StopParser(inst->parser, 0);
       return;
     }
 
@@ -1128,64 +1108,67 @@ void parsePdoEntryAttrs(const char **attr) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid pdoEntry attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // idx is required
   if (p->index == 0xffff) {
     fprintf(stderr, "%s: ERROR: pdoEntry has no idx attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // subIdx is required
   if (p->subindex == 0xff) {
     fprintf(stderr, "%s: ERROR: pdoEntry has no subIdx attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // bitLen is required
   if (p->bitLength == 0) {
     fprintf(stderr, "%s: ERROR: pdoEntry has no bitLen attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // pin name must not be given for complex subtype
   if (p->subType == lcecPdoEntTypeComplex && p->halPin[0] != 0) {
     fprintf(stderr, "%s: ERROR: pdoEntry has halPin attributes but pin type is 'complex'\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
   }
 
   // check for float type if required
   if (floatReq && p->halType != HAL_FLOAT) {
     fprintf(stderr, "%s: ERROR: pdoEntry has scale/offset attributes but pin type is not 'float'\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
-  (currSlave->pdoEntryCount)++;
+  (state->currSlave->pdoEntryCount)++;
   if (p->halPin[0] != 0) {
-    (currSlave->pdoMappingCount)++;
+    (state->currSlave->pdoMappingCount)++;
   }
-  (currPdo->pdoEntryCount)++;
-  currPdoEntry = p;
-  currComplexBitOffset = 0;
+  (state->currPdo->pdoEntryCount)++;
+  state->currPdoEntry = p;
+  state->currComplexBitOffset = 0;
 }
 
-void parseComplexEntryAttrs(const char **attr) {
+static void parseComplexEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
   int tmp;
   int floatReq;
-  LCEC_CONF_COMPLEXENTRY_T *p = addOutputBuffer(sizeof(LCEC_CONF_COMPLEXENTRY_T));
+  LCEC_CONF_COMPLEXENTRY_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_COMPLEXENTRY_T));
   if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   floatReq = 0;
   p->confType = lcecConfTypeComplexEntry;
-  p->bitOffset = currComplexBitOffset;
+  p->bitOffset = state->currComplexBitOffset;
   p->floatScale = 1.0;
   while (*attr) {
     const char *name = *(attr++);
@@ -1196,12 +1179,12 @@ void parseComplexEntryAttrs(const char **attr) {
       tmp = atoi(val);
       if (tmp <= 0 || tmp > LCEC_CONF_GENERIC_MAX_SUBPINS) {
         fprintf(stderr, "%s: ERROR: Invalid complexEntry bitLen %d\n", modname, tmp);
-        XML_StopParser(parser, 0);
+        XML_StopParser(inst->parser, 0);
         return;
       }
-      if ((currComplexBitOffset + tmp) > currPdoEntry->bitLength) {
-        fprintf(stderr, "%s: ERROR: complexEntry bitLen sum exceeded pdoEntry bitLen %d\n", modname, currPdoEntry->bitLength);
-        XML_StopParser(parser, 0);
+      if ((state->currComplexBitOffset + tmp) > state->currPdoEntry->bitLength) {
+        fprintf(stderr, "%s: ERROR: complexEntry bitLen sum exceeded pdoEntry bitLen %d\n", modname, state->currPdoEntry->bitLength);
+        XML_StopParser(inst->parser, 0);
         return;
       }
       p->bitLength = tmp;
@@ -1236,7 +1219,7 @@ void parseComplexEntryAttrs(const char **attr) {
         continue;
       }
       fprintf(stderr, "%s: ERROR: Invalid complexEntry halType %s\n", modname, val);
-      XML_StopParser(parser, 0);
+      XML_StopParser(inst->parser, 0);
       return;
     }
 
@@ -1263,35 +1246,154 @@ void parseComplexEntryAttrs(const char **attr) {
 
     // handle error
     fprintf(stderr, "%s: ERROR: Invalid complexEntry attribute %s\n", modname, name);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // bitLen is required
   if (p->bitLength == 0) {
     fprintf(stderr, "%s: ERROR: complexEntry has no bitLen attribute\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   // check for float type if required
   if (floatReq && p->halType != HAL_FLOAT) {
     fprintf(stderr, "%s: ERROR: complexEntry has scale/offset attributes but pin type is not 'float'\n", modname);
-    XML_StopParser(parser, 0);
+    XML_StopParser(inst->parser, 0);
     return;
   }
 
   if (p->halPin[0] != 0) {
-    (currSlave->pdoMappingCount)++;
+    (state->currSlave->pdoMappingCount)++;
   }
-  currComplexBitOffset += p->bitLength;
+  state->currComplexBitOffset += p->bitLength;
 }
 
-int parseSyncCycle(const char *nptr) {
+static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
+
+  const char *pname, *pval;
+  const LCEC_CONF_MODPARAM_DESC_T *modParams;
+
+  if (state->currSlaveType->modParams == NULL) {
+    fprintf(stderr, "%s: ERROR: modParam not allowed for this slave\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  LCEC_CONF_MODPARAM_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_MODPARAM_T));
+  if (p == NULL) {
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  p->confType = lcecConfTypeModParam;
+
+  pname = NULL;
+  pval = NULL;
+  while (*attr) {
+    const char *name = *(attr++);
+    const char *val = *(attr++);
+
+    // get name
+    if (strcmp(name, "name") == 0) {
+      pname = val;
+      continue;
+    }
+
+    // get value
+    if (strcmp(name, "value") == 0) {
+      pval = val;
+      continue;
+    }
+
+    // handle error
+    fprintf(stderr, "%s: ERROR: Invalid modParam attribute %s\n", modname, name);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // name is required
+  if (pname == NULL || pname[0] == 0) {
+    fprintf(stderr, "%s: ERROR: modParam has no name attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // value is required
+  if (pval == NULL || pval[0] == 0) {
+    fprintf(stderr, "%s: ERROR: modParam has no value attribute\n", modname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // search for matching param name
+  for (modParams = state->currSlaveType->modParams; modParams->name != NULL; modParams++) {
+    if (strcmp(pname, modParams->name) == 0) {
+      break;
+    }
+  }
+  if (modParams->name == NULL) {
+    fprintf(stderr, "%s: ERROR: Invalid modParam '%s'\n", modname, pname);
+    XML_StopParser(inst->parser, 0);
+    return;
+  }
+
+  // set id
+  p->id = modParams->id;
+
+  // try to parse value
+  char *s = NULL;
+  switch (modParams->type) {
+    case HAL_BIT:
+      if ((strcmp("1", pval) == 0) || (strcasecmp("TRUE", pval) == 0)) {
+        p->value.bit = 1;
+      } else if ((strcmp("0", pval) == 0) || (strcasecmp("FALSE", pval)) == 0) {
+        p->value.bit = 0;
+      } else {
+        fprintf(stderr, "%s: ERROR: Invalid modParam bit value '%s' for param '%s'\n", modname, pval, pname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      break;
+    case HAL_U32:
+      p->value.u32 = strtoul(pval, &s, 0);
+      if (*s != 0) {
+        fprintf(stderr, "%s: ERROR: Invalid modParam u32 value '%s' for param '%s'\n", modname, pval, pname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      break;
+    case HAL_S32:
+      p->value.s32 = strtol(pval, &s, 0);
+      if (*s != 0) {
+        fprintf(stderr, "%s: ERROR: Invalid modParam s32 value '%s' for param '%s'\n", modname, pval, pname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      break;
+    case HAL_FLOAT:
+      p->value.flt = strtod(pval, &s);
+      if (*s != 0) {
+        fprintf(stderr, "%s: ERROR: Invalid modParam float value '%s' for param '%s'\n", modname, pval, pname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      break;
+    default:
+      p->value.u32 = 0;
+      break;
+  }
+
+  (state->currSlave->modParamCount)++;
+}
+
+static int parseSyncCycle(LCEC_CONF_XML_STATE_T *state, const char *nptr) {
   // chack for master period multiples
   if (*nptr == '*') {
     nptr++;
-    return atoi(nptr) * currMaster->appTimePeriod;
+    return atoi(nptr) * state->currMaster->appTimePeriod;
   }
 
   // custom value

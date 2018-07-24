@@ -1,39 +1,24 @@
 include ../config.mk
 include Kbuild
 
-cc-option = $(shell if $(CC) $(CFLAGS) $(1) -S -o /dev/null -xc /dev/null \
-             > /dev/null 2>&1; then echo "$(1)"; else echo "$(2)"; fi ;)
-
-.PHONY: all install
+include $(MODINC)
 
 ifeq ($(BUILDSYS),kbuild)
 
-module = $(patsubst %.o,%.ko,$(obj-m))
-
-ifeq (,$(findstring -Wframe-larger-than=,$(EXTRA_CFLAGS)))
-  EXTRA_CFLAGS += $(call cc-option,-Wframe-larger-than=2560)
+# dirty workaround to get the RTAI directory
+RTAIINCDIR = $(subst /rtai.h,,$(firstword $(wildcard $(foreach i,$(subst -I,,$(filter -I%,$(RTFLAGS))), $(i)/rtai.h))))
+ifneq ($(RTAIINCDIR),)
+  RTAIDIR = $(realpath $(RTAIINCDIR)/..)
 endif
 
-$(module):
+all:
 	$(MAKE) EXTRA_CFLAGS="$(EXTRA_CFLAGS)" KBUILD_EXTRA_SYMBOLS="$(RTLIBDIR)/Module.symvers $(RTAIDIR)/modules/ethercat/Module.symvers" -C $(KERNELDIR) SUBDIRS=`pwd` CC=$(CC) V=0 modules
 
 else
 
-module = $(patsubst %.o,%.so,$(obj-m))
+LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat
 
-EXTRA_CFLAGS := $(filter-out -Wframe-larger-than=%,$(EXTRA_CFLAGS))
-
-$(module): $(lcec-objs)
-	$(CC) -shared -o $@ $(lcec-objs) -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat -lrt
-
-%.o: %.c
-	$(CC) -o $@ $(EXTRA_CFLAGS) -Os -c $<
+all: modules
 
 endif
-
-all: $(module)
-
-install: $(module)
-	mkdir -p $(DESTDIR)$(RTLIBDIR)
-	cp $(module) $(DESTDIR)$(RTLIBDIR)/
 

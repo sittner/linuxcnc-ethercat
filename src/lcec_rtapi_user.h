@@ -43,5 +43,9 @@ static inline long lcec_get_ticks(void) {
 
 #define lcec_schedule() sched_yield()
 
+static inline long long lcec_mod_64(long long val, unsigned long div) {
+  return val % div;
+}
+
 #endif
 

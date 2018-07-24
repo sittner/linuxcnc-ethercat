@@ -19,29 +19,22 @@
 #include "lcec.h"
 #include "lcec_stmds5k.h"
 
+#include "lcec_class_enc.h"
+
 #define STMDS5K_PCT_REG_FACTOR (0.5 * (double)0x7fff)
 #define STMDS5K_PCT_REG_DIV    (2.0 / (double)0x7fff)
 #define STMDS5K_TORQUE_DIV     (8.0 / (double)0x7fff)
 #define STMDS5K_TORQUE_REF_DIV (0.01)
 #define STMDS5K_RPM_FACTOR     (60.0)
 #define STMDS5K_RPM_DIV        (1.0 / 60.0)
+#define STMDS5K_PPREV          0x1000000
 
 typedef struct {
-  int do_init;
-
-  long long pos_cnt;
-  long long index_cnt;
-  int32_t last_pos_cnt;
-
   hal_float_t *vel_cmd;
   hal_float_t *vel_fb;
   hal_float_t *vel_fb_rpm;
   hal_float_t *vel_fb_rpm_abs;
   hal_float_t *vel_rpm;
-  hal_u32_t *pos_raw_hi;
-  hal_u32_t *pos_raw_lo;
-  hal_float_t *pos_fb;
-  hal_float_t *pos_fb_rel;
   hal_float_t *torque_fb;
   hal_float_t *torque_fb_abs;
   hal_float_t *torque_fb_pct;
@@ -57,26 +50,17 @@ typedef struct {
   hal_bit_t *err_reset;
   hal_bit_t *fast_ramp;
   hal_bit_t *brake;
-  hal_bit_t *index_ena;
-  hal_bit_t *pos_reset;
-  hal_s32_t *enc_raw;
-  hal_s32_t *enc_raw_rel;
-  hal_bit_t *on_home_neg;
-  hal_bit_t *on_home_pos;
 
   hal_float_t speed_max_rpm;
   hal_float_t speed_max_rpm_sp;
   hal_float_t torque_reference;
   hal_float_t pos_scale;
-  hal_s32_t home_raw;
   double speed_max_rpm_sp_rcpt;
 
   double pos_scale_old;
   double pos_scale_rcpt;
-  double pos_scale_cnt;
 
-  int last_index_ena;
-  int32_t index_ref;
+  lcec_class_enc_data_t enc;
 
   unsigned int dev_state_pdo_os;
   unsigned int speed_mot_pdo_os;
@@ -87,11 +71,73 @@ typedef struct {
   unsigned int speed_sp_rel_pdo_os;
   unsigned int torque_max_pdo_os;
 
-  ec_sdo_request_t *sdo_torque_reference;
-  ec_sdo_request_t *sdo_speed_max_rpm;
-  ec_sdo_request_t *sdo_speed_max_rpm_sp;
-
 } lcec_stmds5k_data_t;
+
+static const lcec_pindesc_t slave_pins[] = {
+  { HAL_FLOAT, HAL_IN, offsetof(lcec_stmds5k_data_t, vel_cmd), "%s.%s.%s.srv-vel-cmd" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, vel_fb), "%s.%s.%s.srv-vel-fb" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, vel_fb_rpm), "%s.%s.%s.srv-vel-fb-rpm" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, vel_fb_rpm_abs), "%s.%s.%s.srv-vel-fb-rpm-abs" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, vel_rpm), "%s.%s.%s.srv-vel-rpm" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, torque_fb), "%s.%s.%s.srv-torque-fb" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, torque_fb_abs), "%s.%s.%s.srv-torque-fb-abs" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_stmds5k_data_t, torque_fb_pct), "%s.%s.%s.srv-torque-fb-pct" },
+  { HAL_FLOAT, HAL_IN, offsetof(lcec_stmds5k_data_t, torque_lim), "%s.%s.%s.srv-torque-lim" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_stmds5k_data_t, stopped), "%s.%s.%s.srv-stopped" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_stmds5k_data_t, at_speed), "%s.%s.%s.srv-at-speed" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_stmds5k_data_t, overload), "%s.%s.%s.srv-overload" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_stmds5k_data_t, ready), "%s.%s.%s.srv-ready" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_stmds5k_data_t, error), "%s.%s.%s.srv-error" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_stmds5k_data_t, toggle), "%s.%s.%s.srv-toggle" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_stmds5k_data_t, loc_ena), "%s.%s.%s.srv-loc-ena" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_stmds5k_data_t, enable), "%s.%s.%s.srv-enable" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_stmds5k_data_t, err_reset), "%s.%s.%s.srv-err-reset" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_stmds5k_data_t, fast_ramp), "%s.%s.%s.srv-fast-ramp" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_stmds5k_data_t, brake), "%s.%s.%s.srv-brake" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
+static const lcec_pindesc_t slave_params[] = {
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_stmds5k_data_t, pos_scale), "%s.%s.%s.srv-pos-scale" },
+  { HAL_FLOAT, HAL_RO, offsetof(lcec_stmds5k_data_t, torque_reference), "%s.%s.%s.srv-torque-ref" },
+  { HAL_FLOAT, HAL_RO, offsetof(lcec_stmds5k_data_t, speed_max_rpm), "%s.%s.%s.srv-max-rpm" },
+  { HAL_FLOAT, HAL_RO, offsetof(lcec_stmds5k_data_t, speed_max_rpm_sp), "%s.%s.%s.srv-max-rpm-sp" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
+static ec_pdo_entry_info_t lcec_stmds5k_out_ch1[] = {
+   {0x20b4, 0x00, 8},  // A180 Device Control Byte
+   {0x26e6, 0x00, 16}, // D230 n-Soll Relativ
+   {0x24e6, 0x00, 16}  // C230 M-Max
+};
+
+static ec_pdo_entry_info_t lcec_stmds5k_in_ch1[] = {
+   {0x28c8, 0x00, 8},  // E200 Device Status Byte
+   {0x2864, 0x00, 16}, // E100 n-Motor
+   {0x2802, 0x00, 16}, // E02 M-Motor gefiltert
+   {0x26c8, 0x00, 16}  // D200 Drehzahlsollwert-Statuswort
+};
+
+static ec_pdo_entry_info_t lcec_stmds5k_in_ch2[] = {
+   {0x2809, 0x00, 32}, // E09 Rotorlage
+};
+
+static ec_pdo_info_t lcec_stmds5k_pdos_out[] = {
+    {0x1600,  3, lcec_stmds5k_out_ch1}
+};
+
+static ec_pdo_info_t lcec_stmds5k_pdos_in[] = {
+    {0x1a00, 4, lcec_stmds5k_in_ch1},
+    {0x1a01, 1, lcec_stmds5k_in_ch2}
+};
+
+static ec_sync_info_t lcec_stmds5k_syncs[] = {
+    {0, EC_DIR_OUTPUT, 0, NULL},
+    {1, EC_DIR_INPUT,  0, NULL},
+    {2, EC_DIR_OUTPUT, 1, lcec_stmds5k_pdos_out},
+    {3, EC_DIR_INPUT,  2, lcec_stmds5k_pdos_in},
+    {0xff}
+};
 
 void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data);
 
@@ -102,6 +148,12 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   lcec_master_t *master = slave->master;
   lcec_stmds5k_data_t *hal_data;
   int err;
+  uint8_t sdo_buf[4];
+  double sdo_torque_reference;
+  double sdo_speed_max_rpm;
+  double sdo_speed_max_rpm_sp;
+  LCEC_CONF_MODPARAM_VAL_T *pval;
+  int enc_bits;
 
   // initialize callbacks
   slave->proc_read = lcec_stmds5k_read;
@@ -117,25 +169,28 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
 
   // read sdos
   // B18 : torque reference
-  if ((hal_data->sdo_torque_reference = lcec_read_sdo(slave, 0x2212, 0x00, 4)) == NULL) {
+  if (lcec_read_sdo(slave, 0x2212, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->torque_reference = (double)EC_READ_S32(ecrt_sdo_request_data(hal_data->sdo_torque_reference)) * STMDS5K_TORQUE_REF_DIV;
+  sdo_torque_reference = (double) EC_READ_S32(sdo_buf) * STMDS5K_TORQUE_REF_DIV;
   // C01 : max rpm
-  if ((hal_data->sdo_speed_max_rpm = lcec_read_sdo(slave, 0x2401, 0x00, 4)) == NULL) {
+  if (lcec_read_sdo(slave, 0x2401, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->speed_max_rpm = (double)EC_READ_S32(ecrt_sdo_request_data(hal_data->sdo_speed_max_rpm));
+  sdo_speed_max_rpm = (double) EC_READ_S32(sdo_buf);
   // D02 : setpoint max rpm
-  if ((hal_data->sdo_speed_max_rpm_sp = lcec_read_sdo(slave, 0x2602, 0x00, 4)) == NULL) {
+  if (lcec_read_sdo(slave, 0x2602, 0x00, sdo_buf, 4)) {
     return -EIO;
   }
-  hal_data->speed_max_rpm_sp = (double)EC_READ_S32(ecrt_sdo_request_data(hal_data->sdo_speed_max_rpm_sp));
-  if (hal_data->speed_max_rpm_sp > 1e-20 || hal_data->speed_max_rpm_sp < -1e-20) {
-    hal_data->speed_max_rpm_sp_rcpt = 1.0 / hal_data->speed_max_rpm_sp;
+  sdo_speed_max_rpm_sp = (double) EC_READ_S32(sdo_buf);
+  if (sdo_speed_max_rpm_sp > 1e-20 || sdo_speed_max_rpm_sp < -1e-20) {
+    hal_data->speed_max_rpm_sp_rcpt = 1.0 / sdo_speed_max_rpm_sp;
   } else {
     hal_data->speed_max_rpm_sp_rcpt = 0.0;
   }
+
+  // initialize sync info
+  slave->sync_info = lcec_stmds5k_syncs;
 
   // initialize POD entries
   // E200 : device state byte
@@ -156,193 +211,37 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x24e6, 0x00, &hal_data->torque_max_pdo_os, NULL);
 
   // export pins
-  if ((err = hal_pin_float_newf(HAL_IN, &(hal_data->vel_cmd), comp_id, "%s.%s.%s.srv-vel-cmd", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-cmd failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->vel_fb), comp_id, "%s.%s.%s.srv-vel-fb", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-fb failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->vel_fb_rpm), comp_id, "%s.%s.%s.srv-vel-fb-rpm", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-fb-rpm failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->vel_fb_rpm_abs), comp_id, "%s.%s.%s.srv-vel-fb-rpm-abs", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-fb-rpm-abs failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->vel_rpm), comp_id, "%s.%s.%s.srv-vel-rpm", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-vel-rpm failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_s32_newf(HAL_OUT, &(hal_data->enc_raw), comp_id, "%s.%s.%s.srv-enc-raw", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-enc-raw failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_s32_newf(HAL_OUT, &(hal_data->enc_raw_rel), comp_id, "%s.%s.%s.srv-enc-raw-rel", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-enc-raw-rel failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->pos_raw_hi), comp_id, "%s.%s.%s.srv-pos-raw-hi", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-raw-hi failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_u32_newf(HAL_OUT, &(hal_data->pos_raw_lo), comp_id, "%s.%s.%s.srv-pos-raw-lo", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-raw-lo failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->pos_fb), comp_id, "%s.%s.%s.srv-pos-fb", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-fb failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->pos_fb_rel), comp_id, "%s.%s.%s.srv-pos-fb-rel", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-fb-rel failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->torque_fb), comp_id, "%s.%s.%s.srv-torque-fb", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-torque-fb failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->torque_fb_abs), comp_id, "%s.%s.%s.srv-torque-fb-abs", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-torque-fb-abs failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_OUT, &(hal_data->torque_fb_pct), comp_id, "%s.%s.%s.srv-torque-fb-pct", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-torque-fb-pct failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_float_newf(HAL_IN, &(hal_data->torque_lim), comp_id, "%s.%s.%s.srv-torque-lim", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-torque-lim failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->stopped), comp_id, "%s.%s.%s.srv-stopped", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-stopped failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->at_speed), comp_id, "%s.%s.%s.srv-at-speed", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-at-speed failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->overload), comp_id, "%s.%s.%s.srv-overload", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-overload failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->ready), comp_id, "%s.%s.%s.srv-ready", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-ready failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->error), comp_id, "%s.%s.%s.srv-error", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-error failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->toggle), comp_id, "%s.%s.%s.srv-toggle", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-toggle failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->loc_ena), comp_id, "%s.%s.%s.srv-loc-ena", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-loc-ena failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->enable), comp_id, "%s.%s.%s.srv-enable", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-enable failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->err_reset), comp_id, "%s.%s.%s.srv-err-reset", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-err-reset failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->fast_ramp), comp_id, "%s.%s.%s.srv-fast-ramp", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-fast-ramp failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->brake), comp_id, "%s.%s.%s.srv-brake", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-brake failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IO, &(hal_data->index_ena), comp_id, "%s.%s.%s.srv-index-ena", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-index-ena failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_IN, &(hal_data->pos_reset), comp_id, "%s.%s.%s.srv-pos-reset", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-reset failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->on_home_neg), comp_id, "%s.%s.%s.srv-on-home-neg", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-on-home-neg failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_pin_bit_newf(HAL_OUT, &(hal_data->on_home_pos), comp_id, "%s.%s.%s.srv-on-home-pos", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-on-home-pos failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+  if ((err = lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
     return err;
   }
 
   // export parameters
-  if ((err = hal_param_float_newf(HAL_RW, &(hal_data->pos_scale), comp_id, "%s.%s.%s.srv-pos-scale", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-pos-scale failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+  if ((err = lcec_param_newf_list(hal_data, slave_params, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
     return err;
   }
-  if ((err = hal_param_float_newf(HAL_RO, &(hal_data->torque_reference), comp_id, "%s.%s.%s.srv-torque-ref", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-torque-ref failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
+
+  // set encoder bits
+  enc_bits = 24;
+  pval = lcec_modparam_get(slave, LCEC_STMDS5K_PARAM_MULTITURN);
+  if (pval != NULL && pval->bit) {
+    enc_bits = 32;
   }
-  if ((err = hal_param_float_newf(HAL_RO, &(hal_data->speed_max_rpm), comp_id, "%s.%s.%s.srv-max-rpm", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-max-rpm failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_param_float_newf(HAL_RO, &(hal_data->speed_max_rpm_sp), comp_id, "%s.%s.%s.srv-max-rpm-sp", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-max-rpm-sp failed\n", LCEC_MODULE_NAME, master->name, slave->name);
-    return err;
-  }
-  if ((err = hal_param_s32_newf(HAL_RW, &(hal_data->home_raw), comp_id, "%s.%s.%s.srv-home-raw", LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.srv-home-raw failed\n", LCEC_MODULE_NAME, master->name, slave->name);
+
+  // init subclasses
+  if ((err = class_enc_init(slave, &hal_data->enc, enc_bits, "enc")) != 0) {
     return err;
   }
 
   // set default pin values
-  *(hal_data->vel_cmd) = 0.0;
-  *(hal_data->vel_fb) = 0.0;
-  *(hal_data->vel_fb_rpm) = 0.0;
-  *(hal_data->vel_fb_rpm_abs) = 0.0;
-  *(hal_data->vel_rpm) = 0.0;
-  *(hal_data->pos_raw_hi) = 0;
-  *(hal_data->pos_raw_lo) = 0;
-  *(hal_data->pos_fb) = 0.0;
-  *(hal_data->pos_fb_rel) = 0.0;
-  *(hal_data->torque_fb) = 0.0;
-  *(hal_data->torque_fb_abs) = 0.0;
-  *(hal_data->torque_fb_pct) = 0.0;
   *(hal_data->torque_lim) = 1.0;
-  *(hal_data->stopped) = 0;
-  *(hal_data->at_speed) = 0;
-  *(hal_data->overload) = 0;
-  *(hal_data->ready) = 0;
-  *(hal_data->error) = 0;
-  *(hal_data->toggle) = 0;
-  *(hal_data->loc_ena) = 0;
-  *(hal_data->enable) = 0;
-  *(hal_data->err_reset) = 0;
-  *(hal_data->fast_ramp) = 0;
-  *(hal_data->brake) = 0;
-  *(hal_data->index_ena) = 0;
-  *(hal_data->pos_reset) = 0;
-  *(hal_data->enc_raw) = 0;
-  *(hal_data->enc_raw_rel) = 0;
-  *(hal_data->on_home_neg) = 0;
-  *(hal_data->on_home_pos) = 0;
 
   // initialize variables
+  hal_data->torque_reference = sdo_torque_reference;
+  hal_data->speed_max_rpm = sdo_speed_max_rpm;
+  hal_data->speed_max_rpm_sp = sdo_speed_max_rpm_sp;
   hal_data->pos_scale = 1.0;
-  hal_data->do_init = 1;
-  hal_data->pos_cnt = 0;
-  hal_data->index_cnt = 0;
-  hal_data->last_pos_cnt = 0;
   hal_data->pos_scale_old = hal_data->pos_scale + 1.0;
   hal_data->pos_scale_rcpt = 1.0;
-  hal_data->pos_scale_cnt = 1.0;
-  hal_data->last_index_ena = 0;
-  hal_data->index_ref = 0;
-  hal_data->home_raw = 0;
 
   return 0;
 }
@@ -359,8 +258,6 @@ void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data) {
     hal_data->pos_scale_old = hal_data->pos_scale;
     // we actually want the reciprocal
     hal_data->pos_scale_rcpt = 1.0 / hal_data->pos_scale;
-    // scale for counter
-    hal_data->pos_scale_cnt = hal_data->pos_scale_rcpt / (double)(0x100000000LL);
   }
 }
 
@@ -368,16 +265,21 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_stmds5k_data_t *hal_data = (lcec_stmds5k_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
-  int32_t index_tmp;
-  int32_t pos_cnt, pos_cnt_rel, pos_cnt_diff;
-  long long net_count, rel_count;
   uint8_t dev_state;
   uint16_t speed_state;
   int16_t speed_raw, torque_raw;
   double rpm, torque;
+  uint32_t pos_cnt;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
+    *(hal_data->ready) = 0;
+    *(hal_data->error) = 1;
+    *(hal_data->loc_ena) = 0;
+    *(hal_data->toggle) = 0;
+    *(hal_data->stopped) = 0;
+    *(hal_data->at_speed) = 0;
+    *(hal_data->overload) = 0;
     return;
   }
 
@@ -413,52 +315,9 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   *(hal_data->torque_fb) = torque;
   *(hal_data->torque_fb_abs) = fabs(torque);
 
-  // update raw position counter
+  // update position feedback
   pos_cnt = EC_READ_S32(&pd[hal_data->pos_mot_pdo_os]);
-  pos_cnt_rel = pos_cnt - hal_data->home_raw;
-  *(hal_data->enc_raw) = pos_cnt;
-  *(hal_data->enc_raw_rel) = pos_cnt_rel;
-  *(hal_data->on_home_neg) = (pos_cnt_rel <= 0);
-  *(hal_data->on_home_pos) = (pos_cnt_rel >= 0);
-
-  pos_cnt <<= 8;
-  pos_cnt_diff = pos_cnt - hal_data->last_pos_cnt;
-  hal_data->last_pos_cnt = pos_cnt;
-  hal_data->pos_cnt += pos_cnt_diff;
-
-  rel_count = ((long long) pos_cnt_rel) << 8;
-
-  // check for index edge
-  if (*(hal_data->index_ena)) {
-    index_tmp = (hal_data->pos_cnt >> 32) & 0xffffffff;
-    if (hal_data->do_init || !hal_data->last_index_ena) {
-      hal_data->index_ref = index_tmp;
-    } else if (index_tmp > hal_data->index_ref) {
-      hal_data->index_cnt = (long long)index_tmp << 32;
-      *(hal_data->index_ena) = 0;
-    } else if (index_tmp  < hal_data->index_ref) {
-      hal_data->index_cnt = (long long)hal_data->index_ref << 32;
-      *(hal_data->index_ena) = 0;
-    }
-  }
-  hal_data->last_index_ena = *(hal_data->index_ena);
-
-  // handle initialization
-  if (hal_data->do_init || *(hal_data->pos_reset)) {
-    hal_data->do_init = 0;
-    hal_data->index_cnt = hal_data->pos_cnt;
-  }
-
-  // compute net counts
-  net_count = hal_data->pos_cnt - hal_data->index_cnt;
-
-  // update raw counter pins
-  *(hal_data->pos_raw_hi) = (net_count >> 32) & 0xffffffff;
-  *(hal_data->pos_raw_lo) = net_count & 0xffffffff;
-
-  // scale count to make floating point position
-  *(hal_data->pos_fb) = ((double) net_count) * hal_data->pos_scale_cnt;
-  *(hal_data->pos_fb_rel) = ((double) rel_count) * hal_data->pos_scale_cnt;
+  class_enc_update(&hal_data->enc, STMDS5K_PPREV, hal_data->pos_scale_rcpt, pos_cnt, 0, false);
 }
 
 void lcec_stmds5k_write(struct lcec_slave *slave, long period) {

@@ -33,7 +33,7 @@
 #define LCEC_CONF_GENERIC_MAX_BITLEN  255
 
 typedef enum {
-  lcecConfTypeNone,
+  lcecConfTypeNone = 0,
   lcecConfTypeMasters,
   lcecConfTypeMaster,
   lcecConfTypeSlave,
@@ -44,7 +44,11 @@ typedef enum {
   lcecConfTypePdoEntry,
   lcecConfTypeSdoConfig,
   lcecConfTypeSdoDataRaw,
-  lcecConfTypeComplexEntry
+  lcecConfTypeIdnConfig,
+  lcecConfTypeIdnDataRaw,
+  lcecConfTypeInitCmds,
+  lcecConfTypeComplexEntry,
+  lcecConfTypeModParam
 } LCEC_CONF_TYPE_T;
 
 typedef enum {
@@ -57,6 +61,7 @@ typedef enum {
 typedef enum {
   lcecSlaveTypeInvalid,
   lcecSlaveTypeGeneric,
+  lcecSlaveTypeAX5206,
   lcecSlaveTypeEK1100,
   lcecSlaveTypeEL1002,
   lcecSlaveTypeEL1004,
@@ -114,11 +119,13 @@ typedef enum {
   lcecSlaveTypeEL4112,
   lcecSlaveTypeEL4122,
   lcecSlaveTypeEL4132,
+  lcecSlaveTypeEL4104,
   lcecSlaveTypeEL5101,
   lcecSlaveTypeEL5151,
   lcecSlaveTypeEL5152,
   lcecSlaveTypeEL2521,
   lcecSlaveTypeEL7041_1000,
+  lcecSlaveTypeEL7211,
   lcecSlaveTypeEL7342,
   lcecSlaveTypeEL9505,
   lcecSlaveTypeEL9508,
@@ -155,6 +162,8 @@ typedef struct {
   unsigned int pdoEntryCount;
   unsigned int pdoMappingCount;
   size_t sdoConfigLength;
+  size_t idnConfigLength;
+  unsigned int modParamCount;
   char name[LCEC_CONF_STR_MAXLEN];
 } LCEC_CONF_SLAVE_T;
 
@@ -162,9 +171,9 @@ typedef struct {
   LCEC_CONF_TYPE_T confType;
   uint16_t assignActivate;
   uint32_t sync0Cycle;
-  uint32_t sync0Shift;
+  int32_t sync0Shift;
   uint32_t sync1Cycle;
-  uint32_t sync1Shift;
+  int32_t sync1Shift;
 } LCEC_CONF_DC_T;
 
 typedef struct {
@@ -220,5 +229,27 @@ typedef struct {
   size_t length;
   uint8_t data[];
 } LCEC_CONF_SDOCONF_T;
+
+typedef struct {
+  LCEC_CONF_TYPE_T confType;
+  uint8_t drive;
+  uint16_t idn;
+  ec_al_state_t state;
+  size_t length;
+  uint8_t data[];
+} LCEC_CONF_IDNCONF_T;
+
+typedef union {
+  hal_bit_t bit;
+  hal_s32_t s32;
+  hal_u32_t u32;
+  hal_float_t flt;
+} LCEC_CONF_MODPARAM_VAL_T;
+
+typedef struct {
+  LCEC_CONF_TYPE_T confType;
+  int id;
+  LCEC_CONF_MODPARAM_VAL_T value;
+} LCEC_CONF_MODPARAM_T;
 
 #endif

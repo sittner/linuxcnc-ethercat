@@ -31,6 +31,17 @@ typedef struct {
   unsigned int val_pdo_os;
 } lcec_el31x2_chan_t;
 
+static const lcec_pindesc_t slave_pins[] = {
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el31x2_chan_t ,error), "%s.%s.%s.ain-%d-error" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el31x2_chan_t ,overrange), "%s.%s.%s.ain-%d-overrange" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el31x2_chan_t ,underrange), "%s.%s.%s.ain-%d-underrange" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_el31x2_chan_t ,raw_val), "%s.%s.%s.ain-%d-raw" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el31x2_chan_t ,val), "%s.%s.%s.ain-%d-val" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el31x2_chan_t ,scale), "%s.%s.%s.ain-%d-scale" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el31x2_chan_t ,bias), "%s.%s.%s.ain-%d-bias" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
 typedef struct {
   lcec_el31x2_chan_t chans[LCEC_EL31x2_CHANS];
 } lcec_el31x2_data_t;
@@ -90,43 +101,12 @@ int lcec_el31x2_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x3101 + i, 0x02, &chan->val_pdo_os, NULL);
 
     // export pins
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->error), comp_id, "%s.%s.%s.ain-%d-error", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.ain-%d-error failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->overrange), comp_id, "%s.%s.%s.ain-%d-overrange", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.ain-%d-overrange failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_bit_newf(HAL_OUT, &(chan->underrange), comp_id, "%s.%s.%s.ain-%d-underrange", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.ain-%d-underrange failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_s32_newf(HAL_OUT, &(chan->raw_val), comp_id, "%s.%s.%s.ain-%d-raw", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.ain-%d-raw failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_float_newf(HAL_OUT, &(chan->val), comp_id, "%s.%s.%s.ain-%d-val", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.ain-%d-val failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_float_newf(HAL_IO, &(chan->scale), comp_id, "%s.%s.%s.ain-%d-scale", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.ain-%d-scale failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
-      return err;
-    }
-    if ((err = hal_pin_float_newf(HAL_IO, &(chan->bias), comp_id, "%s.%s.%s.ain-%d-bias", LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s.%s.%s.ain-%d-bias failed\n", LCEC_MODULE_NAME, master->name, slave->name, i);
+    if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       return err;
     }
 
     // initialize pins
-    *(chan->error) = 0;
-    *(chan->overrange) = 0;
-    *(chan->underrange) = 0;
-    *(chan->raw_val) = 0;
-    *(chan->val) = 0;
-    *(chan->scale) = 1;
-    *(chan->bias) = 0;
+    *(chan->scale) = 1.0;
   }
 
   return 0;
