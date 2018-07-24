@@ -445,6 +445,29 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
   const LCEC_CONF_TYPELIST_T *slaveType = NULL;
   p->confType = lcecConfTypeSlave;
   p->type = lcecSlaveTypeInvalid;
+
+  const char** tmp_attr=attr;
+  while(*tmp_attr) {
+      const char *name = *(tmp_attr++);
+      const char *val = *(tmp_attr++);
+
+      // parse slave type
+      if (strcmp(name, "type") == 0) {
+          for (slaveType = slaveTypes; slaveType->name != NULL; slaveType++) {
+              if (strcmp(val, slaveType->name) == 0) {
+                  break;
+              }
+          }
+          if (slaveType->name == NULL) {
+              fprintf(stderr, "%s: ERROR: Invalid slave type %s\n", modname, val);
+              XML_StopParser(inst->parser, 0);
+              return;
+          }
+          p->type = slaveType->type;
+          continue;
+      }
+  }
+
   while (*attr) {
     const char *name = *(attr++);
     const char *val = *(attr++);
@@ -457,17 +480,6 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
 
     // parse slave type
     if (strcmp(name, "type") == 0) {
-      for (slaveType = slaveTypes; slaveType->name != NULL; slaveType++) {
-        if (strcmp(val, slaveType->name) == 0) {
-          break;
-        }
-      }
-      if (slaveType->name == NULL) {
-        fprintf(stderr, "%s: ERROR: Invalid slave type %s\n", modname, val);
-        XML_StopParser(inst->parser, 0);
-        return;
-      }
-      p->type = slaveType->type;
       continue;
     }
 
