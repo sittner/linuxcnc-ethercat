@@ -34,6 +34,9 @@
 #include "lcec_el5151.h"
 #include "lcec_el5152.h"
 #include "lcec_el2521.h"
+#include "lcec_el6900.h"
+#include "lcec_el1904.h"
+#include "lcec_el2904.h"
 #include "lcec_el7041_1000.h"
 #include "lcec_el7211.h"
 #include "lcec_el7342.h"
@@ -160,6 +163,11 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL9510, LCEC_EL95xx_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
   { lcecSlaveTypeEL9512, LCEC_EL95xx_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
   { lcecSlaveTypeEL9515, LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
+
+  // FSoE devices
+  { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, LCEC_EL6900_PDOS, lcec_el6900_init},
+  { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, lcec_el1904_init},
+  { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, lcec_el2904_init},
 
   // multi axis interface
   { lcecSlaveTypeEM7004, LCEC_EM7004_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, lcec_em7004_init},
@@ -610,7 +618,7 @@ int lcec_parse_config(void) {
           // normal slave
           slave->vid = type->vid;
           slave->pid = type->pid;
-          slave->pdo_entry_count = type->pdo_entry_count;
+          slave->pdo_entry_count = type->pdo_entry_count + slave_conf->pdoMappingCount;
           slave->proc_init = type->proc_init;
         } else {
           // generic slave
@@ -1527,5 +1535,30 @@ LCEC_CONF_MODPARAM_VAL_T *lcec_modparam_get(struct lcec_slave *slave, int id) {
   }
 
   return NULL;
+}
+
+lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index) {
+  lcec_slave_t *slave;
+
+  for (slave = master->first_slave; slave != NULL; slave = slave->next) {
+    if (slave->index == index) {
+      return slave;
+    }
+  }
+
+  return NULL;
+}
+
+void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigned int master_offset) {
+  lcec_master_t *master = slave->master;
+  uint8_t *pd = master->process_data;
+
+  if (slave->fsoe_slave_offset != NULL) {
+    memcpy(&pd[*(slave->fsoe_slave_offset)], &pd[slave_offset], LCEC_FSOE_MSG_LEN);
+  }
+
+  if (slave->fsoe_master_offset != NULL) {
+    memcpy(&pd[master_offset], &pd[*(slave->fsoe_master_offset)], LCEC_FSOE_MSG_LEN);
+  }
 }
 

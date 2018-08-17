@@ -32,11 +32,13 @@
 #include "lcec_conf_priv.h"
 
 #include "lcec_stmds5k.h"
+#include "lcec_el6900.h"
 
 typedef struct {
   const char *name;
   int id;
   hal_type_t type;
+  int pdoMappingCount;
 } LCEC_CONF_MODPARAM_DESC_T;
 
 typedef struct {
@@ -51,7 +53,12 @@ typedef struct {
 } LCEC_CONF_HAL_T;
 
 static const LCEC_CONF_MODPARAM_DESC_T slaveStMDS5kParams[] = {
-  { "isMultiturn", LCEC_STMDS5K_PARAM_MULTITURN, HAL_BIT } ,
+  { "isMultiturn", LCEC_STMDS5K_PARAM_MULTITURN, HAL_BIT, 0 } ,
+  { NULL }
+};
+
+static const LCEC_CONF_MODPARAM_DESC_T slaveEL6900Params[] = {
+  { "fsoeSlaveIdx", LCEC_EL6900_PARAM_SLAVEID, HAL_U32, LCEC_EL6900_PARAM_SLAVEID_PDOS } ,
   { NULL }
 };
 
@@ -162,6 +169,11 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL9510", lcecSlaveTypeEL9510, NULL },
   { "EL9512", lcecSlaveTypeEL9512, NULL },
   { "EL9515", lcecSlaveTypeEL9515, NULL },
+
+  // FSoE devices
+  { "EL6900", lcecSlaveTypeEL6900, slaveEL6900Params },
+  { "EL1904", lcecSlaveTypeEL1904, NULL },
+  { "EL2904", lcecSlaveTypeEL2904, NULL },
 
   // multi axis interface
   { "EM7004", lcecSlaveTypeEM7004, NULL },
@@ -1399,6 +1411,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
       break;
   }
 
+  (state->currSlave->pdoMappingCount) += modParams->pdoMappingCount; 
   (state->currSlave->modParamCount)++;
 }
 

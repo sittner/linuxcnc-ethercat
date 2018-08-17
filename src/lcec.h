@@ -70,6 +70,8 @@ do {                        \
 
 #define LCEC_IDN(type, set, block) (type | ((set & 0x07) << 12) | (block & 0x0fff))
 
+#define LCEC_FSOE_MSG_LEN 6
+
 struct lcec_master;
 struct lcec_slave;
 
@@ -193,6 +195,8 @@ typedef struct lcec_slave {
   lcec_slave_sdoconf_t *sdo_config;
   lcec_slave_idnconf_t *idn_config;
   lcec_slave_modparam_t *modparams;
+  unsigned int *fsoe_slave_offset;
+  unsigned int *fsoe_master_offset;
 } lcec_slave_t;
 
 typedef struct {
@@ -211,6 +215,10 @@ int lcec_param_newf(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const c
 int lcec_param_newf_list(void *base, const lcec_pindesc_t *list, ...);
 
 LCEC_CONF_MODPARAM_VAL_T *lcec_modparam_get(struct lcec_slave *slave, int id);
+
+lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index);
+
+void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigned int master_offset);
 
 #endif
 
