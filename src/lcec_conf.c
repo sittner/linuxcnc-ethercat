@@ -446,40 +446,41 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
   p->confType = lcecConfTypeSlave;
   p->type = lcecSlaveTypeInvalid;
 
-  const char** tmp_attr=attr;
-  while(*tmp_attr) {
-      const char *name = *(tmp_attr++);
-      const char *val = *(tmp_attr++);
+  // pre parse slave type to avoid attribute ordering problems
+  const char **iter = attr;
+  while(*iter) {
+    const char *name = *(iter++);
+    const char *val = *(iter++);
 
-      // parse slave type
-      if (strcmp(name, "type") == 0) {
-          for (slaveType = slaveTypes; slaveType->name != NULL; slaveType++) {
-              if (strcmp(val, slaveType->name) == 0) {
-                  break;
-              }
-          }
-          if (slaveType->name == NULL) {
-              fprintf(stderr, "%s: ERROR: Invalid slave type %s\n", modname, val);
-              XML_StopParser(inst->parser, 0);
-              return;
-          }
-          p->type = slaveType->type;
-          continue;
+    // parse slave type
+    if (strcmp(name, "type") == 0) {
+      for (slaveType = slaveTypes; slaveType->name != NULL; slaveType++) {
+        if (strcmp(val, slaveType->name) == 0) {
+          break;
+        }
       }
+      if (slaveType->name == NULL) {
+        fprintf(stderr, "%s: ERROR: Invalid slave type %s\n", modname, val);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      p->type = slaveType->type;
+      continue;
+    }
   }
 
   while (*attr) {
     const char *name = *(attr++);
     const char *val = *(attr++);
 
-    // parse index
-    if (strcmp(name, "idx") == 0) {
-      p->index = atoi(val);
+    // skip slave type (already parsed)
+    if (strcmp(name, "type") == 0) {
       continue;
     }
 
-    // parse slave type
-    if (strcmp(name, "type") == 0) {
+    // parse index
+    if (strcmp(name, "idx") == 0) {
+      p->index = atoi(val);
       continue;
     }
 
