@@ -70,6 +70,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "generic", lcecSlaveTypeGeneric, NULL },
 
   // AX5000 servo drives
+  { "AX5203", lcecSlaveTypeAX5203, NULL },
   { "AX5206", lcecSlaveTypeAX5206, NULL },
 
   // digital in
