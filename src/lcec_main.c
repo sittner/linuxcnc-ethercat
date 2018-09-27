@@ -375,13 +375,14 @@ int rtapi_app_main(void) {
 
     // initialize application time
     lcec_gettimeofday(&tv);
-#ifdef RTAPI_TASK_PLL_SUPPORT
     master->app_time_base = EC_TIMEVAL2NANO(tv);
+    ecrt_master_application_time(master->master, master->app_time_base);
+#ifdef RTAPI_TASK_PLL_SUPPORT
     if (master->sync_ref_cycles >= 0) {
       master->app_time_base -= rtapi_get_time();
     }
 #else
-    master->app_time_base = EC_TIMEVAL2NANO(tv) - rtapi_get_time();
+    master->app_time_base -= rtapi_get_time();
     if (master->sync_ref_cycles < 0) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "unable to sync master %s cycle to reference clock, RTAPI_TASK_PLL_SUPPORT not present\n", master->name);
     }
