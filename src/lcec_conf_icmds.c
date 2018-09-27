@@ -174,7 +174,9 @@ static void xml_data_handler(void *data, const XML_Char *s, int len) {
       state->currSdoConf->index = parse_int(state, s, len, 0, 0xffff);
       return;
     case icmdTypeCoeIcmdSubindex:
-      state->currSdoConf->subindex = parse_int(state, s, len, 0, 0xff);
+      if (state->currSdoConf->subindex != LCEC_CONF_SDO_COMPLETE_SUBIDX) {
+        state->currSdoConf->subindex = parse_int(state, s, len, 0, 0xff);
+      }
       return;
     case icmdTypeCoeIcmdData:
       state->currSdoConf->length += parse_data(state, s, len);
@@ -223,6 +225,19 @@ static void icmdTypeCoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const cha
   state->currSdoConf->confType = lcecConfTypeSdoConfig;
   state->currSdoConf->index = 0xffff;
   state->currSdoConf->subindex = 0xff;
+
+  while (*attr) {
+    const char *name = *(attr++);
+    const char *val = *(attr++);
+
+    // parse CompleteAccess
+    if (strcmp(name, "CompleteAccess") == 0) {
+      if (atoi(val)) {
+        state->currSdoConf->subindex = LCEC_CONF_SDO_COMPLETE_SUBIDX;
+      }
+      continue;
+    }
+  }
 }
 
 static void icmdTypeCoeIcmdEnd(LCEC_CONF_XML_INST_T *inst, int next) {
