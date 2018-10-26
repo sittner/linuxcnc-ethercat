@@ -46,13 +46,13 @@ typedef struct {
   int raw_shift;
   uint32_t raw_mask;
 
-  uint32_t pprev_last;
+  uint64_t pprev_last;
 
   int index_sign;
 
 } lcec_class_enc_data_t;
 
 int class_enc_init(struct lcec_slave *slave, lcec_class_enc_data_t *hal_data, int raw_bits, const char *pfx);
-void class_enc_update(lcec_class_enc_data_t *hal_data, uint32_t pprev, double scale, uint32_t raw, uint32_t ext_latch_raw, bool ext_latch_ena);
+void class_enc_update(lcec_class_enc_data_t *hal_data, uint64_t pprev, double scale, uint32_t raw, uint32_t ext_latch_raw, bool ext_latch_ena);
 
 #endif

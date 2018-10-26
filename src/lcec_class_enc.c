@@ -73,7 +73,7 @@ int class_enc_init(struct lcec_slave *slave, lcec_class_enc_data_t *hal_data, in
   return 0;
 }
 
-void class_enc_update(lcec_class_enc_data_t *hal_data, uint32_t pprev, double scale, uint32_t raw, uint32_t ext_latch_raw, bool ext_latch_ena) {
+void class_enc_update(lcec_class_enc_data_t *hal_data, uint64_t pprev, double scale, uint32_t raw, uint32_t ext_latch_raw, bool ext_latch_ena) {
   long long pos, mod;
   uint32_t ovfl_win;
   int sign;
@@ -118,7 +118,7 @@ void class_enc_update(lcec_class_enc_data_t *hal_data, uint32_t pprev, double sc
   if (*(hal_data->index_ena)) {
     // get overflow detection window (pprev / 4)
     ovfl_win = pprev >> 2;
-    if (ovfl_win == 0) {
+    if (ovfl_win == 0 || pprev > 0xffffffff) {
       // no useable singleturn bits -> just reset the position
       *(hal_data->index_ena) = 0;
       set_ref(hal_data, pos);
