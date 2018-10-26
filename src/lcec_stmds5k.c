@@ -30,6 +30,45 @@
 #define STMDS5K_PPREV          0x1000000
 
 typedef struct {
+  struct {
+    ec_pdo_entry_info_t ctrl;
+    ec_pdo_entry_info_t n_cmd;
+    ec_pdo_entry_info_t m_max;
+  } out_ch1;
+  struct {
+    ec_pdo_entry_info_t status;
+    ec_pdo_entry_info_t n_fb;
+    ec_pdo_entry_info_t m_fb;
+    ec_pdo_entry_info_t cmd_status;
+  } in_ch1;
+  struct {
+    ec_pdo_entry_info_t rotor;
+    ec_pdo_entry_info_t extenc;
+  } in_ch2;
+  struct {
+    ec_pdo_info_t ch1;
+  } out;
+  struct {
+    ec_pdo_info_t ch1;
+    ec_pdo_info_t ch2;
+  } in;
+  struct {
+    ec_sync_info_t mb_out;
+    ec_sync_info_t mb_in;
+    ec_sync_info_t pdo_out;
+    ec_sync_info_t pdo_in;
+    ec_sync_info_t eot;
+  } syncs;
+} lcec_stmds5k_syncs_t;
+
+typedef struct {
+  uint16_t pdo_index;
+  uint32_t pprev;
+  int used_bits;
+  int shift_bits;
+} lcec_stmds5k_extenc_conf_t;
+
+typedef struct {
   hal_float_t *vel_cmd;
   hal_float_t *vel_fb;
   hal_float_t *vel_fb_rpm;
@@ -55,12 +94,18 @@ typedef struct {
   hal_float_t speed_max_rpm_sp;
   hal_float_t torque_reference;
   hal_float_t pos_scale;
+  hal_float_t extenc_scale;
   double speed_max_rpm_sp_rcpt;
 
   double pos_scale_old;
   double pos_scale_rcpt;
+  double extenc_scale_old;
+  double extenc_scale_rcpt;
 
   lcec_class_enc_data_t enc;
+  lcec_class_enc_data_t extenc;
+
+  const lcec_stmds5k_extenc_conf_t *extenc_conf;
 
   unsigned int dev_state_pdo_os;
   unsigned int speed_mot_pdo_os;
@@ -70,6 +115,9 @@ typedef struct {
   unsigned int dev_ctrl_pdo_os;
   unsigned int speed_sp_rel_pdo_os;
   unsigned int torque_max_pdo_os;
+  unsigned int extinc_pdo_os;
+
+  lcec_stmds5k_syncs_t syncs;
 
 } lcec_stmds5k_data_t;
 
@@ -102,73 +150,64 @@ static const lcec_pindesc_t slave_params[] = {
   { HAL_FLOAT, HAL_RO, offsetof(lcec_stmds5k_data_t, torque_reference), "%s.%s.%s.srv-torque-ref" },
   { HAL_FLOAT, HAL_RO, offsetof(lcec_stmds5k_data_t, speed_max_rpm), "%s.%s.%s.srv-max-rpm" },
   { HAL_FLOAT, HAL_RO, offsetof(lcec_stmds5k_data_t, speed_max_rpm_sp), "%s.%s.%s.srv-max-rpm-sp" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_stmds5k_data_t, extenc_scale), "%s.%s.%s.extenc-scale" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-static ec_pdo_entry_info_t lcec_stmds5k_out_ch1[] = {
-   {0x20b4, 0x00, 8},  // A180 Device Control Byte
-   {0x26e6, 0x00, 16}, // D230 n-Soll Relativ
-   {0x24e6, 0x00, 16}  // C230 M-Max
-};
-
-static ec_pdo_entry_info_t lcec_stmds5k_in_ch1[] = {
-   {0x28c8, 0x00, 8},  // E200 Device Status Byte
-   {0x2864, 0x00, 16}, // E100 n-Motor
-   {0x2802, 0x00, 16}, // E02 M-Motor gefiltert
-   {0x26c8, 0x00, 16}  // D200 Drehzahlsollwert-Statuswort
-};
-
-static ec_pdo_entry_info_t lcec_stmds5k_in_ch2[] = {
-   {0x2809, 0x00, 32}, // E09 Rotorlage
-};
-
-static ec_pdo_info_t lcec_stmds5k_pdos_out[] = {
-    {0x1600,  3, lcec_stmds5k_out_ch1}
-};
-
-static ec_pdo_info_t lcec_stmds5k_pdos_in[] = {
-    {0x1a00, 4, lcec_stmds5k_in_ch1},
-    {0x1a01, 1, lcec_stmds5k_in_ch2}
-};
-
-static ec_sync_info_t lcec_stmds5k_syncs[] = {
+static const lcec_stmds5k_syncs_t lcec_stmds5k_syncs_tmpl = {
+  .out_ch1 = {
+     {0x20b4, 0x00, 8},  // A180 Device Control Byte
+     {0x26e6, 0x00, 16}, // D230 n-Soll Relativ
+     {0x24e6, 0x00, 16}  // C230 M-Max
+  },
+  .in_ch1 = {
+     {0x28c8, 0x00, 8},  // E200 Device Status Byte
+     {0x2864, 0x00, 16}, // E100 n-Motor
+     {0x2802, 0x00, 16}, // E02 M-Motor gefiltert
+     {0x26c8, 0x00, 16}  // D200 Drehzahlsollwert-Statuswort
+  },
+  .in_ch2 = {
+     {0x2809, 0x00, 32}, // E09 Rotorlage
+     {0x0000, 0x00, 32}, // extenc
+  },
+  .out = {
+    {0x1600, 3, NULL} // out_ch1 
+  },
+  .in = {
+    {0x1a00, 4, NULL}, // in_ch1
+    {0x1a01, 1, NULL}  // in_ch2
+  },
+  .syncs = {
     {0, EC_DIR_OUTPUT, 0, NULL},
     {1, EC_DIR_INPUT,  0, NULL},
-    {2, EC_DIR_OUTPUT, 1, lcec_stmds5k_pdos_out},
-    {3, EC_DIR_INPUT,  2, lcec_stmds5k_pdos_in},
+    {2, EC_DIR_OUTPUT, 1, NULL}, // out
+    {3, EC_DIR_INPUT,  2, NULL}, // in
     {0xff}
+  }
 };
 
-typedef struct {
-  uint16_t pdo_index;
-  uint32_t pprev;
-  int used_bits;
-  int shift_bits;
-} extenc_conf_t;
-
-static extenc_conf_t extenc_conf[] {
-  // 0: E154, multiturn EnDat/SSI
-  { 0x289a, 0x000fffff, 32, 0 },
-  // 0: E154, singelturn EnDat/Resolver
-  { 0x289a, 0x0000ffff, 16, 0 },
-  // 0: E154, incremental encoder
-  { 0x289a, 0x00000000, 16, 0 },
-  // 0: E155, multiturn EnDat/SSI
-  { 0x289b, 0x000fffff, 32, 0 },
-  // 0: E155, singelturn EnDat/Resolver
-  { 0x289b, 0xffffffff, 32, 0 },
-  // 0: E155, incremental encoder
-  { 0x289b, 0x00000000, 16, 16 },
-  // 0: E156, multiturn EnDat/SSI
-  { 0x289c, 0x000fffff, 32, 0 },
-  // 0: E156, singelturn EnDat/Resolver
-  { 0x289c, 0xffffffff, 32, 0 },
-  // 0: E156, incremental encoder
-  { 0x289c, 0x00000000, 16, 16 },
-
-  { 0 }
+static const lcec_stmds5k_extenc_conf_t lcec_stmds5k_extenc_conf[] = {
+  // 0: E154, EnDat/SSI
+  { 0x289a, 0x100000, 32, 0 },
+  // 1: E154, Resolver
+  { 0x289a, 0x10000, 16, 0 },
+  // 2: E154, incremental encoder
+  { 0x289a, 0, 16, 0 },
+  // 3: E155, multiturn EnDat/SSI
+  { 0x289b, 0x100000, 32, 0 },
+  // 4: E155, singelturn EnDat/Resolver
+  { 0x289b, 0x100000000, 32, 0 },
+  // 5: E155, incremental encoder
+  { 0x289b, 0, 16, 16, },
+  // 6: E156, multiturn EnDat/SSI
+  { 0x289c, 0x100000, 32, 0 },
+  // 7: E156, singelturn EnDat/Resolver
+  { 0x289c, 0x100000000, 32, 0 },
+  // 8: E156, incremental encoder
+  { 0x289c, 0, 16, 16 },
 };
 
+const lcec_stmds5k_extenc_conf_t *lcec_stmds5k_get_extenc_conf(uint32_t type);
 void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data);
 
 void lcec_stmds5k_read(struct lcec_slave *slave, long period);
@@ -184,6 +223,22 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   double sdo_speed_max_rpm_sp;
   LCEC_CONF_MODPARAM_VAL_T *pval;
   int enc_bits;
+  const lcec_stmds5k_extenc_conf_t *extenc_conf;
+
+  // get encoder bits
+  pval = lcec_modparam_get(slave, LCEC_STMDS5K_PARAM_MULTITURN);
+  enc_bits = (pval != NULL && pval->bit) ? 32 : 24;
+
+  // get extenc config
+  extenc_conf = NULL; 
+  pval = lcec_modparam_get(slave, LCEC_STMDS5K_PARAM_EXTENC);
+  if (pval != NULL) {
+    extenc_conf = lcec_stmds5k_get_extenc_conf(pval->u32);
+    if (extenc_conf == NULL) {
+      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "invalied extenc type %u for slave %s.%s\n", pval->u32, master->name, slave->name);
+      return -EINVAL;
+    }
+  }
 
   // initialize callbacks
   slave->proc_read = lcec_stmds5k_read;
@@ -192,7 +247,7 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   // alloc hal memory
   if ((hal_data = hal_malloc(sizeof(lcec_stmds5k_data_t))) == NULL) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for slave %s.%s failed\n", master->name, slave->name);
-    return -EIO;
+    return -ENOMEM;
   }
   memset(hal_data, 0, sizeof(lcec_stmds5k_data_t));
   slave->hal_data = hal_data;
@@ -220,7 +275,21 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   }
 
   // initialize sync info
-  slave->sync_info = lcec_stmds5k_syncs;
+  // copy template
+  memcpy(&hal_data->syncs, &lcec_stmds5k_syncs_tmpl, sizeof(lcec_stmds5k_syncs_t));
+  // fix pointers
+  hal_data->syncs.out.ch1.entries = (ec_pdo_entry_info_t *) &hal_data->syncs.out_ch1;
+  hal_data->syncs.in.ch1.entries = (ec_pdo_entry_info_t *) &hal_data->syncs.in_ch1;
+  hal_data->syncs.in.ch2.entries = (ec_pdo_entry_info_t *) &hal_data->syncs.in_ch2;
+  hal_data->syncs.syncs.pdo_out.pdos = (ec_pdo_info_t *) &hal_data->syncs.out;
+  hal_data->syncs.syncs.pdo_in.pdos = (ec_pdo_info_t *) &hal_data->syncs.in;
+  // map extenc
+  if (extenc_conf != NULL) {
+    hal_data->syncs.in_ch2.extenc.index = extenc_conf->pdo_index;
+    hal_data->syncs.in.ch2.n_entries++;
+  }
+  // set sync info
+  slave->sync_info = (ec_sync_info_t *) &hal_data->syncs.syncs;
 
   // initialize POD entries
   // E200 : device state byte
@@ -239,6 +308,10 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x26e6, 0x00, &hal_data->speed_sp_rel_pdo_os, NULL);
   // C230 : maximum torque (x 1%, 0% .. 200%)
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x24e6, 0x00, &hal_data->torque_max_pdo_os, NULL);
+  // external encoder
+  if (extenc_conf != NULL) {
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, extenc_conf->pdo_index, 0x00, &hal_data->extinc_pdo_os, NULL);
+  }
 
   // export pins
   if ((err = lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
@@ -250,16 +323,14 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
     return err;
   }
 
-  // set encoder bits
-  enc_bits = 24;
-  pval = lcec_modparam_get(slave, LCEC_STMDS5K_PARAM_MULTITURN);
-  if (pval != NULL && pval->bit) {
-    enc_bits = 32;
-  }
-
   // init subclasses
   if ((err = class_enc_init(slave, &hal_data->enc, enc_bits, "enc")) != 0) {
     return err;
+  }
+  if (extenc_conf != NULL) {
+    if ((err = class_enc_init(slave, &hal_data->extenc, extenc_conf->used_bits, "extenc")) != 0) {
+      return err;
+    }
   }
 
   // set default pin values
@@ -272,8 +343,20 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   hal_data->pos_scale = 1.0;
   hal_data->pos_scale_old = hal_data->pos_scale + 1.0;
   hal_data->pos_scale_rcpt = 1.0;
+  hal_data->extenc_conf = extenc_conf;
+  hal_data->extenc_scale = 1.0;
+  hal_data->extenc_scale_old = hal_data->extenc_scale + 1.0;
+  hal_data->extenc_scale_rcpt = 1.0;
 
   return 0;
+}
+
+const lcec_stmds5k_extenc_conf_t *lcec_stmds5k_get_extenc_conf(uint32_t type) {
+  if (type >= (sizeof(lcec_stmds5k_extenc_conf) / sizeof(lcec_stmds5k_extenc_conf_t))) {
+    return NULL;
+  }
+
+  return &lcec_stmds5k_extenc_conf[type];
 }
 
 void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data) {
@@ -288,6 +371,18 @@ void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data) {
     hal_data->pos_scale_old = hal_data->pos_scale;
     // we actually want the reciprocal
     hal_data->pos_scale_rcpt = 1.0 / hal_data->pos_scale;
+  }
+
+  if (hal_data->extenc_scale != hal_data->extenc_scale_old) {
+    // scale value has changed, test and update it
+    if ((hal_data->extenc_scale < 1e-20) && (hal_data->extenc_scale > -1e-20)) {
+      // value too small, divide by zero is a bad thing
+      hal_data->extenc_scale = 1.0;
+    }
+    // save new scale to detect future changes
+    hal_data->extenc_scale_old = hal_data->extenc_scale;
+    // we actually want the reciprocal
+    hal_data->extenc_scale_rcpt = 1.0 / hal_data->extenc_scale;
   }
 }
 
@@ -346,8 +441,12 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   *(hal_data->torque_fb_abs) = fabs(torque);
 
   // update position feedback
-  pos_cnt = EC_READ_S32(&pd[hal_data->pos_mot_pdo_os]);
+  pos_cnt = EC_READ_U32(&pd[hal_data->pos_mot_pdo_os]);
   class_enc_update(&hal_data->enc, STMDS5K_PPREV, hal_data->pos_scale_rcpt, pos_cnt, 0, false);
+  if (hal_data->extenc_conf != NULL) {
+    pos_cnt = EC_READ_U32(&pd[hal_data->extinc_pdo_os]);
+    class_enc_update(&hal_data->extenc, hal_data->extenc_conf->pprev, hal_data->extenc_scale_rcpt, pos_cnt >> hal_data->extenc_conf->shift_bits, 0, false);
+  }
 }
 
 void lcec_stmds5k_write(struct lcec_slave *slave, long period) {

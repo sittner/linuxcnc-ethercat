@@ -24,8 +24,10 @@
 #define LCEC_STMDS5K_PID 0x00001388
 
 #define LCEC_STMDS5K_PDOS 8
+#define LCEC_STMDS5K_EXTINC_PDOS 1
 
 #define LCEC_STMDS5K_PARAM_MULTITURN 1
+#define LCEC_STMDS5K_PARAM_EXTENC 2
 
 int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 

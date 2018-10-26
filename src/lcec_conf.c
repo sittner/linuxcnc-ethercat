@@ -54,6 +54,7 @@ typedef struct {
 
 static const LCEC_CONF_MODPARAM_DESC_T slaveStMDS5kParams[] = {
   { "isMultiturn", LCEC_STMDS5K_PARAM_MULTITURN, HAL_BIT, 0 } ,
+  { "extEnc", LCEC_STMDS5K_PARAM_EXTENC, HAL_U32, LCEC_STMDS5K_EXTINC_PDOS } ,
   { NULL }
 };
 
