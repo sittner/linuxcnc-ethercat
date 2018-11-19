@@ -25,6 +25,9 @@
 #include "lcec_conf.h"
 #include "lcec_conf_priv.h"
 
+typedef enum { false, true } bool;
+
+
 char *modname = "lcec_conf";
 
 static void xml_start_handler(void *data, const char *el, const char **attr);
@@ -143,7 +146,7 @@ int parseHex(const char *s, int slen, uint8_t *buf) {
     }
 
     // skip blanks if no current nibble
-    if (!nib && strchr(" \t\r\n", c)) {
+    if ((1-nib) && strchr(" \t\r\n", c)) {
       continue;
     }
 
@@ -168,7 +171,7 @@ int parseHex(const char *s, int slen, uint8_t *buf) {
     } else {
       tmp = c << 4;
     }
-    nib = !nib;
+    nib = (1-nib);
   }
 
   // nibble must not be active

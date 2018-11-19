@@ -20,6 +20,9 @@
 
 #include "lcec.h"
 
+typedef enum { false, true } bool;
+
+
 typedef struct {
   hal_s32_t raw_home;
   hal_u32_t raw_bits;
