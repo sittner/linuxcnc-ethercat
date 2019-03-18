@@ -63,7 +63,7 @@ typedef struct {
 
 typedef struct {
   uint16_t pdo_index;
-  uint32_t pprev;
+  uint64_t pprev;
   int used_bits;
   int shift_bits;
 } lcec_stmds5k_extenc_conf_t;
