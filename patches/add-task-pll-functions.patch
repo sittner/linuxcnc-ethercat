@@ -1,7 +1,7 @@
-diff -urNp linuxcnc-2.7.11.orig/src/rtapi/rtapi.h linuxcnc-2.7.11/src/rtapi/rtapi.h
---- linuxcnc-2.7.11.orig/src/rtapi/rtapi.h	2017-07-28 06:37:30.000000000 +0200
-+++ linuxcnc-2.7.11/src/rtapi/rtapi.h	2018-03-09 11:13:47.663003028 +0100
-@@ -473,6 +473,26 @@ RTAPI_BEGIN_DECLS
+diff -Naur linuxcnc.orig/src/rtapi/rtapi.h linuxcnc/src/rtapi/rtapi.h
+--- linuxcnc.orig/src/rtapi/rtapi.h	2018-06-18 20:25:19.000000000 +0200
++++ linuxcnc/src/rtapi/rtapi.h	2018-06-29 17:04:15.169661593 +0200
+@@ -473,6 +473,26 @@
  */
      extern int rtapi_task_self(void);
  
@@ -28,10 +28,10 @@ diff -urNp linuxcnc-2.7.11.orig/src/rtapi/rtapi.h linuxcnc-2.7.11/src/rtapi/rtap
  #endif /* RTAPI */
  
  /***********************************************************************
-diff -urNp linuxcnc-2.7.11.orig/src/rtapi/rtapi_uspace.hh linuxcnc-2.7.11/src/rtapi/rtapi_uspace.hh
---- linuxcnc-2.7.11.orig/src/rtapi/rtapi_uspace.hh	2017-07-28 06:37:30.000000000 +0200
-+++ linuxcnc-2.7.11/src/rtapi/rtapi_uspace.hh	2018-03-09 11:13:59.219002690 +0100
-@@ -47,6 +47,8 @@ struct RtapiApp
+diff -Naur linuxcnc.orig/src/rtapi/rtapi_uspace.hh linuxcnc/src/rtapi/rtapi_uspace.hh
+--- linuxcnc.orig/src/rtapi/rtapi_uspace.hh	2018-06-18 20:25:19.000000000 +0200
++++ linuxcnc/src/rtapi/rtapi_uspace.hh	2018-06-29 17:04:15.169661593 +0200
+@@ -47,6 +47,8 @@
      virtual int task_pause(int task_id) = 0;
      virtual int task_resume(int task_id) = 0;
      virtual int task_self() = 0;
@@ -40,7 +40,7 @@ diff -urNp linuxcnc-2.7.11.orig/src/rtapi/rtapi_uspace.hh linuxcnc-2.7.11/src/rt
      virtual void wait() = 0;
      virtual unsigned char do_inb(unsigned int port) = 0;
      virtual void do_outb(unsigned char value, unsigned int port) = 0;
-@@ -71,6 +73,8 @@ struct rtapi_task {
+@@ -71,6 +73,8 @@
    long period;
    struct timespec nextstart;
    unsigned ratio;
@@ -49,10 +49,10 @@ diff -urNp linuxcnc-2.7.11.orig/src/rtapi/rtapi_uspace.hh linuxcnc-2.7.11/src/rt
    void *arg;
    void (*taskcode) (void*);	/* pointer to task function */
  };
-diff -urNp linuxcnc-2.7.11.orig/src/rtapi/uspace_rtapi_app.cc linuxcnc-2.7.11/src/rtapi/uspace_rtapi_app.cc
---- linuxcnc-2.7.11.orig/src/rtapi/uspace_rtapi_app.cc	2017-07-28 06:37:30.000000000 +0200
-+++ linuxcnc-2.7.11/src/rtapi/uspace_rtapi_app.cc	2018-03-09 11:14:33.823001678 +0100
-@@ -519,6 +519,8 @@ struct Posix : RtapiApp
+diff -Naur linuxcnc.orig/src/rtapi/uspace_rtapi_app.cc linuxcnc/src/rtapi/uspace_rtapi_app.cc
+--- linuxcnc.orig/src/rtapi/uspace_rtapi_app.cc	2018-06-18 20:25:19.000000000 +0200
++++ linuxcnc/src/rtapi/uspace_rtapi_app.cc	2018-06-29 17:04:15.169661593 +0200
+@@ -519,6 +519,8 @@
      int task_pause(int task_id);
      int task_resume(int task_id);
      int task_self();
@@ -61,7 +61,7 @@ diff -urNp linuxcnc-2.7.11.orig/src/rtapi/uspace_rtapi_app.cc linuxcnc-2.7.11/sr
      void wait();
      unsigned char do_inb(unsigned int port);
      void do_outb(unsigned char value, unsigned int port);
-@@ -830,6 +832,10 @@ int Posix::task_start(int task_id, unsig
+@@ -841,6 +843,10 @@
    task->period = period_nsec;
    task->ratio = period_nsec / period;
  
@@ -72,7 +72,7 @@ diff -urNp linuxcnc-2.7.11.orig/src/rtapi/uspace_rtapi_app.cc linuxcnc-2.7.11/sr
    struct sched_param param;
    memset(&param, 0, sizeof(param));
    param.sched_priority = task->prio;
-@@ -906,7 +912,7 @@ void *Posix::wrapper(void *arg)
+@@ -917,7 +923,7 @@
  
    struct timespec now;
    clock_gettime(RTAPI_CLOCK, &now);
@@ -81,7 +81,7 @@ diff -urNp linuxcnc-2.7.11.orig/src/rtapi/uspace_rtapi_app.cc linuxcnc-2.7.11/sr
  
    /* call the task function with the task argument */
    (task->taskcode) (task->arg);
-@@ -929,6 +935,21 @@ int Posix::task_self() {
+@@ -940,6 +946,21 @@
      return task - task_array;
  }
  
@@ -103,7 +103,7 @@ diff -urNp linuxcnc-2.7.11.orig/src/rtapi/uspace_rtapi_app.cc linuxcnc-2.7.11/sr
  static bool ts_less(const struct timespec &ta, const struct timespec &tb) {
      if(ta.tv_sec < tb.tv_sec) return 1;
      if(ta.tv_sec > tb.tv_sec) return 0;
-@@ -940,7 +961,7 @@ void Posix::wait() {
+@@ -951,7 +972,7 @@
          pthread_mutex_unlock(&thread_lock);
      pthread_testcancel();
      struct rtapi_task *task = reinterpret_cast<rtapi_task*>(pthread_getspecific(key));
@@ -112,7 +112,7 @@ diff -urNp linuxcnc-2.7.11.orig/src/rtapi/uspace_rtapi_app.cc linuxcnc-2.7.11/sr
      struct timespec now;
      clock_gettime(RTAPI_CLOCK, &now);
      if(ts_less(task->nextstart, now))
-@@ -1040,6 +1061,16 @@ int rtapi_task_self()
+@@ -1051,6 +1072,16 @@
      return App().task_self();
  }
  
