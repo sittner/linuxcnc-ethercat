@@ -102,6 +102,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL2088, LCEC_EL2xxx_VID, LCEC_EL2088_PID, LCEC_EL2088_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2124, LCEC_EL2xxx_VID, LCEC_EL2124_PID, LCEC_EL2124_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2202, LCEC_EL2202_VID, LCEC_EL2202_PID, LCEC_EL2202_PDOS, lcec_el2202_init}, // 2 fast channels with tristate
+  { lcecSlaveTypeEL2612, LCEC_EL2xxx_VID, LCEC_EL2612_PID, LCEC_EL2612_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2622, LCEC_EL2xxx_VID, LCEC_EL2622_PID, LCEC_EL2622_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2808, LCEC_EL2xxx_VID, LCEC_EL2808_PID, LCEC_EL2808_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2798, LCEC_EL2xxx_VID, LCEC_EL2798_PID, LCEC_EL2798_PDOS, lcec_el2xxx_init},
