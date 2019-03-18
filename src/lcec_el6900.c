@@ -29,22 +29,18 @@ typedef struct {
 
 typedef struct {
   hal_u32_t *fsoe_master_cmd;
-  hal_u32_t *fsoe_master_data;
   hal_u32_t *fsoe_master_crc;
   hal_u32_t *fsoe_master_connid;
 
   hal_u32_t *fsoe_slave_cmd;
-  hal_u32_t *fsoe_slave_data;
   hal_u32_t *fsoe_slave_crc;
   hal_u32_t *fsoe_slave_connid;
 
   unsigned int fsoe_master_cmd_os;
-  unsigned int fsoe_master_data_os;
   unsigned int fsoe_master_crc_os;
   unsigned int fsoe_master_connid_os;
 
   unsigned int fsoe_slave_cmd_os;
-  unsigned int fsoe_slave_data_os;
   unsigned int fsoe_slave_crc_os;
   unsigned int fsoe_slave_connid_os;
 } lcec_el6900_fsoe_t;
@@ -88,11 +84,9 @@ static const lcec_pindesc_t slave_pins[] = {
 
 static const lcec_pindesc_t fsoe_pins[] = {
   { HAL_U32, HAL_OUT, offsetof(lcec_el6900_fsoe_t, fsoe_master_cmd), "%s.%s.%s.fsoe-%d-master-cmd" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_el6900_fsoe_t, fsoe_master_data), "%s.%s.%s.fsoe-%d-master-data" },
   { HAL_U32, HAL_OUT, offsetof(lcec_el6900_fsoe_t, fsoe_master_crc), "%s.%s.%s.fsoe-%d-master-crc" },
   { HAL_U32, HAL_OUT, offsetof(lcec_el6900_fsoe_t, fsoe_master_connid), "%s.%s.%s.fsoe-%d-master-connid" },
   { HAL_U32, HAL_OUT, offsetof(lcec_el6900_fsoe_t, fsoe_slave_cmd), "%s.%s.%s.fsoe-%d-slave-cmd" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_el6900_fsoe_t, fsoe_slave_data), "%s.%s.%s.fsoe-%d-slave-data" },
   { HAL_U32, HAL_OUT, offsetof(lcec_el6900_fsoe_t, fsoe_slave_crc), "%s.%s.%s.fsoe-%d-slave-crc" },
   { HAL_U32, HAL_OUT, offsetof(lcec_el6900_fsoe_t, fsoe_slave_connid), "%s.%s.%s.fsoe-%d-slave-connid" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
@@ -205,11 +199,9 @@ int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
 
       // initialize POD entries
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (fsoe_idx << 4), 0x01, &fsoe_data->fsoe_slave_cmd_os, NULL);
-      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7001 + (fsoe_idx << 4), 0x01, &fsoe_data->fsoe_slave_data_os, NULL);
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (fsoe_idx << 4), 0x03, &fsoe_data->fsoe_slave_crc_os, NULL);
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (fsoe_idx << 4), 0x02, &fsoe_data->fsoe_slave_connid_os, NULL);
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (fsoe_idx << 4), 0x01, &fsoe_data->fsoe_master_cmd_os, NULL);
-      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6001 + (fsoe_idx << 4), 0x01, &fsoe_data->fsoe_master_data_os, NULL);
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (fsoe_idx << 4), 0x03, &fsoe_data->fsoe_master_crc_os, NULL);
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (fsoe_idx << 4), 0x02, &fsoe_data->fsoe_master_connid_os, NULL);
 
@@ -245,11 +237,9 @@ void lcec_el6900_read(struct lcec_slave *slave, long period) {
 
   for (i = 0, fsoe_data = hal_data->fsoe; i < hal_data->fsoe_count; i++, fsoe_data++) {
     *(fsoe_data->fsoe_master_cmd) = EC_READ_U8(&pd[fsoe_data->fsoe_master_cmd_os]);
-    *(fsoe_data->fsoe_master_data) = EC_READ_U8(&pd[fsoe_data->fsoe_master_data_os]);
     *(fsoe_data->fsoe_master_crc) = EC_READ_U16(&pd[fsoe_data->fsoe_master_crc_os]);
     *(fsoe_data->fsoe_master_connid) = EC_READ_U16(&pd[fsoe_data->fsoe_master_connid_os]);
     *(fsoe_data->fsoe_slave_cmd) = EC_READ_U8(&pd[fsoe_data->fsoe_slave_cmd_os]);
-    *(fsoe_data->fsoe_slave_data) = EC_READ_U8(&pd[fsoe_data->fsoe_slave_data_os]);
     *(fsoe_data->fsoe_slave_crc) = EC_READ_U16(&pd[fsoe_data->fsoe_slave_crc_os]);
     *(fsoe_data->fsoe_slave_connid) = EC_READ_U16(&pd[fsoe_data->fsoe_slave_connid_os]);
   }
