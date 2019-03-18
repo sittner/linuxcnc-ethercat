@@ -253,6 +253,7 @@ typedef union {
   hal_s32_t s32;
   hal_u32_t u32;
   hal_float_t flt;
+  char str[LCEC_CONF_STR_MAXLEN];
 } LCEC_CONF_MODPARAM_VAL_T;
 
 typedef struct {

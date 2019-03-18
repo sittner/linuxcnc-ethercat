@@ -34,10 +34,19 @@
 #include "lcec_stmds5k.h"
 #include "lcec_el6900.h"
 
+typedef enum {
+  MODPARAM_TYPE_BIT,
+  MODPARAM_TYPE_U32,
+  MODPARAM_TYPE_S32,
+  MODPARAM_TYPE_FLOAT,
+  MODPARAM_TYPE_STRING
+} LCEC_CONF_MODPARAM_TYPE_T;
+
+
 typedef struct {
   const char *name;
   int id;
-  hal_type_t type;
+  LCEC_CONF_MODPARAM_TYPE_T type;
   int pdoMappingCount;
 } LCEC_CONF_MODPARAM_DESC_T;
 
@@ -53,13 +62,13 @@ typedef struct {
 } LCEC_CONF_HAL_T;
 
 static const LCEC_CONF_MODPARAM_DESC_T slaveStMDS5kParams[] = {
-  { "isMultiturn", LCEC_STMDS5K_PARAM_MULTITURN, HAL_BIT, 0 } ,
-  { "extEnc", LCEC_STMDS5K_PARAM_EXTENC, HAL_U32, LCEC_STMDS5K_EXTINC_PDOS } ,
+  { "isMultiturn", LCEC_STMDS5K_PARAM_MULTITURN, MODPARAM_TYPE_BIT, 0 } ,
+  { "extEnc", LCEC_STMDS5K_PARAM_EXTENC, MODPARAM_TYPE_U32, LCEC_STMDS5K_EXTINC_PDOS } ,
   { NULL }
 };
 
 static const LCEC_CONF_MODPARAM_DESC_T slaveEL6900Params[] = {
-  { "fsoeSlaveIdx", LCEC_EL6900_PARAM_SLAVEID, HAL_U32, LCEC_EL6900_PARAM_SLAVEID_PDOS } ,
+  { "fsoeSlaveIdx", LCEC_EL6900_PARAM_SLAVEID, MODPARAM_TYPE_U32, LCEC_EL6900_PARAM_SLAVEID_PDOS } ,
   { NULL }
 };
 
@@ -1380,7 +1389,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
   // try to parse value
   char *s = NULL;
   switch (modParams->type) {
-    case HAL_BIT:
+    case MODPARAM_TYPE_BIT:
       if ((strcmp("1", pval) == 0) || (strcasecmp("TRUE", pval) == 0)) {
         p->value.bit = 1;
       } else if ((strcmp("0", pval) == 0) || (strcasecmp("FALSE", pval)) == 0) {
@@ -1391,7 +1400,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         return;
       }
       break;
-    case HAL_U32:
+    case MODPARAM_TYPE_U32:
       p->value.u32 = strtoul(pval, &s, 0);
       if (*s != 0) {
         fprintf(stderr, "%s: ERROR: Invalid modParam u32 value '%s' for param '%s'\n", modname, pval, pname);
@@ -1399,7 +1408,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         return;
       }
       break;
-    case HAL_S32:
+    case MODPARAM_TYPE_S32:
       p->value.s32 = strtol(pval, &s, 0);
       if (*s != 0) {
         fprintf(stderr, "%s: ERROR: Invalid modParam s32 value '%s' for param '%s'\n", modname, pval, pname);
@@ -1407,7 +1416,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         return;
       }
       break;
-    case HAL_FLOAT:
+    case MODPARAM_TYPE_FLOAT:
       p->value.flt = strtod(pval, &s);
       if (*s != 0) {
         fprintf(stderr, "%s: ERROR: Invalid modParam float value '%s' for param '%s'\n", modname, pval, pname);
@@ -1415,6 +1424,9 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         return;
       }
       break;
+    case MODPARAM_TYPE_STRING:
+      strncpy(p->value.str, pval, LCEC_CONF_STR_MAXLEN);
+      return;
     default:
       p->value.u32 = 0;
       break;
