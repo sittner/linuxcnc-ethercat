@@ -20,6 +20,14 @@
 #include "lcec_el6900.h"
 
 typedef struct {
+  hal_bit_t *pin;
+
+  unsigned int os;
+  unsigned int bp;
+
+} lcec_el6900_fsoe_io_t;
+
+typedef struct {
   hal_u32_t *fsoe_master_cmd;
   hal_u32_t *fsoe_master_data;
   hal_u32_t *fsoe_master_crc;
@@ -46,25 +54,7 @@ typedef struct {
   lcec_el6900_fsoe_t *fsoe;
   int fsoe_count;
 
-  hal_bit_t *std_in_0;
-  hal_bit_t *std_in_1;
-  hal_bit_t *std_in_2;
-  hal_bit_t *std_in_3;
-  hal_bit_t *std_in_4;
-  hal_bit_t *std_in_5;
-  hal_bit_t *std_in_6;
-  hal_bit_t *std_in_7;
   hal_u32_t *control;
-
-  hal_bit_t *std_out_0;
-  hal_bit_t *std_out_1;
-  hal_bit_t *std_out_2;
-  hal_bit_t *std_out_3;
-  hal_bit_t *std_out_4;
-  hal_bit_t *std_out_5;
-  hal_bit_t *std_out_6;
-  hal_bit_t *std_out_7;
-  hal_bit_t *std_out_8;
   hal_u32_t *state;
   hal_bit_t *login_active;
   hal_bit_t *input_size_missmatch;
@@ -72,42 +62,13 @@ typedef struct {
   hal_bit_t *txpdo_state;
   hal_bit_t *txpdo_toggle;
 
-  unsigned int std_in_0_os;
-  unsigned int std_in_0_bp;
-  unsigned int std_in_1_os;
-  unsigned int std_in_1_bp;
-  unsigned int std_in_2_os;
-  unsigned int std_in_2_bp;
-  unsigned int std_in_3_os;
-  unsigned int std_in_3_bp;
-  unsigned int std_in_4_os;
-  unsigned int std_in_4_bp;
-  unsigned int std_in_5_os;
-  unsigned int std_in_5_bp;
-  unsigned int std_in_6_os;
-  unsigned int std_in_6_bp;
-  unsigned int std_in_7_os;
-  unsigned int std_in_7_bp;
+  int std_ins_count;
+  lcec_el6900_fsoe_io_t std_ins[LCEC_EL6900_DIO_MAX_COUNT];
+
+  int std_outs_count;
+  lcec_el6900_fsoe_io_t std_outs[LCEC_EL6900_DIO_MAX_COUNT];
 
   unsigned int control_os;
-
-  unsigned int std_out_0_os;
-  unsigned int std_out_0_bp;
-  unsigned int std_out_1_os;
-  unsigned int std_out_1_bp;
-  unsigned int std_out_2_os;
-  unsigned int std_out_2_bp;
-  unsigned int std_out_3_os;
-  unsigned int std_out_3_bp;
-  unsigned int std_out_4_os;
-  unsigned int std_out_4_bp;
-  unsigned int std_out_5_os;
-  unsigned int std_out_5_bp;
-  unsigned int std_out_6_os;
-  unsigned int std_out_6_bp;
-  unsigned int std_out_7_os;
-  unsigned int std_out_7_bp;
-
   unsigned int state_os;
   unsigned int login_active_os;
   unsigned int login_active_bp;
@@ -123,23 +84,7 @@ typedef struct {
 } lcec_el6900_data_t;
 
 static const lcec_pindesc_t slave_pins[] = {
-  { HAL_BIT, HAL_IN, offsetof(lcec_el6900_data_t, std_in_0), "%s.%s.%s.std-in-0" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_el6900_data_t, std_in_1), "%s.%s.%s.std-in-1" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_el6900_data_t, std_in_2), "%s.%s.%s.std-in-2" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_el6900_data_t, std_in_3), "%s.%s.%s.std-in-3" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_el6900_data_t, std_in_4), "%s.%s.%s.std-in-4" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_el6900_data_t, std_in_5), "%s.%s.%s.std-in-5" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_el6900_data_t, std_in_6), "%s.%s.%s.std-in-6" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_el6900_data_t, std_in_7), "%s.%s.%s.std-in-7" },
   { HAL_U32, HAL_IN, offsetof(lcec_el6900_data_t, control), "%s.%s.%s.control" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, std_out_0), "%s.%s.%s.std-out-0" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, std_out_1), "%s.%s.%s.std-out-1" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, std_out_2), "%s.%s.%s.std-out-2" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, std_out_3), "%s.%s.%s.std-out-3" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, std_out_4), "%s.%s.%s.std-out-4" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, std_out_5), "%s.%s.%s.std-out-5" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, std_out_6), "%s.%s.%s.std-out-6" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, std_out_7), "%s.%s.%s.std-out-7" },
   { HAL_U32, HAL_OUT, offsetof(lcec_el6900_data_t, state), "%s.%s.%s.state" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, login_active), "%s.%s.%s.login-active" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_el6900_data_t, input_size_missmatch), "%s.%s.%s.input-size-missmatch" },
@@ -164,6 +109,39 @@ static const lcec_pindesc_t fsoe_pins[] = {
 
 void lcec_el6900_read(struct lcec_slave *slave, long period);
 void lcec_el6900_write(struct lcec_slave *slave, long period);
+
+static int init_std_pdos(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int pid, lcec_el6900_fsoe_io_t *io, int index, hal_pin_dir_t dir) {
+  lcec_master_t *master = slave->master;
+  lcec_slave_modparam_t *p;
+  int count, err;
+
+  for (p = slave->modparams, count = 0; p != NULL && p->id >= 0; p++) {
+    // skip not matching params
+    if (p->id != pid) {
+      continue;
+    }
+
+    // check count
+    if (count >= LCEC_EL6900_DIO_MAX_COUNT) {
+      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: maximum stdio count exceeded.\n", master->name, slave->name);
+      return -EINVAL;
+    }
+
+    // initialize POD entry
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, index, 0x01 + count, &io->os, &io->bp);
+
+    // export pin
+    if ((err = lcec_pin_newf(HAL_BIT, dir, (void *) &io->pin, "%s.%s.%s.%s", LCEC_MODULE_NAME, master->name, slave->name, p->value.str)) != 0) {
+      return err;
+    }
+
+    // next item
+    io++;
+    count++;
+  }
+
+  return count;
+}
 
 int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
 
@@ -198,23 +176,7 @@ int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   hal_data->fsoe_count = fsoe_idx;
 
   // initialize POD entries
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf201, 0x01, &hal_data->std_in_0_os, &hal_data->std_in_0_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf201, 0x02, &hal_data->std_in_1_os, &hal_data->std_in_1_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf201, 0x03, &hal_data->std_in_2_os, &hal_data->std_in_2_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf201, 0x04, &hal_data->std_in_3_os, &hal_data->std_in_3_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf201, 0x05, &hal_data->std_in_4_os, &hal_data->std_in_4_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf201, 0x06, &hal_data->std_in_5_os, &hal_data->std_in_5_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf201, 0x07, &hal_data->std_in_6_os, &hal_data->std_in_6_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf201, 0x08, &hal_data->std_in_7_os, &hal_data->std_in_7_bp);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf200, 0x01, &hal_data->control_os, NULL);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf101, 0x01, &hal_data->std_out_0_os, &hal_data->std_out_0_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf101, 0x02, &hal_data->std_out_1_os, &hal_data->std_out_1_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf101, 0x03, &hal_data->std_out_2_os, &hal_data->std_out_2_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf101, 0x04, &hal_data->std_out_3_os, &hal_data->std_out_3_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf101, 0x05, &hal_data->std_out_4_os, &hal_data->std_out_4_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf101, 0x06, &hal_data->std_out_5_os, &hal_data->std_out_5_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf101, 0x07, &hal_data->std_out_6_os, &hal_data->std_out_6_bp);
-  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf101, 0x08, &hal_data->std_out_7_os, &hal_data->std_out_7_bp);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf100, 0x01, &hal_data->state_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf100, 0x08, &hal_data->login_active_os, &hal_data->login_active_bp);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf100, 0x09, &hal_data->input_size_missmatch_os, &hal_data->input_size_missmatch_bp);
@@ -225,6 +187,16 @@ int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   // export pins
   if ((err = lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
     return err;
+  }
+
+  // map and export stdios
+  hal_data->std_ins_count = init_std_pdos(slave, pdo_entry_regs, LCEC_EL6900_PARAM_STDIN_NAME, hal_data->std_ins, 0xf201, HAL_IN);
+  if (hal_data->std_ins_count < 0) {
+    return hal_data->std_ins_count;
+  }
+  hal_data->std_outs_count = init_std_pdos(slave, pdo_entry_regs, LCEC_EL6900_PARAM_STDOUT_NAME, hal_data->std_outs, 0xf101, HAL_OUT);
+  if (hal_data->std_outs_count < 0) {
+    return hal_data->std_outs_count;
   }
 
   // map and export fsoe slave data
@@ -270,21 +242,18 @@ void lcec_el6900_read(struct lcec_slave *slave, long period) {
   uint8_t *pd = master->process_data;
   lcec_el6900_fsoe_t *fsoe_data;
   int i;
+  lcec_el6900_fsoe_io_t *io;
 
-  *(hal_data->std_out_0) = EC_READ_BIT(&pd[hal_data->std_out_0_os], hal_data->std_out_0_bp);
-  *(hal_data->std_out_1) = EC_READ_BIT(&pd[hal_data->std_out_1_os], hal_data->std_out_1_bp);
-  *(hal_data->std_out_2) = EC_READ_BIT(&pd[hal_data->std_out_2_os], hal_data->std_out_2_bp);
-  *(hal_data->std_out_3) = EC_READ_BIT(&pd[hal_data->std_out_3_os], hal_data->std_out_3_bp);
-  *(hal_data->std_out_4) = EC_READ_BIT(&pd[hal_data->std_out_4_os], hal_data->std_out_4_bp);
-  *(hal_data->std_out_5) = EC_READ_BIT(&pd[hal_data->std_out_5_os], hal_data->std_out_5_bp);
-  *(hal_data->std_out_6) = EC_READ_BIT(&pd[hal_data->std_out_6_os], hal_data->std_out_6_bp);
-  *(hal_data->std_out_7) = EC_READ_BIT(&pd[hal_data->std_out_7_os], hal_data->std_out_7_bp);
   *(hal_data->state) = EC_READ_U8(&pd[hal_data->state_os]) & 0x03;
   *(hal_data->login_active) = EC_READ_BIT(&pd[hal_data->login_active_os], hal_data->login_active_bp);
   *(hal_data->input_size_missmatch) = EC_READ_BIT(&pd[hal_data->input_size_missmatch_os], hal_data->input_size_missmatch_bp);
   *(hal_data->output_size_missmatch) = EC_READ_BIT(&pd[hal_data->output_size_missmatch_os], hal_data->output_size_missmatch_bp);
   *(hal_data->txpdo_state) = EC_READ_BIT(&pd[hal_data->txpdo_state_os], hal_data->txpdo_state_bp);
   *(hal_data->txpdo_toggle) = EC_READ_BIT(&pd[hal_data->txpdo_toggle_os], hal_data->txpdo_toggle_bp);
+
+  for (i = 0, io = hal_data->std_outs; i < hal_data->std_outs_count; i++, io++) {
+    *(io->pin) = EC_READ_BIT(&pd[io->os], io->bp);
+  }
 
   for (i = 0, fsoe_data = hal_data->fsoe; i < hal_data->fsoe_count; i++, fsoe_data++) {
     *(fsoe_data->fsoe_master_cmd) = EC_READ_U8(&pd[fsoe_data->fsoe_master_cmd_os]);
@@ -302,16 +271,13 @@ void lcec_el6900_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el6900_data_t *hal_data = (lcec_el6900_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
-
-  EC_WRITE_BIT(&pd[hal_data->std_in_0_os], hal_data->std_in_0_bp, *(hal_data->std_in_0));
-  EC_WRITE_BIT(&pd[hal_data->std_in_1_os], hal_data->std_in_1_bp, *(hal_data->std_in_1));
-  EC_WRITE_BIT(&pd[hal_data->std_in_2_os], hal_data->std_in_2_bp, *(hal_data->std_in_2));
-  EC_WRITE_BIT(&pd[hal_data->std_in_3_os], hal_data->std_in_3_bp, *(hal_data->std_in_3));
-  EC_WRITE_BIT(&pd[hal_data->std_in_4_os], hal_data->std_in_4_bp, *(hal_data->std_in_4));
-  EC_WRITE_BIT(&pd[hal_data->std_in_5_os], hal_data->std_in_5_bp, *(hal_data->std_in_5));
-  EC_WRITE_BIT(&pd[hal_data->std_in_6_os], hal_data->std_in_6_bp, *(hal_data->std_in_6));
-  EC_WRITE_BIT(&pd[hal_data->std_in_7_os], hal_data->std_in_7_bp, *(hal_data->std_in_7));
+  lcec_el6900_fsoe_io_t *io;
+  int i;
 
   EC_WRITE_U16(&pd[hal_data->control_os], *(hal_data->control));
+
+  for (i = 0, io = hal_data->std_ins; i < hal_data->std_ins_count; i++, io++) {
+    EC_WRITE_BIT(&pd[io->os], io->bp, *(io->pin));
+  }
 }
 
