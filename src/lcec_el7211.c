@@ -290,7 +290,7 @@ void lcec_el7211_read(struct lcec_slave *slave, long period) {
 
   // update position feedback
   pos_cnt = EC_READ_U32(&pd[hal_data->pos_fb_pdo_os]);
-  class_enc_update(&hal_data->enc, hal_data->pos_resolution, hal_data->scale_rcpt, pos_cnt, 0, false);
+  class_enc_update(&hal_data->enc, hal_data->pos_resolution, hal_data->scale_rcpt, pos_cnt, 0, 0);
 }
 
 void lcec_el7211_write(struct lcec_slave *slave, long period) {

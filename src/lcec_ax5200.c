@@ -52,7 +52,7 @@ typedef struct {
   double scale_rcpt;
   double vel_output_scale;
 
-  bool toggle;
+  int toggle;
 
 } lcec_ax5200_chan_t;
 
@@ -273,7 +273,7 @@ void lcec_ax5200_read(struct lcec_slave *slave, long period) {
 
     // update position feedback
     pos_cnt = EC_READ_U32(&pd[chan->pos_fb_pdo_os]);
-    class_enc_update(&chan->enc, chan->pos_resolution, chan->scale_rcpt, pos_cnt, 0, false);
+    class_enc_update(&chan->enc, chan->pos_resolution, chan->scale_rcpt, pos_cnt, 0, 0);
   }
 }
 

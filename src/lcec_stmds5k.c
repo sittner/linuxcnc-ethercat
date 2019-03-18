@@ -442,10 +442,10 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
 
   // update position feedback
   pos_cnt = EC_READ_U32(&pd[hal_data->pos_mot_pdo_os]);
-  class_enc_update(&hal_data->enc, STMDS5K_PPREV, hal_data->pos_scale_rcpt, pos_cnt, 0, false);
+  class_enc_update(&hal_data->enc, STMDS5K_PPREV, hal_data->pos_scale_rcpt, pos_cnt, 0, 0);
   if (hal_data->extenc_conf != NULL) {
     pos_cnt = EC_READ_U32(&pd[hal_data->extinc_pdo_os]);
-    class_enc_update(&hal_data->extenc, hal_data->extenc_conf->pprev, hal_data->extenc_scale_rcpt, pos_cnt >> hal_data->extenc_conf->shift_bits, 0, false);
+    class_enc_update(&hal_data->extenc, hal_data->extenc_conf->pprev, hal_data->extenc_scale_rcpt, pos_cnt >> hal_data->extenc_conf->shift_bits, 0, 0);
   }
 }
 

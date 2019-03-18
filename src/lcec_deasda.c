@@ -326,11 +326,11 @@ void lcec_deasda_read(struct lcec_slave *slave, long period) {
 
   // update raw position counter
   pos_cnt = EC_READ_U32(&pd[hal_data->currpos_pdo_os]);
-  class_enc_update(&hal_data->enc, hal_data->pprev, hal_data->pos_scale, pos_cnt, 0, false);
+  class_enc_update(&hal_data->enc, hal_data->pprev, hal_data->pos_scale, pos_cnt, 0, 0);
 
   // update external encoder counter
   pos_cnt = EC_READ_U32(&pd[hal_data->extenc_pdo_os]);
-  class_enc_update(&hal_data->extenc, 1, hal_data->extenc_scale, pos_cnt, 0, false);
+  class_enc_update(&hal_data->extenc, 1, hal_data->extenc_scale, pos_cnt, 0, 0);
 }
 
 void lcec_deasda_write(struct lcec_slave *slave, long period) {

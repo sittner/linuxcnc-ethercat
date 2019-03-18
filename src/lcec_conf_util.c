@@ -133,7 +133,7 @@ static void xml_end_handler(void *data, const char *el) {
 int parseHex(const char *s, int slen, uint8_t *buf) {
   char c;
   int len;
-  bool nib;
+  int nib;
   uint8_t tmp;
 
   for (len = 0, nib = 0, tmp = 0; (slen == -1 || slen > 0) && (c = *s) != 0; s++) {
