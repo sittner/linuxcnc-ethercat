@@ -163,6 +163,9 @@ static void xml_data_handler(void *data, const XML_Char *s, int len) {
   switch (inst->state) {
     case icmdTypeCoeIcmdTrans:
       if (len == 2) {
+        if (strncmp("IP", s, len) == 0) {
+          return;
+        }
         if (strncmp("PS", s, len) == 0) {
           return;
         }
