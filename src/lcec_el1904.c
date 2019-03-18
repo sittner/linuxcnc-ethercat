@@ -111,11 +111,11 @@ void lcec_el1904_read(struct lcec_slave *slave, long period) {
 
   copy_fsoe_data(slave, hal_data->fsoe_slave_cmd_os, hal_data->fsoe_master_cmd_os);
 
-  *(hal_data->fsoe_slave_cmd) = EC_READ_U16(&pd[hal_data->fsoe_slave_cmd_os]);
+  *(hal_data->fsoe_slave_cmd) = EC_READ_U8(&pd[hal_data->fsoe_slave_cmd_os]);
   *(hal_data->fsoe_slave_crc) = EC_READ_U16(&pd[hal_data->fsoe_slave_crc_os]);
   *(hal_data->fsoe_slave_connid) = EC_READ_U16(&pd[hal_data->fsoe_slave_connid_os]);
 
-  *(hal_data->fsoe_master_cmd) = EC_READ_U16(&pd[hal_data->fsoe_master_cmd_os]);
+  *(hal_data->fsoe_master_cmd) = EC_READ_U8(&pd[hal_data->fsoe_master_cmd_os]);
   *(hal_data->fsoe_master_crc) = EC_READ_U16(&pd[hal_data->fsoe_master_crc_os]);
   *(hal_data->fsoe_master_connid) = EC_READ_U16(&pd[hal_data->fsoe_master_connid_os]);
 
