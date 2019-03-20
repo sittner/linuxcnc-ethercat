@@ -84,6 +84,12 @@ typedef int (*lcec_slave_init_t) (int comp_id, struct lcec_slave *slave, ec_pdo_
 typedef void (*lcec_slave_cleanup_t) (struct lcec_slave *slave);
 typedef void (*lcec_slave_rw_t) (struct lcec_slave *slave, long period);
 
+typedef struct {
+  int slave_data_len;
+  int master_data_len;
+  int data_channels;
+} LCEC_CONF_FSOE_T;
+
 typedef struct lcec_master_data {
   hal_u32_t *slaves_responding;
   hal_bit_t *state_init;
@@ -179,6 +185,7 @@ typedef struct lcec_slave {
   struct lcec_slave *next;
   struct lcec_master *master;
   int index;
+  LCEC_SLAVE_TYPE_T type;
   char name[LCEC_CONF_STR_MAXLEN];
   uint32_t vid;
   uint32_t pid;
@@ -201,7 +208,7 @@ typedef struct lcec_slave {
   lcec_slave_sdoconf_t *sdo_config;
   lcec_slave_idnconf_t *idn_config;
   lcec_slave_modparam_t *modparams;
-  LCEC_CONF_FSOE_T fsoeConf;
+  const LCEC_CONF_FSOE_T *fsoeConf;
   unsigned int *fsoe_slave_offset;
   unsigned int *fsoe_master_offset;
 } lcec_slave_t;

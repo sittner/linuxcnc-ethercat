@@ -161,12 +161,6 @@ typedef struct {
 } LCEC_CONF_MASTER_T;
 
 typedef struct {
-  int slave_data_len;
-  int master_data_len;
-  int data_channels;
-} LCEC_CONF_FSOE_T;
-
-typedef struct {
   LCEC_CONF_TYPE_T confType;
   int index;
   LCEC_SLAVE_TYPE_T type;
@@ -181,7 +175,6 @@ typedef struct {
   size_t idnConfigLength;
   unsigned int modParamCount;
   char name[LCEC_CONF_STR_MAXLEN];
-  LCEC_CONF_FSOE_T fsoeConf;
 } LCEC_CONF_SLAVE_T;
 
 typedef struct {

@@ -138,6 +138,7 @@ int lcec_el6900_preinit(struct lcec_slave *slave) {
   lcec_slave_modparam_t *p;
   int index, stdin_count, stdout_count;
   struct lcec_slave *fsoe_slave;
+  const LCEC_CONF_FSOE_T *fsoeConf;
 
   slave->pdo_entry_count = LCEC_EL6900_PDOS;
 
@@ -153,12 +154,14 @@ int lcec_el6900_preinit(struct lcec_slave *slave) {
           rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: slave index %d not found\n", master->name, slave->name, index);
           return -EINVAL;
         }
-        if (!(fsoe_slave->fsoeConf.data_channels > 0)) {
+
+        fsoeConf = fsoe_slave->fsoeConf;
+        if (fsoeConf == NULL) {
           rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: slave index %d is not a fsoe slave\n", master->name, slave->name, index);
           return -EINVAL;
         }
 
-        slave->pdo_entry_count += LCEC_EL6900_PARAM_SLAVE_PDOS + LCEC_EL6900_PARAM_SLAVE_CH_PDOS * fsoe_slave->fsoeConf.data_channels;
+        slave->pdo_entry_count += LCEC_EL6900_PARAM_SLAVE_PDOS + LCEC_EL6900_PARAM_SLAVE_CH_PDOS * fsoeConf->data_channels;
         break;
 
       case LCEC_EL6900_PARAM_STDIN_NAME:
@@ -193,6 +196,8 @@ int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   lcec_slave_modparam_t *p;
   int fsoe_idx, index, err;
   lcec_el6900_fsoe_crc_t *crc;
+  struct lcec_slave *fsoe_slave;
+  const LCEC_CONF_FSOE_T *fsoeConf;
 
   // initialize callbacks
   slave->proc_read = lcec_el6900_read;
@@ -246,13 +251,15 @@ int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     if (p->id == LCEC_EL6900_PARAM_SLAVEID) {
       // find slave
       index = p->value.u32;
-      fsoe_data->fsoe_slave = lcec_slave_by_index(master, index);
-      fsoe_data->fsoe_slave->fsoe_slave_offset = &fsoe_data->fsoe_slave_cmd_os;
-      fsoe_data->fsoe_slave->fsoe_master_offset = &fsoe_data->fsoe_master_cmd_os;
+      fsoe_slave = lcec_slave_by_index(master, index);
+      fsoe_data->fsoe_slave = fsoe_slave;
+      fsoe_slave->fsoe_slave_offset = &fsoe_data->fsoe_slave_cmd_os;
+      fsoe_slave->fsoe_master_offset = &fsoe_data->fsoe_master_cmd_os;
+      fsoeConf = fsoe_slave->fsoeConf;
 
       // alloc crc hal memory
-      if ((fsoe_data->fsoe_crc = hal_malloc(fsoe_data->fsoe_slave->fsoeConf.data_channels * sizeof(lcec_el6900_fsoe_crc_t))) == NULL) {
-        rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for fsoe_slave %s.%s crc data failed\n", master->name, fsoe_data->fsoe_slave->name);
+      if ((fsoe_data->fsoe_crc = hal_malloc(fsoeConf->data_channels * sizeof(lcec_el6900_fsoe_crc_t))) == NULL) {
+        rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for fsoe_slave %s.%s crc data failed\n", master->name, fsoe_slave->name);
         return -EIO;
       }
       memset(fsoe_data->fsoe_crc, 0, sizeof(lcec_el6900_fsoe_crc_t));
@@ -269,7 +276,7 @@ int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
       }
 
       // map CRC PDOS
-      for (index = 0, crc = fsoe_data->fsoe_crc; index < fsoe_data->fsoe_slave->fsoeConf.data_channels; index++, crc++) {
+      for (index = 0, crc = fsoe_data->fsoe_crc; index < fsoeConf->data_channels; index++, crc++) {
         LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + (fsoe_idx << 4), 0x03 + index, &crc->fsoe_slave_crc_os, NULL);
         LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (fsoe_idx << 4), 0x03 + index, &crc->fsoe_master_crc_os, NULL);
         if ((err = lcec_pin_newf_list(crc, fsoe_crc_pins, LCEC_MODULE_NAME, master->name, slave->name, fsoe_idx, index)) != 0) {
@@ -293,6 +300,8 @@ void lcec_el6900_read(struct lcec_slave *slave, long period) {
   int i, crc_idx;
   lcec_el6900_fsoe_io_t *io;
   lcec_el6900_fsoe_crc_t *crc;
+  struct lcec_slave *fsoe_slave;
+  const LCEC_CONF_FSOE_T *fsoeConf;
 
   *(hal_data->state) = EC_READ_U8(&pd[hal_data->state_os]) & 0x03;
   *(hal_data->login_active) = EC_READ_BIT(&pd[hal_data->login_active_os], hal_data->login_active_bp);
@@ -304,11 +313,13 @@ void lcec_el6900_read(struct lcec_slave *slave, long period) {
   }
 
   for (i = 0, fsoe_data = hal_data->fsoe; i < hal_data->fsoe_count; i++, fsoe_data++) {
+    fsoe_slave = fsoe_data->fsoe_slave;
+    fsoeConf = fsoe_slave->fsoeConf;
     *(fsoe_data->fsoe_master_cmd) = EC_READ_U8(&pd[fsoe_data->fsoe_master_cmd_os]);
     *(fsoe_data->fsoe_master_connid) = EC_READ_U16(&pd[fsoe_data->fsoe_master_connid_os]);
     *(fsoe_data->fsoe_slave_cmd) = EC_READ_U8(&pd[fsoe_data->fsoe_slave_cmd_os]);
     *(fsoe_data->fsoe_slave_connid) = EC_READ_U16(&pd[fsoe_data->fsoe_slave_connid_os]);
-    for (crc_idx = 0, crc = fsoe_data->fsoe_crc; crc_idx < fsoe_data->fsoe_slave->fsoeConf.data_channels; crc_idx++, crc++) {
+    for (crc_idx = 0, crc = fsoe_data->fsoe_crc; crc_idx < fsoeConf->data_channels; crc_idx++, crc++) {
       *(crc->fsoe_master_crc) = EC_READ_U16(&pd[crc->fsoe_master_crc_os]);
       *(crc->fsoe_slave_crc) = EC_READ_U16(&pd[crc->fsoe_slave_crc_os]);
     }

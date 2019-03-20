@@ -177,9 +177,9 @@ static const lcec_typelist_t types[] = {
 
   // FSoE devices
   { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, 0, lcec_el6900_preinit, lcec_el6900_init},
-  { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, NULL, lcec_el1904_init},
-  { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, NULL, lcec_el2904_init},
-  { lcecSlaveTypeAX5805, LCEC_AX5805_VID, LCEC_AX5805_PID, LCEC_AX5805_PDOS, NULL, lcec_ax5805_init},
+  { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, lcec_el1904_preinit, lcec_el1904_init},
+  { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, lcec_el2904_preinit, lcec_el2904_init},
+  { lcecSlaveTypeAX5805, LCEC_AX5805_VID, LCEC_AX5805_PID, LCEC_AX5805_PDOS, lcec_ax5805_preinit, lcec_ax5805_init},
 
   // multi axis interface
   { lcecSlaveTypeEM7004, LCEC_EM7004_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, NULL, lcec_em7004_init},
@@ -620,9 +620,9 @@ int lcec_parse_config(void) {
         modparams = NULL;
 
         slave->index = slave_conf->index;
+        slave->type = slave_conf->type;
         strncpy(slave->name, slave_conf->name, LCEC_CONF_STR_MAXLEN);
         slave->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
-        memcpy(&slave->fsoeConf, &slave_conf->fsoeConf, sizeof(LCEC_CONF_FSOE_T));
         slave->master = master;
 
         // add slave to list
@@ -996,16 +996,28 @@ int lcec_parse_config(void) {
 
   // allocate PDO entity memory
   for (master = first_master; master != NULL; master = master->next) {
-    // update dynamic pdo mapping count and sum required pdo mappings
+    // stage 1 preinit: process all but EL6900s
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
       // call preinit function
-      if (slave->proc_preinit != NULL) {
+      if (slave->type != lcecSlaveTypeEL6900 && slave->proc_preinit != NULL) {
         if (slave->proc_preinit(slave) < 0) {
           goto fail2;
         }
       }
+    }
 
-      // update master's POD entry count
+    // stage 2 preinit: process only EL6900s (this depends on initialized fsoeConf data)
+    for (slave = master->first_slave; slave != NULL; slave = slave->next) {
+      // call preinit function
+      if (slave->type == lcecSlaveTypeEL6900 && slave->proc_preinit != NULL) {
+        if (slave->proc_preinit(slave) < 0) {
+          goto fail2;
+        }
+      }
+    }
+
+    // stage 3 preinit: sum required pdo mappings
+    for (slave = master->first_slave; slave != NULL; slave = slave->next) {
       master->pdo_entry_count += slave->pdo_entry_count;
     }
 
@@ -1578,7 +1590,11 @@ lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index) {
 void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigned int master_offset) {
   lcec_master_t *master = slave->master;
   uint8_t *pd = master->process_data;
-  LCEC_CONF_FSOE_T *fsoeConf = &slave->fsoeConf;
+  const LCEC_CONF_FSOE_T *fsoeConf = slave->fsoeConf;
+
+  if (fsoeConf == NULL) {
+    return;
+  }
 
   if (slave->fsoe_slave_offset != NULL) {
     memcpy(&pd[*(slave->fsoe_slave_offset)], &pd[slave_offset], LCEC_FSOE_SIZE(fsoeConf->data_channels, fsoeConf->slave_data_len));

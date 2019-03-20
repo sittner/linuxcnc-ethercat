@@ -26,6 +26,7 @@
 
 #define LCEC_EL1904_PDOS 10
 
+int lcec_el1904_preinit(struct lcec_slave *slave);
 int lcec_el1904_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
