@@ -998,7 +998,6 @@ int lcec_parse_config(void) {
   for (master = first_master; master != NULL; master = master->next) {
     // stage 1 preinit: process all but EL6900s
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
-      // call preinit function
       if (slave->type != lcecSlaveTypeEL6900 && slave->proc_preinit != NULL) {
         if (slave->proc_preinit(slave) < 0) {
           goto fail2;
@@ -1008,7 +1007,6 @@ int lcec_parse_config(void) {
 
     // stage 2 preinit: process only EL6900s (this depends on initialized fsoeConf data)
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
-      // call preinit function
       if (slave->type == lcecSlaveTypeEL6900 && slave->proc_preinit != NULL) {
         if (slave->proc_preinit(slave) < 0) {
           goto fail2;
