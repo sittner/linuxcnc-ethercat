@@ -1417,6 +1417,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         return;
       }
       break;
+
     case MODPARAM_TYPE_U32:
       p->value.u32 = strtoul(pval, &s, 0);
       if (*s != 0) {
@@ -1425,6 +1426,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         return;
       }
       break;
+
     case MODPARAM_TYPE_S32:
       p->value.s32 = strtol(pval, &s, 0);
       if (*s != 0) {
@@ -1433,6 +1435,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         return;
       }
       break;
+
     case MODPARAM_TYPE_FLOAT:
       p->value.flt = strtod(pval, &s);
       if (*s != 0) {
@@ -1441,9 +1444,11 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         return;
       }
       break;
+
     case MODPARAM_TYPE_STRING:
-      strncpy(p->value.str, pval, LCEC_CONF_STR_MAXLEN);
-      return;
+      strncpy(p->value.str, pval, LCEC_CONF_STR_MAXLEN - 1);
+      break;
+
     default:
       p->value.u32 = 0;
       break;
