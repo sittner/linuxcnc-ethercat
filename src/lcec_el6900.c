@@ -234,10 +234,12 @@ int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   if (hal_data->std_ins_count < 0) {
     return hal_data->std_ins_count;
   }
+  pdo_entry_regs += hal_data->std_ins_count;
   hal_data->std_outs_count = init_std_pdos(slave, pdo_entry_regs, LCEC_EL6900_PARAM_STDOUT_NAME, hal_data->std_outs, 0xf101, HAL_OUT);
   if (hal_data->std_outs_count < 0) {
     return hal_data->std_outs_count;
   }
+  pdo_entry_regs += hal_data->std_outs_count;
 
   // map and export fsoe slave data
   for (fsoe_idx = 0, fsoe_data = hal_data->fsoe, p = slave->modparams; p != NULL && p->id >= 0; p++) {
