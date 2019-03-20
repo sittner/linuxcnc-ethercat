@@ -79,6 +79,12 @@ static const LCEC_CONF_FSOE_T slaveEL2904FsoeConf = {
   .data_channels = 1
 };
 
+static const LCEC_CONF_FSOE_T slaveAX5805FsoeConf = {
+  .slave_data_len = 2,
+  .master_data_len = 2,
+  .data_channels = 2
+};
+
 static const LCEC_CONF_MODPARAM_DESC_T slaveEL6900Params[] = {
   { "fsoeSlaveIdx", LCEC_EL6900_PARAM_SLAVEID, MODPARAM_TYPE_U32 } ,
   { "stdInName", LCEC_EL6900_PARAM_STDIN_NAME, MODPARAM_TYPE_STRING } ,
@@ -206,6 +212,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL6900", lcecSlaveTypeEL6900, slaveEL6900Params, NULL },
   { "EL1904", lcecSlaveTypeEL1904, NULL, &slaveEL1904FsoeConf },
   { "EL2904", lcecSlaveTypeEL2904, NULL, &slaveEL2904FsoeConf },
+  { "AX5805", lcecSlaveTypeAX5805, NULL, &slaveAX5805FsoeConf },
 
   // multi axis interface
   { "EM7004", lcecSlaveTypeEM7004, NULL, NULL },
