@@ -15,20 +15,18 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
-#ifndef _LCEC_AX5200_H_
-#define _LCEC_AX5200_H_
+#ifndef _LCEC_AX5100_H_
+#define _LCEC_AX5100_H_
 
 #include "lcec.h"
 #include "lcec_class_ax5.h"
 
-#define LCEC_AX5200_VID LCEC_BECKHOFF_VID
-#define LCEC_AX5203_PID 0x14536012
-#define LCEC_AX5206_PID 0x14566012
+#define LCEC_AX5100_VID LCEC_BECKHOFF_VID
+#define LCEC_AX5112_PID 0x13f86012
 
-#define LCEC_AX5200_CHANS 2
-#define LCEC_AX5200_PDOS  (LCEC_AX5200_CHANS * LCEC_CLASS_AX5_PDOS)
+#define LCEC_AX5100_PDOS LCEC_CLASS_AX5_PDOS
 
-int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
 
