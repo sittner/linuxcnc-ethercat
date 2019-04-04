@@ -24,7 +24,7 @@
 
 #define LCEC_AX5805_PID 0x16AD6012
 
-#define LCEC_AX5805_PDOS 10
+#define LCEC_AX5805_PARAM_CHANCOUNT 1
 
 int lcec_ax5805_preinit(struct lcec_slave *slave);
 int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);

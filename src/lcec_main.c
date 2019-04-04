@@ -181,7 +181,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, 0, lcec_el6900_preinit, lcec_el6900_init},
   { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, lcec_el1904_preinit, lcec_el1904_init},
   { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, lcec_el2904_preinit, lcec_el2904_init},
-  { lcecSlaveTypeAX5805, LCEC_AX5805_VID, LCEC_AX5805_PID, LCEC_AX5805_PDOS, lcec_ax5805_preinit, lcec_ax5805_init},
+  { lcecSlaveTypeAX5805, LCEC_AX5805_VID, LCEC_AX5805_PID, 0, lcec_ax5805_preinit, lcec_ax5805_init},
 
   // multi axis interface
   { lcecSlaveTypeEM7004, LCEC_EM7004_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, NULL, lcec_em7004_init},
