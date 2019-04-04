@@ -18,6 +18,7 @@
 
 #include "lcec.h"
 #include "lcec_ax5805.h"
+#include "lcec_ax5200.h"
 
 typedef struct {
   int chanCount;
@@ -89,26 +90,34 @@ static const LCEC_CONF_FSOE_T fsoe_conf_2ch = {
   .data_channels = 2
 };
 
+void lcec_ax5805_chancount(struct lcec_slave *slave);
 void lcec_ax5805_read(struct lcec_slave *slave, long period);
 
-int lcec_ax5805_preinit(struct lcec_slave *slave) {
+int lcec_ax5805_chan_count(struct lcec_slave *slave) {
   lcec_master_t *master = slave->master;
-  lcec_slave_modparam_t *p;
+  struct lcec_slave *ax5n_slave;
+
+  // try to find corresponding ax5n
+  ax5n_slave = lcec_slave_by_index(master, slave->index - 1);
+  if (ax5n_slave == NULL) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: unable to find corresponding AX5nxx with index %d.\n", master->name, slave->name, slave->index - 1);
+    return -EINVAL;
+  }
+
+  // check for AX52xx
+  if (ax5n_slave->proc_init == lcec_ax5200_init) {
+    return 2;
+  }
+
+  return 1;
+}
+
+int lcec_ax5805_preinit(struct lcec_slave *slave) {
   int chanCount;
 
-  // parse parameters
-  chanCount = 1;
-  for (p = slave->modparams; p != NULL && p->id >= 0; p++) {
-    switch(p->id) {
-      case LCEC_AX5805_PARAM_CHANCOUNT:
-        // get channel count
-        chanCount = p->value.u32;
-        if (chanCount < 1 || chanCount > 2) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: invalid chanCount value %d\n", master->name, slave->name, chanCount);
-          return -EINVAL;
-        }
-        break;
-    }
+  chanCount = lcec_ax5805_chan_count(slave);
+  if (chanCount < 0) {
+    return chanCount;
   }
 
   if (chanCount >= 2) {
@@ -126,7 +135,6 @@ int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   lcec_master_t *master = slave->master;
   lcec_ax5805_data_t *hal_data;
   int err;
-  lcec_slave_modparam_t *p;
   const lcec_pindesc_t *slave_pins;
 
   // initialize callbacks
@@ -140,15 +148,10 @@ int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   memset(hal_data, 0, sizeof(lcec_ax5805_data_t));
   slave->hal_data = hal_data;
 
-  // parse parameters
-  hal_data->chanCount = 1;
-  for (p = slave->modparams; p != NULL && p->id >= 0; p++) {
-    switch(p->id) {
-      case LCEC_AX5805_PARAM_CHANCOUNT:
-        // get channel count
-        hal_data->chanCount = p->value.u32;
-        break;
-    }
+  // get number of channels
+  hal_data->chanCount = lcec_ax5805_chan_count(slave);
+  if (hal_data->chanCount < 0) {
+    return hal_data->chanCount;
   }
 
   // initialize POD entries
