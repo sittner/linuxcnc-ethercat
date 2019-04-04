@@ -84,8 +84,21 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
+static const LCEC_CONF_FSOE_T fsoe_conf = {
+  .slave_data_len = 1,
+  .master_data_len = 1,
+  .data_channels = 1
+};
+
 void lcec_el2904_read(struct lcec_slave *slave, long period);
 void lcec_el2904_write(struct lcec_slave *slave, long period);
+
+int lcec_el2904_preinit(struct lcec_slave *slave) {
+  // set fsoe config
+  slave->fsoeConf = &fsoe_conf;
+
+  return 0;
+}
 
 int lcec_el2904_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;

@@ -1,5 +1,5 @@
 //
-//    Copyright (C) 2011 Sascha Ittner <sascha.ittner@modusoft.de>
+//    Copyright (C) 2018 Sascha Ittner <sascha.ittner@modusoft.de>
 //
 //    This program is free software; you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -15,22 +15,19 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
-#ifndef _LCEC_STMDS5K_H_
-#define _LCEC_STMDS5K_H_
+#ifndef _LCEC_AX5805_H_
+#define _LCEC_AX5805_H_
 
 #include "lcec.h"
 
-#define LCEC_STMDS5K_VID LCEC_STOEBER_VID
-#define LCEC_STMDS5K_PID 0x00001388
+#define LCEC_AX5805_VID LCEC_BECKHOFF_VID
 
-#define LCEC_STMDS5K_PDOS 8
-#define LCEC_STMDS5K_EXTINC_PDOS 1
+#define LCEC_AX5805_PID 0x16AD6012
 
-#define LCEC_STMDS5K_PARAM_MULTITURN 1
-#define LCEC_STMDS5K_PARAM_EXTENC 2
+#define LCEC_AX5805_PDOS 10
 
-int lcec_stmds5k_preinit(struct lcec_slave *slave);
-int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+int lcec_ax5805_preinit(struct lcec_slave *slave);
+int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
 

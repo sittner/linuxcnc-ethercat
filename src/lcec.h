@@ -70,14 +70,25 @@ do {                        \
 
 #define LCEC_IDN(type, set, block) (type | ((set & 0x07) << 12) | (block & 0x0fff))
 
-#define LCEC_FSOE_MSG_LEN 6
+#define LCEC_FSOE_CMD_LEN 1
+#define LCEC_FSOE_CRC_LEN 2
+#define LCEC_FSOE_CONNID_LEN 2
+
+#define LCEC_FSOE_SIZE(ch_count, data_len) (LCEC_FSOE_CMD_LEN + ch_count * (data_len + LCEC_FSOE_CRC_LEN) + LCEC_FSOE_CONNID_LEN)
 
 struct lcec_master;
 struct lcec_slave;
 
+typedef int (*lcec_slave_preinit_t) (struct lcec_slave *slave);
 typedef int (*lcec_slave_init_t) (int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 typedef void (*lcec_slave_cleanup_t) (struct lcec_slave *slave);
 typedef void (*lcec_slave_rw_t) (struct lcec_slave *slave, long period);
+
+typedef struct {
+  int slave_data_len;
+  int master_data_len;
+  int data_channels;
+} LCEC_CONF_FSOE_T;
 
 typedef struct lcec_master_data {
   hal_u32_t *slaves_responding;
@@ -174,6 +185,7 @@ typedef struct lcec_slave {
   struct lcec_slave *next;
   struct lcec_master *master;
   int index;
+  LCEC_SLAVE_TYPE_T type;
   char name[LCEC_CONF_STR_MAXLEN];
   uint32_t vid;
   uint32_t pid;
@@ -183,6 +195,7 @@ typedef struct lcec_slave {
   ec_slave_config_state_t state;
   lcec_slave_dc_t *dc_conf;
   lcec_slave_watchdog_t *wd_conf;
+  lcec_slave_preinit_t proc_preinit;
   lcec_slave_init_t proc_init;
   lcec_slave_cleanup_t proc_cleanup;
   lcec_slave_rw_t proc_read;
@@ -195,6 +208,7 @@ typedef struct lcec_slave {
   lcec_slave_sdoconf_t *sdo_config;
   lcec_slave_idnconf_t *idn_config;
   lcec_slave_modparam_t *modparams;
+  const LCEC_CONF_FSOE_T *fsoeConf;
   unsigned int *fsoe_slave_offset;
   unsigned int *fsoe_master_offset;
 } lcec_slave_t;
