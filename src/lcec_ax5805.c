@@ -18,11 +18,10 @@
 
 #include "lcec.h"
 #include "lcec_ax5805.h"
+#include "lcec_ax5100.h"
 #include "lcec_ax5200.h"
 
 typedef struct {
-  int chanCount;
-
   hal_u32_t *fsoe_master_cmd;
   hal_u32_t *fsoe_master_crc0;
   hal_u32_t *fsoe_master_crc1;
@@ -78,55 +77,38 @@ static const lcec_pindesc_t slave_pins_2ch[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-static const LCEC_CONF_FSOE_T fsoe_conf_1ch = {
-  .slave_data_len = 2,
-  .master_data_len = 2,
-  .data_channels = 1
-};
-
-static const LCEC_CONF_FSOE_T fsoe_conf_2ch = {
-  .slave_data_len = 2,
-  .master_data_len = 2,
-  .data_channels = 2
-};
-
 void lcec_ax5805_chancount(struct lcec_slave *slave);
 void lcec_ax5805_read(struct lcec_slave *slave, long period);
 
-int lcec_ax5805_chan_count(struct lcec_slave *slave) {
+int lcec_ax5805_preinit(struct lcec_slave *slave) {
   lcec_master_t *master = slave->master;
   struct lcec_slave *ax5n_slave;
 
   // try to find corresponding ax5n
   ax5n_slave = lcec_slave_by_index(master, slave->index - 1);
   if (ax5n_slave == NULL) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: unable to find corresponding AX5nxx with index %d.\n", master->name, slave->name, slave->index - 1);
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: Unable to find corresponding AX5nxx with index %d.\n", master->name, slave->name, slave->index - 1);
     return -EINVAL;
   }
 
-  // check for AX52xx
-  if (ax5n_slave->proc_init == lcec_ax5200_init) {
-    return 2;
+  // check for AX5nxx
+  if (ax5n_slave->proc_preinit != lcec_ax5100_preinit && ax5n_slave->proc_preinit != lcec_ax5200_preinit) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: Slave with index %d is not an AX5nxx.\n", master->name, slave->name, ax5n_slave->index);
+    return -EINVAL;
   }
 
-  return 1;
-}
+  // call AX52xx preinit to solve dependency
+  ax5n_slave->proc_preinit(ax5n_slave);
 
-int lcec_ax5805_preinit(struct lcec_slave *slave) {
-  int chanCount;
-
-  chanCount = lcec_ax5805_chan_count(slave);
-  if (chanCount < 0) {
-    return chanCount;
+  // use FSOE config from AX5nxx
+  slave->fsoeConf = ax5n_slave->fsoeConf;
+  if (slave->fsoeConf == NULL) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: Corresponding AX5nxx with index %d has no FSOE config.\n", master->name, slave->name, ax5n_slave->index);
+    return -EINVAL;
   }
 
-  if (chanCount >= 2) {
-    slave->fsoeConf = &fsoe_conf_2ch;
-    slave->pdo_entry_count = 10;
-  } else {
-    slave->fsoeConf = &fsoe_conf_1ch;
-    slave->pdo_entry_count = 7;
-  }
+  // set PDO count
+  slave->pdo_entry_count = 4 + 3 * slave->fsoeConf->data_channels;
 
   return 0;
 }
@@ -148,12 +130,6 @@ int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   memset(hal_data, 0, sizeof(lcec_ax5805_data_t));
   slave->hal_data = hal_data;
 
-  // get number of channels
-  hal_data->chanCount = lcec_ax5805_chan_count(slave);
-  if (hal_data->chanCount < 0) {
-    return hal_data->chanCount;
-  }
-
   // initialize POD entries
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xE700, 0x01, &hal_data->fsoe_master_cmd_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xE700, 0x02, &hal_data->fsoe_master_connid_os, NULL);
@@ -164,7 +140,7 @@ int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xE600, 0x03, &hal_data->fsoe_slave_crc0_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6640, 0x00, &hal_data->fsoe_in_sto0_os, &hal_data->fsoe_in_sto0_bp);
 
-  if (hal_data->chanCount >= 2) {
+  if (slave->fsoeConf->data_channels >= 2) {
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xE700, 0x04, &hal_data->fsoe_master_crc1_os, NULL);
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xE600, 0x04, &hal_data->fsoe_slave_crc1_os, NULL);
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6E40, 0x00, &hal_data->fsoe_in_sto1_os, &hal_data->fsoe_in_sto1_bp);
@@ -198,7 +174,7 @@ void lcec_ax5805_read(struct lcec_slave *slave, long period) {
   *(hal_data->fsoe_slave_crc0) = EC_READ_U16(&pd[hal_data->fsoe_slave_crc0_os]);
   *(hal_data->fsoe_in_sto0) = EC_READ_BIT(&pd[hal_data->fsoe_in_sto0_os], hal_data->fsoe_in_sto0_bp);
 
-  if (hal_data->chanCount >= 2) {
+  if (slave->fsoeConf->data_channels >= 2) {
     *(hal_data->fsoe_master_crc1) = EC_READ_U16(&pd[hal_data->fsoe_master_crc1_os]);
     *(hal_data->fsoe_slave_crc1) = EC_READ_U16(&pd[hal_data->fsoe_slave_crc1_os]);
     *(hal_data->fsoe_in_sto1) = EC_READ_BIT(&pd[hal_data->fsoe_in_sto1_os], hal_data->fsoe_in_sto1_bp);

@@ -63,8 +63,26 @@ static ec_sync_info_t lcec_ax5200_syncs[] = {
     {0xff}
 };
 
+static const LCEC_CONF_FSOE_T fsoe_conf = {
+  .slave_data_len = 2,
+  .master_data_len = 2,
+  .data_channels = 2
+};
+
 void lcec_ax5200_read(struct lcec_slave *slave, long period);
 void lcec_ax5200_write(struct lcec_slave *slave, long period);
+
+int lcec_ax5200_preinit(struct lcec_slave *slave) {
+  // check if already initialized
+  if (slave->fsoeConf != NULL) {
+    return 0;
+  }
+
+  // set FSOE conf (this will be used by the corresponding AX5805
+  slave->fsoeConf = &fsoe_conf;
+
+  return 0;
+}
 
 int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;

@@ -26,6 +26,7 @@
 
 #define LCEC_AX5100_PDOS LCEC_CLASS_AX5_PDOS
 
+int lcec_ax5100_preinit(struct lcec_slave *slave);
 int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
