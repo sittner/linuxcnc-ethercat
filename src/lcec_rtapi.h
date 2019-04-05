@@ -20,6 +20,12 @@
 #define _LCEC_RTAPI_H_
 
 #include <rtapi.h>
+#include <rtapi_stdint.h>
+
+// hack to identify LinuxCNC >= 2.8
+#ifdef RTAPI_UINT64_MAX
+#include <rtapi_mutex.h>
+#endif
 
 #ifdef __KERNEL__
   #include "lcec_rtapi_kmod.h"
