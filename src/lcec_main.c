@@ -162,6 +162,7 @@ static const lcec_typelist_t types[] = {
 
   // ac servo
   { lcecSlaveTypeEL7211, LCEC_EL7211_VID, LCEC_EL7211_PID, LCEC_EL7211_PDOS, lcec_el7211_init},
+  { lcecSlaveTypeEL7221, LCEC_EL7211_VID, LCEC_EL7221_PID, LCEC_EL7211_PDOS, lcec_el7211_init},
 
   // dc servo
   { lcecSlaveTypeEL7342, LCEC_EL7342_VID, LCEC_EL7342_PID, LCEC_EL7342_PDOS, lcec_el7342_init},
