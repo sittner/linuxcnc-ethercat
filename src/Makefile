@@ -1,4 +1,4 @@
-include ../config.mk
+-include ../config.mk
 
 .PHONY: all install clean
 
@@ -6,7 +6,7 @@ all:
 	@$(MAKE) -f user.mk all
 	@$(MAKE) -f realtime.mk all
 
-install:
+install: ../config.mk
 	mkdir -p $(DESTDIR)$(RTLIBDIR)
 	@$(MAKE) -f user.mk install
 	@$(MAKE) -f realtime.mk install
