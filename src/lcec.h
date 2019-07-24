@@ -90,8 +90,7 @@ typedef struct lcec_master_data {
 #ifdef RTAPI_TASK_PLL_SUPPORT
   hal_s32_t *pll_err;
   hal_s32_t *pll_out;
-  hal_float_t pll_p;
-  hal_float_t pll_i;
+  hal_u32_t pll_step;
 #endif
 } lcec_master_data_t;
 
@@ -127,12 +126,9 @@ typedef struct lcec_master {
   long long state_update_timer;
   ec_master_state_t ms;
 #ifdef RTAPI_TASK_PLL_SUPPORT
-  double periodfp;
   uint64_t dc_ref;
   uint32_t dc_time_last;
   uint32_t app_time_last;
-  int32_t pll_limit;
-  double pll_isum;
 #endif
 } lcec_master_t;
 
