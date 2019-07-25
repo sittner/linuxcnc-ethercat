@@ -127,8 +127,8 @@ typedef struct lcec_master {
   ec_master_state_t ms;
 #ifdef RTAPI_TASK_PLL_SUPPORT
   uint64_t dc_ref;
-  uint32_t dc_time_last;
   uint32_t app_time_last;
+  int dc_time_valid_last;
 #endif
 } lcec_master_t;
 
