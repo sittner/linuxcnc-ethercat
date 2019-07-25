@@ -206,6 +206,7 @@ static const lcec_pindesc_t master_pins[] = {
 #ifdef RTAPI_TASK_PLL_SUPPORT
   { HAL_S32, HAL_OUT, offsetof(lcec_master_data_t, pll_err), "%s.pll-err" },
   { HAL_S32, HAL_OUT, offsetof(lcec_master_data_t, pll_out), "%s.pll-out" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_master_data_t, pll_reset_cnt), "%s.pll-reset-count" },
 #endif
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
@@ -213,6 +214,7 @@ static const lcec_pindesc_t master_pins[] = {
 static const lcec_pindesc_t master_params[] = {
 #ifdef RTAPI_TASK_PLL_SUPPORT
   { HAL_U32, HAL_RW, offsetof(lcec_master_data_t, pll_step), "%s.pll-step" },
+  { HAL_U32, HAL_RW, offsetof(lcec_master_data_t, pll_max_err), "%s.pll-max-err" },
 #endif
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
@@ -416,6 +418,8 @@ int rtapi_app_main(void) {
 #ifdef RTAPI_TASK_PLL_SUPPORT
     // set default PLL_STEP: use +/-0.1% of period
     master->hal_data->pll_step = master->app_time_period / 1000;
+    // set default PLL_MAX_ERR: one period
+    master->hal_data->pll_max_err = master->app_time_period;
 #endif
 
     // export read function
@@ -1316,7 +1320,17 @@ void lcec_write_master(void *arg, long period) {
   // the first read dc_time value semms to be invalid, so wait for two successive succesfull reads 
   if (dc_time_valid && master->dc_time_valid_last) {
     *(hal_data->pll_err) = master->app_time_last - dc_time;
-    *(hal_data->pll_out) = (*(hal_data->pll_err) < 0) ? -(hal_data->pll_step) : (hal_data->pll_step);
+    // check for invalid error values
+    if (abs(*(hal_data->pll_err)) > hal_data->pll_max_err) {
+      // force resync of master time
+      master->dc_ref -= *(hal_data->pll_err);
+      // skip next control cycle to allow resync
+      dc_time_valid = 0;
+      // increment reset counter to document this event
+      (*(hal_data->pll_reset_cnt))++;
+    } else {
+      *(hal_data->pll_out) = (*(hal_data->pll_err) < 0) ? -(hal_data->pll_step) : (hal_data->pll_step);
+    }
   }
 
   rtapi_task_pll_set_correction(*(hal_data->pll_out));

@@ -91,6 +91,8 @@ typedef struct lcec_master_data {
   hal_s32_t *pll_err;
   hal_s32_t *pll_out;
   hal_u32_t pll_step;
+  hal_u32_t pll_max_err;
+  hal_u32_t *pll_reset_cnt;
 #endif
 } lcec_master_data_t;
 
