@@ -212,8 +212,7 @@ static const lcec_pindesc_t master_pins[] = {
 
 static const lcec_pindesc_t master_params[] = {
 #ifdef RTAPI_TASK_PLL_SUPPORT
-  { HAL_FLOAT, HAL_RW, offsetof(lcec_master_data_t, pll_p), "%s.pll-p" },
-  { HAL_FLOAT, HAL_RW, offsetof(lcec_master_data_t, pll_i), "%s.pll-i" },
+  { HAL_U32, HAL_RW, offsetof(lcec_master_data_t, pll_step), "%s.pll-step" },
 #endif
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
@@ -413,6 +412,11 @@ int rtapi_app_main(void) {
       goto fail2;
     }
 
+#ifdef RTAPI_TASK_PLL_SUPPORT
+    // set default PLL_STEP: use +/-0.1% of period
+    master->hal_data->pll_step = master->app_time_period / 1000;
+#endif
+
     // export read function
     rtapi_snprintf(name, HAL_NAME_LEN, "%s.%s.read", LCEC_MODULE_NAME, master->name);
     if (hal_export_funct(name, lcec_read_master, master, 0, 0, comp_id) != 0) {
@@ -570,9 +574,6 @@ int lcec_parse_config(void) {
         master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
         master->app_time_period = master_conf->appTimePeriod;
         master->sync_ref_cycles = master_conf->refClockSyncCycles;
-#ifdef RTAPI_TASK_PLL_SUPPORT
-        master->pll_isum = 0.0;
-#endif
 
         // add master to list
         LCEC_LIST_APPEND(first_master, last_master, master);
@@ -1108,10 +1109,6 @@ lcec_master_data_t *lcec_init_master_hal(const char *pfx, int global) {
     if (lcec_param_newf_list(hal_data, master_params, pfx) != 0) {
       return NULL;
     }
-#ifdef RTAPI_TASK_PLL_SUPPORT
-    hal_data->pll_p = 0.005;
-    hal_data->pll_i = 0.01;
-#endif
   }
 
   return hal_data;
@@ -1188,11 +1185,6 @@ void lcec_read_master(void *arg, long period) {
   // check period
   if (period != master->period_last) {
     master->period_last = period;
-#ifdef RTAPI_TASK_PLL_SUPPORT
-    master->periodfp = (double) period * 0.000000001;
-    // allow max +/-0.1% of period
-    master->pll_limit = period / 1000;
-#endif
     if (master->app_time_period != period) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Invalid appTimePeriod of %u for master %s (should be %ld).\n",
         master->app_time_period, master->name, period);
@@ -1314,7 +1306,7 @@ void lcec_write_master(void *arg, long period) {
   rtapi_mutex_give(&master->mutex);
 
 #ifdef RTAPI_TASK_PLL_SUPPORT
-  // PI controller for master thread PLL sync
+  // BANG-BANG controller for master thread PLL sync
   // this part is done after ecrt_master_send() to reduce jitter
   hal_data = master->hal_data;
   *(hal_data->pll_err) = 0;
@@ -1322,15 +1314,11 @@ void lcec_write_master(void *arg, long period) {
   if (dc_time_valid) {
     if (master->dc_time_last != 0 || dc_time != 0) {
       *(hal_data->pll_err) = master->app_time_last - dc_time;
-      if ((*(hal_data->pll_err) > 0 && *(hal_data->pll_out) < master->pll_limit) || (*(hal_data->pll_err) < 0 && *(hal_data->pll_out) > -(master->pll_limit))) {
-        master->pll_isum += (double) *(hal_data->pll_err);
-      }
-      *(hal_data->pll_out) = (int32_t) (hal_data->pll_p * (double) *(hal_data->pll_err) + hal_data->pll_i * master->pll_isum * master->periodfp);
+      *(hal_data->pll_out) = (*(hal_data->pll_err) < 0) ? -(hal_data->pll_step) : (hal_data->pll_step);
     }
     master->dc_time_last = dc_time;
   } else {
     master->dc_time_last = 0;
-    master->pll_isum = 0.0;
   }
 
   rtapi_task_pll_set_correction(*(hal_data->pll_out));
