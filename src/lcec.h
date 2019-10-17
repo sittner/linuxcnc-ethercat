@@ -60,6 +60,7 @@ do {                        \
 #define LCEC_BECKHOFF_VID 0x00000002
 #define LCEC_STOEBER_VID  0x000000b9
 #define LCEC_DELTA_VID    0x000001dd
+#define LCEC_MODUSOFT_VID 0x00000907
 
 // State update period (ns)
 #define LCEC_STATE_UPDATE_PERIOD 1000000000LL

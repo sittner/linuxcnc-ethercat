@@ -45,6 +45,7 @@
 #include "lcec_em7004.h"
 #include "lcec_stmds5k.h"
 #include "lcec_deasda.h"
+#include "lcec_ph3lm2rm.h"
 
 #include "rtapi_app.h"
 
@@ -188,6 +189,9 @@ static const lcec_typelist_t types[] = {
 
   // Delta ASDA series
   { lcecSlaveTypeDeASDA, LCEC_DEASDA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, lcec_deasda_init},
+
+  // modusoft PH3LM2RM converter
+  { lcecSlaveTypePh3LM2RM, LCEC_PH3LM2RM_VID, LCEC_PH3LM2RM_PID, LCEC_PH3LM2RM_PDOS, lcec_ph3lm2rm_init},
 
   { lcecSlaveTypeInvalid }
 };
