@@ -141,8 +141,8 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL4132, LCEC_EL41x2_VID, LCEC_EL4132_PID, LCEC_EL41x2_PDOS, lcec_el41x2_init},
 
   // analog out, 4ch, 16 bits
-  { lcecSlaveTypeEL4104, LCEC_EL41x2_VID, LCEC_EL4104_PID, LCEC_EL41x4_PDOS, lcec_el41x2_init},
-  { lcecSlaveTypeEL4134, LCEC_EL41x2_VID, LCEC_EL4134_PID, LCEC_EL41x4_PDOS, lcec_el41x2_init},
+  { lcecSlaveTypeEL4104, LCEC_EL41x4_VID, LCEC_EL4104_PID, LCEC_EL41x4_PDOS, lcec_el41x4_init},
+  { lcecSlaveTypeEL4134, LCEC_EL41x4_VID, LCEC_EL4134_PID, LCEC_EL41x4_PDOS, lcec_el41x4_init},
 
   // analog out, 8ch, 12 bits
   { lcecSlaveTypeEL4008, LCEC_EL40x8_VID, LCEC_EL4008_PID, LCEC_EL40x8_PDOS, lcec_el40x8_init},
