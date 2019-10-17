@@ -220,7 +220,7 @@ int lcec_ph3lm2rm_lm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entr
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + ios, 0x06, &hal_data->ch.latch_os, NULL);
 
   // init channel
-  if ((err = lcec_ph3lm2rm_enc_init(slave, &hal_data->ch, pfx, 0.635)) != 0) {
+  if ((err = lcec_ph3lm2rm_enc_init(slave, &hal_data->ch, pfx, 0.0005)) != 0) {
     return err;
   }
 
