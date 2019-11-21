@@ -196,6 +196,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // Delta ASDA series
   { "DeASDA", lcecSlaveTypeDeASDA, NULL },
 
+  // Omron G5 series
+  { "OmrG5", lcecSlaveTypeOmrG5, NULL },
+
   // modusoft PH3LM2RM converter
   { "Ph3LM2RM", lcecSlaveTypePh3LM2RM, NULL },
 
