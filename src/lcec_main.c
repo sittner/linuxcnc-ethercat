@@ -24,7 +24,9 @@
 #include "lcec_el1252.h"
 #include "lcec_el2xxx.h"
 #include "lcec_el2202.h"
+#include "lcec_el30x4.h"
 #include "lcec_el31x2.h"
+#include "lcec_el3202.h"
 #include "lcec_el3255.h"
 #include "lcec_el40x1.h"
 #include "lcec_el40x2.h"
@@ -49,6 +51,7 @@
 #include "lcec_ph3lm2rm.h"
 
 #include "rtapi_app.h"
+//#include <linuxcnc/rtapi_mutex.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Sascha Ittner <sascha.ittner@modusoft.de>");
@@ -114,6 +117,9 @@ static const lcec_typelist_t types[] = {
 
   { lcecSlaveTypeEP2028, LCEC_EL2xxx_VID, LCEC_EP2028_PID, LCEC_EP2028_PDOS, lcec_el2xxx_init},
 
+  // analog in, 4ch, 12 bits
+  { lcecSlaveTypeEL3064, LCEC_EL30x4_VID, LCEC_EL3064_PID, LCEC_EL30x4_PDOS, lcec_el30x4_init},
+
   // analog in, 2ch, 16 bits
   { lcecSlaveTypeEL3102, LCEC_EL31x2_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
   { lcecSlaveTypeEL3112, LCEC_EL31x2_VID, LCEC_EL3112_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
@@ -121,6 +127,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL3142, LCEC_EL31x2_VID, LCEC_EL3142_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
   { lcecSlaveTypeEL3152, LCEC_EL31x2_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
   { lcecSlaveTypeEL3162, LCEC_EL31x2_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
+  { lcecSlaveTypeEL3202, LCEC_EL3202_VID, LCEC_EL3202_PID, LCEC_EL3202_PDOS, lcec_el3202_init},
 
   // analog in, 5ch, 16 bits
   { lcecSlaveTypeEL3255, LCEC_EL3255_VID, LCEC_EL3255_PID, LCEC_EL3255_PDOS, lcec_el3255_init},
