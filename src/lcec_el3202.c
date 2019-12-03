@@ -25,8 +25,6 @@ typedef struct {
   hal_bit_t *error;
   hal_bit_t *sync_err;
   hal_s32_t *raw_val;
-  hal_float_t *scale;
-  hal_float_t *bias;
   hal_float_t *val;
   unsigned int ovr_pdo_os;
   unsigned int ovr_pdo_bp;
@@ -49,9 +47,7 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_BIT, HAL_OUT, offsetof(lcec_el3202_chan_t, error), "%s.%s.%s.temp-%d-error" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_el3202_chan_t, sync_err), "%s.%s.%s.temp-%d-sync-err" },
   { HAL_S32, HAL_OUT, offsetof(lcec_el3202_chan_t, raw_val), "%s.%s.%s.temp-%d-raw" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el3202_chan_t, val), "%s.%s.%s.temp-%d-val" },
-  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3202_chan_t, scale), "%s.%s.%s.temp-%d-scale" },
-  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3202_chan_t, bias), "%s.%s.%s.temp-%d-bias" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el3202_chan_t, val), "%s.%s.%s.temp-%d-temperature" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -135,9 +131,6 @@ int lcec_el3202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       return err;
     }
-
-    // initialize pins
-    *(chan->scale) = 1.0;
   }
 
   return 0;
@@ -169,7 +162,7 @@ void lcec_el3202_read(struct lcec_slave *slave, long period) {
     // update value
     value = EC_READ_S16(&pd[chan->val_pdo_os]);
     *(chan->raw_val) = value;
-    *(chan->val) = *(chan->bias) + *(chan->scale) * (double)value * ((double)1/(double)0x7fff);
+    *(chan->val) = (double)value / 10.0;
   }
 }
 

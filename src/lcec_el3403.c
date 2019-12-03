@@ -20,23 +20,18 @@
 #include "lcec_el3403.h"
 
 typedef struct {
-  hal_bit_t *overrange;
-  hal_bit_t *underrange;
-  hal_bit_t *error;
   hal_bit_t *sync_err;
-  hal_s32_t *raw_val;
-  hal_float_t *scale;
-  hal_float_t *bias;
-  hal_float_t *val;
-  unsigned int ovr_pdo_os;
-  unsigned int ovr_pdo_bp;
-  unsigned int udr_pdo_os;
-  unsigned int udr_pdo_bp;
-  unsigned int error_pdo_os;
-  unsigned int error_pdo_bp;
+  hal_float_t *current;
+  hal_float_t *voltage;
+  hal_float_t *power;
   unsigned int sync_err_pdo_os;
   unsigned int sync_err_pdo_bp;
-  unsigned int val_pdo_os;
+  unsigned int curr_pdo_os;
+  unsigned int curr_pdo_bp;
+  unsigned int volt_pdo_os;
+  unsigned int volt_pdo_bp;
+  unsigned int pow_pdo_os;
+  unsigned int pow_pdo_bp;
 } lcec_el3403_chan_t;
 
 typedef struct {
@@ -44,101 +39,95 @@ typedef struct {
 } lcec_el3403_data_t;
 
 static const lcec_pindesc_t slave_pins[] = {
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el3403_chan_t, overrange), "%s.%s.%s.pot-%d-overrange" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el3403_chan_t, underrange), "%s.%s.%s.pot-%d-underrange" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el3403_chan_t, error), "%s.%s.%s.pot-%d-error" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el3403_chan_t, sync_err), "%s.%s.%s.pot-%d-sync-err" },
-  { HAL_S32, HAL_OUT, offsetof(lcec_el3403_chan_t, raw_val), "%s.%s.%s.pot-%d-raw" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el3403_chan_t, val), "%s.%s.%s.pot-%d-val" },
-  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3403_chan_t, scale), "%s.%s.%s.pot-%d-scale" },
-  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3403_chan_t, bias), "%s.%s.%s.pot-%d-bias" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el3403_chan_t, sync_err), "%s.%s.%s.pow-%d-sync-err" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el3403_chan_t, current), "%s.%s.%s.pow-%d-current" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el3403_chan_t, voltage), "%s.%s.%s.pow-%d-voltage" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el3403_chan_t, power), "%s.%s.%s.pow-%d-power" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
 
+static ec_pdo_entry_info_t lcec_el3403_r1[] = {
+  {0x7000, 0x01, 8}, /* Index */
+};
+  
+static ec_pdo_entry_info_t lcec_el3403_r2[] = {
+  {0x7010, 0x01, 8}, /* Index */
+};
+  
+static ec_pdo_entry_info_t lcec_el3403_r3[] = {
+  {0x7020, 0x01, 8}, /* Index */
+};
+
 static ec_pdo_entry_info_t lcec_el3403_channel1[] = {
-    {0x6000, 0x01,  1}, // Underrange
-    {0x6000, 0x02,  1}, // Overrange
-    {0x6000, 0x03,  2}, // Limit 1
-    {0x6000, 0x05,  2}, // Limit 2
-    {0x6000, 0x07,  1}, // Error
-    {0x0000, 0x00,  1}, // Gap
-    {0x0000, 0x00,  5}, // Gap
-    {0x6000, 0x0e,  1}, // Sync error
-    {0x6000, 0x0f,  1}, // TxPDO State
-    {0x6000, 0x10,  1}, // TxPDO Toggle
-    {0x6000, 0x11, 16}  // Value
+  {0x0000, 0x00, 13}, /* Gap */
+  {0x6000, 0x0e, 1}, /* Sync Error */
+  {0x0000, 0x00, 1}, /* Gap */
+  {0x1800, 0x09, 1},
+  {0x6000, 0x11, 32}, /* Current */
+  {0x6000, 0x12, 32}, /* Voltage */
+  {0x6000, 0x13, 32}, /* Active power */
+  {0x6000, 0x14, 8}, /* Index */
+  {0x0000, 0x00, 8}, /* Gap */
+  {0x6000, 0x1d, 32}, /* Variant value */
 };
 
 static ec_pdo_entry_info_t lcec_el3403_channel2[] = {
-    {0x6010, 0x01,  1}, // Underrange
-    {0x6010, 0x02,  1}, // Overrange
-    {0x6010, 0x03,  2}, // Limit 1
-    {0x6010, 0x05,  2}, // Limit 2
-    {0x6010, 0x07,  1}, // Error
-    {0x0000, 0x00,  1}, // Gap
-    {0x0000, 0x00,  5}, // Gap
-    {0x6010, 0x0e,  1}, // Sync error
-    {0x6010, 0x0f,  1}, // TxPDO State
-    {0x6010, 0x10,  1}, // TxPDO Toggle
-    {0x6010, 0x11, 16}  // Value
+  {0x0000, 0x00, 13}, /* Gap */
+  {0x6010, 0x0e, 1}, /* Sync Error */
+  {0x0000, 0x00, 1}, /* Gap */
+  {0x1801, 0x09, 1},
+  {0x6010, 0x11, 32}, /* Current */
+  {0x6010, 0x12, 32}, /* Voltage */
+  {0x6010, 0x13, 32}, /* Active power */
+  {0x6010, 0x14, 8}, /* Index */
+  {0x0000, 0x00, 8}, /* Gap */
+  {0x6010, 0x1d, 32}, /* Variant value */
 };
 
 static ec_pdo_entry_info_t lcec_el3403_channel3[] = {
-    {0x6020, 0x01,  1}, // Underrange
-    {0x6020, 0x02,  1}, // Overrange
-    {0x6020, 0x03,  2}, // Limit 1
-    {0x6020, 0x05,  2}, // Limit 2
-    {0x6020, 0x07,  1}, // Error
-    {0x0000, 0x00,  1}, // Gap
-    {0x0000, 0x00,  5}, // Gap
-    {0x6020, 0x0e,  1}, // Sync error
-    {0x6020, 0x0f,  1}, // TxPDO State
-    {0x6020, 0x10,  1}, // TxPDO Toggle
-    {0x6020, 0x11, 16}  // Value
+  {0x0000, 0x00, 13}, /* Gap */
+  {0x6020, 0x0e, 1}, /* Sync Error */
+  {0x0000, 0x00, 1}, /* Gap */
+  {0x1802, 0x09, 1},
+  {0x6020, 0x11, 32}, /* Current */
+  {0x6020, 0x12, 32}, /* Voltage */
+  {0x6020, 0x13, 32}, /* Active power */
+  {0x6020, 0x14, 8}, /* Index */
+  {0x0000, 0x00, 8}, /* Gap */
+  {0x6020, 0x1d, 32}, /* Variant value */
 };
 
-static ec_pdo_entry_info_t lcec_el3403_channel4[] = {
-    {0x6030, 0x01,  1}, // Underrange
-    {0x6030, 0x02,  1}, // Overrange
-    {0x6030, 0x03,  2}, // Limit 1
-    {0x6030, 0x05,  2}, // Limit 2
-    {0x6030, 0x07,  1}, // Error
-    {0x0000, 0x00,  1}, // Gap
-    {0x0000, 0x00,  5}, // Gap
-    {0x6030, 0x0e,  1}, // Sync error
-    {0x6030, 0x0f,  1}, // TxPDO State
-    {0x6030, 0x10,  1}, // TxPDO Toggle
-    {0x6030, 0x11, 16}  // Value
+static ec_pdo_entry_info_t lcec_el3403_statusdata[] = {
+    {0x0000, 0x00, 3}, /* Gap */
+    {0xf100, 0x04, 1}, /* Missing zero crossing A */
+    {0xf100, 0x05, 1}, /* Missing zero crossing B */
+    {0xf100, 0x06, 1}, /* Missing zero crossing C */
+    {0x0000, 0x00, 2}, /* Gap */
+    {0xf100, 0x09, 1}, /* Phase sequence error */
+    {0x0000, 0x00, 4}, /* Gap */
+    {0xf100, 0x0e, 1}, /* Sync Error */
+    {0x0000, 0x00, 2}, /* Gap */
 };
 
-static ec_pdo_entry_info_t lcec_el3403_channel5[] = {
-    {0x6040, 0x01,  1}, // Underrange
-    {0x6040, 0x02,  1}, // Overrange
-    {0x6040, 0x03,  2}, // Limit 1
-    {0x6040, 0x05,  2}, // Limit 2
-    {0x6040, 0x07,  1}, // Error
-    {0x0000, 0x00,  1}, // Gap
-    {0x0000, 0x00,  5}, // Gap
-    {0x6040, 0x0e,  1}, // Sync error
-    {0x6040, 0x0f,  1}, // TxPDO State
-    {0x6040, 0x10,  1}, // TxPDO Toggle
-    {0x6040, 0x11, 16}  // Value
+static ec_pdo_info_t lcec_el3403_pdos_out[] = {
+    {0x1600, 1, lcec_el3403_r1},
+    {0x1601, 1, lcec_el3403_r2},
+    {0x1602, 1, lcec_el3403_r3},
 };
-
+  
 static ec_pdo_info_t lcec_el3403_pdos_in[] = {
-    {0x1A00, 11, lcec_el3403_channel1},
-    {0x1A02, 11, lcec_el3403_channel2},
-    {0x1A04, 11, lcec_el3403_channel3},
-    {0x1A06, 11, lcec_el3403_channel4},
-    {0x1A08, 11, lcec_el3403_channel5}
+    {0x1A00, 10, lcec_el3403_channel1},
+    {0x1A01, 10, lcec_el3403_channel2},
+    {0x1A02, 10, lcec_el3403_channel3},
+    {0x1A03, 9, lcec_el3403_statusdata},
 };
 
 static ec_sync_info_t lcec_el3403_syncs[] = {
     {0, EC_DIR_OUTPUT, 0, NULL},
     {1, EC_DIR_INPUT,  0, NULL},
-    {2, EC_DIR_OUTPUT, 0, NULL},
-    {3, EC_DIR_INPUT,  5, lcec_el3403_pdos_in},
+    {2, EC_DIR_OUTPUT, 3, lcec_el3403_pdos_out},
+    {3, EC_DIR_INPUT,  4, lcec_el3403_pdos_in},
     {0xff}
 };
 
@@ -170,19 +159,15 @@ int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     chan = &hal_data->chans[i];
 
     // initialize POD entries
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x01, &chan->ovr_pdo_os, &chan->ovr_pdo_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x02, &chan->udr_pdo_os, &chan->udr_pdo_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x07, &chan->error_pdo_os, &chan->error_pdo_bp);
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x0e, &chan->sync_err_pdo_os, &chan->sync_err_pdo_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x11, &chan->val_pdo_os, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x11, &chan->curr_pdo_os, &chan->curr_pdo_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x12, &chan->volt_pdo_os, &chan->volt_pdo_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x13, &chan->pow_pdo_os, &chan->pow_pdo_bp);
 
     // export pins
     if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
       return err;
     }
-
-    // initialize pins
-    *(chan->scale) = 1.0;
   }
 
   return 0;
@@ -194,7 +179,7 @@ void lcec_el3403_read(struct lcec_slave *slave, long period) {
   uint8_t *pd = master->process_data;
   int i;
   lcec_el3403_chan_t *chan;
-  int16_t value;
+  int32_t current, voltage, power;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
@@ -206,15 +191,16 @@ void lcec_el3403_read(struct lcec_slave *slave, long period) {
     chan = &hal_data->chans[i];
 
     // update state
-    *(chan->overrange) = EC_READ_BIT(&pd[chan->ovr_pdo_os], chan->ovr_pdo_bp);
-    *(chan->underrange) = EC_READ_BIT(&pd[chan->udr_pdo_os], chan->udr_pdo_bp);
-    *(chan->error) = EC_READ_BIT(&pd[chan->error_pdo_os], chan->error_pdo_bp);
     *(chan->sync_err) = EC_READ_BIT(&pd[chan->sync_err_pdo_os], chan->sync_err_pdo_bp);
 
     // update value
-    value = EC_READ_S16(&pd[chan->val_pdo_os]);
-    *(chan->raw_val) = value;
-    *(chan->val) = *(chan->bias) + *(chan->scale) * (double)value * ((double)1/(double)0x7fff);
+    current = EC_READ_S32(&pd[chan->curr_pdo_os]);
+    voltage = EC_READ_S32(&pd[chan->volt_pdo_os]);
+    power = EC_READ_S32(&pd[chan->pow_pdo_os]);
+
+    *(chan->current) = (double)current * 0.000001;  // 1 uA
+    *(chan->voltage) = (double)voltage * 0.0001; // 0.1 mV
+    *(chan->power) = (double)power * 0.01; // 0.01 W
   }
 }
 

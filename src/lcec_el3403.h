@@ -21,9 +21,9 @@
 #include "lcec.h"
 
 #define LCEC_EL3403_VID LCEC_BECKHOFF_VID
-#define LCEC_EL3403_PID 0x0CB73052
+#define LCEC_EL3403_PID 0x0d4b3052
 
-#define LCEC_EL3403_CHANS 5
+#define LCEC_EL3403_CHANS 3
 #define LCEC_EL3403_PDOS  (LCEC_EL3403_CHANS * 5)
 
 int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
