@@ -160,9 +160,9 @@ int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
 
     // initialize POD entries
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x0e, &chan->sync_err_pdo_os, &chan->sync_err_pdo_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x11, &chan->curr_pdo_os, &chan->curr_pdo_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x12, &chan->volt_pdo_os, &chan->volt_pdo_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x13, &chan->pow_pdo_os, &chan->pow_pdo_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x11, &chan->curr_pdo_os, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x12, &chan->volt_pdo_os, NULL); // &chan->volt_pdo_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x13, &chan->pow_pdo_os, NULL);  //&chan->pow_pdo_bp);
 
     // export pins
     if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
