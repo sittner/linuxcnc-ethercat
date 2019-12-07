@@ -45,6 +45,7 @@
 #include "lcec_el7211.h"
 #include "lcec_el7342.h"
 #include "lcec_el95xx.h"
+#include "lcec_em37xx.h"
 #include "lcec_em7004.h"
 #include "lcec_stmds5k.h"
 #include "lcec_deasda.h"
@@ -193,6 +194,11 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, LCEC_EL6900_PDOS, lcec_el6900_init},
   { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, lcec_el1904_init},
   { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, lcec_el2904_init},
+
+  // pressure sensor
+  { lcecSlaveTypeEM3701, LCEC_EM37XX_VID, LCEC_EM3701_PID, LCEC_EM37XX_PDOS, lcec_em37xx_init},
+  { lcecSlaveTypeEM3702, LCEC_EM37XX_VID, LCEC_EM3702_PID, LCEC_EM37XX_PDOS, lcec_em37xx_init},
+  { lcecSlaveTypeEM3712, LCEC_EM37XX_VID, LCEC_EM3712_PID, LCEC_EM37XX_PDOS, lcec_em37xx_init},
 
   // multi axis interface
   { lcecSlaveTypeEM7004, LCEC_EM7004_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, lcec_em7004_init},

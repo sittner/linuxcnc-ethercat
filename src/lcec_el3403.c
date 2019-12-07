@@ -161,8 +161,8 @@ int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     // initialize POD entries
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x0e, &chan->sync_err_pdo_os, &chan->sync_err_pdo_bp);
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x11, &chan->curr_pdo_os, NULL);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x12, &chan->volt_pdo_os, NULL); // &chan->volt_pdo_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x13, &chan->pow_pdo_os, NULL);  //&chan->pow_pdo_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x12, &chan->volt_pdo_os, NULL);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x13, &chan->pow_pdo_os, NULL);
 
     // export pins
     if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
@@ -198,9 +198,9 @@ void lcec_el3403_read(struct lcec_slave *slave, long period) {
     voltage = EC_READ_S32(&pd[chan->volt_pdo_os]);
     power = EC_READ_S32(&pd[chan->pow_pdo_os]);
 
-    *(chan->current) = (double)current * 0.000001;  // 1 uA
-    *(chan->voltage) = (double)voltage * 0.0001; // 0.1 mV
-    *(chan->power) = (double)power * 0.01; // 0.01 W
+    *(chan->current) = current * 0.000001;  // 1 uA
+    *(chan->voltage) = voltage * 0.0001; // 0.1 mV
+    *(chan->power) = power * 0.01; // 0.01 W
   }
 }
 

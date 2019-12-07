@@ -194,6 +194,11 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL1904", lcecSlaveTypeEL1904, NULL },
   { "EL2904", lcecSlaveTypeEL2904, NULL },
 
+  // pressure sensor
+  { "EM3701", lcecSlaveTypeEM3701, NULL },
+  { "EM3702", lcecSlaveTypeEM3702, NULL },
+  { "EM3712", lcecSlaveTypeEM3712, NULL },
+
   // multi axis interface
   { "EM7004", lcecSlaveTypeEM7004, NULL },
 

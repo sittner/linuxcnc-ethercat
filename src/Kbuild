@@ -29,6 +29,7 @@ lcec-objs := \
     lcec_el7211.o \
     lcec_el7342.o \
     lcec_el95xx.o \
+    lcec_em37xx.o \
     lcec_em7004.o \
     lcec_stmds5k.o \
     lcec_deasda.o \
