@@ -119,6 +119,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EP2028", lcecSlaveTypeEP2028, NULL },
 
   // analog in, 2ch, 16 bits
+  { "EL3004", lcecSlaveTypeEL3004, NULL },
+  { "EL3044", lcecSlaveTypeEL3044, NULL },
+  { "EL3054", lcecSlaveTypeEL3054, NULL },
   { "EL3064", lcecSlaveTypeEL3064, NULL },
 
   // analog in, 2ch, 16 bits

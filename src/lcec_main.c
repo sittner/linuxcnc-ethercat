@@ -120,6 +120,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEP2028, LCEC_EL2xxx_VID, LCEC_EP2028_PID, LCEC_EP2028_PDOS, lcec_el2xxx_init},
 
   // analog in, 4ch, 12 bits
+  { lcecSlaveTypeEL3004, LCEC_EL30x4_VID, LCEC_EL3004_PID, LCEC_EL30x4_PDOS, lcec_el30x4_init},
+  { lcecSlaveTypeEL3044, LCEC_EL30x4_VID, LCEC_EL3044_PID, LCEC_EL30x4_PDOS, lcec_el30x4_init},
+  { lcecSlaveTypeEL3054, LCEC_EL30x4_VID, LCEC_EL3054_PID, LCEC_EL30x4_PDOS, lcec_el30x4_init},
   { lcecSlaveTypeEL3064, LCEC_EL30x4_VID, LCEC_EL3064_PID, LCEC_EL30x4_PDOS, lcec_el30x4_init},
 
   // analog in, 2ch, 16 bits
