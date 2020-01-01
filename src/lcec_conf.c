@@ -96,6 +96,8 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL1252", lcecSlaveTypeEL1252, NULL },
   { "EL1808", lcecSlaveTypeEL1808, NULL },
   { "EL1809", lcecSlaveTypeEL1809, NULL },
+  { "EP1008", lcecSlaveTypeEP1008, NULL },
+  { "EP1018", lcecSlaveTypeEP1018, NULL },
 
   // digital out
   { "EL2002", lcecSlaveTypeEL2002, NULL },
@@ -117,6 +119,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL2809", lcecSlaveTypeEL2809, NULL },
 
   { "EP2028", lcecSlaveTypeEP2028, NULL },
+
+  // digital combo (in/out)
+  { "EP2338", lcecSlaveTypeEP2338, NULL },
 
   // analog in, 2ch, 16 bits
   { "EL3004", lcecSlaveTypeEL3004, NULL },

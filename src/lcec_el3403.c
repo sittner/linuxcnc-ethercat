@@ -312,7 +312,7 @@ void lcec_el3403_read(struct lcec_slave *slave, long period) {
 				case 2 :
 					energy = EC_READ_S32(&pd[chan->variable_pdo_os]);
 					*(chan->energy) = (double)energy * EL3403_FACTOR_ENERGY; 
-                break;
+				break;
 				case 3 :
 					cosphi = EC_READ_S32(&pd[chan->variable_pdo_os]);
 					*(chan->cosphi) = (double)cosphi * EL3403_FACTOR_COSPHI;

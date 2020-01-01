@@ -47,6 +47,7 @@
 #include "lcec_el95xx.h"
 #include "lcec_em37xx.h"
 #include "lcec_em7004.h"
+#include "lcec_ep23xx.h"
 #include "lcec_stmds5k.h"
 #include "lcec_deasda.h"
 #include "lcec_omrg5.h"
@@ -97,6 +98,8 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL1252, LCEC_EL1252_VID, LCEC_EL1252_PID, LCEC_EL1252_PDOS, lcec_el1252_init},  // 2 fast channels with timestamp
   { lcecSlaveTypeEL1808, LCEC_EL1xxx_VID, LCEC_EL1808_PID, LCEC_EL1808_PDOS, lcec_el1xxx_init},
   { lcecSlaveTypeEL1809, LCEC_EL1xxx_VID, LCEC_EL1809_PID, LCEC_EL1809_PDOS, lcec_el1xxx_init},
+  { lcecSlaveTypeEP1008, LCEC_EL1xxx_VID, LCEC_EP1008_PID, LCEC_EP1008_PDOS, lcec_el1xxx_init},
+  { lcecSlaveTypeEP1018, LCEC_EL1xxx_VID, LCEC_EP1018_PID, LCEC_EL1018_PDOS, lcec_el1xxx_init},
 
   // digital out
   { lcecSlaveTypeEL2002, LCEC_EL2xxx_VID, LCEC_EL2002_PID, LCEC_EL2002_PDOS, lcec_el2xxx_init},
@@ -118,6 +121,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL2809, LCEC_EL2xxx_VID, LCEC_EL2809_PID, LCEC_EL2809_PDOS, lcec_el2xxx_init},
 
   { lcecSlaveTypeEP2028, LCEC_EL2xxx_VID, LCEC_EP2028_PID, LCEC_EP2028_PDOS, lcec_el2xxx_init},
+
+  // digital combo (in/out)
+  { lcecSlaveTypeEP2338, LCEC_EP23xx_VID, LCEC_EP2338_PID, LCEC_EP2338_PDOS, lcec_ep23xx_init},
 
   // analog in, 4ch, 12 bits
   { lcecSlaveTypeEL3004, LCEC_EL30x4_VID, LCEC_EL3004_PID, LCEC_EL30x4_PDOS, lcec_el30x4_init},
