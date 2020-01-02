@@ -41,7 +41,7 @@
 #include "lcec_el6900.h"
 #include "lcec_el1904.h"
 #include "lcec_el2904.h"
-#include "lcec_el7041_1000.h"
+#include "lcec_el7041.h"
 #include "lcec_el7211.h"
 #include "lcec_el7342.h"
 #include "lcec_el95xx.h"
@@ -184,7 +184,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL2521, LCEC_EL2521_VID, LCEC_EL2521_PID, LCEC_EL2521_PDOS, lcec_el2521_init},
 
   // stepper
-  { lcecSlaveTypeEL7041_1000, LCEC_EL7041_1000_VID, LCEC_EL7041_1000_PID, LCEC_EL7041_1000_PDOS, lcec_el7041_1000_init},
+  { lcecSlaveTypeEL7041, LCEC_EL7041_VID, LCEC_EL7041_PID, LCEC_EL7041_PDOS, lcec_el7041_init},
+  { lcecSlaveTypeEL7041_1000, LCEC_EL7041_VID, LCEC_EL7041_1000_PID, LCEC_EL7041_1000_PDOS, lcec_el7041_init},
+  { lcecSlaveTypeEP7041, LCEC_EL7041_VID, LCEC_EP7041_PID, LCEC_EP7041_PDOS, lcec_el7041_init},
 
   // ac servo
   { lcecSlaveTypeEL7211, LCEC_EL7211_VID, LCEC_EL7211_PID, LCEC_EL7211_PDOS, lcec_el7211_init},
