@@ -19,6 +19,11 @@
 #include "lcec.h"
 #include "lcec_ep23xx.h"
 
+// This has been tested with the EP2338.  With the addition of a
+// couple config entries, it should work fine with the EP2339 and
+// EP2349 devices.  It *may* work with the EP23[012][89] and EP1859
+// devices, depending on how their PDOs are configured.
+
 typedef struct {
   hal_bit_t *in;
   hal_bit_t *in_not;
@@ -107,9 +112,7 @@ int lcec_ep23xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     // initialize POD entry
     int idx_offset = (i<<4);
     
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "INITing %d at %p (%x)\n", i, pdo_entry_regs, 0x6000 + idx_offset);
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + idx_offset, 0x01, &pin->in_pdo_os, &pin->in_pdo_bp);
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "INITing %d at %p (%x)\n", i, pdo_entry_regs, 0x7000 + idx_offset);
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7000 + idx_offset, 0x01, &pin->out_pdo_os, &pin->out_pdo_bp);
  
     // export pins
@@ -120,8 +123,6 @@ int lcec_ep23xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     // initialize pins
     *(pin->out) = 0;
     pin->invert = 0;
-
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "PDOs added: was %x now %x\n", initial_pdo, pdo_entry_regs);
   }
 
   return 0;
