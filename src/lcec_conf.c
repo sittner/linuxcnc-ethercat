@@ -96,6 +96,8 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL1252", lcecSlaveTypeEL1252, NULL },
   { "EL1808", lcecSlaveTypeEL1808, NULL },
   { "EL1809", lcecSlaveTypeEL1809, NULL },
+  { "EP1008", lcecSlaveTypeEP1008, NULL },
+  { "EP1018", lcecSlaveTypeEP1018, NULL },
 
   // digital out
   { "EL2002", lcecSlaveTypeEL2002, NULL },
@@ -118,6 +120,16 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   { "EP2028", lcecSlaveTypeEP2028, NULL },
 
+  // digital combo (in/out)
+  { "EP2316", lcecSlaveTypeEP2316, NULL },
+  { "EP2338", lcecSlaveTypeEP2338, NULL },
+
+  // analog in, 2ch, 16 bits
+  { "EL3004", lcecSlaveTypeEL3004, NULL },
+  { "EL3044", lcecSlaveTypeEL3044, NULL },
+  { "EL3054", lcecSlaveTypeEL3054, NULL },
+  { "EL3064", lcecSlaveTypeEL3064, NULL },
+
   // analog in, 2ch, 16 bits
   { "EL3102", lcecSlaveTypeEL3102, NULL },
   { "EL3112", lcecSlaveTypeEL3112, NULL },
@@ -125,9 +137,13 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL3142", lcecSlaveTypeEL3142, NULL },
   { "EL3152", lcecSlaveTypeEL3152, NULL },
   { "EL3162", lcecSlaveTypeEL3162, NULL },
+  { "EL3202", lcecSlaveTypeEL3202, NULL },
 
   // analog in, 5ch, 16 bits
   { "EL3255", lcecSlaveTypeEL3255, NULL },
+
+  // analog in, 3ch, 16 bits
+  { "EL3403", lcecSlaveTypeEL3403, NULL },
 
   // analog out, 1ch, 12 bits
   { "EL4001", lcecSlaveTypeEL4001, NULL },
@@ -166,7 +182,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL2521", lcecSlaveTypeEL2521, NULL },
 
   // stepper
+  { "EL7041", lcecSlaveTypeEL7041, NULL },
   { "EL7041-1000", lcecSlaveTypeEL7041_1000, NULL },
+  { "EP7041", lcecSlaveTypeEP7041, NULL },
 
   // ac servo
   { "EL7211", lcecSlaveTypeEL7211, NULL },
@@ -186,6 +204,11 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL6900", lcecSlaveTypeEL6900, slaveEL6900Params },
   { "EL1904", lcecSlaveTypeEL1904, NULL },
   { "EL2904", lcecSlaveTypeEL2904, NULL },
+
+  // pressure sensor
+  { "EM3701", lcecSlaveTypeEM3701, NULL },
+  { "EM3702", lcecSlaveTypeEM3702, NULL },
+  { "EM3712", lcecSlaveTypeEM3712, NULL },
 
   // multi axis interface
   { "EM7004", lcecSlaveTypeEM7004, NULL },

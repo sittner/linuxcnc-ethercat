@@ -1,6 +1,5 @@
 //
-//    Copyright (C) 2015 Jakob Flierl  <jakob.flierl@gmail.com>
-//    Copyright (C) 2011 Sascha Ittner <sascha.ittner@modusoft.de>
+//    Copyright (C) 2019 Scott Laird <laird@google.com>
 //
 //    This program is free software; you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -16,17 +15,18 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
-#ifndef _LCEC_EL7041_1000_H_
-#define _LCEC_EL7041_1000_H_
+#ifndef _LCEC_EL3202_H_
+#define _LCEC_EL3202_H_
 
 #include "lcec.h"
 
-#define LCEC_EL7041_1000_VID LCEC_BECKHOFF_VID
-#define LCEC_EL7041_1000_PID 0x1B813052
+#define LCEC_EL3202_VID LCEC_BECKHOFF_VID
+#define LCEC_EL3202_PID 0x0c823052
 
-#define LCEC_EL7041_1000_PDOS  34
+#define LCEC_EL3202_CHANS 2
+#define LCEC_EL3202_PDOS  (LCEC_EL3202_CHANS * 5)
 
-int lcec_el7041_1000_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+int lcec_el3202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
 
