@@ -120,6 +120,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   { "EP2028", lcecSlaveTypeEP2028, NULL },
 
+  // digital in(out
+  { "EL1859", lcecSlaveTypeEL1859, NULL },
+
   // analog in, 2ch, 16 bits
   { "EL3102", lcecSlaveTypeEL3102, NULL },
   { "EL3112", lcecSlaveTypeEL3112, NULL },

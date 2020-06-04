@@ -22,6 +22,7 @@
 #include "lcec_ax5200.h"
 #include "lcec_el1xxx.h"
 #include "lcec_el1252.h"
+#include "lcec_el1859.h"
 #include "lcec_el2xxx.h"
 #include "lcec_el2202.h"
 #include "lcec_el31x2.h"
@@ -116,6 +117,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL2809, LCEC_EL2xxx_VID, LCEC_EL2809_PID, LCEC_EL2809_PDOS, lcec_el2xxx_init},
 
   { lcecSlaveTypeEP2028, LCEC_EL2xxx_VID, LCEC_EP2028_PID, LCEC_EP2028_PDOS, lcec_el2xxx_init},
+
+  // digital in/out
+  { lcecSlaveTypeEL1859, LCEC_EL1859_VID, LCEC_EL1859_PID, LCEC_EL1859_PDOS, lcec_el1859_init},
 
   // analog in, 2ch, 16 bits
   { lcecSlaveTypeEL3102, LCEC_EL31x2_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, lcec_el31x2_init},
