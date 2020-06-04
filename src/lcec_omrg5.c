@@ -179,8 +179,6 @@ int lcec_omrg5_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *p
   lcec_master_t *master = slave->master;
   lcec_omrg5_data_t *hal_data;
   int err;
-  uint32_t tu;
-  int8_t ti;
 
   // initialize callbacks
   slave->proc_read = lcec_omrg5_read;
