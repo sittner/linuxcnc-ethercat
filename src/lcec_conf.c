@@ -113,6 +113,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL2202", lcecSlaveTypeEL2202, NULL },
   { "EL2612", lcecSlaveTypeEL2612, NULL },
   { "EL2622", lcecSlaveTypeEL2622, NULL },
+  { "EL2634", lcecSlaveTypeEL2634, NULL },
   { "EL2808", lcecSlaveTypeEL2808, NULL },
   { "EL2798", lcecSlaveTypeEL2798, NULL },
   { "EL2809", lcecSlaveTypeEL2809, NULL },
