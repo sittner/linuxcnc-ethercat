@@ -189,6 +189,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL7041-1000", lcecSlaveTypeEL7041_1000, NULL },
 
   // ac servo
+  { "EL7201-9014", lcecSlaveTypeEL7201_9014, NULL },
   { "EL7211", lcecSlaveTypeEL7211, NULL },
   { "EL7221", lcecSlaveTypeEL7221, NULL },
 
