@@ -33,6 +33,7 @@
 
 #include "lcec_stmds5k.h"
 #include "lcec_el6900.h"
+#include "lcec_el70x1.h"
 
 typedef struct {
   const char *name;
@@ -60,6 +61,15 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveStMDS5kParams[] = {
 
 static const LCEC_CONF_MODPARAM_DESC_T slaveEL6900Params[] = {
   { "fsoeSlaveIdx", LCEC_EL6900_PARAM_SLAVEID, HAL_U32, LCEC_EL6900_PARAM_SLAVEID_PDOS } ,
+  { NULL }
+};
+
+static const LCEC_CONF_MODPARAM_DESC_T slaveEL70x1Params[] = {
+  { "maxCurrent", LCEC_EL70x1_PARAM_MAX_CURR, HAL_U32, 0 } ,
+  { "redCurrent", LCEC_EL70x1_PARAM_RED_CURR, HAL_U32, 0 } ,
+  { "nomVoltage", LCEC_EL70x1_PARAM_NOM_VOLT, HAL_U32, 0 } ,
+  { "coilRes", LCEC_EL70x1_PARAM_COIL_RES, HAL_U32, 0 } ,
+  { "motorEMF", LCEC_EL70x1_PARAM_MOTOR_EMF, HAL_U32, 0 } ,
   { NULL }
 };
 
@@ -174,6 +184,8 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL2521", lcecSlaveTypeEL2521, NULL },
 
   // stepper
+  { "EL7031", lcecSlaveTypeEL7031, slaveEL70x1Params },
+  { "EL7041-0052", lcecSlaveTypeEL7041_0052, slaveEL70x1Params },
   { "EL7041-1000", lcecSlaveTypeEL7041_1000, NULL },
 
   // ac servo
