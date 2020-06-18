@@ -364,7 +364,7 @@ void lcec_el70x1_write(struct lcec_slave *slave, long period) {
   EC_WRITE_BIT(&pd[hal_data->stm_ena_pdo_os], hal_data->stm_ena_pdo_bp, *(hal_data->stm_enable));
   EC_WRITE_BIT(&pd[hal_data->stm_reset_pdo_os], hal_data->stm_reset_pdo_bp, *(hal_data->stm_reset));
   EC_WRITE_BIT(&pd[hal_data->stm_reduce_torque_pdo_os], hal_data->stm_reduce_torque_pdo_bp, *(hal_data->stm_reduce_torque));
-  EC_WRITE_S16(&pd[hal_data->stm_pos_raw_pdo_os], *(hal_data->stm_pos_cmd_raw));
+  EC_WRITE_S32(&pd[hal_data->stm_pos_raw_pdo_os], *(hal_data->stm_pos_cmd_raw));
 
 }
 
