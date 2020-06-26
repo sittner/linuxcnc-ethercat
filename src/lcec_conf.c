@@ -34,6 +34,7 @@
 #include "lcec_stmds5k.h"
 #include "lcec_el6900.h"
 #include "lcec_el70x1.h"
+#include "lcec_el7411.h"
 
 typedef struct {
   const char *name;
@@ -70,6 +71,29 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveEL70x1Params[] = {
   { "nomVoltage", LCEC_EL70x1_PARAM_NOM_VOLT, HAL_U32, 0 } ,
   { "coilRes", LCEC_EL70x1_PARAM_COIL_RES, HAL_U32, 0 } ,
   { "motorEMF", LCEC_EL70x1_PARAM_MOTOR_EMF, HAL_U32, 0 } ,
+  { NULL }
+};
+
+
+static const LCEC_CONF_MODPARAM_DESC_T slaveEL7411Params[] = {
+
+  { "dcLinkNominal", LCEC_EL7411_PARAM_DCLINK_NOM, HAL_U32, 0 } ,
+  { "dcLinkMin", LCEC_EL7411_PARAM_DCLINK_MIN, HAL_U32, 0 } ,
+  { "dcLinkMax", LCEC_EL7411_PARAM_DCLINK_MAX, HAL_U32, 0 } ,
+  { "maxCurrent", LCEC_EL7411_PARAM_MAX_CURR, HAL_U32, 0 } ,
+  { "ratedCurrent", LCEC_EL7411_PARAM_RATED_CURR, HAL_U32, 0 } ,
+  { "ratedVoltage", LCEC_EL7411_PARAM_RATED_VOLT, HAL_U32, 0 } ,
+  { "polePairs", LCEC_EL7411_PARAM_POLE_PAIRS, HAL_U32, 0 } ,
+  { "coilRes", LCEC_EL7411_PARAM_RESISTANCE, HAL_U32, 0 } ,
+  { "coilInd", LCEC_EL7411_PARAM_INDUCTANCE, HAL_U32, 0 } ,
+  { "torqueConst", LCEC_EL7411_PARAM_TOURQUE_CONST, HAL_U32, 0 } ,
+  { "voltageConst", LCEC_EL7411_PARAM_VOLTAGE_CONST, HAL_U32, 0 } ,
+  { "rotorInertia", LCEC_EL7411_PARAM_ROTOR_INERTIA, HAL_U32, 0 } ,
+  { "maxSpeed", LCEC_EL7411_PARAM_MAX_SPEED, HAL_U32, 0 } ,
+  { "ratedSpeed", LCEC_EL7411_PARAM_RATED_SPEED, HAL_U32, 0 } ,
+  { "thermalTimeConst", LCEC_EL7411_PARAM_TH_TIME_CONST, HAL_U32, 0 } ,
+  { "hallVoltage", LCEC_EL7411_PARAM_HALL_VOLT, HAL_U32, 0 } ,
+  { "hallAdjust", LCEC_EL7411_PARAM_HALL_ADJUST, HAL_S32, 0 } ,
   { NULL }
 };
 
@@ -195,6 +219,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // dc servo
   { "EL7342", lcecSlaveTypeEL7342, NULL },
+
+  // BLDC
+  { "EL7411", lcecSlaveTypeEL7411, slaveEL7411Params },
 
   // power suppply
   { "EL9505", lcecSlaveTypeEL9505, NULL },

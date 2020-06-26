@@ -44,6 +44,7 @@
 #include "lcec_el70x1.h"
 #include "lcec_el7211.h"
 #include "lcec_el7342.h"
+#include "lcec_el7411.h"
 #include "lcec_el95xx.h"
 #include "lcec_em7004.h"
 #include "lcec_stmds5k.h"
@@ -184,6 +185,9 @@ static const lcec_typelist_t types[] = {
 
   // dc servo
   { lcecSlaveTypeEL7342, LCEC_EL7342_VID, LCEC_EL7342_PID, LCEC_EL7342_PDOS, lcec_el7342_init},
+
+  // BLDC
+  { lcecSlaveTypeEL7411, LCEC_EL7411_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, lcec_el7411_init},
 
   // power supply
   { lcecSlaveTypeEL9505, LCEC_EL95xx_VID, LCEC_EL9505_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
