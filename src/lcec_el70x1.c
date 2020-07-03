@@ -25,6 +25,9 @@ typedef struct {
   hal_float_t stm_pos_scale;
   hal_float_t *stm_pos_cmd;
 
+  hal_float_t auto_reduce_tourque_delay;
+  long long auto_reduce_tourque_timer;
+
   hal_bit_t *stm_ready_to_enable;
   hal_bit_t *stm_ready;
   hal_bit_t *stm_warning;
@@ -40,6 +43,8 @@ typedef struct {
   hal_bit_t *stm_reset;
   hal_bit_t *stm_reduce_torque;
   hal_s32_t *stm_pos_cmd_raw;
+
+  hal_s32_t stm_pos_cmd_raw_last;
 
   unsigned int stm_ready_to_enable_pdo_os;
   unsigned int stm_ready_to_enable_pdo_bp;
@@ -219,6 +224,7 @@ static const lcec_pindesc_t slave_pins[] = {
 static const lcec_pindesc_t slave_params[] = {
   { HAL_FLOAT, HAL_RW, offsetof(lcec_el70x1_data_t, stm_pos_scale),  "%s.%s.%s.srv-pos-scale" },
   { HAL_BIT, HAL_RW, offsetof(lcec_el70x1_data_t, auto_fault_reset), "%s.%s.%s.auto-fault-reset" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_el70x1_data_t, auto_reduce_tourque_delay), "%s.%s.%s.auto-reduce-torque-delay" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -332,6 +338,9 @@ int lcec_el70x1_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   // initialize variables
   hal_data->stm_pos_scale = 1.0;
   hal_data->auto_fault_reset = 1;
+  hal_data->auto_reduce_tourque_delay = 0.0;
+  hal_data->auto_reduce_tourque_timer = 0;
+  hal_data->stm_pos_cmd_raw_last = 0;
 
   return 0;
 }
@@ -358,12 +367,32 @@ void lcec_el70x1_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el70x1_data_t *hal_data = (lcec_el70x1_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
+  bool enabled, reduce_tourque;
 
   *(hal_data->stm_pos_cmd_raw) = (int32_t) (*(hal_data->stm_pos_cmd) * hal_data->stm_pos_scale);
 
-  EC_WRITE_BIT(&pd[hal_data->stm_ena_pdo_os], hal_data->stm_ena_pdo_bp, *(hal_data->stm_enable));
+  enabled = *(hal_data->stm_enable);
+  if (!enabled) {
+    hal_data->auto_reduce_tourque_timer = 0;
+  }
+  EC_WRITE_BIT(&pd[hal_data->stm_ena_pdo_os], hal_data->stm_ena_pdo_bp, enabled);
+
+  reduce_tourque = *(hal_data->stm_reduce_torque);
+  if (*(hal_data->stm_pos_cmd_raw) != hal_data->stm_pos_cmd_raw_last) {
+    hal_data->stm_pos_cmd_raw_last = *(hal_data->stm_pos_cmd_raw);
+    hal_data->auto_reduce_tourque_timer = 0;
+  }
+  if (hal_data->auto_reduce_tourque_delay > 0.0) {
+    if (hal_data->auto_reduce_tourque_timer < (long long) (hal_data->auto_reduce_tourque_delay * 1e9)) {
+      hal_data->auto_reduce_tourque_timer += period;
+    } else {
+      reduce_tourque = true;
+    }
+  }
+  EC_WRITE_BIT(&pd[hal_data->stm_reduce_torque_pdo_os], hal_data->stm_reduce_torque_pdo_bp, reduce_tourque);
+
   EC_WRITE_BIT(&pd[hal_data->stm_reset_pdo_os], hal_data->stm_reset_pdo_bp, *(hal_data->stm_reset));
-  EC_WRITE_BIT(&pd[hal_data->stm_reduce_torque_pdo_os], hal_data->stm_reduce_torque_pdo_bp, *(hal_data->stm_reduce_torque));
+
   EC_WRITE_S32(&pd[hal_data->stm_pos_raw_pdo_os], *(hal_data->stm_pos_cmd_raw));
 
 }
