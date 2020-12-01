@@ -38,6 +38,8 @@ typedef struct {
   hal_bit_t *status_warning;
   hal_bit_t *status_limit_active;
 
+  hal_bit_t *at_speed;
+
   hal_float_t *vel_cmd;
   hal_float_t *vel_fb;
   hal_float_t *vel_fb_rpm;
@@ -49,6 +51,11 @@ typedef struct {
 
   hal_u32_t vel_resolution;
   hal_u32_t pos_resolution;
+
+  hal_float_t min_vel;
+  hal_float_t max_vel;
+  hal_float_t max_accel;
+  hal_float_t  at_speed_window;
 
   lcec_class_enc_data_t enc;
 
@@ -66,6 +73,8 @@ typedef struct {
   double vel_out_scale;
 
   long fault_reset_timer;
+
+  double current_vel_cmd;
 
 } lcec_el7211_data_t;
 
@@ -85,6 +94,7 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb_rpm), "%s.%s.%s.velo-fb-rpm" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb_rpm_abs), "%s.%s.%s.velo-fb-rpm-abs" },
   { HAL_S32, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb_raw), "%s.%s.%s.velo-fb-raw" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, at_speed), "%s.%s.%s.at-speed" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -92,6 +102,10 @@ static const lcec_pindesc_t slave_params[] = {
   { HAL_FLOAT, HAL_RW, offsetof(lcec_el7211_data_t, scale), "%s.%s.%s.scale" },
   { HAL_U32, HAL_RO, offsetof(lcec_el7211_data_t, vel_resolution), "%s.%s.%s.vel-resolution" },
   { HAL_U32, HAL_RO, offsetof(lcec_el7211_data_t, pos_resolution), "%s.%s.%s.pos-resolution" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_el7211_data_t, min_vel), "%s.%s.%s.min-vel" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_el7211_data_t, max_vel), "%s.%s.%s.max-vel" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_el7211_data_t, max_accel), "%s.%s.%s.max-accel" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_el7211_data_t, at_speed_window), "%s.%s.%s.at-speed-window" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -211,6 +225,10 @@ int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   hal_data->scale_rcpt = 0.0;
   hal_data->vel_out_scale = 0.0;
   hal_data->fault_reset_timer = 0;
+  hal_data->current_vel_cmd = 0;
+  hal_data->min_vel = -1e20;
+  hal_data->max_vel = 1e20;
+  hal_data->max_accel = 1e20;
 
   return 0;
 }
@@ -288,9 +306,20 @@ void lcec_el7211_read(struct lcec_slave *slave, long period) {
   *(hal_data->vel_fb_rpm) = vel;
   *(hal_data->vel_fb_rpm_abs) = fabs(vel);
 
+  // update at-speed
+  *(hal_data->at_speed) =
+    *(hal_data->vel_fb) >= (*(hal_data->vel_cmd) - hal_data->at_speed_window) &&
+    *(hal_data->vel_fb) <= (*(hal_data->vel_cmd) + hal_data->at_speed_window);
+
   // update position feedback
   pos_cnt = EC_READ_U32(&pd[hal_data->pos_fb_pdo_os]);
   class_enc_update(&hal_data->enc, hal_data->pos_resolution, hal_data->scale_rcpt, pos_cnt, 0, 0);
+}
+
+static inline double clamp(double v, double sub, double sup) {
+  if (v < sub) return sub;
+  if (v > sup) return sup;
+  return v;
 }
 
 void lcec_el7211_write(struct lcec_slave *slave, long period) {
@@ -298,13 +327,20 @@ void lcec_el7211_write(struct lcec_slave *slave, long period) {
   lcec_el7211_data_t *hal_data = (lcec_el7211_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
   uint16_t control;
-  double velo_raw;
+  double velo_cmd, velo_raw, velo_maxdelta;
 
   // check for change in scale value
   lcec_el7211_check_scales(hal_data);
 
-  control = 0;
+  velo_cmd = 0.0;
   if (*(hal_data->enable)) {
+    velo_cmd = clamp(*(hal_data->vel_cmd), hal_data->min_vel, hal_data->max_vel);
+  }
+  velo_maxdelta = hal_data->max_accel * (double) period * 1e-9;
+  hal_data->current_vel_cmd = clamp(velo_cmd, hal_data->current_vel_cmd - velo_maxdelta, hal_data->current_vel_cmd + velo_maxdelta);
+
+  control = 0;
+  if (*(hal_data->enable) || hal_data->current_vel_cmd != 0) {
     if (*(hal_data->status_fault)) {
       control = 0x80;
     } else if (*(hal_data->status_disabled)) {
@@ -319,7 +355,7 @@ void lcec_el7211_write(struct lcec_slave *slave, long period) {
   EC_WRITE_U16(&pd[hal_data->ctrl_pdo_os], control);
 
   // set velocity
-  velo_raw = *(hal_data->vel_cmd) * hal_data->vel_out_scale;
+  velo_raw = hal_data->current_vel_cmd * hal_data->vel_out_scale;
   if (velo_raw > (double)0x7fffffff) {
     velo_raw = (double)0x7fffffff;
   }
