@@ -39,7 +39,9 @@
 #define LCEC_EL2808_PID 0x0AF83052
 #define LCEC_EL2798_PID 0x0AEE3052
 #define LCEC_EL2809_PID 0x0AF93052
+#define LCEC_EP2008_PID 0x07D84052
 #define LCEC_EP2028_PID 0x07EC4052
+#define LCEC_EP2809_PID 0x0AF94052
 
 #define LCEC_EL2002_PDOS 2
 #define LCEC_EL2004_PDOS 4
@@ -58,7 +60,9 @@
 #define LCEC_EL2808_PDOS 8
 #define LCEC_EL2798_PDOS 8
 #define LCEC_EL2809_PDOS 16
+#define LCEC_EP2008_PDOS 8
 #define LCEC_EP2028_PDOS 8
+#define LCEC_EP2809_PDOS 16
 
 int lcec_el2xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 

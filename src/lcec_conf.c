@@ -101,6 +101,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // bus coupler
   { "EK1100", lcecSlaveTypeEK1100, NULL },
   { "EK1110", lcecSlaveTypeEK1110, NULL },
+  { "EK1122", lcecSlaveTypeEK1122, NULL },
 
   // generic device
   { "generic", lcecSlaveTypeGeneric, NULL },
@@ -152,7 +153,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL2798", lcecSlaveTypeEL2798, NULL },
   { "EL2809", lcecSlaveTypeEL2809, NULL },
 
+  { "EP2008", lcecSlaveTypeEP2008, NULL },
   { "EP2028", lcecSlaveTypeEP2028, NULL },
+  { "EP2809", lcecSlaveTypeEP2809, NULL },
 
   // digital in(out
   { "EL1859", lcecSlaveTypeEL1859, NULL },
@@ -245,7 +248,29 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "DeASDA", lcecSlaveTypeDeASDA, NULL },
 
   // Omron G5 series
-  { "OmrG5", lcecSlaveTypeOmrG5, NULL },
+  { "R88D-KNA5L-ECT", lcecSlaveTypeOmrG5_KNA5L, NULL },
+  { "R88D-KN01L-ECT", lcecSlaveTypeOmrG5_KN01L, NULL },
+  { "R88D-KN02L-ECT", lcecSlaveTypeOmrG5_KN02L, NULL },
+  { "R88D-KN04L-ECT", lcecSlaveTypeOmrG5_KN04L, NULL },
+  { "R88D-KN01H-ECT", lcecSlaveTypeOmrG5_KN01H, NULL },
+  { "R88D-KN02H-ECT", lcecSlaveTypeOmrG5_KN02H, NULL },
+  { "R88D-KN04H-ECT", lcecSlaveTypeOmrG5_KN04H, NULL },
+  { "R88D-KN08H-ECT", lcecSlaveTypeOmrG5_KN08H, NULL },
+  { "R88D-KN10H-ECT", lcecSlaveTypeOmrG5_KN10H, NULL },
+  { "R88D-KN15H-ECT", lcecSlaveTypeOmrG5_KN15H, NULL },
+  { "R88D-KN20H-ECT", lcecSlaveTypeOmrG5_KN20H, NULL },
+  { "R88D-KN30H-ECT", lcecSlaveTypeOmrG5_KN30H, NULL },
+  { "R88D-KN50H-ECT", lcecSlaveTypeOmrG5_KN50H, NULL },
+  { "R88D-KN75H-ECT", lcecSlaveTypeOmrG5_KN75H, NULL },
+  { "R88D-KN150H-ECT", lcecSlaveTypeOmrG5_KN150H, NULL },
+  { "R88D-KN06F-ECT", lcecSlaveTypeOmrG5_KN06F, NULL },
+  { "R88D-KN10F-ECT", lcecSlaveTypeOmrG5_KN10F, NULL },
+  { "R88D-KN15F-ECT", lcecSlaveTypeOmrG5_KN15F, NULL },
+  { "R88D-KN20F-ECT", lcecSlaveTypeOmrG5_KN20F, NULL },
+  { "R88D-KN30F-ECT", lcecSlaveTypeOmrG5_KN30F, NULL },
+  { "R88D-KN50F-ECT", lcecSlaveTypeOmrG5_KN50F, NULL },
+  { "R88D-KN75F-ECT", lcecSlaveTypeOmrG5_KN75F, NULL },
+  { "R88D-KN150F-ECT", lcecSlaveTypeOmrG5_KN150F, NULL },
 
   // modusoft PH3LM2RM converter
   { "Ph3LM2RM", lcecSlaveTypePh3LM2RM, NULL },
