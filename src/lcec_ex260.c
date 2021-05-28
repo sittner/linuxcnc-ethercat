@@ -13,12 +13,6 @@ typedef struct {
     hal_bit_t *sol_3b;
     hal_bit_t *sol_4a;
     hal_bit_t *sol_4b;
-    hal_bit_t *sol_5a;
-    hal_bit_t *sol_5b;
-    hal_bit_t *sol_6a;
-    hal_bit_t *sol_6b;
-    hal_bit_t *sol_7a;
-    hal_bit_t *sol_7b;
     unsigned int pdo_os;
     unsigned int pdo_bp;
 } lcec_ex260_pin_t;
@@ -32,12 +26,6 @@ static const lcec_pindesc_t slave_pins[] = {
         { HAL_BIT, HAL_IN, offsetof(lcec_ex260_pin_t, sol_3b), "%s.%s.%s.sol-%d-3b" },
         { HAL_BIT, HAL_IN, offsetof(lcec_ex260_pin_t, sol_4a), "%s.%s.%s.sol-%d-4a" },
         { HAL_BIT, HAL_IN, offsetof(lcec_ex260_pin_t, sol_4b), "%s.%s.%s.sol-%d-4b" },
-        { HAL_BIT, HAL_IN, offsetof(lcec_ex260_pin_t, sol_5a), "%s.%s.%s.sol-%d-5a" },
-        { HAL_BIT, HAL_IN, offsetof(lcec_ex260_pin_t, sol_5b), "%s.%s.%s.sol-%d-5b" },
-        { HAL_BIT, HAL_IN, offsetof(lcec_ex260_pin_t, sol_6a), "%s.%s.%s.sol-%d-6a" },
-        { HAL_BIT, HAL_IN, offsetof(lcec_ex260_pin_t, sol_6b), "%s.%s.%s.sol-%d-6b" },
-        { HAL_BIT, HAL_IN, offsetof(lcec_ex260_pin_t, sol_7a), "%s.%s.%s.sol-%d-7a" },
-        { HAL_BIT, HAL_IN, offsetof(lcec_ex260_pin_t, sol_7b), "%s.%s.%s.sol-%d-7b" },
         { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -90,8 +78,15 @@ void lcec_ex260_write(struct lcec_slave *slave, long period) {
   // set outputs
   for (i=0, pin=hal_data; i<slave->pdo_entry_count; i++, pin++) {
     s = *(pin->sol_1a);
+    s |= *(pin->sol_1b) << 1;
+    s |= *(pin->sol_2a) << 2;
+    s |= *(pin->sol_2b) << 3;
+    s |= *(pin->sol_3a) << 4;
+    s |= *(pin->sol_3b) << 5;
+    s |= *(pin->sol_4a) << 6;
+    s |= *(pin->sol_4b) << 7;
+    EC_WRITE_U8(&pd[pin->pdo_os], s);
 
-    EC_WRITE_BIT(&pd[pin->pdo_os], pin->pdo_bp, s);
   }
 }
 
