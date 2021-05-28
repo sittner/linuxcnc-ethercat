@@ -243,7 +243,10 @@ static const lcec_typelist_t types[] = {
 
   // modusoft PH3LM2RM converter
   { lcecSlaveTypePh3LM2RM, LCEC_PH3LM2RM_VID, LCEC_PH3LM2RM_PID, LCEC_PH3LM2RM_PDOS, lcec_ph3lm2rm_init},
-  { lcecSlaveTypeEX260, LCEC_EX260_VID, LCEC_EX260_PID, LCEC_EX260_PDOS, lcec_ex260_init},
+  { lcecSlaveTypeEX260_SEC1, LCEC_EX260_VID, LCEC_EX260_SEC1_PID, LCEC_EX260_SEC1_PDOS, lcec_ex260_init},
+  { lcecSlaveTypeEX260_SEC2, LCEC_EX260_VID, LCEC_EX260_SEC2_PID, LCEC_EX260_SEC2_PDOS, lcec_ex260_init},
+  { lcecSlaveTypeEX260_SEC3, LCEC_EX260_VID, LCEC_EX260_SEC3_PID, LCEC_EX260_SEC3_PDOS, lcec_ex260_init},
+  { lcecSlaveTypeEX260_SEC4, LCEC_EX260_VID, LCEC_EX260_SEC4_PID, LCEC_EX260_SEC4_PDOS, lcec_ex260_init},
 
   { lcecSlaveTypeInvalid }
 };
