@@ -2,7 +2,7 @@ Source: linuxcnc-ethercat
 Section: unknown
 Priority: extra
 Maintainer: Sascha Ittner <sascha.ittner@modusoft.de>
-Build-Depends: debhelper (>= 8.0.0), linuxcnc-dev | linuxcnc-sim-dev | linuxcnc-uspace-dev | machinekit-dev, etherlabmaster-dev
+Build-Depends: debhelper (>= 8.0.0), libexpat1-dev, linuxcnc-dev | linuxcnc-sim-dev | linuxcnc-uspace-dev | machinekit-dev, etherlabmaster-dev
 Standards-Version: 3.9.3
 
 Package: linuxcnc-ethercat
