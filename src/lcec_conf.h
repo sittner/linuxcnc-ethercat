@@ -64,6 +64,7 @@ typedef enum {
   lcecSlaveTypeAX5203,
   lcecSlaveTypeAX5206,
   lcecSlaveTypeEK1100,
+  lcecSlaveTypeEK1101,
   lcecSlaveTypeEK1110,
   lcecSlaveTypeEK1122,
   lcecSlaveTypeEL1002,
@@ -102,6 +103,7 @@ typedef enum {
   lcecSlaveTypeEL2612,
   lcecSlaveTypeEL2622,
   lcecSlaveTypeEL2634,
+  lcecSlaveTypeEL2652,
   lcecSlaveTypeEL2808,
   lcecSlaveTypeEL2798,
   lcecSlaveTypeEL2809,
@@ -181,7 +183,11 @@ typedef enum {
   lcecSlaveTypeOmrG5_KN50F,
   lcecSlaveTypeOmrG5_KN75F,
   lcecSlaveTypeOmrG5_KN150F,
-  lcecSlaveTypePh3LM2RM
+  lcecSlaveTypePh3LM2RM,
+  lcecSlaveTypeEX260_SEC1,
+  lcecSlaveTypeEX260_SEC2,
+  lcecSlaveTypeEX260_SEC3,
+  lcecSlaveTypeEX260_SEC4
 } LCEC_SLAVE_TYPE_T;
 
 typedef struct {
