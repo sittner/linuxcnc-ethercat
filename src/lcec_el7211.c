@@ -53,6 +53,9 @@ typedef struct {
 
   hal_s32_t *vel_fb_raw;
 
+  hal_float_t *vel_cmd_out;
+  hal_s32_t *vel_cmd_out_raw;
+
   hal_float_t scale;
 
   hal_u32_t vel_resolution;
@@ -81,8 +84,6 @@ typedef struct {
 
   long fault_reset_timer;
 
-  double current_vel_cmd;
-
 } lcec_el7211_data_t;
 
 static const lcec_pindesc_t slave_pins[] = {
@@ -97,6 +98,8 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, status_warning), "%s.%s.%s.status-warning" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, status_limit_active), "%s.%s.%s.status-limit-active" },
   { HAL_FLOAT, HAL_IN, offsetof(lcec_el7211_data_t, vel_cmd), "%s.%s.%s.velo-cmd" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, vel_cmd_out), "%s.%s.%s.velo-cmd-out" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_el7211_data_t, vel_cmd_out_raw), "%s.%s.%s.velo-cmd-out-raw" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb), "%s.%s.%s.velo-fb" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb_rpm), "%s.%s.%s.velo-fb-rpm" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7211_data_t, vel_fb_rpm_abs), "%s.%s.%s.velo-fb-rpm-abs" },
@@ -251,7 +254,6 @@ int lcec_el7211_export_pins(lcec_master_t *master, struct lcec_slave *slave, lce
   hal_data->scale_rcpt = 0.0;
   hal_data->vel_out_scale = 0.0;
   hal_data->fault_reset_timer = 0;
-  hal_data->current_vel_cmd = 0;
   hal_data->min_vel = -1e20;
   hal_data->max_vel = 1e20;
   hal_data->max_accel = 1e20;
@@ -461,10 +463,10 @@ void lcec_el7211_write(struct lcec_slave *slave, long period) {
     velo_cmd = clamp(*(hal_data->vel_cmd), hal_data->min_vel, hal_data->max_vel);
   }
   velo_maxdelta = hal_data->max_accel * (double) period * 1e-9;
-  hal_data->current_vel_cmd = clamp(velo_cmd, hal_data->current_vel_cmd - velo_maxdelta, hal_data->current_vel_cmd + velo_maxdelta);
+  *(hal_data->vel_cmd_out) = clamp(velo_cmd, *(hal_data->vel_cmd_out) - velo_maxdelta, *(hal_data->vel_cmd_out) + velo_maxdelta);
 
   control = 0;
-  if (*(hal_data->enable) || hal_data->current_vel_cmd != 0) {
+  if (*(hal_data->enable) || *(hal_data->vel_cmd_out) != 0) {
     if (*(hal_data->status_fault)) {
       control = 0x80;
     } else if (*(hal_data->status_disabled)) {
@@ -479,14 +481,15 @@ void lcec_el7211_write(struct lcec_slave *slave, long period) {
   EC_WRITE_U16(&pd[hal_data->ctrl_pdo_os], control);
 
   // set velocity
-  velo_raw = hal_data->current_vel_cmd * hal_data->vel_out_scale;
+  velo_raw = *(hal_data->vel_cmd_out) * hal_data->vel_out_scale;
   if (velo_raw > (double)0x7fffffff) {
     velo_raw = (double)0x7fffffff;
   }
   if (velo_raw < (double)-0x7fffffff) {
     velo_raw = (double)-0x7fffffff;
   }
-  EC_WRITE_S32(&pd[hal_data->vel_cmd_pdo_os], (int32_t)velo_raw);
+  *(hal_data->vel_cmd_out_raw) = (int32_t) velo_raw;
+  EC_WRITE_S32(&pd[hal_data->vel_cmd_pdo_os], *(hal_data->vel_cmd_out_raw));
 
 }
 
