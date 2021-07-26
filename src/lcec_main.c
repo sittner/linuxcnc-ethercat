@@ -38,6 +38,7 @@
 #include "lcec_el5152.h"
 #include "lcec_el2521.h"
 #include "lcec_el6900.h"
+#include "lcec_el1918_logic.h"
 #include "lcec_el1904.h"
 #include "lcec_el2904.h"
 #include "lcec_el7041_1000.h"
@@ -201,6 +202,7 @@ static const lcec_typelist_t types[] = {
 
   // FSoE devices
   { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, LCEC_EL6900_PDOS, lcec_el6900_init},
+  { lcecSlaveTypeEL1918_LOGIC, LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, LCEC_EL1918_LOGIC_PDOS, lcec_el1918_logic_init},
   { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, lcec_el1904_init},
   { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, lcec_el2904_init},
 
