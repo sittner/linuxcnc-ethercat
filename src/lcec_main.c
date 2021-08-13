@@ -201,6 +201,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL9510, LCEC_EL95xx_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
   { lcecSlaveTypeEL9512, LCEC_EL95xx_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
   { lcecSlaveTypeEL9515, LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
+  { lcecSlaveTypeEL9576, LCEC_EL95xx_VID, LCEC_EL9576_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},  
 
   // FSoE devices
   { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, LCEC_EL6900_PDOS, lcec_el6900_init},

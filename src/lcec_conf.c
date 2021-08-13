@@ -242,6 +242,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL9510", lcecSlaveTypeEL9510, NULL },
   { "EL9512", lcecSlaveTypeEL9512, NULL },
   { "EL9515", lcecSlaveTypeEL9515, NULL },
+  { "EL9576", lcecSlaveTypeEL9576, NULL },
 
   // FSoE devices
   { "EL6900", lcecSlaveTypeEL6900, slaveEL6900Params },
