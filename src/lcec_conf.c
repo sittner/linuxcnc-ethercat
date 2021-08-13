@@ -108,6 +108,7 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveEL7411Params[] = {
 static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // bus coupler
   { "EK1100", lcecSlaveTypeEK1100, NULL },
+  { "EK1101", lcecSlaveTypeEK1101, NULL },
   { "EK1110", lcecSlaveTypeEK1110, NULL },
   { "EK1122", lcecSlaveTypeEK1122, NULL },
 
@@ -157,6 +158,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL2612", lcecSlaveTypeEL2612, NULL },
   { "EL2622", lcecSlaveTypeEL2622, NULL },
   { "EL2634", lcecSlaveTypeEL2634, NULL },
+  { "EL2652", lcecSlaveTypeEL2652, NULL },
   { "EL2808", lcecSlaveTypeEL2808, NULL },
   { "EL2798", lcecSlaveTypeEL2798, NULL },
   { "EL2809", lcecSlaveTypeEL2809, NULL },
