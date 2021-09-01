@@ -137,6 +137,7 @@ static const lcec_typelist_t types[] = {
   // digital in/out
   { lcecSlaveTypeEL1859, LCEC_EL1859_VID, LCEC_EL1859_PID, LCEC_EL1859_PDOS, lcec_el1859_init},
   { lcecSlaveTypeEP2338, LCEC_EP23xx_VID, LCEC_EP2338_PID, LCEC_EP2338_PDOS, lcec_ep23xx_init},
+  { lcecSlaveTypeEP2349, LCEC_EP23xx_VID, LCEC_EP2349_PID, LCEC_EP2349_PDOS, lcec_ep23xx_init},
   { lcecSlaveTypeEP2316, LCEC_EP23xx_VID, LCEC_EP2316_PID, LCEC_EP2316_PDOS, lcec_ep23xx_init},
 
   // analog in, 4ch, 12 bits

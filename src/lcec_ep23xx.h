@@ -24,9 +24,11 @@
 
 // Add additional EP23xx models here, as well as lcec_main.c, lcec_conf.c, and lcec_conf.h.
 #define LCEC_EP2338_PID 0x09224052
+#define LCEC_EP2349_PID 0x092d4052
 #define LCEC_EP2316_PID 0x090C4052  // Untested, may not work.
 
 #define LCEC_EP2338_PDOS 16  // Can be in or out on each port, so 2 PDOs per port.
+#define LCEC_EP2349_PDOS 32  // Can be in or out on each port, so 2 PDOs per port.
 #define LCEC_EP2316_PDOS 16  // Each port is fixed in or out, so 1 PDO per port.
 
 int lcec_ep23xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
