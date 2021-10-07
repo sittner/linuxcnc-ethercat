@@ -34,6 +34,7 @@ lcec-objs := \
     lcec_em7004.o \
     lcec_stmds5k.o \
     lcec_deasda.o \
+	lcec_dems300.o \
     lcec_omrg5.o \
     lcec_ph3lm2rm.o
 
