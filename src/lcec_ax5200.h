@@ -19,15 +19,16 @@
 #define _LCEC_AX5200_H_
 
 #include "lcec.h"
-
+#include "lcec_class_ax5.h"
 
 #define LCEC_AX5200_VID LCEC_BECKHOFF_VID
 #define LCEC_AX5203_PID 0x14536012
 #define LCEC_AX5206_PID 0x14566012
 
 #define LCEC_AX5200_CHANS 2
-#define LCEC_AX5200_PDOS 10
+#define LCEC_AX5200_PDOS  (LCEC_AX5200_CHANS * LCEC_CLASS_AX5_PDOS)
 
+int lcec_ax5200_preinit(struct lcec_slave *slave);
 int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif

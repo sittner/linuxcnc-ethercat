@@ -24,11 +24,19 @@
 
 #define LCEC_EL6900_PID 0x1AF43052
 
-#define LCEC_EL6900_PDOS 21
+#define LCEC_EL6900_PDOS 5
 
-#define LCEC_EL6900_PARAM_SLAVEID 1
-#define LCEC_EL6900_PARAM_SLAVEID_PDOS 8
 
+#define LCEC_EL6900_PARAM_SLAVEID      1
+#define LCEC_EL6900_PARAM_STDIN_NAME   2
+#define LCEC_EL6900_PARAM_STDOUT_NAME  3
+
+#define LCEC_EL6900_PARAM_SLAVE_PDOS    4
+#define LCEC_EL6900_PARAM_SLAVE_CH_PDOS 2
+
+#define LCEC_EL6900_DIO_MAX_COUNT 32
+
+int lcec_el6900_preinit(struct lcec_slave *slave);
 int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif

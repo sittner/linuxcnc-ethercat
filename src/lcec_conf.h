@@ -61,6 +61,7 @@ typedef enum {
 typedef enum {
   lcecSlaveTypeInvalid,
   lcecSlaveTypeGeneric,
+  lcecSlaveTypeAX5112,
   lcecSlaveTypeAX5203,
   lcecSlaveTypeAX5206,
   lcecSlaveTypeEK1100,
@@ -159,6 +160,7 @@ typedef enum {
   lcecSlaveTypeEL1918_LOGIC,
   lcecSlaveTypeEL1904,
   lcecSlaveTypeEL2904,
+  lcecSlaveTypeAX5805,
   lcecSlaveTypeEM7004,
   lcecSlaveTypeStMDS5k,
   lcecSlaveTypeDeASDA,
@@ -296,6 +298,7 @@ typedef union {
   hal_s32_t s32;
   hal_u32_t u32;
   hal_float_t flt;
+  char str[LCEC_CONF_STR_MAXLEN];
 } LCEC_CONF_MODPARAM_VAL_T;
 
 typedef struct {
