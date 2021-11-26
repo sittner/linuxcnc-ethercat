@@ -132,7 +132,6 @@ static const lcec_typelist_t types[] = {
 
   // digital in/out
   { lcecSlaveTypeEL1859, LCEC_EL1859_VID, LCEC_EL1859_PID, LCEC_EL1859_PDOS, NULL, lcec_el1859_init},
->>>>>>> master
 
   // analog in, 2ch, 16 bits
   { lcecSlaveTypeEL3102, LCEC_EL31x2_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, NULL, lcec_el31x2_init},
