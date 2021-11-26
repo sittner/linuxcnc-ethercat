@@ -17,3 +17,10 @@ config.mk
 src/lcec_conf
 src/Module.symvers
 
+# debian pkgbuild files
+debian/.debhelper/
+debian/files
+debian/*.log
+debian/*.substvars
+debian/linuxcnc-ethercat/
+

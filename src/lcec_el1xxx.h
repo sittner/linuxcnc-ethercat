@@ -41,6 +41,7 @@
 #define LCEC_EL1144_PID 0x04783052
 #define LCEC_EL1808_PID 0x07103052
 #define LCEC_EL1809_PID 0x07113052
+#define LCEC_EL1819_PID 0x071B3052
 
 #define LCEC_EL1002_PDOS 2
 #define LCEC_EL1004_PDOS 4
@@ -61,6 +62,7 @@
 #define LCEC_EL1144_PDOS 4
 #define LCEC_EL1808_PDOS 8
 #define LCEC_EL1809_PDOS 16
+#define LCEC_EL1819_PDOS 16
 
 int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 

@@ -33,6 +33,9 @@
 
 #include "lcec_stmds5k.h"
 #include "lcec_el6900.h"
+#include "lcec_el1918_logic.h"
+#include "lcec_el70x1.h"
+#include "lcec_el7411.h"
 
 typedef enum {
   MODPARAM_TYPE_BIT,
@@ -73,9 +76,51 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveEL6900Params[] = {
   { NULL }
 };
 
+static const LCEC_CONF_MODPARAM_DESC_T slaveEL1918_LOGICParams[] = {
+  { "fsoeSlaveIdx", LCEC_EL1918_LOGIC_PARAM_SLAVEID, HAL_U32, LCEC_EL1918_LOGIC_PARAM_SLAVEID_PDOS } ,
+  { "stdInCount", LCEC_EL1918_LOGIC_PARAM_STDINCOUNT, HAL_U32, LCEC_EL1918_LOGIC_PARAM_STDINCOUNT_PDOS } ,
+  { "stdOutCount", LCEC_EL1918_LOGIC_PARAM_STDOUTCOUNT, HAL_U32, LCEC_EL1918_LOGIC_PARAM_STDOUTCOUNT_PDOS } ,
+  { NULL }
+};
+
+static const LCEC_CONF_MODPARAM_DESC_T slaveEL70x1Params[] = {
+  { "maxCurrent", LCEC_EL70x1_PARAM_MAX_CURR, HAL_U32, 0 } ,
+  { "redCurrent", LCEC_EL70x1_PARAM_RED_CURR, HAL_U32, 0 } ,
+  { "nomVoltage", LCEC_EL70x1_PARAM_NOM_VOLT, HAL_U32, 0 } ,
+  { "coilRes", LCEC_EL70x1_PARAM_COIL_RES, HAL_U32, 0 } ,
+  { "motorEMF", LCEC_EL70x1_PARAM_MOTOR_EMF, HAL_U32, 0 } ,
+  { NULL }
+};
+
+
+static const LCEC_CONF_MODPARAM_DESC_T slaveEL7411Params[] = {
+
+  { "dcLinkNominal", LCEC_EL7411_PARAM_DCLINK_NOM, HAL_U32, 0 } ,
+  { "dcLinkMin", LCEC_EL7411_PARAM_DCLINK_MIN, HAL_U32, 0 } ,
+  { "dcLinkMax", LCEC_EL7411_PARAM_DCLINK_MAX, HAL_U32, 0 } ,
+  { "maxCurrent", LCEC_EL7411_PARAM_MAX_CURR, HAL_U32, 0 } ,
+  { "ratedCurrent", LCEC_EL7411_PARAM_RATED_CURR, HAL_U32, 0 } ,
+  { "ratedVoltage", LCEC_EL7411_PARAM_RATED_VOLT, HAL_U32, 0 } ,
+  { "polePairs", LCEC_EL7411_PARAM_POLE_PAIRS, HAL_U32, 0 } ,
+  { "coilRes", LCEC_EL7411_PARAM_RESISTANCE, HAL_U32, 0 } ,
+  { "coilInd", LCEC_EL7411_PARAM_INDUCTANCE, HAL_U32, 0 } ,
+  { "torqueConst", LCEC_EL7411_PARAM_TOURQUE_CONST, HAL_U32, 0 } ,
+  { "voltageConst", LCEC_EL7411_PARAM_VOLTAGE_CONST, HAL_U32, 0 } ,
+  { "rotorInertia", LCEC_EL7411_PARAM_ROTOR_INERTIA, HAL_U32, 0 } ,
+  { "maxSpeed", LCEC_EL7411_PARAM_MAX_SPEED, HAL_U32, 0 } ,
+  { "ratedSpeed", LCEC_EL7411_PARAM_RATED_SPEED, HAL_U32, 0 } ,
+  { "thermalTimeConst", LCEC_EL7411_PARAM_TH_TIME_CONST, HAL_U32, 0 } ,
+  { "hallVoltage", LCEC_EL7411_PARAM_HALL_VOLT, HAL_U32, 0 } ,
+  { "hallAdjust", LCEC_EL7411_PARAM_HALL_ADJUST, HAL_S32, 0 } ,
+  { NULL }
+};
+
 static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // bus coupler
   { "EK1100", lcecSlaveTypeEK1100, NULL },
+  { "EK1101", lcecSlaveTypeEK1101, NULL },
+  { "EK1110", lcecSlaveTypeEK1110, NULL },
+  { "EK1122", lcecSlaveTypeEK1122, NULL },
 
   // generic device
   { "generic", lcecSlaveTypeGeneric, NULL },
@@ -106,6 +151,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL1252", lcecSlaveTypeEL1252, NULL },
   { "EL1808", lcecSlaveTypeEL1808, NULL },
   { "EL1809", lcecSlaveTypeEL1809, NULL },
+  { "EL1819", lcecSlaveTypeEL1819, NULL },
 
   // digital out
   { "EL2002", lcecSlaveTypeEL2002, NULL },
@@ -122,11 +168,18 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL2202", lcecSlaveTypeEL2202, NULL },
   { "EL2612", lcecSlaveTypeEL2612, NULL },
   { "EL2622", lcecSlaveTypeEL2622, NULL },
+  { "EL2634", lcecSlaveTypeEL2634, NULL },
+  { "EL2652", lcecSlaveTypeEL2652, NULL },
   { "EL2808", lcecSlaveTypeEL2808, NULL },
   { "EL2798", lcecSlaveTypeEL2798, NULL },
   { "EL2809", lcecSlaveTypeEL2809, NULL },
 
+  { "EP2008", lcecSlaveTypeEP2008, NULL },
   { "EP2028", lcecSlaveTypeEP2028, NULL },
+  { "EP2809", lcecSlaveTypeEP2809, NULL },
+
+  // digital in(out
+  { "EL1859", lcecSlaveTypeEL1859, NULL },
 
   // analog in, 2ch, 16 bits
   { "EL3102", lcecSlaveTypeEL3102, NULL },
@@ -135,6 +188,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL3142", lcecSlaveTypeEL3142, NULL },
   { "EL3152", lcecSlaveTypeEL3152, NULL },
   { "EL3162", lcecSlaveTypeEL3162, NULL },
+
+  // analog in, 4ch, 16 bits
+  { "EL3164", lcecSlaveTypeEL3164, NULL },
 
   // analog in, 5ch, 16 bits
   { "EL3255", lcecSlaveTypeEL3255, NULL },
@@ -159,6 +215,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // analog out, 4ch, 16 bits
   { "EL4104", lcecSlaveTypeEL4104, NULL },
+  { "EL4134", lcecSlaveTypeEL4134, NULL },
 
   // analog out, 8ch, 12 bits
   { "EL4008", lcecSlaveTypeEL4008, NULL },
@@ -175,13 +232,20 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL2521", lcecSlaveTypeEL2521, NULL },
 
   // stepper
+  { "EL7031", lcecSlaveTypeEL7031, slaveEL70x1Params },
+  { "EL7041-0052", lcecSlaveTypeEL7041_0052, slaveEL70x1Params },
   { "EL7041-1000", lcecSlaveTypeEL7041_1000, NULL },
 
   // ac servo
+  { "EL7201-9014", lcecSlaveTypeEL7201_9014, NULL },
   { "EL7211", lcecSlaveTypeEL7211, NULL },
+  { "EL7221", lcecSlaveTypeEL7221, NULL },
 
   // dc servo
   { "EL7342", lcecSlaveTypeEL7342, NULL },
+
+  // BLDC
+  { "EL7411", lcecSlaveTypeEL7411, slaveEL7411Params },
 
   // power suppply
   { "EL9505", lcecSlaveTypeEL9505, NULL },
@@ -189,9 +253,11 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "EL9510", lcecSlaveTypeEL9510, NULL },
   { "EL9512", lcecSlaveTypeEL9512, NULL },
   { "EL9515", lcecSlaveTypeEL9515, NULL },
+  { "EL9576", lcecSlaveTypeEL9576, NULL },
 
   // FSoE devices
   { "EL6900", lcecSlaveTypeEL6900, slaveEL6900Params },
+  { "EL1918_LOGIC", lcecSlaveTypeEL1918_LOGIC, slaveEL1918_LOGICParams },
   { "EL1904", lcecSlaveTypeEL1904, NULL },
   { "EL2904", lcecSlaveTypeEL2904, NULL },
   { "AX5805", lcecSlaveTypeAX5805, NULL },
@@ -204,6 +270,34 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // Delta ASDA series
   { "DeASDA", lcecSlaveTypeDeASDA, NULL },
+
+  // Omron G5 series
+  { "R88D-KNA5L-ECT", lcecSlaveTypeOmrG5_KNA5L, NULL },
+  { "R88D-KN01L-ECT", lcecSlaveTypeOmrG5_KN01L, NULL },
+  { "R88D-KN02L-ECT", lcecSlaveTypeOmrG5_KN02L, NULL },
+  { "R88D-KN04L-ECT", lcecSlaveTypeOmrG5_KN04L, NULL },
+  { "R88D-KN01H-ECT", lcecSlaveTypeOmrG5_KN01H, NULL },
+  { "R88D-KN02H-ECT", lcecSlaveTypeOmrG5_KN02H, NULL },
+  { "R88D-KN04H-ECT", lcecSlaveTypeOmrG5_KN04H, NULL },
+  { "R88D-KN08H-ECT", lcecSlaveTypeOmrG5_KN08H, NULL },
+  { "R88D-KN10H-ECT", lcecSlaveTypeOmrG5_KN10H, NULL },
+  { "R88D-KN15H-ECT", lcecSlaveTypeOmrG5_KN15H, NULL },
+  { "R88D-KN20H-ECT", lcecSlaveTypeOmrG5_KN20H, NULL },
+  { "R88D-KN30H-ECT", lcecSlaveTypeOmrG5_KN30H, NULL },
+  { "R88D-KN50H-ECT", lcecSlaveTypeOmrG5_KN50H, NULL },
+  { "R88D-KN75H-ECT", lcecSlaveTypeOmrG5_KN75H, NULL },
+  { "R88D-KN150H-ECT", lcecSlaveTypeOmrG5_KN150H, NULL },
+  { "R88D-KN06F-ECT", lcecSlaveTypeOmrG5_KN06F, NULL },
+  { "R88D-KN10F-ECT", lcecSlaveTypeOmrG5_KN10F, NULL },
+  { "R88D-KN15F-ECT", lcecSlaveTypeOmrG5_KN15F, NULL },
+  { "R88D-KN20F-ECT", lcecSlaveTypeOmrG5_KN20F, NULL },
+  { "R88D-KN30F-ECT", lcecSlaveTypeOmrG5_KN30F, NULL },
+  { "R88D-KN50F-ECT", lcecSlaveTypeOmrG5_KN50F, NULL },
+  { "R88D-KN75F-ECT", lcecSlaveTypeOmrG5_KN75F, NULL },
+  { "R88D-KN150F-ECT", lcecSlaveTypeOmrG5_KN150F, NULL },
+
+  // modusoft PH3LM2RM converter
+  { "Ph3LM2RM", lcecSlaveTypePh3LM2RM, NULL },
 
   { NULL }
 };
