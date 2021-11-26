@@ -45,7 +45,15 @@ typedef struct {
   hal_bit_t *fault_reset;
   hal_bit_t *halt;
  
-  hal_s32_t *mode_op_display; 
+  hal_s32_t *mode_op_display;
+
+  hal_float_t *act_current; 
+  hal_u32_t *warn_code; 
+  hal_u32_t *error_code; 
+  hal_u32_t *drive_temp; 
+
+  hal_u32_t *vel_ramp_up; 
+  hal_u32_t *vel_ramp_down;  
 
   hal_bit_t auto_fault_reset;
   
@@ -57,6 +65,12 @@ typedef struct {
   unsigned int cmdvel_pdo_os;
   unsigned int mode_op_pdo_os;
 
+  unsigned int current_pdo_os;
+  unsigned int warn_err_pdo_os;
+  unsigned int temp_pdo_os;
+
+  unsigned int ramp_up_pdo_os;
+  unsigned int ramp_down_pdo_os;
 
   hal_bit_t enable_old;
   hal_bit_t internal_fault;
@@ -78,11 +92,17 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_BIT, HAL_OUT, offsetof(lcec_dems300_data_t, stat_warning), "%s.%s.%s.stat-warning" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_dems300_data_t, stat_remote), "%s.%s.%s.stat-remote" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_dems300_data_t, stat_at_speed), "%s.%s.%s.stat-at-speed" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_dems300_data_t, act_current), "%s.%s.%s.act-current" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_dems300_data_t, warn_code), "%s.%s.%s.warn-code" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_dems300_data_t, error_code), "%s.%s.%s.error-code" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_dems300_data_t, drive_temp), "%s.%s.%s.drive-temp" },
   { HAL_BIT, HAL_IN, offsetof(lcec_dems300_data_t, quick_stop), "%s.%s.%s.quick-stop" },
   { HAL_BIT, HAL_IN, offsetof(lcec_dems300_data_t, enable), "%s.%s.%s.enable" },
   { HAL_BIT, HAL_IN, offsetof(lcec_dems300_data_t, fault_reset), "%s.%s.%s.fault-reset" },
   { HAL_BIT, HAL_IN, offsetof(lcec_dems300_data_t, halt), "%s.%s.%s.halt" },
   { HAL_FLOAT, HAL_IN, offsetof(lcec_dems300_data_t, vel_rpm_cmd), "%s.%s.%s.vel-rpm-cmd" },
+  { HAL_U32, HAL_IN, offsetof(lcec_dems300_data_t, vel_ramp_up), "%s.%s.%s.vel-ramp-up" },
+  { HAL_U32, HAL_IN, offsetof(lcec_dems300_data_t, vel_ramp_down), "%s.%s.%s.vel-ramp-down" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -97,25 +117,37 @@ static ec_pdo_entry_info_t lcec_dems300_in[] = {
    {0x6061, 0x00,  8}  // Mode of Operation Display
 };
 
+static ec_pdo_entry_info_t lcec_dems300_in2[] = {
+   {0x3021, 0x05, 16}, // Output Current
+   {0x3021, 0x01, 16}, // Warn HB Error LB Code
+   {0x3022, 0x0f, 16}  // IGBT Temp
+};
+
 static ec_pdo_entry_info_t lcec_dems300_out[] = {
    {0x6040, 0x00, 16}, // Control Word
    {0x6042, 0x00, 16}, // Target Velocity
    {0x6060, 0x00, 8}   // Modes of Operation
 };
 
+static ec_pdo_entry_info_t lcec_dems300_out2[] = {
+   {0x6050, 0x00, 32}, // ramp down time 100ms
+   {0x604f, 0x00, 32} // ramp up time 100ms
+};
 static ec_pdo_info_t lcec_dems300_pdos_out[] = {
-    {0x1600,  3, lcec_dems300_out}
+    {0x1600,  3, lcec_dems300_out},
+    {0x1601,  2, lcec_dems300_out2}
 };
 
 static ec_pdo_info_t lcec_dems300_pdos_in[] = {
-    {0x1a00, 3, lcec_dems300_in}
+    {0x1a00, 3, lcec_dems300_in},
+    {0x1a01, 3, lcec_dems300_in2}
 };
 
 static ec_sync_info_t lcec_dems300_syncs[] = {
     {0, EC_DIR_OUTPUT, 0, NULL},
     {1, EC_DIR_INPUT,  0, NULL},
-    {2, EC_DIR_OUTPUT, 1, lcec_dems300_pdos_out},
-    {3, EC_DIR_INPUT,  1, lcec_dems300_pdos_in},
+    {2, EC_DIR_OUTPUT, 2, lcec_dems300_pdos_out},
+    {3, EC_DIR_INPUT,  2, lcec_dems300_pdos_in},
     {0xff}
 };
 
@@ -139,11 +171,6 @@ int lcec_dems300_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   memset(hal_data, 0, sizeof(lcec_dems300_data_t));
   slave->hal_data = hal_data;
 
-  // set to velocity mode
-  //if (ecrt_slave_config_sdo8(slave->config, 0x6060, 0x00, 2) != 0) {
-  //  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo velo mode\n", master->name, slave->name);
-  //}
-
   // initialize sync info
   slave->sync_info = lcec_dems300_syncs;
 
@@ -151,9 +178,14 @@ int lcec_dems300_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6041, 0x00, &hal_data->status_pdo_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6043, 0x00, &hal_data->currvel_pdo_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6061, 0x00, &hal_data->mode_op_display_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x3021, 0x05, &hal_data->current_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x3021, 0x01, &hal_data->warn_err_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x3022, 0x0f, &hal_data->temp_pdo_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6040, 0x00, &hal_data->control_pdo_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6042, 0x00, &hal_data->cmdvel_pdo_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6060, 0x00, &hal_data->mode_op_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6050, 0x00, &hal_data->ramp_down_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x604f, 0x00, &hal_data->ramp_up_pdo_os, NULL);
 
   // export pins
   if ((err = lcec_pin_newf_list(hal_data, slave_pins, LCEC_MODULE_NAME, master->name, slave->name)) != 0) {
@@ -178,10 +210,19 @@ void lcec_dems300_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_dems300_data_t *hal_data = (lcec_dems300_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
-  uint16_t status;
+  uint16_t status,error;
   int8_t opmode_in;
   int32_t speed_raw;
   double rpm;
+
+	//read current; 
+	*(hal_data->act_current) = (double)EC_READ_U16(&pd[hal_data->current_pdo_os]) /1000;
+	//read temp; 
+	*(hal_data->drive_temp) = (double)EC_READ_U16(&pd[hal_data->temp_pdo_os]) /100;
+	//read warn and error code ; 
+	error = EC_READ_U16(&pd[hal_data->warn_err_pdo_os]);
+	*(hal_data->error_code) = error & 0xff; //low byte
+	*(hal_data->warn_code) = error >> 8; //high byte
 
   // wait for slave to be operational
   if (!slave->state.operational) {
@@ -227,7 +268,7 @@ void lcec_dems300_read(struct lcec_slave *slave, long period) {
     hal_data->auto_fault_reset_delay -= period;
     *(hal_data->stat_fault) = 0;
   } else {
-    *(hal_data->stat_fault) = hal_data->internal_fault && *(hal_data->enable);
+    *(hal_data->stat_fault) = hal_data->internal_fault;
   }
 
   // read current speed
@@ -291,14 +332,17 @@ void lcec_dems300_write(struct lcec_slave *slave, long period) {
 
   EC_WRITE_U16(&pd[hal_data->control_pdo_os], control);
 
+	//write ramp times 
+  EC_WRITE_U32(&pd[hal_data->ramp_up_pdo_os], *(hal_data->vel_ramp_up));
+  EC_WRITE_U32(&pd[hal_data->ramp_down_pdo_os], *(hal_data->vel_ramp_down));
 
   // set RPM
   speed_raw = *(hal_data->vel_rpm_cmd);
-  if (speed_raw > (double)0x7fffffff) {
-    speed_raw = (double)0x7fffffff;
+  if (speed_raw > (double)0x7fff) {
+    speed_raw = (double)0x7fff;
   }
-  if (speed_raw < (double)-0x7fffffff) {
-    speed_raw = (double)-0x7fffffff;
+  if (speed_raw < (double)-0x7fff) {
+    speed_raw = (double)-0x7fff;
   }
   EC_WRITE_S16(&pd[hal_data->cmdvel_pdo_os], (int16_t)speed_raw);
 }
