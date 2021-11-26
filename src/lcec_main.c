@@ -38,11 +38,14 @@
 #include "lcec_el5152.h"
 #include "lcec_el2521.h"
 #include "lcec_el6900.h"
+#include "lcec_el1918_logic.h"
 #include "lcec_el1904.h"
 #include "lcec_el2904.h"
 #include "lcec_el7041_1000.h"
+#include "lcec_el70x1.h"
 #include "lcec_el7211.h"
 #include "lcec_el7342.h"
+#include "lcec_el7411.h"
 #include "lcec_el95xx.h"
 #include "lcec_em7004.h"
 #include "lcec_stmds5k.h"
@@ -68,6 +71,7 @@ typedef struct lcec_typelist {
 static const lcec_typelist_t types[] = {
   // bus coupler
   { lcecSlaveTypeEK1100, LCEC_EK1100_VID, LCEC_EK1100_PID, LCEC_EK1100_PDOS, NULL},
+  { lcecSlaveTypeEK1101, LCEC_EK1101_VID, LCEC_EK1101_PID, LCEC_EK1101_PDOS, NULL},
   { lcecSlaveTypeEK1110, LCEC_EK1110_VID, LCEC_EK1110_PID, LCEC_EK1110_PDOS, NULL},
   { lcecSlaveTypeEK1122, LCEC_EK1122_VID, LCEC_EK1122_PID, LCEC_EK1122_PDOS, NULL},
 
@@ -114,6 +118,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL2612, LCEC_EL2xxx_VID, LCEC_EL2612_PID, LCEC_EL2612_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2622, LCEC_EL2xxx_VID, LCEC_EL2622_PID, LCEC_EL2622_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2634, LCEC_EL2xxx_VID, LCEC_EL2634_PID, LCEC_EL2634_PDOS, lcec_el2xxx_init},
+  { lcecSlaveTypeEL2652, LCEC_EL2xxx_VID, LCEC_EL2652_PID, LCEC_EL2652_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2808, LCEC_EL2xxx_VID, LCEC_EL2808_PID, LCEC_EL2808_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2798, LCEC_EL2xxx_VID, LCEC_EL2798_PID, LCEC_EL2798_PDOS, lcec_el2xxx_init},
   { lcecSlaveTypeEL2809, LCEC_EL2xxx_VID, LCEC_EL2809_PID, LCEC_EL2809_PDOS, lcec_el2xxx_init},
@@ -176,14 +181,20 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL2521, LCEC_EL2521_VID, LCEC_EL2521_PID, LCEC_EL2521_PDOS, lcec_el2521_init},
 
   // stepper
+  { lcecSlaveTypeEL7031, LCEC_EL70x1_VID, LCEC_EL7031_PID, LCEC_EL70x1_PDOS, lcec_el7031_init},
+  { lcecSlaveTypeEL7041_0052, LCEC_EL70x1_VID, LCEC_EL7041_0052_PID, LCEC_EL70x1_PDOS, lcec_el7041_0052_init},
   { lcecSlaveTypeEL7041_1000, LCEC_EL7041_1000_VID, LCEC_EL7041_1000_PID, LCEC_EL7041_1000_PDOS, lcec_el7041_1000_init},
 
   // ac servo
+  { lcecSlaveTypeEL7201_9014, LCEC_EL7211_VID, LCEC_EL7201_9014_PID, LCEC_EL7201_9014_PDOS, lcec_el7201_9014_init},
   { lcecSlaveTypeEL7211, LCEC_EL7211_VID, LCEC_EL7211_PID, LCEC_EL7211_PDOS, lcec_el7211_init},
   { lcecSlaveTypeEL7221, LCEC_EL7211_VID, LCEC_EL7221_PID, LCEC_EL7211_PDOS, lcec_el7211_init},
 
   // dc servo
   { lcecSlaveTypeEL7342, LCEC_EL7342_VID, LCEC_EL7342_PID, LCEC_EL7342_PDOS, lcec_el7342_init},
+
+  // BLDC
+  { lcecSlaveTypeEL7411, LCEC_EL7411_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, lcec_el7411_init},
 
   // power supply
   { lcecSlaveTypeEL9505, LCEC_EL95xx_VID, LCEC_EL9505_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
@@ -191,9 +202,11 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL9510, LCEC_EL95xx_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
   { lcecSlaveTypeEL9512, LCEC_EL95xx_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
   { lcecSlaveTypeEL9515, LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},
+  { lcecSlaveTypeEL9576, LCEC_EL95xx_VID, LCEC_EL9576_PID, LCEC_EL95xx_PDOS, lcec_el95xx_init},  
 
   // FSoE devices
   { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, LCEC_EL6900_PDOS, lcec_el6900_init},
+  { lcecSlaveTypeEL1918_LOGIC, LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, LCEC_EL1918_LOGIC_PDOS, lcec_el1918_logic_init},
   { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, lcec_el1904_init},
   { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, lcec_el2904_init},
 
