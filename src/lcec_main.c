@@ -79,7 +79,11 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEK1122, LCEC_EK1122_VID, LCEC_EK1122_PID, LCEC_EK1122_PDOS, NULL, NULL},
 
   // AX5000 servo drives
+  { lcecSlaveTypeAX5101, LCEC_AX5100_VID, LCEC_AX5101_PID, LCEC_AX5100_PDOS, lcec_ax5100_preinit, lcec_ax5100_init},
+  { lcecSlaveTypeAX5103, LCEC_AX5100_VID, LCEC_AX5103_PID, LCEC_AX5100_PDOS, lcec_ax5100_preinit, lcec_ax5100_init},
+  { lcecSlaveTypeAX5106, LCEC_AX5100_VID, LCEC_AX5106_PID, LCEC_AX5100_PDOS, lcec_ax5100_preinit, lcec_ax5100_init},
   { lcecSlaveTypeAX5112, LCEC_AX5100_VID, LCEC_AX5112_PID, LCEC_AX5100_PDOS, lcec_ax5100_preinit, lcec_ax5100_init},
+  { lcecSlaveTypeAX5118, LCEC_AX5100_VID, LCEC_AX5118_PID, LCEC_AX5100_PDOS, lcec_ax5100_preinit, lcec_ax5100_init},
   { lcecSlaveTypeAX5203, LCEC_AX5200_VID, LCEC_AX5203_PID, LCEC_AX5200_PDOS, lcec_ax5200_preinit, lcec_ax5200_init},
   { lcecSlaveTypeAX5206, LCEC_AX5200_VID, LCEC_AX5206_PID, LCEC_AX5200_PDOS, lcec_ax5200_preinit, lcec_ax5200_init},
 

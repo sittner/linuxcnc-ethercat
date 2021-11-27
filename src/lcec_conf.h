@@ -61,7 +61,11 @@ typedef enum {
 typedef enum {
   lcecSlaveTypeInvalid,
   lcecSlaveTypeGeneric,
+  lcecSlaveTypeAX5101,
+  lcecSlaveTypeAX5103,
+  lcecSlaveTypeAX5106,
   lcecSlaveTypeAX5112,
+  lcecSlaveTypeAX5118,
   lcecSlaveTypeAX5203,
   lcecSlaveTypeAX5206,
   lcecSlaveTypeEK1100,
