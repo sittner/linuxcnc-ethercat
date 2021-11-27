@@ -225,7 +225,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeDeASDA, LCEC_DEASDA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, NULL, lcec_deasda_init},
 
   // Delta MS/MH300 series
-  { lcecSlaveTypeDeMS300, LCEC_DEMS300_VID, LCEC_DEMS300_PID, LCEC_DEMS300_PDOS, lcec_dems300_init},
+  { lcecSlaveTypeDeMS300, LCEC_DEMS300_VID, LCEC_DEMS300_PID, LCEC_DEMS300_PDOS, NULL, lcec_dems300_init},
 
   // Omron G5 series
   { lcecSlaveTypeOmrG5_KNA5L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KNA5L_ECT_PID,  LCEC_OMRG5_PDOS, NULL, lcec_omrg5_init},
