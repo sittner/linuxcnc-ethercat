@@ -52,6 +52,7 @@
 #include "lcec_em7004.h"
 #include "lcec_stmds5k.h"
 #include "lcec_deasda.h"
+#include "lcec_dems300.h"
 #include "lcec_omrg5.h"
 #include "lcec_ph3lm2rm.h"
 
@@ -222,6 +223,9 @@ static const lcec_typelist_t types[] = {
 
   // Delta ASDA series
   { lcecSlaveTypeDeASDA, LCEC_DEASDA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, NULL, lcec_deasda_init},
+
+  // Delta MS/MH300 series
+  { lcecSlaveTypeDeMS300, LCEC_DEMS300_VID, LCEC_DEMS300_PID, LCEC_DEMS300_PDOS, lcec_dems300_init},
 
   // Omron G5 series
   { lcecSlaveTypeOmrG5_KNA5L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KNA5L_ECT_PID,  LCEC_OMRG5_PDOS, NULL, lcec_omrg5_init},
