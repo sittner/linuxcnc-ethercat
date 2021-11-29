@@ -20,44 +20,45 @@
 #include "lcec_el1918_logic.h"
 
 typedef struct {
-  hal_u32_t *fsoe_master_cmd;
-  hal_u32_t *fsoe_master_data;
   hal_u32_t *fsoe_master_crc;
+  hal_u32_t *fsoe_slave_crc;
+  unsigned int fsoe_master_crc_os;
+  unsigned int fsoe_slave_crc_os;
+} lcec_el1918_logic_fsoe_crc_t;
+
+typedef struct {
+  struct lcec_slave *fsoe_slave;
+
+  hal_u32_t *fsoe_master_cmd;
   hal_u32_t *fsoe_master_connid;
 
   hal_u32_t *fsoe_slave_cmd;
-  hal_u32_t *fsoe_slave_data;
-  hal_u32_t *fsoe_slave_crc;
   hal_u32_t *fsoe_slave_connid;
 
   unsigned int fsoe_master_cmd_os;
-  unsigned int fsoe_master_data_os;
-  unsigned int fsoe_master_crc_os;
   unsigned int fsoe_master_connid_os;
 
   unsigned int fsoe_slave_cmd_os;
-  unsigned int fsoe_slave_data_os;
-  unsigned int fsoe_slave_crc_os;
   unsigned int fsoe_slave_connid_os;
-} lcec_el1918_logic_fsoe_t;
 
-#define MAX_STDIO_COUNT 8
+  lcec_el1918_logic_fsoe_crc_t *fsoe_crc;
+} lcec_el1918_logic_fsoe_t;
 
 typedef struct {
 
   lcec_el1918_logic_fsoe_t *fsoe;
   int fsoe_count;
 
-  int std_in_count;
-  hal_bit_t *std_in_pins[MAX_STDIO_COUNT];
-  unsigned int std_in_os;
-
-  int std_out_count;
-  hal_bit_t *std_out_pins[MAX_STDIO_COUNT];
-  unsigned int std_out_os;
-
   hal_u32_t *state;
   hal_u32_t *cycle_counter;
+
+  hal_bit_t *std_in_pins[LCEC_EL1918_LOGIC_DIO_MAX_COUNT];
+  int std_in_count;
+  unsigned int std_in_os;
+
+  hal_bit_t *std_out_pins[LCEC_EL1918_LOGIC_DIO_MAX_COUNT];
+  int std_out_count;
+  unsigned int std_out_os;
 
   unsigned int state_os;
   unsigned int cycle_counter_os;
@@ -72,28 +73,110 @@ static const lcec_pindesc_t slave_pins[] = {
 
 static const lcec_pindesc_t fsoe_pins[] = {
   { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_t, fsoe_master_cmd), "%s.%s.%s.fsoe-%d-master-cmd" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_t, fsoe_master_data), "%s.%s.%s.fsoe-%d-master-data" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_t, fsoe_master_crc), "%s.%s.%s.fsoe-%d-master-crc" },
   { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_t, fsoe_master_connid), "%s.%s.%s.fsoe-%d-master-connid" },
   { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_t, fsoe_slave_cmd), "%s.%s.%s.fsoe-%d-slave-cmd" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_t, fsoe_slave_data), "%s.%s.%s.fsoe-%d-slave-data" },
-  { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_t, fsoe_slave_crc), "%s.%s.%s.fsoe-%d-slave-crc" },
   { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_t, fsoe_slave_connid), "%s.%s.%s.fsoe-%d-slave-connid" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
+static const lcec_pindesc_t fsoe_crc_pins[] = {
+  { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_crc_t, fsoe_master_crc), "%s.%s.%s.fsoe-%d-master-crc" },
+  { HAL_U32, HAL_OUT, offsetof(lcec_el1918_logic_fsoe_crc_t, fsoe_slave_crc), "%s.%s.%s.fsoe-%d-slave-crc" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
 
 void lcec_el1918_logic_read(struct lcec_slave *slave, long period);
 void lcec_el1918_logic_write(struct lcec_slave *slave, long period);
 
-int lcec_el1918_logic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int export_std_pins(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int pid, hal_bit_t **pin, hal_pin_dir_t dir) {
+  lcec_master_t *master = slave->master;
+  lcec_slave_modparam_t *p;
+  int count, err;
 
+  for (p = slave->modparams, count = 0; p != NULL && p->id >= 0; p++) {
+    // skip not matching params
+    if (p->id != pid) {
+      continue;
+    }
+
+    // export pin
+    if ((err = lcec_pin_newf(HAL_BIT, dir, (void *) pin, "%s.%s.%s.%s", LCEC_MODULE_NAME, master->name, slave->name, p->value.str)) != 0) {
+      return err;
+    }
+
+    // next item
+    pin++;
+    count++;
+  }
+
+  return count;
+}
+
+int lcec_el1918_logic_preinit(struct lcec_slave *slave) {
+  lcec_master_t *master = slave->master;
+  lcec_slave_modparam_t *p;
+  int index, stdin_count, stdout_count;
+  struct lcec_slave *fsoe_slave;
+  const LCEC_CONF_FSOE_T *fsoeConf;
+
+  slave->pdo_entry_count = LCEC_EL1918_LOGIC_PDOS;
+
+  stdin_count = 0;
+  stdout_count = 0;
+  for (p = slave->modparams; p != NULL && p->id >= 0; p++) {
+    switch(p->id) {
+      case LCEC_EL1918_LOGIC_PARAM_SLAVEID:
+        // find slave
+        index = p->value.u32;
+        fsoe_slave = lcec_slave_by_index(master, index);
+        if (fsoe_slave == NULL) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: slave index %d not found\n", master->name, slave->name, index);
+          return -EINVAL;
+        }
+
+        fsoeConf = fsoe_slave->fsoeConf;
+        if (fsoeConf == NULL) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: slave index %d is not a fsoe slave\n", master->name, slave->name, index);
+          return -EINVAL;
+        }
+
+        slave->pdo_entry_count += LCEC_EL1918_LOGIC_PARAM_SLAVE_PDOS + LCEC_EL1918_LOGIC_PARAM_SLAVE_CH_PDOS * fsoeConf->data_channels;
+        break;
+
+      case LCEC_EL1918_LOGIC_PARAM_STDIN_NAME:
+        stdin_count++;
+        if (stdin_count > LCEC_EL1918_LOGIC_DIO_MAX_COUNT) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: maximum stdin count exceeded.\n", master->name, slave->name);
+          return -EINVAL;
+        }
+
+        (slave->pdo_entry_count)++;
+        break;
+
+      case LCEC_EL1918_LOGIC_PARAM_STDOUT_NAME:
+        stdout_count++;
+        if (stdout_count > LCEC_EL1918_LOGIC_DIO_MAX_COUNT) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "%s.%s: maximum stdout count exceeded.\n", master->name, slave->name);
+          return -EINVAL;
+        }
+
+        (slave->pdo_entry_count)++;
+        break;
+    }
+  }
+
+  return 0;
+}
+
+int lcec_el1918_logic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el1918_logic_data_t *hal_data;
   lcec_el1918_logic_fsoe_t *fsoe_data;
   lcec_slave_modparam_t *p;
-  int fsoe_idx, index, err, count;
+  int fsoe_idx, index, err;
+  lcec_el1918_logic_fsoe_crc_t *crc;
   struct lcec_slave *fsoe_slave;
+  const LCEC_CONF_FSOE_T *fsoeConf;
 
   // initialize callbacks
   slave->proc_read = lcec_el1918_logic_read;
@@ -127,30 +210,47 @@ int lcec_el1918_logic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_r
     return err;
   }
 
+  // map and export stdios
+  hal_data->std_in_count = export_std_pins(slave, pdo_entry_regs, LCEC_EL1918_LOGIC_PARAM_STDIN_NAME, hal_data->std_in_pins, HAL_IN);
+  if (hal_data->std_in_count < 0) {
+    return hal_data->std_in_count;
+  }
+  if (hal_data->std_in_count > 0) {
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf788, 0x00, &hal_data->std_in_os, NULL);
+    pdo_entry_regs += hal_data->std_in_count;
+  }
+
+  hal_data->std_out_count = export_std_pins(slave, pdo_entry_regs, LCEC_EL1918_LOGIC_PARAM_STDOUT_NAME, hal_data->std_out_pins, HAL_OUT);
+  if (hal_data->std_out_count < 0) {
+    return hal_data->std_out_count;
+  }
+  if (hal_data->std_out_count > 0) {
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf688, 0x00, &hal_data->std_out_os, NULL);
+    pdo_entry_regs += hal_data->std_out_count;
+  }
+
   // map and export fsoe slave data
-  hal_data->std_in_count = -1;
-  hal_data->std_out_count = -1;
   for (fsoe_idx = 0, fsoe_data = hal_data->fsoe, p = slave->modparams; p != NULL && p->id >= 0; p++) {
     if (p->id == LCEC_EL1918_LOGIC_PARAM_SLAVEID) {
       // find slave
       index = p->value.u32;
       fsoe_slave = lcec_slave_by_index(master, index);
-      if (fsoe_slave == NULL) {
-        rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave index %d not found\n", index);
-        return -EINVAL;
-      }
-
+      fsoe_data->fsoe_slave = fsoe_slave;
       fsoe_slave->fsoe_slave_offset = &fsoe_data->fsoe_slave_cmd_os;
       fsoe_slave->fsoe_master_offset = &fsoe_data->fsoe_master_cmd_os;
+      fsoeConf = fsoe_slave->fsoeConf;
+
+      // alloc crc hal memory
+      if ((fsoe_data->fsoe_crc = hal_malloc(fsoeConf->data_channels * sizeof(lcec_el1918_logic_fsoe_crc_t))) == NULL) {
+        rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for fsoe_slave %s.%s crc data failed\n", master->name, fsoe_slave->name);
+        return -EIO;
+      }
+      memset(fsoe_data->fsoe_crc, 0, sizeof(lcec_el1918_logic_fsoe_crc_t));
 
       // initialize POD entries
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7080 + (fsoe_idx << 4), 0x01, &fsoe_data->fsoe_slave_cmd_os, NULL);
-      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7081 + (fsoe_idx << 4), 0x01, &fsoe_data->fsoe_slave_data_os, NULL);
-      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7080 + (fsoe_idx << 4), 0x03, &fsoe_data->fsoe_slave_crc_os, NULL);
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7080 + (fsoe_idx << 4), 0x02, &fsoe_data->fsoe_slave_connid_os, NULL);
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6080 + (fsoe_idx << 4), 0x01, &fsoe_data->fsoe_master_cmd_os, NULL);
-      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6081 + (fsoe_idx << 4), 0x01, &fsoe_data->fsoe_master_data_os, NULL);
-      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6080 + (fsoe_idx << 4), 0x03, &fsoe_data->fsoe_master_crc_os, NULL);
       LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6080 + (fsoe_idx << 4), 0x02, &fsoe_data->fsoe_master_connid_os, NULL);
 
       // export pins
@@ -158,47 +258,17 @@ int lcec_el1918_logic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_r
         return err;
       }
 
+      // map CRC PDOS
+      for (index = 0, crc = fsoe_data->fsoe_crc; index < fsoeConf->data_channels; index++, crc++) {
+        LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7080 + (fsoe_idx << 4), 0x03 + index, &crc->fsoe_slave_crc_os, NULL);
+        LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6080 + (fsoe_idx << 4), 0x03 + index, &crc->fsoe_master_crc_os, NULL);
+        if ((err = lcec_pin_newf_list(crc, fsoe_crc_pins, LCEC_MODULE_NAME, master->name, slave->name, fsoe_idx, index)) != 0) {
+          return err;
+        }
+      }
+
       fsoe_idx++;
       fsoe_data++;
-      continue;
-    }
-
-    if (p->id == LCEC_EL1918_LOGIC_PARAM_STDINCOUNT && hal_data->std_in_count < 0) {
-      count = p->value.u32;
-      if (count < 0) count = 0;
-      if (count > 8) count = 8;
-      hal_data->std_in_count = count;
-
-      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf788, 0x00, &hal_data->std_in_os, NULL);
-
-      for (index = 0; index < count; index++) {
-        if ((err = lcec_pin_newf(HAL_BIT, HAL_IN, (void **) &(hal_data->std_in_pins[index]), "%s.%s.%s.std-in-%d", LCEC_MODULE_NAME, master->name, slave->name, index)) != 0) {
-          return err;
-        }
-
-        *(hal_data->std_in_pins[index]) = 0;
-      }
-
-      continue;
-    }
-
-    if (p->id == LCEC_EL1918_LOGIC_PARAM_STDOUTCOUNT && hal_data->std_out_count < 0) {
-      count = p->value.u32;
-      if (count < 0) count = 0;
-      if (count > 8) count = 8;
-      hal_data->std_out_count = count;
-
-      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf688, 0x00, &hal_data->std_out_os, NULL);
-
-      for (index = 0; index < count; index++) {
-        if ((err = lcec_pin_newf(HAL_BIT, HAL_OUT, (void **) &(hal_data->std_out_pins[index]), "%s.%s.%s.std-out-%d", LCEC_MODULE_NAME, master->name, slave->name, index)) != 0) {
-          return err;
-        }
-
-        *(hal_data->std_out_pins[index]) = 0;
-      }
-
-      continue;
     }
   }
 
@@ -210,8 +280,11 @@ void lcec_el1918_logic_read(struct lcec_slave *slave, long period) {
   lcec_el1918_logic_data_t *hal_data = (lcec_el1918_logic_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
   lcec_el1918_logic_fsoe_t *fsoe_data;
+  int i, crc_idx;
   uint8_t std_out;
-  int i;
+  lcec_el1918_logic_fsoe_crc_t *crc;
+  struct lcec_slave *fsoe_slave;
+  const LCEC_CONF_FSOE_T *fsoeConf;
 
   *(hal_data->state) = EC_READ_U8(&pd[hal_data->state_os]);
   *(hal_data->cycle_counter) = EC_READ_U8(&pd[hal_data->cycle_counter_os]);
@@ -224,14 +297,16 @@ void lcec_el1918_logic_read(struct lcec_slave *slave, long period) {
   }
 
   for (i = 0, fsoe_data = hal_data->fsoe; i < hal_data->fsoe_count; i++, fsoe_data++) {
+    fsoe_slave = fsoe_data->fsoe_slave;
+    fsoeConf = fsoe_slave->fsoeConf;
     *(fsoe_data->fsoe_master_cmd) = EC_READ_U8(&pd[fsoe_data->fsoe_master_cmd_os]);
-    *(fsoe_data->fsoe_master_data) = EC_READ_U8(&pd[fsoe_data->fsoe_master_data_os]);
-    *(fsoe_data->fsoe_master_crc) = EC_READ_U16(&pd[fsoe_data->fsoe_master_crc_os]);
     *(fsoe_data->fsoe_master_connid) = EC_READ_U16(&pd[fsoe_data->fsoe_master_connid_os]);
     *(fsoe_data->fsoe_slave_cmd) = EC_READ_U8(&pd[fsoe_data->fsoe_slave_cmd_os]);
-    *(fsoe_data->fsoe_slave_data) = EC_READ_U8(&pd[fsoe_data->fsoe_slave_data_os]);
-    *(fsoe_data->fsoe_slave_crc) = EC_READ_U16(&pd[fsoe_data->fsoe_slave_crc_os]);
     *(fsoe_data->fsoe_slave_connid) = EC_READ_U16(&pd[fsoe_data->fsoe_slave_connid_os]);
+    for (crc_idx = 0, crc = fsoe_data->fsoe_crc; crc_idx < fsoeConf->data_channels; crc_idx++, crc++) {
+      *(crc->fsoe_master_crc) = EC_READ_U16(&pd[crc->fsoe_master_crc_os]);
+      *(crc->fsoe_slave_crc) = EC_READ_U16(&pd[crc->fsoe_slave_crc_os]);
+    }
   }
 }
 
