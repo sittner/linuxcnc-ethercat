@@ -24,7 +24,9 @@
 
 #define LCEC_EL1904_PID 0x07703052
 
-#define LCEC_EL1904_PDOS 10
+#define LCEC_EL1904_INPUT_COUNT 4
+
+#define LCEC_EL1904_PDOS (6 + LCEC_EL1904_INPUT_COUNT * 1)
 
 int lcec_el1904_preinit(struct lcec_slave *slave);
 int lcec_el1904_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
