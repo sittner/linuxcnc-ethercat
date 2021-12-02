@@ -21,7 +21,6 @@
 #include "lcec.h"
 
 #define LCEC_EL6900_VID LCEC_BECKHOFF_VID
-
 #define LCEC_EL6900_PID 0x1AF43052
 
 #define LCEC_EL6900_PDOS 5

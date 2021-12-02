@@ -215,14 +215,14 @@ void lcec_dems300_read(struct lcec_slave *slave, long period) {
   int32_t speed_raw;
   double rpm;
 
-	//read current; 
-	*(hal_data->act_current) = (double)EC_READ_U16(&pd[hal_data->current_pdo_os]) /1000;
-	//read temp; 
-	*(hal_data->drive_temp) = (double)EC_READ_U16(&pd[hal_data->temp_pdo_os]) /100;
-	//read warn and error code ; 
-	error = EC_READ_U16(&pd[hal_data->warn_err_pdo_os]);
-	*(hal_data->error_code) = error & 0xff; //low byte
-	*(hal_data->warn_code) = error >> 8; //high byte
+  // read current; 
+  *(hal_data->act_current) = (double)EC_READ_U16(&pd[hal_data->current_pdo_os]) /1000;
+  // read temp; 
+  *(hal_data->drive_temp) = (double)EC_READ_U16(&pd[hal_data->temp_pdo_os]) /100;
+  // read warn and error code ; 
+  error = EC_READ_U16(&pd[hal_data->warn_err_pdo_os]);
+  *(hal_data->error_code) = error & 0xff; //low byte
+  *(hal_data->warn_code) = error >> 8; //high byte
 
   // wait for slave to be operational
   if (!slave->state.operational) {

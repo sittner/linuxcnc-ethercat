@@ -209,6 +209,7 @@ typedef struct lcec_slave {
   lcec_slave_idnconf_t *idn_config;
   lcec_slave_modparam_t *modparams;
   const LCEC_CONF_FSOE_T *fsoeConf;
+  int is_fsoe_logic;
   unsigned int *fsoe_slave_offset;
   unsigned int *fsoe_master_offset;
 } lcec_slave_t;
