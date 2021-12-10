@@ -45,8 +45,6 @@ typedef struct {
 } lcec_el1918_logic_fsoe_t;
 
 typedef struct {
-
-  lcec_el1918_logic_fsoe_t *fsoe;
   int fsoe_count;
 
   hal_u32_t *state;
@@ -63,6 +61,8 @@ typedef struct {
   unsigned int state_os;
   unsigned int cycle_counter_os;
 
+  // must be last entry (dynamic size)
+  lcec_el1918_logic_fsoe_t fsoe[];
 } lcec_el1918_logic_data_t;
 
 static const lcec_pindesc_t slave_pins[] = {
@@ -200,11 +200,8 @@ int lcec_el1918_logic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_r
     return -EIO;
   }
   memset(hal_data, 0, sizeof(lcec_el1918_logic_data_t));
-  slave->hal_data = hal_data;
-
-  // setup fsoe pointer
-  hal_data->fsoe = (lcec_el1918_logic_fsoe_t *) &hal_data[1];
   hal_data->fsoe_count = fsoe_idx;
+  slave->hal_data = hal_data;
 
   // initialize POD entries
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0xf100, 0x01, &hal_data->state_os, NULL);
