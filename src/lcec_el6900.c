@@ -143,7 +143,7 @@ int lcec_el6900_preinit(struct lcec_slave *slave) {
   slave->pdo_entry_count = LCEC_EL6900_PDOS;
 
   stdin_count = 0;
-  stdout_count = 0;  
+  stdout_count = 0;
   for (p = slave->modparams; p != NULL && p->id >= 0; p++) {
     switch(p->id) {
       case LCEC_EL6900_PARAM_SLAVEID:
