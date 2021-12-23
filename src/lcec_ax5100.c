@@ -19,32 +19,10 @@
 #include "lcec.h"
 #include "lcec_ax5100.h"
 
-static ec_pdo_entry_info_t lcec_ax5100_in_a[] = {
-   {0x0087, 0x01, 16}, // status word
-   {0x0033, 0x01, 32}, // position feedback
-   {0x0054, 0x01, 16}  // torque feedback
-};
-
-static ec_pdo_entry_info_t lcec_ax5100_out_a[] = {
-   {0x0086, 0x01,  16}, // control-word
-   {0x0018, 0x01,  32}, // velo-command
-};
-
-static ec_pdo_info_t lcec_ax5100_pdos_out[] = {
-    {0x0018,  2, lcec_ax5100_out_a}
-};
-
-static ec_pdo_info_t lcec_ax5100_pdos_in[] = {
-    {0x0010,  3, lcec_ax5100_in_a}
-};
-
-static ec_sync_info_t lcec_ax5100_syncs[] = {
-    {0, EC_DIR_OUTPUT, 0, NULL},
-    {1, EC_DIR_INPUT,  0, NULL},
-    {2, EC_DIR_OUTPUT, 1, lcec_ax5100_pdos_out},
-    {3, EC_DIR_INPUT,  1, lcec_ax5100_pdos_in},
-    {0xff}
-};
+typedef struct {
+  lcec_syncs_t syncs;
+  lcec_class_ax5_chan_t chan;
+} lcec_ax5100_data_t;
 
 static const LCEC_CONF_FSOE_T fsoe_conf = {
   .slave_data_len = 2,
@@ -64,12 +42,15 @@ int lcec_ax5100_preinit(struct lcec_slave *slave) {
   // set FSOE conf (this will be used by the corresponding AX5805
   slave->fsoeConf = &fsoe_conf;
 
+  // set pdo count
+  slave->pdo_entry_count = lcec_class_ax5_pdos(slave);
+
   return 0;
 }
 
 int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
-  lcec_class_ax5_chan_t *hal_data;
+  lcec_ax5100_data_t *hal_data;
   int err;
 
   // initialize callbacks
@@ -77,21 +58,37 @@ int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   slave->proc_write = lcec_ax5100_write;
 
   // alloc hal memory
-  if ((hal_data = hal_malloc(sizeof(lcec_class_ax5_chan_t))) == NULL) {
+  if ((hal_data = hal_malloc(sizeof(lcec_ax5100_data_t))) == NULL) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for slave %s.%s failed\n", master->name, slave->name);
     return -EIO;
   }
-  memset(hal_data, 0, sizeof(lcec_class_ax5_chan_t));
+  memset(hal_data, 0, sizeof(lcec_ax5100_data_t));
   slave->hal_data = hal_data;
 
   // initialize sync info
-  slave->sync_info = lcec_ax5100_syncs;
+  lcec_syncs_init(&hal_data->syncs);
+    lcec_syncs_add_sync(&hal_data->syncs, EC_DIR_OUTPUT, EC_WD_DEFAULT);
+    lcec_syncs_add_sync(&hal_data->syncs, EC_DIR_INPUT, EC_WD_DEFAULT);
+    lcec_syncs_add_sync(&hal_data->syncs, EC_DIR_OUTPUT, EC_WD_DEFAULT);
+      lcec_syncs_add_pdo_info(&hal_data->syncs, 0x0018);
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0086, 0x01,  16); // control-word
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0018, 0x01,  32); // velo-command
+    lcec_syncs_add_sync(&hal_data->syncs, EC_DIR_INPUT, EC_WD_DEFAULT);
+      lcec_syncs_add_pdo_info(&hal_data->syncs, 0x0010);
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0087, 0x01, 16); // status word
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0033, 0x01, 32); // position feedback
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0054, 0x01, 16); // torque feedback
+        if (lcec_class_ax5_enable_fb2(slave)) {
+          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0035, 0x01, 32); // position feedback 2
+        }
+
+  slave->sync_info = &hal_data->syncs.syncs[0];
 
   // init subclasses
-  if ((err = lcec_class_ax5_init(slave, pdo_entry_regs, hal_data, 0, "srv")) != 0) {
+  if ((err = lcec_class_ax5_init(slave, pdo_entry_regs, &hal_data->chan, 0, "srv")) != 0) {
     return err;
   }
-  if ((err = class_enc_init(slave, &hal_data->enc, 32, "enc")) != 0) {
+  if ((err = class_enc_init(slave, &hal_data->chan.enc, 32, "enc")) != 0) {
     return err;
   }
 
@@ -99,16 +96,16 @@ int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
 }
 
 void lcec_ax5100_read(struct lcec_slave *slave, long period) {
-  lcec_class_ax5_chan_t *hal_data = (lcec_class_ax5_chan_t *) slave->hal_data;
+  lcec_ax5100_data_t *hal_data = (lcec_ax5100_data_t *) slave->hal_data;
 
   // check inputs
-  lcec_class_ax5_read(slave, hal_data);
+  lcec_class_ax5_read(slave, &hal_data->chan);
 }
 
 void lcec_ax5100_write(struct lcec_slave *slave, long period) {
-  lcec_class_ax5_chan_t *hal_data = (lcec_class_ax5_chan_t *) slave->hal_data;
+  lcec_ax5100_data_t *hal_data = (lcec_ax5100_data_t *) slave->hal_data;
 
   // write outputs
-  lcec_class_ax5_write(slave, hal_data);
+  lcec_class_ax5_write(slave, &hal_data->chan);
 }
 

@@ -34,12 +34,43 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
+static const lcec_pindesc_t slave_fb2_pins[] = {
+  { HAL_S32, HAL_IN, offsetof(lcec_class_ax5_chan_t, pos_fb2), "%s.%s.%s.%s-pos-fb2" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
 static const lcec_pindesc_t slave_params[] = {
   { HAL_FLOAT, HAL_RW, offsetof(lcec_class_ax5_chan_t, scale), "%s.%s.%s.%s-scale" },
   { HAL_FLOAT, HAL_RO, offsetof(lcec_class_ax5_chan_t, vel_scale), "%s.%s.%s.%s-vel-scale" },
   { HAL_U32, HAL_RO, offsetof(lcec_class_ax5_chan_t, pos_resolution), "%s.%s.%s.%s-pos-resolution" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
+
+static const lcec_pindesc_t slave_fb2_params[] = {
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_class_ax5_chan_t, scale_fb2), "%s.%s.%s.%s-scale-fb2" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
+int lcec_class_ax5_enable_fb2(struct lcec_slave *slave) {
+  LCEC_CONF_MODPARAM_VAL_T *pval;
+
+  pval = lcec_modparam_get(slave, LCEC_AX5_PARAM_ENABLE_FB2);
+  if (pval == NULL) {
+    return 0;
+  }
+
+  return pval->bit;
+}
+
+int lcec_class_ax5_pdos(struct lcec_slave *slave) {
+  int pdo_count = 5;
+
+  if (lcec_class_ax5_enable_fb2(slave)) {
+    pdo_count += 1;
+  }
+
+  return pdo_count;
+}
 
 int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, lcec_class_ax5_chan_t *chan, int index, const char *pfx) {
   lcec_master_t *master = slave->master;
@@ -81,8 +112,19 @@ int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_
     return err;
   }
 
+  if (lcec_class_ax5_enable_fb2(slave)) {
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0035, 0x01 + index, &chan->pos_fb2_pdo_os, NULL);
+    if ((err = lcec_pin_newf_list(chan, slave_fb2_pins, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
+      return err;
+    }
+    if ((err = lcec_param_newf_list(chan, slave_fb2_params, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
+      return err;
+    }
+  }
+
   // init parameters
   chan->scale = 1.0;
+  chan->scale_fb2 = 1.0;
   chan->vel_scale = ((double) idn_vel_scale) * pow(10.0, (double) idn_vel_exp);
   chan->pos_resolution = idn_pos_resolution;
 
@@ -108,16 +150,30 @@ void lcec_class_ax5_check_scales(lcec_class_ax5_chan_t *chan) {
     // we actually want the reciprocal
     chan->scale_rcpt = 1.0 / chan->scale;
   }
+
+  // check fb2 for change in scale value
+  if (chan->scale_fb2 != chan->scale_fb2_old) {
+    // scale value has changed, test and update it
+    if ((chan->scale_fb2 < 1e-20) && (chan->scale_fb2 > -1e-20)) {
+      // value too small, divide by zero is a bad thing
+      chan->scale_fb2 = 1.0;
+    }
+    // save new scale to detect future changes
+    chan->scale_fb2_old = chan->scale_fb2;
+    // we actually want the reciprocal
+    chan->scale_fb2_rcpt = 1.0 / chan->scale_fb2;
+  }
 }
 
 void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan) {
   lcec_master_t *master = slave->master;
   uint8_t *pd = master->process_data;
-  uint32_t pos_cnt;
+  uint32_t pos_cnt, pos_cnt_fb2;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
     chan->enc.do_init = 1;
+    chan->enc_fb2.do_init = 1;
     *(chan->fault) = 1;
     *(chan->enabled) = 0;
     *(chan->halted) = 0;
@@ -128,8 +184,6 @@ void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan) 
   lcec_class_ax5_check_scales(chan);
 
   *(chan->status) = EC_READ_U16(&pd[chan->status_pdo_os]);
-  *(chan->pos_fb) = EC_READ_S32(&pd[chan->pos_fb_pdo_os]);
-  *(chan->torque_fb_pct) = ((double) EC_READ_S16(&pd[chan->torque_fb_pdo_os])) * 0.1;
 
   // check fault
   *(chan->fault) = 0;
@@ -147,8 +201,17 @@ void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan) 
   *(chan->halted) = (((*(chan->status) >> 3) & 1) != 1);
 
   // update position feedback
+  *(chan->pos_fb) = EC_READ_S32(&pd[chan->pos_fb_pdo_os]);
   pos_cnt = EC_READ_U32(&pd[chan->pos_fb_pdo_os]);
   class_enc_update(&chan->enc, chan->pos_resolution, chan->scale_rcpt, pos_cnt, 0, 0);
+
+  if (chan->pos_fb2 != NULL) {
+    *(chan->pos_fb2) = EC_READ_S32(&pd[chan->pos_fb2_pdo_os]);
+    pos_cnt_fb2 = EC_READ_U32(&pd[chan->pos_fb2_pdo_os]);
+    class_enc_update(&chan->enc_fb2, 1, chan->scale_fb2_rcpt, pos_cnt_fb2, 0, 0);
+  }
+
+  *(chan->torque_fb_pct) = ((double) EC_READ_S16(&pd[chan->torque_fb_pdo_os])) * 0.1;
 }
 
 void lcec_class_ax5_write(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan) {

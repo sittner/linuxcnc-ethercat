@@ -28,8 +28,6 @@
 #define LCEC_AX5112_PID 0x13f86012
 #define LCEC_AX5118_PID 0x13fe6012
 
-#define LCEC_AX5100_PDOS LCEC_CLASS_AX5_PDOS
-
 int lcec_ax5100_preinit(struct lcec_slave *slave);
 int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
