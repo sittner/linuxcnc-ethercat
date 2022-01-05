@@ -131,6 +131,8 @@ void lcec_generic_read(struct lcec_slave *slave, long period) {
       case HAL_FLOAT:
         if (hal_data->subType == lcecPdoEntTypeFloatUnsigned) {
           fval = lcec_generic_read_u32(pd, hal_data);
+        } else if(hal_data->subType == lcecPdoEntTypeFloatIeee){
+          fval = EC_READ_REAL(&pd[hal_data->pdo_os]);
         } else {
           fval = lcec_generic_read_s32(pd, hal_data);
         }
