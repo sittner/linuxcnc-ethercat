@@ -1680,17 +1680,18 @@ void lcec_syncs_init(lcec_syncs_t *syncs) {
 }
 
 void lcec_syncs_add_sync(lcec_syncs_t *syncs, ec_direction_t dir, ec_watchdog_mode_t watchdog_mode) {
-  syncs->curr_sync = &syncs->syncs[(syncs->sync_count)++];
+  syncs->curr_sync = &syncs->syncs[syncs->sync_count];
 
   syncs->curr_sync->index = syncs->sync_count;
   syncs->curr_sync->dir = dir;
   syncs->curr_sync->watchdog_mode = watchdog_mode;
 
+  (syncs->sync_count)++;
   syncs->syncs[syncs->sync_count].index = 0xff;
 }
 
 void lcec_syncs_add_pdo_info(lcec_syncs_t *syncs, uint16_t index) {
-  syncs->curr_pdo_info = &syncs->pdo_infos[(syncs->pdo_info_count)++];
+  syncs->curr_pdo_info = &syncs->pdo_infos[syncs->pdo_info_count];
 
   if (syncs->curr_sync->pdos == NULL) {
     syncs->curr_sync->pdos = syncs->curr_pdo_info;
@@ -1698,10 +1699,12 @@ void lcec_syncs_add_pdo_info(lcec_syncs_t *syncs, uint16_t index) {
   (syncs->curr_sync->n_pdos)++;
 
   syncs->curr_pdo_info->index = index;
+
+  (syncs->pdo_info_count)++;
 }
 
 void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subindex, uint8_t bit_length) {
-  syncs->curr_pdo_entry = &syncs->pdo_entries[(syncs->pdo_entry_count)++];
+  syncs->curr_pdo_entry = &syncs->pdo_entries[syncs->pdo_entry_count];
 
   if (syncs->curr_pdo_info->entries == NULL) {
     syncs->curr_pdo_info->entries = syncs->curr_pdo_entry;
@@ -1711,5 +1714,7 @@ void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subin
   syncs->curr_pdo_entry->index = index;
   syncs->curr_pdo_entry->subindex = subindex;
   syncs->curr_pdo_entry->bit_length = bit_length;
+
+  (syncs->pdo_entry_count)++;
 }
 
