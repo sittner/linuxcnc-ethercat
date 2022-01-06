@@ -43,7 +43,7 @@ int lcec_ax5200_preinit(struct lcec_slave *slave) {
   slave->fsoeConf = &fsoe_conf;
 
   // set pdo count
-  slave->pdo_entry_count = lcec_class_ax5_pdos(slave);
+  slave->pdo_entry_count = lcec_class_ax5_pdos(slave) * LCEC_AX5200_CHANS;
 
   return 0;
 }
