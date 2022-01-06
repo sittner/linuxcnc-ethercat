@@ -66,10 +66,7 @@ int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   slave->hal_data = hal_data;
 
   // init subclasses
-  if ((err = lcec_class_ax5_init(slave, pdo_entry_regs, &hal_data->chan, 0, "srv")) != 0) {
-    return err;
-  }
-  if ((err = class_enc_init(slave, &hal_data->chan.enc, 32, "enc")) != 0) {
+  if ((err = lcec_class_ax5_init(slave, pdo_entry_regs, &hal_data->chan, 0, "")) != 0) {
     return err;
   }
 

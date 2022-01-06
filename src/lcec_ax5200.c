@@ -73,12 +73,8 @@ int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
     chan = &hal_data->chans[i];
 
     // init subclasses
-    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.srv", i);
+    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.", i);
     if ((err = lcec_class_ax5_init(slave, pdo_entry_regs, chan, i, pfx)) != 0) {
-      return err;
-    }
-    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.enc", i);
-    if ((err = class_enc_init(slave, &chan->enc, 32, pfx)) != 0) {
       return err;
     }
   }
