@@ -68,6 +68,21 @@ int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   memset(hal_data, 0, sizeof(lcec_ax5200_data_t));
   slave->hal_data = hal_data;
 
+  // initialize pins
+  for (i=0; i<LCEC_AX5200_CHANS; i++, pdo_entry_regs += lcec_class_ax5_pdos(slave)) {
+    chan = &hal_data->chans[i];
+
+    // init subclasses
+    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.srv", i);
+    if ((err = lcec_class_ax5_init(slave, pdo_entry_regs, chan, i, pfx)) != 0) {
+      return err;
+    }
+    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.enc", i);
+    if ((err = class_enc_init(slave, &chan->enc, 32, pfx)) != 0) {
+      return err;
+    }
+  }
+
   // initialize sync info
   lcec_syncs_init(&hal_data->syncs);
     lcec_syncs_add_sync(&hal_data->syncs, EC_DIR_OUTPUT, EC_WD_DEFAULT);
@@ -84,38 +99,23 @@ int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
         lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0087, 0x01, 16); // status word
         lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0033, 0x01, 32); // position feedback
         lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0054, 0x01, 16); // torque feedback
-        if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2)) {
+        if (hal_data->chans[0].fb2_enabled) {
           lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0035, 0x01, 32); // position feedback 2
         }
-        if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG)) {
-          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0186, 0x01, 32); // position feedback 2
+        if (hal_data->chans[0].diag_enabled) {
+          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0186, 0x01, 32); // diagnostic number
         }
       lcec_syncs_add_pdo_info(&hal_data->syncs, 0x1010);
         lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0087, 0x02, 16); // status word
         lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0033, 0x02, 32); // position feedback
         lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0054, 0x02, 16); // torque feedback
-        if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2)) {
+        if (hal_data->chans[1].fb2_enabled) {
           lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0035, 0x02, 32); // position feedback 2
         }
-        if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG)) {
-          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0186, 0x02, 32); // position feedback 2
+        if (hal_data->chans[1].diag_enabled) {
+          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0186, 0x02, 32); // diagnostic number
         }
   slave->sync_info = &hal_data->syncs.syncs[0];
-
-  // initialize pins
-  for (i=0; i<LCEC_AX5200_CHANS; i++, pdo_entry_regs += lcec_class_ax5_pdos(slave)) {
-    chan = &hal_data->chans[i];
-
-    // init subclasses
-    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.srv", i);
-    if ((err = lcec_class_ax5_init(slave, pdo_entry_regs, chan, i, pfx)) != 0) {
-      return err;
-    }
-    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.enc", i);
-    if ((err = class_enc_init(slave, &chan->enc, 32, pfx)) != 0) {
-      return err;
-    }
-  }
 
   return 0;
 }

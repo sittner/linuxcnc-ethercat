@@ -35,9 +35,10 @@ typedef struct {
 
   hal_float_t *velo_cmd;
 
+  int fb2_enabled;
+  int diag_enabled;
+
   hal_u32_t *status;
-  hal_s32_t *pos_fb;
-  hal_s32_t *pos_fb2;
   hal_float_t *torque_fb_pct;
   hal_u32_t *diag;
 
@@ -68,7 +69,6 @@ typedef struct {
 
 } lcec_class_ax5_chan_t;
 
-int lcec_class_ax5_get_param_flag(struct lcec_slave *slave, int id);
 int lcec_class_ax5_pdos(struct lcec_slave *slave);
 int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, lcec_class_ax5_chan_t *chan, int index, const char *pfx);
 void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan);

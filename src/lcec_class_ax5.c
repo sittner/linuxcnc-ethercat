@@ -29,13 +29,7 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_FLOAT, HAL_IN, offsetof(lcec_class_ax5_chan_t, velo_cmd), "%s.%s.%s.%s-velo-cmd" },
 
   { HAL_U32, HAL_IN, offsetof(lcec_class_ax5_chan_t, status), "%s.%s.%s.%s-status" },
-  { HAL_S32, HAL_IN, offsetof(lcec_class_ax5_chan_t, pos_fb), "%s.%s.%s.%s-pos-fb" },
   { HAL_FLOAT, HAL_IN, offsetof(lcec_class_ax5_chan_t, torque_fb_pct), "%s.%s.%s.%s-torque-fb-pct" },
-  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
-};
-
-static const lcec_pindesc_t slave_fb2_pins[] = {
-  { HAL_S32, HAL_IN, offsetof(lcec_class_ax5_chan_t, pos_fb2), "%s.%s.%s.%s-pos-fb2" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -56,7 +50,7 @@ static const lcec_pindesc_t slave_fb2_params[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-int lcec_class_ax5_get_param_flag(struct lcec_slave *slave, int id) {
+static int get_param_flag(struct lcec_slave *slave, int id) {
   LCEC_CONF_MODPARAM_VAL_T *pval;
 
   pval = lcec_modparam_get(slave, id);
@@ -70,11 +64,11 @@ int lcec_class_ax5_get_param_flag(struct lcec_slave *slave, int id) {
 int lcec_class_ax5_pdos(struct lcec_slave *slave) {
   int pdo_count = 5;
 
-  if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2)) {
+  if (get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2)) {
     pdo_count += 1;
   }
 
-  if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG)) {
+  if (get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG)) {
     pdo_count += 1;
   }
 
@@ -121,17 +115,16 @@ int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_
     return err;
   }
 
-  if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2)) {
+  chan->fb2_enabled = get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2);
+  if (chan->fb2_enabled) {
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0035, 0x01 + index, &chan->pos_fb2_pdo_os, NULL);
-    if ((err = lcec_pin_newf_list(chan, slave_fb2_pins, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
-      return err;
-    }
     if ((err = lcec_param_newf_list(chan, slave_fb2_params, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
       return err;
     }
   }
 
-  if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG)) {
+  chan->diag_enabled = get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG);
+  if (chan->diag_enabled) {
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0186, 0x01 + index, &chan->diag_pdo_os, NULL);
     if ((err = lcec_pin_newf_list(chan, slave_diag_pins, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
       return err;
@@ -184,7 +177,7 @@ void lcec_class_ax5_check_scales(lcec_class_ax5_chan_t *chan) {
 void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan) {
   lcec_master_t *master = slave->master;
   uint8_t *pd = master->process_data;
-  uint32_t pos_cnt, pos_cnt_fb2;
+  uint32_t pos_cnt;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
@@ -217,17 +210,15 @@ void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan) 
   *(chan->halted) = (((*(chan->status) >> 3) & 1) != 1);
 
   // update position feedback
-  *(chan->pos_fb) = EC_READ_S32(&pd[chan->pos_fb_pdo_os]);
   pos_cnt = EC_READ_U32(&pd[chan->pos_fb_pdo_os]);
   class_enc_update(&chan->enc, chan->pos_resolution, chan->scale_rcpt, pos_cnt, 0, 0);
 
-  if (chan->pos_fb2 != NULL) {
-    *(chan->pos_fb2) = EC_READ_S32(&pd[chan->pos_fb2_pdo_os]);
-    pos_cnt_fb2 = EC_READ_U32(&pd[chan->pos_fb2_pdo_os]);
-    class_enc_update(&chan->enc_fb2, 1, chan->scale_fb2_rcpt, pos_cnt_fb2, 0, 0);
+  if (chan->fb2_enabled) {
+    pos_cnt = EC_READ_U32(&pd[chan->pos_fb2_pdo_os]);
+    class_enc_update(&chan->enc_fb2, 1, chan->scale_fb2_rcpt, pos_cnt, 0, 0);
   }
 
-  if (chan->diag != NULL) {
+  if (chan->diag_enabled) {
     *(chan->diag) = EC_READ_U32(&pd[chan->diag_pdo_os]);
   }
 
