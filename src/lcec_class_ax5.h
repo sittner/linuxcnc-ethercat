@@ -21,7 +21,8 @@
 #include "lcec.h"
 #include "lcec_class_enc.h"
 
-#define LCEC_AX5_PARAM_ENABLE_FB2 1
+#define LCEC_AX5_PARAM_ENABLE_FB2  1
+#define LCEC_AX5_PARAM_ENABLE_DIAG 2
 
 typedef struct {
   hal_bit_t *enable;
@@ -38,11 +39,13 @@ typedef struct {
   hal_s32_t *pos_fb;
   hal_s32_t *pos_fb2;
   hal_float_t *torque_fb_pct;
+  hal_u32_t *diag;
 
   unsigned int status_pdo_os;
   unsigned int pos_fb_pdo_os;
   unsigned int pos_fb2_pdo_os;
   unsigned int torque_fb_pdo_os;
+  unsigned int diag_pdo_os;
   unsigned int ctrl_pdo_os;
   unsigned int vel_cmd_pdo_os;
 
@@ -65,7 +68,7 @@ typedef struct {
 
 } lcec_class_ax5_chan_t;
 
-int lcec_class_ax5_enable_fb2(struct lcec_slave *slave);
+int lcec_class_ax5_get_param_flag(struct lcec_slave *slave, int id);
 int lcec_class_ax5_pdos(struct lcec_slave *slave);
 int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, lcec_class_ax5_chan_t *chan, int index, const char *pfx);
 void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan);

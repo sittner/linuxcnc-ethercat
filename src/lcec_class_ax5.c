@@ -39,6 +39,11 @@ static const lcec_pindesc_t slave_fb2_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
+static const lcec_pindesc_t slave_diag_pins[] = {
+  { HAL_U32, HAL_IN, offsetof(lcec_class_ax5_chan_t, diag), "%s.%s.%s.%s-diag" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
+};
+
 static const lcec_pindesc_t slave_params[] = {
   { HAL_FLOAT, HAL_RW, offsetof(lcec_class_ax5_chan_t, scale), "%s.%s.%s.%s-scale" },
   { HAL_FLOAT, HAL_RO, offsetof(lcec_class_ax5_chan_t, vel_scale), "%s.%s.%s.%s-vel-scale" },
@@ -51,10 +56,10 @@ static const lcec_pindesc_t slave_fb2_params[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-int lcec_class_ax5_enable_fb2(struct lcec_slave *slave) {
+int lcec_class_ax5_get_param_flag(struct lcec_slave *slave, int id) {
   LCEC_CONF_MODPARAM_VAL_T *pval;
 
-  pval = lcec_modparam_get(slave, LCEC_AX5_PARAM_ENABLE_FB2);
+  pval = lcec_modparam_get(slave, id);
   if (pval == NULL) {
     return 0;
   }
@@ -65,7 +70,11 @@ int lcec_class_ax5_enable_fb2(struct lcec_slave *slave) {
 int lcec_class_ax5_pdos(struct lcec_slave *slave) {
   int pdo_count = 5;
 
-  if (lcec_class_ax5_enable_fb2(slave)) {
+  if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2)) {
+    pdo_count += 1;
+  }
+
+  if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG)) {
     pdo_count += 1;
   }
 
@@ -112,12 +121,19 @@ int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_
     return err;
   }
 
-  if (lcec_class_ax5_enable_fb2(slave)) {
+  if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2)) {
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0035, 0x01 + index, &chan->pos_fb2_pdo_os, NULL);
     if ((err = lcec_pin_newf_list(chan, slave_fb2_pins, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
       return err;
     }
     if ((err = lcec_param_newf_list(chan, slave_fb2_params, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
+      return err;
+    }
+  }
+
+  if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG)) {
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x0186, 0x01 + index, &chan->diag_pdo_os, NULL);
+    if ((err = lcec_pin_newf_list(chan, slave_diag_pins, LCEC_MODULE_NAME, master->name, slave->name, pfx)) != 0) {
       return err;
     }
   }
@@ -209,6 +225,10 @@ void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan) 
     *(chan->pos_fb2) = EC_READ_S32(&pd[chan->pos_fb2_pdo_os]);
     pos_cnt_fb2 = EC_READ_U32(&pd[chan->pos_fb2_pdo_os]);
     class_enc_update(&chan->enc_fb2, 1, chan->scale_fb2_rcpt, pos_cnt_fb2, 0, 0);
+  }
+
+  if (chan->diag != NULL) {
+    *(chan->diag) = EC_READ_U32(&pd[chan->diag_pdo_os]);
   }
 
   *(chan->torque_fb_pct) = ((double) EC_READ_S16(&pd[chan->torque_fb_pdo_os])) * 0.1;

@@ -78,8 +78,11 @@ int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
         lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0087, 0x01, 16); // status word
         lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0033, 0x01, 32); // position feedback
         lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0054, 0x01, 16); // torque feedback
-        if (lcec_class_ax5_enable_fb2(slave)) {
+        if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_FB2)) {
           lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0035, 0x01, 32); // position feedback 2
+        }
+        if (lcec_class_ax5_get_param_flag(slave, LCEC_AX5_PARAM_ENABLE_DIAG)) {
+          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0186, 0x01, 32); // position feedback 2
         }
 
   slave->sync_info = &hal_data->syncs.syncs[0];

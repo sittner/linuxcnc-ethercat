@@ -117,6 +117,7 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveEL7411Params[] = {
 
 static const LCEC_CONF_MODPARAM_DESC_T slaveAX5Params[] = {
   { "enableFB2", LCEC_AX5_PARAM_ENABLE_FB2, MODPARAM_TYPE_BIT } ,
+  { "enableDiag", LCEC_AX5_PARAM_ENABLE_DIAG, MODPARAM_TYPE_BIT } ,
   { NULL }
 };
 
