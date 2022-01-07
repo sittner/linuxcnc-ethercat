@@ -291,7 +291,7 @@ void lcec_dems300_write(struct lcec_slave *slave, long period) {
 
   //set drive OP mode
   opmode = OPMODE_VELOCITY; 	
-  EC_WRITE_S8(&pd[hal_data->mode_op_pdo_os], opmode);
+  EC_WRITE_S8(&pd[hal_data->mode_op_pdo_os], (int8_t)opmode);
 
   // check for enable edge
   enable_edge = *(hal_data->enable) && !hal_data->enable_old;
@@ -324,6 +324,8 @@ void lcec_dems300_write(struct lcec_slave *slave, long period) {
       control |= (1 << 4); // rfg enable 
       control |= (1 << 5); // rfg unlock
       control |= (1 << 6); // rfg use ref 
+      control |= (1 << 2); // check 
+
 	}
   }
 
@@ -333,9 +335,9 @@ void lcec_dems300_write(struct lcec_slave *slave, long period) {
   EC_WRITE_U16(&pd[hal_data->control_pdo_os], control);
 
 	//write ramp times 
-  EC_WRITE_U32(&pd[hal_data->ramp_up_pdo_os], *(hal_data->vel_ramp_up));
-  EC_WRITE_U32(&pd[hal_data->ramp_down_pdo_os], *(hal_data->vel_ramp_down));
-
+  EC_WRITE_U32(&pd[hal_data->ramp_up_pdo_os], (uint32_t)*(hal_data->vel_ramp_up)*100);
+  EC_WRITE_U32(&pd[hal_data->ramp_down_pdo_os], (uint32_t)*(hal_data->vel_ramp_down)*100);
+  
   // set RPM
   speed_raw = *(hal_data->vel_rpm_cmd);
   if (speed_raw > (double)0x7fff) {
