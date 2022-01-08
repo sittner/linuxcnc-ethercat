@@ -91,7 +91,7 @@ Parameters:
 #define LCEC_DEMS300_VID LCEC_DELTA_VID
 #define LCEC_DEMS300_PID 0x10400200
 
-#define LCEC_DEMS300_PDOS 11
+#define LCEC_DEMS300_PDOS 13
 
 int lcec_dems300_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
