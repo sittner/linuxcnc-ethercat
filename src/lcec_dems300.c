@@ -22,8 +22,6 @@
 #define MS300_FAULT_AUTORESET_DELAY_NS 100000000LL
 #define OPMODE_VELOCITY 2
 
-
-
 typedef struct {
   hal_float_t *vel_fb_rpm;
   hal_float_t *vel_fb_rpm_abs;
@@ -39,24 +37,24 @@ typedef struct {
   hal_bit_t *stat_warning;
   hal_bit_t *stat_remote;
   hal_bit_t *stat_at_speed;
-  
+
   hal_bit_t *quick_stop;
   hal_bit_t *enable;
   hal_bit_t *fault_reset;
   hal_bit_t *halt;
- 
+
   hal_s32_t *mode_op_display;
 
-  hal_float_t *act_current; 
-  hal_u32_t *warn_code; 
-  hal_u32_t *error_code; 
-  hal_float_t *drive_temp; 
+  hal_float_t *act_current;
+  hal_u32_t *warn_code;
+  hal_u32_t *error_code;
+  hal_float_t *drive_temp;
 
-  hal_u32_t *vel_ramp_up; 
-  hal_u32_t *vel_ramp_down;  
+  hal_u32_t *vel_ramp_up;
+  hal_u32_t *vel_ramp_down;
 
   hal_bit_t auto_fault_reset;
-  
+
   unsigned int status_pdo_os;
   unsigned int currvel_pdo_os;
   unsigned int mode_op_display_pdo_os;
@@ -75,7 +73,7 @@ typedef struct {
   hal_bit_t enable_old;
   hal_bit_t internal_fault;
 
-  long long auto_fault_reset_delay;  
+  long long auto_fault_reset_delay;
 
 } lcec_dems300_data_t;
 
@@ -217,27 +215,27 @@ void lcec_dems300_read(struct lcec_slave *slave, long period) {
   int32_t speed_raw;
   double rpm;
 
-  // read current; 
-  *(hal_data->act_current) = (double)EC_READ_U16(&pd[hal_data->current_pdo_os]) /100;
-  // read temp; 
-  *(hal_data->drive_temp) = (float)EC_READ_U16(&pd[hal_data->temp_pdo_os]) /10;
-  // read warn and error code ; 
+  // read current
+  *(hal_data->act_current) = (double) EC_READ_U16(&pd[hal_data->current_pdo_os]) / 100.0;
+  // read temp
+  *(hal_data->drive_temp) = (double) EC_READ_U16(&pd[hal_data->temp_pdo_os]) / 10.0;
+  // read warn and error code
   error = EC_READ_U16(&pd[hal_data->warn_err_pdo_os]);
   *(hal_data->error_code) = error & 0xff; //low byte
   *(hal_data->warn_code) = error >> 8; //high byte
 
   // wait for slave to be operational
   if (!slave->state.operational) {
-    *(hal_data->stat_switch_on_ready) = 0;
-    *(hal_data->stat_switched_on)  = 0;
-    *(hal_data->stat_op_enabled) = 0;
-    *(hal_data->stat_fault)        = 1;
-    *(hal_data->stat_volt_enabled) = 0;
-    *(hal_data->stat_quick_stoped) = 0;
-    *(hal_data->stat_switch_on_disabled)  = 0;
-    *(hal_data->stat_warning)      = 0;
-    *(hal_data->stat_remote)       = 0;
-    *(hal_data->stat_at_speed)     = 0;
+    *(hal_data->stat_switch_on_ready)    = 0;
+    *(hal_data->stat_switched_on)        = 0;
+    *(hal_data->stat_op_enabled)         = 0;
+    *(hal_data->stat_fault)              = 1;
+    *(hal_data->stat_volt_enabled)       = 0;
+    *(hal_data->stat_quick_stoped)       = 0;
+    *(hal_data->stat_switch_on_disabled) = 0;
+    *(hal_data->stat_warning)            = 0;
+    *(hal_data->stat_remote)             = 0;
+    *(hal_data->stat_at_speed)           = 0;
     return;
   }
 
@@ -247,21 +245,20 @@ void lcec_dems300_read(struct lcec_slave *slave, long period) {
   // read status word
   status = EC_READ_U16(&pd[hal_data->status_pdo_os]);
   *(hal_data->stat_switch_on_ready)    = (status >> 0) & 1;
-  *(hal_data->stat_switched_on)       = (status >> 1) & 1;
-  *(hal_data->stat_op_enabled)        = (status >> 2) & 1;
+  *(hal_data->stat_switched_on)        = (status >> 1) & 1;
+  *(hal_data->stat_op_enabled)         = (status >> 2) & 1;
 //  *(hal_data->stat_fault)             = (status >> 3) & 1;
-  hal_data->internal_fault 			  = (status >> 3) & 0x01;
-  *(hal_data->stat_volt_enabled)      = (status >> 4) & 1;
-  *(hal_data->stat_quick_stoped)      = (status >> 5) & 1;
+  hal_data->internal_fault             = (status >> 3) & 0x01;
+  *(hal_data->stat_volt_enabled)       = (status >> 4) & 1;
+  *(hal_data->stat_quick_stoped)       = (status >> 5) & 1;
   *(hal_data->stat_switch_on_disabled) = (status >> 6) & 1;
-  *(hal_data->stat_warning)           = (status >> 7) & 1;
-  *(hal_data->stat_remote)            = (status >> 9) & 1;
-  *(hal_data->stat_at_speed) 	      = (status >> 10) & 0x01;
+  *(hal_data->stat_warning)            = (status >> 7) & 1;
+  *(hal_data->stat_remote)             = (status >> 9) & 1;
+  *(hal_data->stat_at_speed)           = (status >> 10) & 0x01;
 
- 
-  // set fault if op mode is wrong 
+  // set fault if op mode is wrong
   if (opmode_in != 2) {
-	  hal_data->internal_fault  = 1;
+    hal_data->internal_fault  = 1;
     rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "MS300 slave %s.%s not sending velo mode\n", master->name, slave->name);
   }
 
@@ -289,10 +286,10 @@ void lcec_dems300_write(struct lcec_slave *slave, long period) {
   uint16_t control;
   double speed_raw;
   int8_t opmode;
-	int enable_edge;
+  int enable_edge;
 
   //set drive OP mode
-  opmode = OPMODE_VELOCITY; 	
+  opmode = OPMODE_VELOCITY;
   EC_WRITE_S8(&pd[hal_data->mode_op_pdo_os], (int8_t)opmode);
 
   // check for enable edge
@@ -301,7 +298,7 @@ void lcec_dems300_write(struct lcec_slave *slave, long period) {
 
 
   // write control register
-  control = (!*(hal_data->fault_reset) << 2); // quick stop 
+  control = (!*(hal_data->fault_reset) << 2); // quick stop
 
   if (*(hal_data->stat_fault)) {
     if (*(hal_data->fault_reset)) {
@@ -321,23 +318,23 @@ void lcec_dems300_write(struct lcec_slave *slave, long period) {
         }
       }
     }
-    //set velo control bits 
-	  if (*(hal_data->stat_op_enabled)) {
-      control |= (1 << 4); // rfg enable 
+    //set velo control bits
+    if (*(hal_data->stat_op_enabled)) {
+      control |= (1 << 4); // rfg enable
       control |= (1 << 5); // rfg unlock
-      control |= (1 << 6); // rfg use ref 
+      control |= (1 << 6); // rfg use ref
     }
   }
 
-  //halt 
-  control |= (*(hal_data->halt) << 8); // halt  
+  //halt
+  control |= (*(hal_data->halt) << 8); // halt
 
   EC_WRITE_U16(&pd[hal_data->control_pdo_os], control);
 
-	//write ramp times 
+  //write ramp times
   EC_WRITE_U32(&pd[hal_data->ramp_up_pdo_os], *(hal_data->vel_ramp_up));
   EC_WRITE_U32(&pd[hal_data->ramp_down_pdo_os], *(hal_data->vel_ramp_down));
-  
+
   // set RPM
   speed_raw = *(hal_data->vel_rpm_cmd);
   if (speed_raw > (double)0x7fff) {
