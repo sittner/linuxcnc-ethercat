@@ -1,3 +1,19 @@
+linuxcnc-ethercat (0.9.5) unstable; urgency=low
+
+  * better buffer handling of dynamic fsoe data
+  * fixed el1918_logic pdo count calculation
+  * added inverted inputs to EL1904
+  * fixed el1918 to adapt new el6900 config method
+  * Add Delta MS300
+  * add additional AX5100 Types
+  * removed txpdo state bit from el6900, due firmware change
+  * Support added for EL9576
+  * Adding Support for EK1101 and EL2652
+  * Support added for EL9576
+  * added support for EL1918 as TwinSAFE plc
+
+ -- Sascha Ittner <sascha.ittner@modusoft.de>  Thu, 10 Mar 2022 09:13:50 +0100
+
 linuxcnc-ethercat (0.9.4) unstable; urgency=low
 
   * added EL7211 debug pins
