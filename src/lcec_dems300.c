@@ -54,6 +54,10 @@ typedef struct {
   hal_u32_t *vel_ramp_down;
 
   hal_bit_t auto_fault_reset;
+  hal_float_t vel_scale;
+
+  double vel_scale_old;
+  double vel_scale_rcpt;
 
   unsigned int status_pdo_os;
   unsigned int currvel_pdo_os;
@@ -106,6 +110,7 @@ static const lcec_pindesc_t slave_pins[] = {
 
 static const lcec_pindesc_t slave_params[] = {
   { HAL_BIT, HAL_RW, offsetof(lcec_dems300_data_t, auto_fault_reset), "%s.%s.%s.auto-fault-reset" },
+  { HAL_FLOAT, HAL_RW, offsetof(lcec_dems300_data_t, vel_scale), "%s.%s.%s.vel-scale" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -150,6 +155,8 @@ static ec_sync_info_t lcec_dems300_syncs[] = {
     {3, EC_DIR_INPUT,  2, lcec_dems300_pdos_in},
     {0xff}
 };
+
+void lcec_dems300_check_scales(lcec_dems300_data_t *hal_data);
 
 void lcec_dems300_read(struct lcec_slave *slave, long period);
 void lcec_dems300_write(struct lcec_slave *slave, long period);
@@ -202,8 +209,26 @@ int lcec_dems300_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   hal_data->internal_fault = 0;
 
   hal_data->auto_fault_reset = 1;
+  hal_data->vel_scale = 1.0;
+  hal_data->vel_scale_old = hal_data->vel_scale + 1.0;
+  hal_data->vel_scale_rcpt = 1.0;
 
   return 0;
+}
+
+void lcec_dems300_check_scales(lcec_dems300_data_t *hal_data) {
+  // check for change in scale value
+  if (hal_data->vel_scale != hal_data->vel_scale_old) {
+    // scale value has changed, test and update it
+    if ((hal_data->vel_scale < 1e-20) && (hal_data->vel_scale > -1e-20)) {
+      // value too small, divide by zero is a bad thing
+      hal_data->vel_scale = 1.0;
+    }
+    // save new scale to detect future changes
+    hal_data->vel_scale_old = hal_data->vel_scale;
+    // we actually want the reciprocal
+    hal_data->vel_scale_rcpt = 1.0 / hal_data->vel_scale;
+  }
 }
 
 void lcec_dems300_read(struct lcec_slave *slave, long period) {
@@ -214,6 +239,9 @@ void lcec_dems300_read(struct lcec_slave *slave, long period) {
   int8_t opmode_in;
   int32_t speed_raw;
   double rpm;
+
+  // check for change in scale value
+  lcec_dems300_check_scales(hal_data);
 
   // read current
   *(hal_data->act_current) = (double) EC_READ_U16(&pd[hal_data->current_pdo_os]) / 100.0;
@@ -272,7 +300,7 @@ void lcec_dems300_read(struct lcec_slave *slave, long period) {
 
   // read current speed
   speed_raw = EC_READ_S16(&pd[hal_data->currvel_pdo_os]);
-  rpm = (double)speed_raw;
+  rpm = (double)speed_raw * hal_data->vel_scale_rcpt;
   *(hal_data->vel_fb_rpm) = rpm;
   *(hal_data->vel_fb_rpm_abs) = fabs(rpm);
 
@@ -287,6 +315,9 @@ void lcec_dems300_write(struct lcec_slave *slave, long period) {
   double speed_raw;
   int8_t opmode;
   int enable_edge;
+
+  // check for change in scale value
+  lcec_dems300_check_scales(hal_data);
 
   //set drive OP mode
   opmode = OPMODE_VELOCITY;
@@ -336,7 +367,7 @@ void lcec_dems300_write(struct lcec_slave *slave, long period) {
   EC_WRITE_U32(&pd[hal_data->ramp_down_pdo_os], *(hal_data->vel_ramp_down));
 
   // set RPM
-  speed_raw = *(hal_data->vel_rpm_cmd);
+  speed_raw = *(hal_data->vel_rpm_cmd) * hal_data->vel_scale;
   if (speed_raw > (double)0x7fff) {
     speed_raw = (double)0x7fff;
   }
