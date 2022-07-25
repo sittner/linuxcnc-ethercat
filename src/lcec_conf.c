@@ -1227,6 +1227,11 @@ static void parsePdoEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         p->subType = lcecPdoEntTypeComplex;
         continue;
       }
+      if (strcasecmp(val, "float-ieee") == 0) {
+        p->subType = lcecPdoEntTypeFloatIeee;
+        p->halType = HAL_FLOAT;
+        continue;
+      }
       fprintf(stderr, "%s: ERROR: Invalid pdoEntry halType %s\n", modname, val);
       XML_StopParser(inst->parser, 0);
       return;
@@ -1362,6 +1367,11 @@ static void parseComplexEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const c
       }
       if (strcasecmp(val, "float-unsigned") == 0) {
         p->subType = lcecPdoEntTypeFloatUnsigned;
+        p->halType = HAL_FLOAT;
+        continue;
+      }
+      if (strcasecmp(val, "float-ieee") == 0) {
+        p->subType = lcecPdoEntTypeFloatIeee;
         p->halType = HAL_FLOAT;
         continue;
       }
