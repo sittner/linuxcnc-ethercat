@@ -80,13 +80,13 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEK1122, LCEC_EK1122_VID, LCEC_EK1122_PID, LCEC_EK1122_PDOS, 0, NULL, NULL},
 
   // AX5000 servo drives
-  { lcecSlaveTypeAX5101, LCEC_AX5100_VID, LCEC_AX5101_PID, LCEC_AX5100_PDOS, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5103, LCEC_AX5100_VID, LCEC_AX5103_PID, LCEC_AX5100_PDOS, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5106, LCEC_AX5100_VID, LCEC_AX5106_PID, LCEC_AX5100_PDOS, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5112, LCEC_AX5100_VID, LCEC_AX5112_PID, LCEC_AX5100_PDOS, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5118, LCEC_AX5100_VID, LCEC_AX5118_PID, LCEC_AX5100_PDOS, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5203, LCEC_AX5200_VID, LCEC_AX5203_PID, LCEC_AX5200_PDOS, 0, lcec_ax5200_preinit, lcec_ax5200_init},
-  { lcecSlaveTypeAX5206, LCEC_AX5200_VID, LCEC_AX5206_PID, LCEC_AX5200_PDOS, 0, lcec_ax5200_preinit, lcec_ax5200_init},
+  { lcecSlaveTypeAX5101, LCEC_AX5100_VID, LCEC_AX5101_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { lcecSlaveTypeAX5103, LCEC_AX5100_VID, LCEC_AX5103_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { lcecSlaveTypeAX5106, LCEC_AX5100_VID, LCEC_AX5106_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { lcecSlaveTypeAX5112, LCEC_AX5100_VID, LCEC_AX5112_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { lcecSlaveTypeAX5118, LCEC_AX5100_VID, LCEC_AX5118_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { lcecSlaveTypeAX5203, LCEC_AX5200_VID, LCEC_AX5203_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
+  { lcecSlaveTypeAX5206, LCEC_AX5200_VID, LCEC_AX5206_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
 
   // digital in
   { lcecSlaveTypeEL1002, LCEC_EL1xxx_VID, LCEC_EL1002_PID, LCEC_EL1002_PDOS, 0, NULL, lcec_el1xxx_init},
@@ -1673,5 +1673,48 @@ void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigne
   if (slave->fsoe_master_offset != NULL) {
     memcpy(&pd[master_offset], &pd[*(slave->fsoe_master_offset)], LCEC_FSOE_SIZE(fsoeConf->data_channels, fsoeConf->master_data_len));
   }
+}
+
+void lcec_syncs_init(lcec_syncs_t *syncs) {
+  memset(syncs, 0, sizeof(lcec_syncs_t));
+}
+
+void lcec_syncs_add_sync(lcec_syncs_t *syncs, ec_direction_t dir, ec_watchdog_mode_t watchdog_mode) {
+  syncs->curr_sync = &syncs->syncs[syncs->sync_count];
+
+  syncs->curr_sync->index = syncs->sync_count;
+  syncs->curr_sync->dir = dir;
+  syncs->curr_sync->watchdog_mode = watchdog_mode;
+
+  (syncs->sync_count)++;
+  syncs->syncs[syncs->sync_count].index = 0xff;
+}
+
+void lcec_syncs_add_pdo_info(lcec_syncs_t *syncs, uint16_t index) {
+  syncs->curr_pdo_info = &syncs->pdo_infos[syncs->pdo_info_count];
+
+  if (syncs->curr_sync->pdos == NULL) {
+    syncs->curr_sync->pdos = syncs->curr_pdo_info;
+  }
+  (syncs->curr_sync->n_pdos)++;
+
+  syncs->curr_pdo_info->index = index;
+
+  (syncs->pdo_info_count)++;
+}
+
+void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subindex, uint8_t bit_length) {
+  syncs->curr_pdo_entry = &syncs->pdo_entries[syncs->pdo_entry_count];
+
+  if (syncs->curr_pdo_info->entries == NULL) {
+    syncs->curr_pdo_info->entries = syncs->curr_pdo_entry;
+  }
+  (syncs->curr_pdo_info->n_entries)++;
+
+  syncs->curr_pdo_entry->index = index;
+  syncs->curr_pdo_entry->subindex = subindex;
+  syncs->curr_pdo_entry->bit_length = bit_length;
+
+  (syncs->pdo_entry_count)++;
 }
 

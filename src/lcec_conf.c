@@ -36,6 +36,7 @@
 #include "lcec_el1918_logic.h"
 #include "lcec_el70x1.h"
 #include "lcec_el7411.h"
+#include "lcec_class_ax5.h"
 
 typedef enum {
   MODPARAM_TYPE_BIT,
@@ -92,7 +93,6 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveEL70x1Params[] = {
   { NULL }
 };
 
-
 static const LCEC_CONF_MODPARAM_DESC_T slaveEL7411Params[] = {
 
   { "dcLinkNominal", LCEC_EL7411_PARAM_DCLINK_NOM, MODPARAM_TYPE_U32 } ,
@@ -115,6 +115,12 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveEL7411Params[] = {
   { NULL }
 };
 
+static const LCEC_CONF_MODPARAM_DESC_T slaveAX5Params[] = {
+  { "enableFB2", LCEC_AX5_PARAM_ENABLE_FB2, MODPARAM_TYPE_BIT } ,
+  { "enableDiag", LCEC_AX5_PARAM_ENABLE_DIAG, MODPARAM_TYPE_BIT } ,
+  { NULL }
+};
+
 static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // bus coupler
   { "EK1100", lcecSlaveTypeEK1100, NULL },
@@ -126,13 +132,13 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   { "generic", lcecSlaveTypeGeneric, NULL },
 
   // AX5000 servo drives
-  { "AX5101", lcecSlaveTypeAX5101, NULL },
-  { "AX5103", lcecSlaveTypeAX5103, NULL },
-  { "AX5106", lcecSlaveTypeAX5106, NULL },
-  { "AX5112", lcecSlaveTypeAX5112, NULL },
-  { "AX5118", lcecSlaveTypeAX5118, NULL },
-  { "AX5203", lcecSlaveTypeAX5203, NULL },
-  { "AX5206", lcecSlaveTypeAX5206, NULL },
+  { "AX5101", lcecSlaveTypeAX5101, slaveAX5Params },
+  { "AX5103", lcecSlaveTypeAX5103, slaveAX5Params },
+  { "AX5106", lcecSlaveTypeAX5106, slaveAX5Params },
+  { "AX5112", lcecSlaveTypeAX5112, slaveAX5Params },
+  { "AX5118", lcecSlaveTypeAX5118, slaveAX5Params },
+  { "AX5203", lcecSlaveTypeAX5203, slaveAX5Params },
+  { "AX5206", lcecSlaveTypeAX5206, slaveAX5Params },
 
   // digital in
   { "EL1002", lcecSlaveTypeEL1002, NULL },

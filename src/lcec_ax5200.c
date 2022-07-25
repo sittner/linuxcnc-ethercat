@@ -20,48 +20,9 @@
 #include "lcec_ax5200.h"
 
 typedef struct {
+  lcec_syncs_t syncs;
   lcec_class_ax5_chan_t chans[LCEC_AX5200_CHANS];
 } lcec_ax5200_data_t;
-
-static ec_pdo_entry_info_t lcec_ax5200_in_a[] = {
-   {0x0087, 0x01, 16}, // status word
-   {0x0033, 0x01, 32}, // position feedback
-   {0x0054, 0x01, 16}  // torque feedback
-};
-
-static ec_pdo_entry_info_t lcec_ax5200_in_b[] = {
-   {0x0087, 0x02, 16}, // status word
-   {0x0033, 0x02, 32}, // position feedback
-   {0x0054, 0x02, 16}  // torque feedback
-};
-
-static ec_pdo_entry_info_t lcec_ax5200_out_a[] = {
-   {0x0086, 0x01,  16}, // control-word
-   {0x0018, 0x01,  32}, // velo-command
-};
-
-static ec_pdo_entry_info_t lcec_ax5200_out_b[] = {
-   {0x0086, 0x02,  16}, // control word
-   {0x0018, 0x02,  32}, // velo command
-};
-
-static ec_pdo_info_t lcec_ax5200_pdos_out[] = {
-    {0x0018,  2, lcec_ax5200_out_a},
-    {0x1018,  2, lcec_ax5200_out_b}
-};
-
-static ec_pdo_info_t lcec_ax5200_pdos_in[] = {
-    {0x0010,  3, lcec_ax5200_in_a},
-    {0x1010,  3, lcec_ax5200_in_b}
-};
-
-static ec_sync_info_t lcec_ax5200_syncs[] = {
-    {0, EC_DIR_OUTPUT, 0, NULL},
-    {1, EC_DIR_INPUT,  0, NULL},
-    {2, EC_DIR_OUTPUT, 2, lcec_ax5200_pdos_out},
-    {3, EC_DIR_INPUT,  2, lcec_ax5200_pdos_in},
-    {0xff}
-};
 
 static const LCEC_CONF_FSOE_T fsoe_conf = {
   .slave_data_len = 2,
@@ -80,6 +41,9 @@ int lcec_ax5200_preinit(struct lcec_slave *slave) {
 
   // set FSOE conf (this will be used by the corresponding AX5805
   slave->fsoeConf = &fsoe_conf;
+
+  // set pdo count
+  slave->pdo_entry_count = lcec_class_ax5_pdos(slave) * LCEC_AX5200_CHANS;
 
   return 0;
 }
@@ -104,23 +68,50 @@ int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   memset(hal_data, 0, sizeof(lcec_ax5200_data_t));
   slave->hal_data = hal_data;
 
-  // initialize sync info
-  slave->sync_info = lcec_ax5200_syncs;
-
   // initialize pins
-  for (i=0; i<LCEC_AX5200_CHANS; i++, pdo_entry_regs += LCEC_CLASS_AX5_PDOS) {
+  for (i=0; i<LCEC_AX5200_CHANS; i++, pdo_entry_regs += lcec_class_ax5_pdos(slave)) {
     chan = &hal_data->chans[i];
 
     // init subclasses
-    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.srv", i);
+    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.", i);
     if ((err = lcec_class_ax5_init(slave, pdo_entry_regs, chan, i, pfx)) != 0) {
       return err;
     }
-    rtapi_snprintf(pfx, HAL_NAME_LEN, "ch%d.enc", i);
-    if ((err = class_enc_init(slave, &chan->enc, 32, pfx)) != 0) {
-      return err;
-    }
   }
+
+  // initialize sync info
+  lcec_syncs_init(&hal_data->syncs);
+    lcec_syncs_add_sync(&hal_data->syncs, EC_DIR_OUTPUT, EC_WD_DEFAULT);
+    lcec_syncs_add_sync(&hal_data->syncs, EC_DIR_INPUT, EC_WD_DEFAULT);
+    lcec_syncs_add_sync(&hal_data->syncs, EC_DIR_OUTPUT, EC_WD_DEFAULT);
+      lcec_syncs_add_pdo_info(&hal_data->syncs, 0x0018);
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0086, 0x01,  16); // control-word
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0018, 0x01,  32); // velo-command
+      lcec_syncs_add_pdo_info(&hal_data->syncs, 0x1018);
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0086, 0x02,  16); // control-word
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0018, 0x02,  32); // velo-command
+    lcec_syncs_add_sync(&hal_data->syncs, EC_DIR_INPUT, EC_WD_DEFAULT);
+      lcec_syncs_add_pdo_info(&hal_data->syncs, 0x0010);
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0087, 0x01, 16); // status word
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0033, 0x01, 32); // position feedback
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0054, 0x01, 16); // torque feedback
+        if (hal_data->chans[0].fb2_enabled) {
+          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0035, 0x01, 32); // position feedback 2
+        }
+        if (hal_data->chans[0].diag_enabled) {
+          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0186, 0x01, 32); // diagnostic number
+        }
+      lcec_syncs_add_pdo_info(&hal_data->syncs, 0x1010);
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0087, 0x02, 16); // status word
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0033, 0x02, 32); // position feedback
+        lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0054, 0x02, 16); // torque feedback
+        if (hal_data->chans[1].fb2_enabled) {
+          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0035, 0x02, 32); // position feedback 2
+        }
+        if (hal_data->chans[1].diag_enabled) {
+          lcec_syncs_add_pdo_entry(&hal_data->syncs, 0x0186, 0x02, 32); // diagnostic number
+        }
+  slave->sync_info = &hal_data->syncs.syncs[0];
 
   return 0;
 }

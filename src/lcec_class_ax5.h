@@ -21,6 +21,9 @@
 #include "lcec.h"
 #include "lcec_class_enc.h"
 
+#define LCEC_AX5_PARAM_ENABLE_FB2  1
+#define LCEC_AX5_PARAM_ENABLE_DIAG 2
+
 typedef struct {
   hal_bit_t *enable;
   hal_bit_t *enabled;
@@ -32,32 +35,41 @@ typedef struct {
 
   hal_float_t *velo_cmd;
 
+  int fb2_enabled;
+  int diag_enabled;
+
   hal_u32_t *status;
-  hal_s32_t *pos_fb;
   hal_float_t *torque_fb_pct;
+  hal_u32_t *diag;
 
   unsigned int status_pdo_os;
   unsigned int pos_fb_pdo_os;
+  unsigned int pos_fb2_pdo_os;
   unsigned int torque_fb_pdo_os;
+  unsigned int diag_pdo_os;
   unsigned int ctrl_pdo_os;
   unsigned int vel_cmd_pdo_os;
 
   hal_float_t scale;
+  hal_float_t scale_fb2;
   hal_float_t vel_scale;
   hal_u32_t pos_resolution;
 
   lcec_class_enc_data_t enc;
+  lcec_class_enc_data_t enc_fb2;
 
   double scale_old;
   double scale_rcpt;
+  double scale_fb2_old;
+  double scale_fb2_rcpt;
+
   double vel_output_scale;
 
   int toggle;
 
 } lcec_class_ax5_chan_t;
 
-#define LCEC_CLASS_AX5_PDOS 5
-
+int lcec_class_ax5_pdos(struct lcec_slave *slave);
 int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, lcec_class_ax5_chan_t *chan, int index, const char *pfx);
 void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan);
 void lcec_class_ax5_write(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan);
