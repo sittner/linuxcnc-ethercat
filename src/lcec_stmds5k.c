@@ -213,6 +213,25 @@ void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data);
 void lcec_stmds5k_read(struct lcec_slave *slave, long period);
 void lcec_stmds5k_write(struct lcec_slave *slave, long period);
 
+int lcec_stmds5k_preinit(struct lcec_slave *slave) {
+  lcec_master_t *master = slave->master;
+  LCEC_CONF_MODPARAM_VAL_T *pval;
+
+  slave->pdo_entry_count = LCEC_STMDS5K_PDOS;
+
+  // check for extenc config
+  pval = lcec_modparam_get(slave, LCEC_STMDS5K_PARAM_EXTENC);
+  if (pval != NULL) {
+    if (lcec_stmds5k_get_extenc_conf(pval->u32) == NULL) {
+      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "invalied extenc type %u for slave %s.%s\n", pval->u32, master->name, slave->name);
+      return -EINVAL;
+    }
+    slave->pdo_entry_count += LCEC_STMDS5K_EXTINC_PDOS;
+  }
+
+  return 0;
+}
+
 int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_stmds5k_data_t *hal_data;
@@ -234,10 +253,6 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   pval = lcec_modparam_get(slave, LCEC_STMDS5K_PARAM_EXTENC);
   if (pval != NULL) {
     extenc_conf = lcec_stmds5k_get_extenc_conf(pval->u32);
-    if (extenc_conf == NULL) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "invalied extenc type %u for slave %s.%s\n", pval->u32, master->name, slave->name);
-      return -EINVAL;
-    }
   }
 
   // initialize callbacks

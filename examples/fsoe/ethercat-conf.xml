@@ -3,6 +3,8 @@
     <slave idx="0" type="EK1100"/>
 
     <slave idx="1" type="EL6900">
+      <modParam name="stdInName" value="run"/>
+      <modParam name="stdInName" value="reset"/>
       <modParam name="fsoeSlaveIdx" value="6"/>
       <modParam name="fsoeSlaveIdx" value="4"/>
       <modParam name="fsoeSlaveIdx" value="5"/>

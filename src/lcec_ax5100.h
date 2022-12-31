@@ -1,5 +1,5 @@
 //
-//    Copyright (C) 2011 Sascha Ittner <sascha.ittner@modusoft.de>
+//    Copyright (C) 2018 Sascha Ittner <sascha.ittner@modusoft.de>
 //
 //    This program is free software; you can redistribute it and/or modify
 //    it under the terms of the GNU General Public License as published by
@@ -15,23 +15,21 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
-#ifndef _LCEC_EL95XX_H_
-#define _LCEC_EL95XX_H_
+#ifndef _LCEC_AX5100_H_
+#define _LCEC_AX5100_H_
 
 #include "lcec.h"
+#include "lcec_class_ax5.h"
 
-#define LCEC_EL95xx_VID LCEC_BECKHOFF_VID
+#define LCEC_AX5100_VID LCEC_BECKHOFF_VID
+#define LCEC_AX5101_PID 0x13ed6012
+#define LCEC_AX5103_PID 0x13ef6012
+#define LCEC_AX5106_PID 0x13f26012
+#define LCEC_AX5112_PID 0x13f86012
+#define LCEC_AX5118_PID 0x13fe6012
 
-#define LCEC_EL9505_PID 0x25213052
-#define LCEC_EL9508_PID 0x25243052
-#define LCEC_EL9510_PID 0x25263052
-#define LCEC_EL9512_PID 0x25283052
-#define LCEC_EL9515_PID 0x252b3052
-#define LCEC_EL9576_PID 0x25683052
-
-#define LCEC_EL95xx_PDOS 2
-
-int lcec_el95xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+int lcec_ax5100_preinit(struct lcec_slave *slave);
+int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
 

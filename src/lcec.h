@@ -73,14 +73,29 @@ do {                        \
 
 #define LCEC_IDN(type, set, block) (type | ((set & 0x07) << 12) | (block & 0x0fff))
 
-#define LCEC_FSOE_MSG_LEN 6
+#define LCEC_FSOE_CMD_LEN 1
+#define LCEC_FSOE_CRC_LEN 2
+#define LCEC_FSOE_CONNID_LEN 2
+
+#define LCEC_FSOE_SIZE(ch_count, data_len) (LCEC_FSOE_CMD_LEN + ch_count * (data_len + LCEC_FSOE_CRC_LEN) + LCEC_FSOE_CONNID_LEN)
+
+#define LCEC_MAX_PDO_ENTRY_COUNT 32
+#define LCEC_MAX_PDO_INFO_COUNT  8
+#define LCEC_MAX_SYNC_COUNT      4
 
 struct lcec_master;
 struct lcec_slave;
 
+typedef int (*lcec_slave_preinit_t) (struct lcec_slave *slave);
 typedef int (*lcec_slave_init_t) (int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 typedef void (*lcec_slave_cleanup_t) (struct lcec_slave *slave);
 typedef void (*lcec_slave_rw_t) (struct lcec_slave *slave, long period);
+
+typedef struct {
+  int slave_data_len;
+  int master_data_len;
+  int data_channels;
+} LCEC_CONF_FSOE_T;
 
 typedef struct lcec_master_data {
   hal_u32_t *slaves_responding;
@@ -175,6 +190,7 @@ typedef struct lcec_slave {
   struct lcec_slave *next;
   struct lcec_master *master;
   int index;
+  LCEC_SLAVE_TYPE_T type;
   char name[LCEC_CONF_STR_MAXLEN];
   uint32_t vid;
   uint32_t pid;
@@ -184,6 +200,7 @@ typedef struct lcec_slave {
   ec_slave_config_state_t state;
   lcec_slave_dc_t *dc_conf;
   lcec_slave_watchdog_t *wd_conf;
+  lcec_slave_preinit_t proc_preinit;
   lcec_slave_init_t proc_init;
   lcec_slave_cleanup_t proc_cleanup;
   lcec_slave_rw_t proc_read;
@@ -196,6 +213,8 @@ typedef struct lcec_slave {
   lcec_slave_sdoconf_t *sdo_config;
   lcec_slave_idnconf_t *idn_config;
   lcec_slave_modparam_t *modparams;
+  const LCEC_CONF_FSOE_T *fsoeConf;
+  int is_fsoe_logic;
   unsigned int *fsoe_slave_offset;
   unsigned int *fsoe_master_offset;
 } lcec_slave_t;
@@ -206,6 +225,20 @@ typedef struct {
   int offset;
   const char *fmt;
 } lcec_pindesc_t;
+
+typedef struct {
+  int sync_count;
+  ec_sync_info_t *curr_sync;
+  ec_sync_info_t syncs[LCEC_MAX_SYNC_COUNT + 1];
+
+  int pdo_info_count;
+  ec_pdo_info_t *curr_pdo_info;
+  ec_pdo_info_t pdo_infos[LCEC_MAX_PDO_INFO_COUNT];
+
+  int pdo_entry_count;
+  ec_pdo_entry_info_t *curr_pdo_entry;
+  ec_pdo_entry_info_t pdo_entries[LCEC_MAX_PDO_ENTRY_COUNT];
+} lcec_syncs_t;
 
 int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, uint8_t *target, size_t size);
 int lcec_read_idn(struct lcec_slave *slave, uint8_t drive_no, uint16_t idn, uint8_t *target, size_t size);
@@ -220,6 +253,11 @@ LCEC_CONF_MODPARAM_VAL_T *lcec_modparam_get(struct lcec_slave *slave, int id);
 lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index);
 
 void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigned int master_offset);
+
+void lcec_syncs_init(lcec_syncs_t *syncs);
+void lcec_syncs_add_sync(lcec_syncs_t *syncs, ec_direction_t dir, ec_watchdog_mode_t watchdog_mode);
+void lcec_syncs_add_pdo_info(lcec_syncs_t *syncs, uint16_t index);
+void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subindex, uint8_t bit_length);
 
 #endif
 

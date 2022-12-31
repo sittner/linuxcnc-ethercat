@@ -55,12 +55,18 @@ typedef enum {
   lcecPdoEntTypeSimple,
   lcecPdoEntTypeFloatSigned,
   lcecPdoEntTypeFloatUnsigned,
-  lcecPdoEntTypeComplex
+  lcecPdoEntTypeComplex,
+  lcecPdoEntTypeFloatIeee
 } LCEC_PDOENT_TYPE_T;
 
 typedef enum {
   lcecSlaveTypeInvalid,
   lcecSlaveTypeGeneric,
+  lcecSlaveTypeAX5101,
+  lcecSlaveTypeAX5103,
+  lcecSlaveTypeAX5106,
+  lcecSlaveTypeAX5112,
+  lcecSlaveTypeAX5118,
   lcecSlaveTypeAX5203,
   lcecSlaveTypeAX5206,
   lcecSlaveTypeEK1100,
@@ -150,16 +156,20 @@ typedef enum {
   lcecSlaveTypeEL7342,
   lcecSlaveTypeEL7411,
   lcecSlaveTypeEL9505,
+  lcecSlaveTypeEL9576,
   lcecSlaveTypeEL9508,
   lcecSlaveTypeEL9510,
   lcecSlaveTypeEL9512,
   lcecSlaveTypeEL9515,
   lcecSlaveTypeEL6900,
+  lcecSlaveTypeEL1918_LOGIC,
   lcecSlaveTypeEL1904,
   lcecSlaveTypeEL2904,
+  lcecSlaveTypeAX5805,
   lcecSlaveTypeEM7004,
   lcecSlaveTypeStMDS5k,
   lcecSlaveTypeDeASDA,
+  lcecSlaveTypeDeMS300,
   lcecSlaveTypeOmrG5_KNA5L,
   lcecSlaveTypeOmrG5_KN01L,
   lcecSlaveTypeOmrG5_KN02L,
@@ -297,6 +307,7 @@ typedef union {
   hal_s32_t s32;
   hal_u32_t u32;
   hal_float_t flt;
+  char str[LCEC_CONF_STR_MAXLEN];
 } LCEC_CONF_MODPARAM_VAL_T;
 
 typedef struct {
