@@ -18,7 +18,7 @@
 //
 
 #include "lcec.h"
-#include "lcec_el7041_1000.h"
+#include "lcec_el7041.h"
 
 typedef struct {
   hal_bit_t *reset;
@@ -155,63 +155,63 @@ typedef struct {
   hal_u32_t fault_reset_state;
   hal_u32_t fault_reset_cycle;
 
-} lcec_el7041_1000_data_t;
+} lcec_el7041_data_t;
 
 static const lcec_pindesc_t slave_pins[] = {
   // encoder pins
-  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, reset),             "%s.%s.%s.enc-reset" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, ina),               "%s.%s.%s.enc-ina" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, inb),               "%s.%s.%s.enc-inb" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, inc),               "%s.%s.%s.enc-inc" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, inext),             "%s.%s.%s.enc-inext" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, sync_err),          "%s.%s.%s.enc-sync-error" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, expol_stall),       "%s.%s.%s.enc-expol-stall" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, tx_toggle),         "%s.%s.%s.enc-tx-toggle" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, count_overflow),    "%s.%s.%s.enc-count-overflow" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, count_underflow),   "%s.%s.%s.enc-count-underflow" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, latch_c_valid),     "%s.%s.%s.enc-latch-c-valid" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, latch_ext_valid),   "%s.%s.%s.enc-latch-ext-valid" },
-  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_1000_data_t, set_raw_count),     "%s.%s.%s.enc-set-raw-count" },
-  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_1000_data_t, ena_latch_c),       "%s.%s.%s.enc-latch-c-enable" },
-  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_1000_data_t, ena_latch_ext_pos), "%s.%s.%s.enc-index-ext-pos-enable" },
-  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_1000_data_t, ena_latch_ext_neg), "%s.%s.%s.enc-index-ext-neg-enable" },
-  { HAL_S32,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, set_raw_count_val), "%s.%s.%s.enc-set-raw-count-val" },
-  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, raw_count),         "%s.%s.%s.enc-raw-count" },
-  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, count),             "%s.%s.%s.enc-count" },
-  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, raw_latch),         "%s.%s.%s.enc-raw-latch" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7041_1000_data_t, pos),               "%s.%s.%s.enc-pos" },
-  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, pos_scale),         "%s.%s.%s.enc-pos-scale" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_data_t, reset),             "%s.%s.%s.enc-reset" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, ina),               "%s.%s.%s.enc-ina" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, inb),               "%s.%s.%s.enc-inb" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, inc),               "%s.%s.%s.enc-inc" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, inext),             "%s.%s.%s.enc-inext" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, sync_err),          "%s.%s.%s.enc-sync-error" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, expol_stall),       "%s.%s.%s.enc-expol-stall" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, tx_toggle),         "%s.%s.%s.enc-tx-toggle" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, count_overflow),    "%s.%s.%s.enc-count-overflow" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, count_underflow),   "%s.%s.%s.enc-count-underflow" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, latch_c_valid),     "%s.%s.%s.enc-latch-c-valid" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, latch_ext_valid),   "%s.%s.%s.enc-latch-ext-valid" },
+  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_data_t, set_raw_count),     "%s.%s.%s.enc-set-raw-count" },
+  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_data_t, ena_latch_c),       "%s.%s.%s.enc-latch-c-enable" },
+  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_data_t, ena_latch_ext_pos), "%s.%s.%s.enc-index-ext-pos-enable" },
+  { HAL_BIT,   HAL_IO,  offsetof(lcec_el7041_data_t, ena_latch_ext_neg), "%s.%s.%s.enc-index-ext-neg-enable" },
+  { HAL_S32,   HAL_IN,  offsetof(lcec_el7041_data_t, set_raw_count_val), "%s.%s.%s.enc-set-raw-count-val" },
+  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_data_t, raw_count),         "%s.%s.%s.enc-raw-count" },
+  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_data_t, count),             "%s.%s.%s.enc-count" },
+  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_data_t, raw_latch),         "%s.%s.%s.enc-raw-latch" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7041_data_t, pos),               "%s.%s.%s.enc-pos" },
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_data_t, pos_scale),         "%s.%s.%s.enc-pos-scale" },
 
   // servo pins
-  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, dcm_scale),     "%s.%s.%s.srv-scale" },
-  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, dcm_offset),    "%s.%s.%s.srv-offset" },
-  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, dcm_min_dc),    "%s.%s.%s.srv-min-dc" },
-  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_1000_data_t, dcm_max_dc),    "%s.%s.%s.srv-max-dc" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_curr_dc),   "%s.%s.%s.srv-curr-dc" },
-  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_enable),    "%s.%s.%s.srv-enable" },
-  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_absmode),   "%s.%s.%s.srv-absmode" },
-  { HAL_FLOAT, HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_value),     "%s.%s.%s.srv-cmd" },
-  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_raw_val),   "%s.%s.%s.srv-raw-cmd" },
-  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_reset),     "%s.%s.%s.srv-reset" },
-  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, dcm_reduce_torque), "%s.%s.%s.srv-reduce-torque" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_ready_to_enable), "%s.%s.%s.srv-ready-to-enable" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_ready),     "%s.%s.%s.srv-ready" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_warning),   "%s.%s.%s.srv-warning" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_error),     "%s.%s.%s.srv-error" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_move_pos),  "%s.%s.%s.srv-move-pos" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_move_neg),  "%s.%s.%s.srv-move-neg" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_torque_reduced), "%s.%s.%s.srv-torque-reduced" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_din1),      "%s.%s.%s.srv-din1" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_din2),      "%s.%s.%s.srv-din2" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_sync_err),  "%s.%s.%s.srv-sync-error" },
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, dcm_tx_toggle), "%s.%s.%s.srv-tx-toggle" },
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_data_t, dcm_scale),     "%s.%s.%s.srv-scale" },
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_data_t, dcm_offset),    "%s.%s.%s.srv-offset" },
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_data_t, dcm_min_dc),    "%s.%s.%s.srv-min-dc" },
+  { HAL_FLOAT, HAL_IO,  offsetof(lcec_el7041_data_t, dcm_max_dc),    "%s.%s.%s.srv-max-dc" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el7041_data_t, dcm_curr_dc),   "%s.%s.%s.srv-curr-dc" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_data_t, dcm_enable),    "%s.%s.%s.srv-enable" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_data_t, dcm_absmode),   "%s.%s.%s.srv-absmode" },
+  { HAL_FLOAT, HAL_IN,  offsetof(lcec_el7041_data_t, dcm_value),     "%s.%s.%s.srv-cmd" },
+  { HAL_S32,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_raw_val),   "%s.%s.%s.srv-raw-cmd" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_data_t, dcm_reset),     "%s.%s.%s.srv-reset" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_data_t, dcm_reduce_torque), "%s.%s.%s.srv-reduce-torque" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_ready_to_enable), "%s.%s.%s.srv-ready-to-enable" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_ready),     "%s.%s.%s.srv-ready" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_warning),   "%s.%s.%s.srv-warning" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_error),     "%s.%s.%s.srv-error" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_move_pos),  "%s.%s.%s.srv-move-pos" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_move_neg),  "%s.%s.%s.srv-move-neg" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_torque_reduced), "%s.%s.%s.srv-torque-reduced" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_din1),      "%s.%s.%s.srv-din1" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_din2),      "%s.%s.%s.srv-din2" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_sync_err),  "%s.%s.%s.srv-sync-error" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, dcm_tx_toggle), "%s.%s.%s.srv-tx-toggle" },
 
-  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_1000_data_t, fault),       "%s.%s.%s.srv-fault" },
-  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_1000_data_t, fault_reset), "%s.%s.%s.srv-fault-reset" },
+  { HAL_BIT,   HAL_OUT, offsetof(lcec_el7041_data_t, fault),       "%s.%s.%s.srv-fault" },
+  { HAL_BIT,   HAL_IN,  offsetof(lcec_el7041_data_t, fault_reset), "%s.%s.%s.srv-fault-reset" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-static ec_pdo_entry_info_t lcec_el7041_1000_channel1_enc_out[] = {
+static ec_pdo_entry_info_t lcec_el7041_channel1_enc_out[] = {
     {0x7000, 0x01,  1}, /* Enable latch C */
     {0x7000, 0x02,  1}, /* Enable latch extern on positive edge */
     {0x7000, 0x03,  1}, /* Set counter */
@@ -221,7 +221,7 @@ static ec_pdo_entry_info_t lcec_el7041_1000_channel1_enc_out[] = {
     {0x7000, 0x11, 16}  /* Set counter value */
 };
 
-static ec_pdo_entry_info_t lcec_el7041_1000_channel1_dcm_out[] = {
+static ec_pdo_entry_info_t lcec_el7041_channel1_dcm_out[] = {
     {0x7010, 0x01,  1}, /* Enable */
     {0x7010, 0x02,  1}, /* Reset */
     {0x7010, 0x03,  1}, /* Reduce torque */
@@ -229,11 +229,11 @@ static ec_pdo_entry_info_t lcec_el7041_1000_channel1_dcm_out[] = {
     {0x0000, 0x00,  8}  /* Gap */
 };
 
-static ec_pdo_entry_info_t lcec_el7041_1000_channel1_vel_out[] = {
+static ec_pdo_entry_info_t lcec_el7041_channel1_vel_out[] = {
     {0x7010, 0x21, 16}  /* Velocity */
 };
 
-static ec_pdo_entry_info_t lcec_el7041_1000_channel1_enc_in[] = {
+static ec_pdo_entry_info_t lcec_el7041_channel1_enc_in[] = {
     {0x6000, 0x01,  1}, /* Latch C valid */
     {0x6000, 0x02,  1}, /* Latch extern valid */
     {0x6000, 0x03,  1}, /* Set counter done */
@@ -253,7 +253,7 @@ static ec_pdo_entry_info_t lcec_el7041_1000_channel1_enc_in[] = {
     {0x6000, 0x12, 16}  /* Latch value */
 };
 
-static ec_pdo_entry_info_t lcec_el7041_1000_channel1_dcm_in[] = {
+static ec_pdo_entry_info_t lcec_el7041_channel1_dcm_in[] = {
     {0x6010, 0x01,  1}, /* Ready to enable */
     {0x6010, 0x02,  1}, /* Ready */
     {0x6010, 0x03,  1}, /* Warning */
@@ -269,47 +269,47 @@ static ec_pdo_entry_info_t lcec_el7041_1000_channel1_dcm_in[] = {
     {0x6010, 0x10,  1}  /* TxPDO Toggle */
 };
 
-static ec_pdo_info_t lcec_el7041_1000_pdos_out[] = {
-    {0x1600, 7, lcec_el7041_1000_channel1_enc_out}, /* ENC RxPDO-Map Control compact */
-    {0x1602, 5, lcec_el7041_1000_channel1_dcm_out}, /* STM RxPDO-Map Control */
-    {0x1604, 1, lcec_el7041_1000_channel1_vel_out}  /* STM RxPDO-Map Velocity */
+static ec_pdo_info_t lcec_el7041_pdos_out[] = {
+    {0x1600, 7, lcec_el7041_channel1_enc_out}, /* ENC RxPDO-Map Control compact */
+    {0x1602, 5, lcec_el7041_channel1_dcm_out}, /* STM RxPDO-Map Control */
+    {0x1604, 1, lcec_el7041_channel1_vel_out}  /* STM RxPDO-Map Velocity */
 };
 
-static ec_pdo_info_t lcec_el7041_1000_pdos_in[] = {
-    {0x1a00, 17, lcec_el7041_1000_channel1_enc_in}, /* ENC TxPDO-Map Status compact */
-    {0x1a03, 13, lcec_el7041_1000_channel1_dcm_in}  /* STM TxPDO-Map Status */
+static ec_pdo_info_t lcec_el7041_pdos_in[] = {
+    {0x1a00, 17, lcec_el7041_channel1_enc_in}, /* ENC TxPDO-Map Status compact */
+    {0x1a03, 13, lcec_el7041_channel1_dcm_in}  /* STM TxPDO-Map Status */
 };
 
-static ec_sync_info_t lcec_el7041_1000_syncs[] = {
+static ec_sync_info_t lcec_el7041_syncs[] = {
     {0, EC_DIR_OUTPUT, 0, NULL},
     {1, EC_DIR_INPUT,  0, NULL},
-    {2, EC_DIR_OUTPUT, 3, lcec_el7041_1000_pdos_out},
-    {3, EC_DIR_INPUT,  2, lcec_el7041_1000_pdos_in},
+    {2, EC_DIR_OUTPUT, 3, lcec_el7041_pdos_out},
+    {3, EC_DIR_INPUT,  2, lcec_el7041_pdos_in},
     {0xff}
 };
 
-void lcec_el7041_1000_read(struct lcec_slave *s, long period);
-void lcec_el7041_1000_write(struct lcec_slave *s, long period);
+void lcec_el7041_read(struct lcec_slave *s, long period);
+void lcec_el7041_write(struct lcec_slave *s, long period);
 
-int lcec_el7041_1000_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t *r) {
+int lcec_el7041_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t *r) {
   lcec_master_t *m = s->master;
-  lcec_el7041_1000_data_t *hd;
+  lcec_el7041_data_t *hd;
   int err;
 
   // initialize callbacks
-  s->proc_read  = lcec_el7041_1000_read;
-  s->proc_write = lcec_el7041_1000_write;
+  s->proc_read  = lcec_el7041_read;
+  s->proc_write = lcec_el7041_write;
 
   // alloc hal memory
-  if ((hd = hal_malloc(sizeof(lcec_el7041_1000_data_t))) == NULL) {
+  if ((hd = hal_malloc(sizeof(lcec_el7041_data_t))) == NULL) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for slave %s.%s failed\n", m->name, s->name);
     return -EIO;
   }
-  memset(hd, 0, sizeof(lcec_el7041_1000_data_t));
+  memset(hd, 0, sizeof(lcec_el7041_data_t));
   s->hal_data = hd;
 
   // initialize sync info
-  s->sync_info = lcec_el7041_1000_syncs;
+  s->sync_info = lcec_el7041_syncs;
 
   // initialize global data
   hd->last_operational = 0;
@@ -386,9 +386,9 @@ int lcec_el7041_1000_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t 
   return 0;
 }
 
-void lcec_el7041_1000_read(struct lcec_slave *s, long period) {
+void lcec_el7041_read(struct lcec_slave *s, long period) {
   lcec_master_t *m = s->master;
-  lcec_el7041_1000_data_t *hd = (lcec_el7041_1000_data_t *) s->hal_data;
+  lcec_el7041_data_t *hd = (lcec_el7041_data_t *) s->hal_data;
   uint8_t *pd = m->process_data;
   int16_t raw_count, raw_latch, raw_delta;
 
@@ -508,9 +508,9 @@ void lcec_el7041_1000_read(struct lcec_slave *s, long period) {
   hd->last_operational = 1;
 }
 
-void lcec_el7041_1000_write(struct lcec_slave *s, long period) {
+void lcec_el7041_write(struct lcec_slave *s, long period) {
   lcec_master_t *m = s->master;
-  lcec_el7041_1000_data_t *hd = (lcec_el7041_1000_data_t *) s->hal_data;
+  lcec_el7041_data_t *hd = (lcec_el7041_data_t *) s->hal_data;
   uint8_t *pd = m->process_data;
   double tmpval, tmpdc, raw_val;
   int enable_on_edge;

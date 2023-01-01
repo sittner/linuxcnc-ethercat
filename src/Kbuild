@@ -12,9 +12,12 @@ lcec-objs := \
     lcec_el2521.o \
     lcec_el2xxx.o \
     lcec_el2202.o \
+    lcec_el30x4.o \
     lcec_el31x2.o \
     lcec_el31x4.o \
+    lcec_el3202.o \
     lcec_el3255.o \
+    lcec_el3403.o \
     lcec_el40x1.o \
     lcec_el40x2.o \
     lcec_el40x8.o \
@@ -27,14 +30,16 @@ lcec-objs := \
     lcec_el1918_logic.o \
     lcec_el1904.o \
     lcec_el2904.o \
+    lcec_el7041.o \
     lcec_ax5805.o \
-    lcec_el7041_1000.o \
     lcec_el70x1.o \
     lcec_el7211.o \
     lcec_el7342.o \
     lcec_el7411.o \
     lcec_el95xx.o \
+    lcec_em37xx.o \
     lcec_em7004.o \
+    lcec_ep23xx.o \
     lcec_stmds5k.o \
     lcec_deasda.o \
 	lcec_dems300.o \
