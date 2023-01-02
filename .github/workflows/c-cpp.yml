@@ -9,12 +9,16 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+    - name: enable Ubuntu universe packages
+      run: sudo apt-add-repository universe
+    - name: apt update
+      run: sudo apt update
     - name: install linuxcnc
-      run: sudo apt-get install -y linuxcnc-uspace linuxcnc-uspace-dev
+      run: sudo apt install -y linuxcnc-uspace
     - name: configure
       run: ./configure
     - name: make
