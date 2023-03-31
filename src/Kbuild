@@ -24,8 +24,10 @@ lcec-objs := \
     lcec_el5151.o \
     lcec_el5152.o \
     lcec_el6900.o \
+    lcec_el6910.o \
     lcec_el1918_logic.o \
     lcec_el1904.o \
+    lcec_el1918.o \
     lcec_el2904.o \
     lcec_ax5805.o \
     lcec_el7041_1000.o \

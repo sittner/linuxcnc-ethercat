@@ -33,6 +33,7 @@
 
 #include "lcec_stmds5k.h"
 #include "lcec_el6900.h"
+#include "lcec_el6910.h"
 #include "lcec_el1918_logic.h"
 #include "lcec_el70x1.h"
 #include "lcec_el7411.h"
@@ -74,6 +75,13 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveEL6900Params[] = {
   { "fsoeSlaveIdx", LCEC_EL6900_PARAM_SLAVEID, MODPARAM_TYPE_U32 } ,
   { "stdInName", LCEC_EL6900_PARAM_STDIN_NAME, MODPARAM_TYPE_STRING } ,
   { "stdOutName", LCEC_EL6900_PARAM_STDOUT_NAME, MODPARAM_TYPE_STRING } ,
+  { NULL }
+};
+
+static const LCEC_CONF_MODPARAM_DESC_T slaveEL6910Params[] = {
+  { "fsoeSlaveIdx", LCEC_EL6910_PARAM_SLAVEID, MODPARAM_TYPE_U32 } ,
+  { "stdInName", LCEC_EL6910_PARAM_STDIN_NAME, MODPARAM_TYPE_STRING } ,
+  { "stdOutName", LCEC_EL6910_PARAM_STDOUT_NAME, MODPARAM_TYPE_STRING } ,
   { NULL }
 };
 
@@ -267,8 +275,10 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // FSoE devices
   { "EL6900", lcecSlaveTypeEL6900, slaveEL6900Params },
+  { "EL6910", lcecSlaveTypeEL6910, slaveEL6910Params },
   { "EL1918_LOGIC", lcecSlaveTypeEL1918_LOGIC, slaveEL1918_LOGICParams },
   { "EL1904", lcecSlaveTypeEL1904, NULL },
+  { "EL1918", lcecSlaveTypeEL1918, NULL },
   { "EL2904", lcecSlaveTypeEL2904, NULL },
   { "AX5805", lcecSlaveTypeAX5805, NULL },
 

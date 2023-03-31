@@ -39,8 +39,10 @@
 #include "lcec_el5152.h"
 #include "lcec_el2521.h"
 #include "lcec_el6900.h"
+#include "lcec_el6910.h"
 #include "lcec_el1918_logic.h"
 #include "lcec_el1904.h"
+#include "lcec_el1918.h"
 #include "lcec_el2904.h"
 #include "lcec_ax5805.h"
 #include "lcec_el7041_1000.h"
@@ -215,8 +217,10 @@ static const lcec_typelist_t types[] = {
 
   // FSoE devices
   { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init},
+  { lcecSlaveTypeEL6910, LCEC_EL6910_VID, LCEC_EL6910_PID, 0, 1, lcec_el6910_preinit, lcec_el6910_init},
   { lcecSlaveTypeEL1918_LOGIC, LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init},
   { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, 0, lcec_el1904_preinit, lcec_el1904_init},
+  { lcecSlaveTypeEL1918, LCEC_EL1918_VID, LCEC_EL1918_PID, LCEC_EL1918_PDOS, 0, lcec_el1918_preinit, lcec_el1918_init},
   { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, 0, lcec_el2904_preinit, lcec_el2904_init},
   { lcecSlaveTypeAX5805, LCEC_AX5805_VID, LCEC_AX5805_PID, 0, 0, lcec_ax5805_preinit, lcec_ax5805_init},
 
