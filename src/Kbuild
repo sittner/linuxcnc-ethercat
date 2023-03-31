@@ -20,6 +20,8 @@ lcec-objs := \
     lcec_el40x8.o \
     lcec_el41x2.o \
     lcec_el41x4.o \
+    lcec_el5002.o \
+    lcec_el5032.o \
     lcec_el5101.o \
     lcec_el5151.o \
     lcec_el5152.o \
