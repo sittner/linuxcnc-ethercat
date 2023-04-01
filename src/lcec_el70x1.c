@@ -137,7 +137,7 @@ static ec_pdo_entry_info_t lcec_el70x1_stm_stat[] = {
 static ec_pdo_info_t lcec_el70x1_pdos_out[] = {
     {0x1601, 7, lcec_el70x1_enc_ctl}, /* ENC RxPDO-Map Control compact */
     {0x1602, 5, lcec_el70x1_stm_ctl}, /* STM RxPDO-Map Control */
-    {0x1603, 1, lcec_el70x1_stm_pos}  /* STM RxPDO-Map Velocity */
+    {0x1603, 1, lcec_el70x1_stm_pos}  /* STM RxPDO-Map Position */
 };
 
 static ec_pdo_info_t lcec_el70x1_pdos_in[] = {
