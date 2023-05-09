@@ -113,6 +113,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL1134, LCEC_EL1xxx_VID, LCEC_EL1134_PID, LCEC_EL1134_PDOS, 0, NULL, lcec_el1xxx_init},
   { lcecSlaveTypeEL1144, LCEC_EL1xxx_VID, LCEC_EL1144_PID, LCEC_EL1144_PDOS, 0, NULL, lcec_el1xxx_init},
   { lcecSlaveTypeEL1252, LCEC_EL1252_VID, LCEC_EL1252_PID, LCEC_EL1252_PDOS, 0, NULL, lcec_el1252_init},  // 2 fast channels with timestamp
+  { lcecSlaveTypeEL1804, LCEC_EL1xxx_VID, LCEC_EL1804_PID, LCEC_EL1804_PDOS, 0, NULL, lcec_el1xxx_init},
   { lcecSlaveTypeEL1808, LCEC_EL1xxx_VID, LCEC_EL1808_PID, LCEC_EL1808_PDOS, 0, NULL, lcec_el1xxx_init},
   { lcecSlaveTypeEL1809, LCEC_EL1xxx_VID, LCEC_EL1809_PID, LCEC_EL1809_PDOS, 0, NULL, lcec_el1xxx_init},
   { lcecSlaveTypeEP1008, LCEC_EL1xxx_VID, LCEC_EP1008_PID, LCEC_EP1008_PDOS, 0, NULL, lcec_el1xxx_init},
