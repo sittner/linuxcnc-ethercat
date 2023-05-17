@@ -192,7 +192,10 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // digital combo (in/out)
   { "EL1859", lcecSlaveTypeEL1859, NULL },
+  { "EP2308", lcecSlaveTypeEP2308, NULL },
   { "EP2316", lcecSlaveTypeEP2316, NULL },
+  { "EP2318", lcecSlaveTypeEP2318, NULL },
+  { "EP2328", lcecSlaveTypeEP2328, NULL },
   { "EP2338", lcecSlaveTypeEP2338, NULL },
   { "EP2349", lcecSlaveTypeEP2349, NULL },
   // analog in, 2ch, 16 bits
