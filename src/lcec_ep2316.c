@@ -61,7 +61,7 @@ typedef struct {
 static const lcec_pindesc_t ep2316_slave_pins[] = {
   { HAL_BIT, HAL_OUT, offsetof(lcec_ep2316_pin_t, in), "%s.%s.%s.din-%d" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_ep2316_pin_t, in_not), "%s.%s.%s.din-%d-not" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_ep2316_pin_t, in_diag), "%s.%s.%s.din-diag-%d" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_ep2316_pin_t, in_diag), "%s.%s.%s.diag-in-%d" },
   { HAL_BIT, HAL_IN, offsetof(lcec_ep2316_pin_t, out), "%s.%s.%s.dout-%d"},
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
