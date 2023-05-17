@@ -55,6 +55,7 @@
 #include "lcec_em37xx.h"
 #include "lcec_em7004.h"
 #include "lcec_ep23xx.h"
+#include "lcec_ep2316.h"
 #include "lcec_stmds5k.h"
 #include "lcec_deasda.h"
 #include "lcec_dems300.h"
@@ -148,7 +149,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL1859, LCEC_EL1859_VID, LCEC_EL1859_PID, LCEC_EL1859_PDOS, 0, NULL, lcec_el1859_init},
   { lcecSlaveTypeEP2338, LCEC_EP23xx_VID, LCEC_EP2338_PID, LCEC_EP2338_PDOS, 0, NULL, lcec_ep23xx_init},
   { lcecSlaveTypeEP2349, LCEC_EP23xx_VID, LCEC_EP2349_PID, LCEC_EP2349_PDOS, 0, NULL, lcec_ep23xx_init},
-  { lcecSlaveTypeEP2316, LCEC_EP23xx_VID, LCEC_EP2316_PID, LCEC_EP2316_PDOS, 0, NULL, lcec_ep23xx_init},
+  { lcecSlaveTypeEP2316, LCEC_EP23xx_VID, LCEC_EP2316_PID, LCEC_EP2316_PDOS, 0, NULL, lcec_ep2316_init},
 
   // analog in, 4ch, 12 bits
   { lcecSlaveTypeEL3004, LCEC_EL30x4_VID, LCEC_EL3004_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},

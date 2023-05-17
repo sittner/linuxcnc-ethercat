@@ -40,6 +40,7 @@ lcec-objs := \
     lcec_em37xx.o \
     lcec_em7004.o \
     lcec_ep23xx.o \
+    lcec_ep2316.o \
     lcec_stmds5k.o \
     lcec_deasda.o \
 	lcec_dems300.o \

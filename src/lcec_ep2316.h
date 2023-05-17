@@ -15,21 +15,18 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
-#ifndef _LCEC_EP23XX_H_
-#define _LCEC_EP23XX_H_
+#ifndef _LCEC_EP2316_H_
+#define _LCEC_EP2316_H_
 
 #include "lcec.h"
 
 #define LCEC_EP23xx_VID LCEC_BECKHOFF_VID
 
-// Add additional EP23xx models here, as well as lcec_main.c, lcec_conf.c, and lcec_conf.h.
-#define LCEC_EP2338_PID 0x09224052
-#define LCEC_EP2349_PID 0x092d4052
+#define LCEC_EP2316_PID 0x090C4052
 
-#define LCEC_EP2338_PDOS 16  // Can be in or out on each port, so 2 PDOs per port.
-#define LCEC_EP2349_PDOS 32  // Can be in or out on each port, so 2 PDOs per port.
+#define LCEC_EP2316_PDOS 32  // 8 inputs, 8 diag inputs, 8 outputs, 8 auxiliary 
 
-int lcec_ep23xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+int lcec_ep2316_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
 
