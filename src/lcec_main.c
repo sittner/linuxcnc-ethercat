@@ -148,6 +148,9 @@ static const lcec_typelist_t types[] = {
 
   // digital in/out
   { lcecSlaveTypeEL1859, LCEC_EL1859_VID, LCEC_EL1859_PID, LCEC_EL1859_PDOS, 0, NULL, lcec_el1859_init},
+  { lcecSlaveTypeEP2308, LCEC_EP23xx_VID, LCEC_EP2308_PID, LCEC_EP2308_PDOS, 0, NULL, lcec_ep23xx_init},
+  { lcecSlaveTypeEP2318, LCEC_EP23xx_VID, LCEC_EP2318_PID, LCEC_EP2318_PDOS, 0, NULL, lcec_ep23xx_init},
+  { lcecSlaveTypeEP2328, LCEC_EP23xx_VID, LCEC_EP2328_PID, LCEC_EP2328_PDOS, 0, NULL, lcec_ep23xx_init},
   { lcecSlaveTypeEP2338, LCEC_EP23xx_VID, LCEC_EP2338_PID, LCEC_EP2338_PDOS, 0, NULL, lcec_ep23xx_init},
   { lcecSlaveTypeEP2349, LCEC_EP23xx_VID, LCEC_EP2349_PID, LCEC_EP2349_PDOS, 0, NULL, lcec_ep23xx_init},
   { lcecSlaveTypeEP2316, LCEC_EP23xx_VID, LCEC_EP2316_PID, LCEC_EP2316_PDOS, 0, NULL, lcec_ep2316_init},

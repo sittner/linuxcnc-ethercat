@@ -22,10 +22,16 @@
 
 #define LCEC_EP23xx_VID LCEC_BECKHOFF_VID
 
-// Add additional EP23xx models here, as well as lcec_main.c, lcec_conf.c, and lcec_conf.h.
+#define LCEC_EP2308_PID 0x09044052
+#define LCEC_EP2318_PID 0x090E4052
+#define LCEC_EP2328_PID 0x09184052
 #define LCEC_EP2338_PID 0x09224052
 #define LCEC_EP2349_PID 0x092d4052
 
+
+#define LCEC_EP2308_PDOS 8   // Can be in or out on each port, so 2 PDOs per port.
+#define LCEC_EP2318_PDOS 8   // Can be in or out on each port, so 2 PDOs per port.
+#define LCEC_EP2328_PDOS 8   // Can be in or out on each port, so 2 PDOs per port.
 #define LCEC_EP2338_PDOS 16  // Can be in or out on each port, so 2 PDOs per port.
 #define LCEC_EP2349_PDOS 32  // Can be in or out on each port, so 2 PDOs per port.
 
