@@ -57,6 +57,7 @@
 #include "lcec_dems300.h"
 #include "lcec_omrg5.h"
 #include "lcec_ph3lm2rm.h"
+#include "lcec_epocat.h"
 
 #include "rtapi_app.h"
 
@@ -263,6 +264,9 @@ static const lcec_typelist_t types[] = {
 
   // modusoft PH3LM2RM converter
   { lcecSlaveTypePh3LM2RM, LCEC_PH3LM2RM_VID, LCEC_PH3LM2RM_PID, LCEC_PH3LM2RM_PDOS, 0, NULL, lcec_ph3lm2rm_init},
+
+  // AB&T EpoCAT FR4000
+  { lcecSlaveTypeEpoCAT, LCEC_ABET_VID, LCEC_EPOCAT_PID, LCEC_EPOCAT_PDOS, 0, NULL, lcec_epocat_init },
 
   { lcecSlaveTypeInvalid }
 };
