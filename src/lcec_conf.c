@@ -341,6 +341,9 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // modusoft PH3LM2RM converter
   { "Ph3LM2RM", lcecSlaveTypePh3LM2RM, NULL },
 
+  // AB&T EpoCAT FR4000
+  { "EpoCAT", lcecSlaveTypeEpoCAT, NULL },
+
   { NULL }
 };
 
