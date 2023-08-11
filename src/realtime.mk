@@ -16,7 +16,8 @@ all:
 
 else
 
-LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat
+LDFLAGS += -Wl,-rpath,$(LIBDIR)
+EXTRA_LDFLAGS += -L$(LIBDIR) -llinuxcnchal -lethercat -lrt
 
 all: modules
 
