@@ -75,7 +75,7 @@ static const lcec_pindesc_t slave_in_pins[] = {
 };
 
 static const LCEC_CONF_FSOE_T fsoe_conf = {
-  .slave_data_len = 1,
+  .slave_data_len = 2,
   .master_data_len = 1,
   .data_channels = 1
 };
@@ -150,6 +150,8 @@ void lcec_el1918_read(struct lcec_slave *slave, long period) {
   *(hal_data->fsoe_master_cmd) = EC_READ_U8(&pd[hal_data->fsoe_master_cmd_os]);
   *(hal_data->fsoe_master_crc) = EC_READ_U16(&pd[hal_data->fsoe_master_crc_os]);
   *(hal_data->fsoe_master_connid) = EC_READ_U16(&pd[hal_data->fsoe_master_connid_os]);
+
+//TODO: printf("in: %d %d %d %d\n", hal_data->fsoe_master_cmd_os, hal_data->fsoe_master_connid_os, hal_data->fsoe_slave_cmd_os, hal_data->fsoe_slave_connid_os);
 
   for (i = 0, in = hal_data->inputs; i < LCEC_EL1918_INPUT_COUNT; i++, in++) {
     *(in->fsoe_in) = EC_READ_BIT(&pd[in->fsoe_in_os], in->fsoe_in_bp);
