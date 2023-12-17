@@ -1,5 +1,14 @@
 ---
 # Adapted from Linuxcnc's ci.yml action
+#
+# LinuxCNC-Ethercat depends on both LinuxCNC and Ethercat Master; both
+# need to be compiled from source.  This creates a job for each and
+# attempts to cache the results.  Worst-case, this will result in a ~5
+# minute run while dependencies are installed and code builds.  Best
+# case, it will take a few seconds each to verify and restore caches,
+# and then we can get started building code that we care about.
+#
+# As of 2023-12-17, builds with a hot cache take about 40 seconds.
 
 name: Build CI
 
@@ -16,16 +25,10 @@ permissions:
     contents: read  # to fetch code (actions/checkout)
 
 jobs:
-    build:
+    # Build LinuxCNC itself.  The result is cached, probably too aggressively.
+    build-linuxcnc:
         runs-on: ubuntu-20.04
         steps:
-            - name: Dump GitHub context
-              env:
-                  GITHUB_CONTEXT: ${{ toJson(github) }}
-              run: echo "$GITHUB_CONTEXT"
-            - uses: actions/checkout@v4
-              name: Checkout linuxcnc-ethercat
-
             - name: cache linuxcnc
               id: cache-linuxcnc
               uses: actions/cache@v3
@@ -45,6 +48,7 @@ jobs:
                   fetch-depth: 0
 
             - name: install linuxcnc deps
+              if: ${{ steps.cache-linuxcnc.outputs.cache-hit != 'true' }}
               run: |
                   set -x
                   cd linuxcnc
@@ -70,6 +74,72 @@ jobs:
                     --enable-non-distributable=yes
                   make -O -j$((1+$(nproc))) default pycheck V=1
 
+    # Build Ethercat Master, caching the result.
+    build-ethercatmaster:
+        runs-on: ubuntu-20.04
+        steps:
+            - name: cache Ethercat Master
+              id: cache-ethercatmaster
+              uses: actions/cache@v3
+              env:
+                  cache-name: cache-ethercatmaster
+              with:
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}
+                  path: ethercat/
+
+
+            - name: Fetch EtherCAT Master
+              if: ${{ steps.cache-ethercatmaster.outputs.cache-hit != 'true' }}
+              run: |
+                  set -x
+                  git clone https://gitlab.com/etherlab.org/ethercat.git
+
+            - name: Build EtherCAT Master
+              if: ${{ steps.cache-ethercatmaster.outputs.cache-hit != 'true' }}
+              run: |
+                  set -x
+                  cd ethercat
+                  ./bootstrap
+                  ./configure --disable-kernel
+                  make -j$((1+$(nproc))) all
+                  #sudo make install
+
+    # Build LinuxCNC-Ethercat itself.
+    build:
+        needs:
+            - build-linuxcnc
+            - build-ethercatmaster
+        runs-on: ubuntu-20.04
+        steps:
+            - name: Dump GitHub context
+              env:
+                  GITHUB_CONTEXT: ${{ toJson(github) }}
+              run: echo "$GITHUB_CONTEXT"
+
+            - name: Checkout linuxcnc-ethercat
+              uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: |
+                  sh -x
+                  sudo apt install yapps2
+
+            - name: Restore LinuxCNC cache
+              uses: actions/cache/restore@v3
+              env:
+                  cache-name: cache-linuxcnc
+              with:
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}
+                  path: linuxcnc/
+
+            - name: Restore Ethercat Master cache
+              uses: actions/cache/restore@v3
+              env:
+                  cache-name: cache-ethercatmaster
+              with:
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}
+                  path: ethercat/
+
             - name: Install linuxcnc locally
               run: |
                   set -x
@@ -77,27 +147,12 @@ jobs:
                   sudo make install-kernel-indep
                   echo "$GITHUB_WORKSPACE/linuxcnc/bin" >> $GITHUB_PATH
 
-            - name: Fetch EtherCAT Master
-              run: |
-                  set -x
-                  git clone https://gitlab.com/etherlab.org/ethercat.git
-
-            - name: Build EtherCAT Master
+            - name: Install EtherCAT Master locally
               run: |
                   set -x
                   cd ethercat
-                  ./bootstrap
-                  ./configure --disable-kernel
-                  make -j$((1+$(nproc))) all
                   sudo make install
-
-            - name: Print linuxcnc bin
-              run: |
-                  ls -l $GITHUB_WORKSPACE/linuxcnc/bin
-                  echo "Path is:"
-                  echo $PATH
-                  $GITHUB_WORKSPACE/linuxcnc/bin/halcompile --help
 
             - name: make
               run: |
-                  make COMP=$GITHUB_WORKSPACE/linuxcnc/bin/halcompile
+                  make COMP=$GITHUB_WORKSPACE/linuxcnc/bin/halcompile -j$((1+$(nproc)))
