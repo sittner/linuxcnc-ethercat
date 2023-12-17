@@ -2,10 +2,34 @@
 
 ## Submitting changes
 
-Please send a [GitHub Pull Request to us](https://github.com/linuxcnc-ethercat/linuxcnc-ethercat/pull/new/master) with a clear list of what you've done (read more about [pull requests](http://help.github.com/pull-requests/)). When you send a pull request, we will love you forever if you include RSpec examples. We can always use more test coverage. Please follow our coding conventions (below) and make sure all of your commits are atomic (one feature per commit).
+Please send a [GitHub Pull Request to
+us](https://github.com/linuxcnc-ethercat/linuxcnc-ethercat/pull/new/master)
+with a clear list of what you've done (read more about [pull
+requests](http://help.github.com/pull-requests/)). When you send a
+pull request, we will love you forever if you include RSpec
+examples. We can always use more test coverage. Please follow our
+coding conventions (below) and make sure all of your commits are
+atomic (one feature per commit).
 
-Always write a clear log message for your commits. One-line messages are fine for small changes, but bigger changes should look like this:
+Always write a clear log message for your commits. One-line messages
+are fine for small changes, but bigger changes should look like this:
 
     $ git commit -m "A brief summary of the commit
     > 
     > A paragraph describing what changed and its impact."
+
+## Coding and Formatting Conventions
+
+Right now, the code is somewhat inconsistent about formatting.  We've
+[discussed](https://github.com/linuxcnc-ethercat/linuxcnc-ethercat/issues/3)
+adding (and possibly enforcing) a standard formatting/indentation
+standard, but aren't ready to enforce it (or manage the multi-thousand
+line PR that it'd cause, or the merge headaches that would fall out
+from that).
+
+At the moment, consider using
+[`clang-format`](https://clang.llvm.org/docs/ClangFormat.html) on new
+or heavily modified code, using the style included in `.clang-format`
+in the root of the LinuxCNC-Ethercat directory.  This is a lightly
+modified version of Google's standard format, and comes fairly close
+to matching most of the existing code.
