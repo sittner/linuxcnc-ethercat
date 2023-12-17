@@ -1,0 +1,98 @@
+# vim: sw=2
+
+# Copied from Linuxcnc's ci.yml action
+
+name: Build CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+  release:
+    types: [published]
+  check_suite:
+    types: [rerequested]
+
+permissions:
+  contents: read #  to fetch code (actions/checkout)
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - uses: actions/checkout@v4
+      name: Checkout linuxcnc-ethercat
+
+    - name: cache linuxcnc
+      id: cache-linuxcnc
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-linuxcnc
+      with:
+        key: ${{ runner.os }}-build-${{ env.cache-name }}
+        path: linuxcnc/
+
+    - name: Checkout linuxcnc
+      if: ${{ steps.cache-linuxcnc.outputs.cache-hit != 'true' }}
+      uses: actions/checkout@v4
+      with:
+        repository: 'linuxcnc/linuxcnc'
+        path: linuxcnc/
+        submodules: true
+        fetch-depth: 0
+
+    - name: install linuxcnc deps
+      run: |
+        set -x
+        cd linuxcnc
+        sudo apt-get install -y eatmydata
+        eatmydata ./scripts/travis-install-build-deps.sh
+        eatmydata curl -O https://snapshot.debian.org/archive/debian/20220716T154603Z/pool/main/p/po4a/po4a_0.67-2_all.deb
+        sudo eatmydata apt install --yes ./po4a_0.67-2_all.deb
+        sudo eatmydata apt --quiet --yes upgrade
+
+    - name: Build linuxcnc
+      if: ${{ steps.cache-linuxcnc.outputs.cache-hit != 'true' }}
+      run: |
+        set -x
+        cd linuxcnc
+        cd src
+        eatmydata ./autogen.sh
+        eatmydata ./configure --with-realtime=uspace --disable-check-runtime-deps --disable-gtk --enable-non-distributable=yes 
+        eatmydata make -O -j$((1+$(nproc))) default pycheck V=1
+
+    - name: Install linuxcnc locally
+      run: |
+        set -x
+        cd linuxcnc/src
+        sudo make install-kernel-indep
+        echo "$GITHUB_WORKSPACE/linuxcnc/bin" >> $GITHUB_PATH
+
+    - name: Fetch EtherCAT Master
+      run: |
+        set -x
+        git clone https://gitlab.com/etherlab.org/ethercat.git
+
+    - name: Build EtherCAT Master
+      run: |
+        set -x
+        cd ethercat
+        ./bootstrap
+        ./configure --disable-kernel
+        make -j$((1+$(nproc))) all
+        sudo make install
+
+    - name: Print linuxcnc bin
+      run: |
+        ls -l $GITHUB_WORKSPACE/linuxcnc/bin
+        echo "Path is:"
+        echo $PATH
+        $GITHUB_WORKSPACE/linuxcnc/bin/halcompile --help
+
+    - name: make
+      run: |
+        make COMP=$GITHUB_WORKSPACE/linuxcnc/bin/halcompile
