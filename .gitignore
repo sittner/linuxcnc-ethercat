@@ -24,3 +24,7 @@ debian/*.log
 debian/*.substvars
 debian/linuxcnc-ethercat/
 
+# emacs tmp files
+\#*\#
+.\#*
+*~
