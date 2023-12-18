@@ -17,15 +17,21 @@
 //
 
 #include "lcec.h"
-#include "lcec_generic.h"
-#include "lcec_ek1100.h"
 #include "lcec_ax5100.h"
 #include "lcec_ax5200.h"
-#include "lcec_el1xxx.h"
+#include "lcec_ax5805.h"
+#include "lcec_deasda.h"
+#include "lcec_dems300.h"
+#include "lcec_ek1100.h"
 #include "lcec_el1252.h"
 #include "lcec_el1859.h"
-#include "lcec_el2xxx.h"
+#include "lcec_el1904.h"
+#include "lcec_el1918_logic.h"
+#include "lcec_el1xxx.h"
 #include "lcec_el2202.h"
+#include "lcec_el2521.h"
+#include "lcec_el2904.h"
+#include "lcec_el2xxx.h"
 #include "lcec_el30x4.h"
 #include "lcec_el31x2.h"
 #include "lcec_el31x4.h"
@@ -42,13 +48,9 @@
 #include "lcec_el5101.h"
 #include "lcec_el5151.h"
 #include "lcec_el5152.h"
-#include "lcec_el2521.h"
+#include "lcec_el6090.h"
 #include "lcec_el6900.h"
-#include "lcec_el1918_logic.h"
-#include "lcec_el1904.h"
-#include "lcec_el2904.h"
 #include "lcec_el7041.h"
-#include "lcec_ax5805.h"
 #include "lcec_el70x1.h"
 #include "lcec_el7211.h"
 #include "lcec_el7342.h"
@@ -56,13 +58,12 @@
 #include "lcec_el95xx.h"
 #include "lcec_em37xx.h"
 #include "lcec_em7004.h"
-#include "lcec_ep23xx.h"
 #include "lcec_ep2316.h"
-#include "lcec_stmds5k.h"
-#include "lcec_deasda.h"
-#include "lcec_dems300.h"
+#include "lcec_ep23xx.h"
+#include "lcec_generic.h"
 #include "lcec_omrg5.h"
 #include "lcec_ph3lm2rm.h"
+#include "lcec_stmds5k.h"
 
 #include "rtapi_app.h"
 //#include <linuxcnc/rtapi_mutex.h>
@@ -244,6 +245,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL9515, LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
   { lcecSlaveTypeEL9576, LCEC_EL95xx_VID, LCEC_EL9576_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
 
+  // Display Terminal
+  { lcecSlaveTypeEL6090, LCEC_EL6090_VID, LCEC_EL6090_PID, LCEC_EL6090_PDOS, 0, NULL, lcec_el6090_init},
+  
   // FSoE devices
   { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init},
   { lcecSlaveTypeEL1918_LOGIC, LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init},
