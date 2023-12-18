@@ -1,0 +1,10 @@
+---
+Device: AX5101
+VendorID: 0x00000002
+VendorName: Beckhoff
+PID: 0x13ed6012
+Description: Beckhoff AX5101 Digital Compact Servo Drive, 1-channel
+DocumentationURL: https://www.beckhoff.com/en-us/products/motion/servo-drives/ax5000-digital-compact-servo-drives/ax5101.html
+DeviceType: Servo Controller
+Channels: 1
+Notes: 1.5A current limit

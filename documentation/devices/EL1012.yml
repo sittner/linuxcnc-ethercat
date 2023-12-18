@@ -1,0 +1,10 @@
+---
+Device: EL1012
+VendorID: 0x00000002
+VendorName: Beckhoff
+PID: 0x03F43052
+Description: Beckhoff EL1012 2-port digital input
+DocumentationURL: https://infosys.beckhoff.com/english.php?content=../content/1033/el10xx_el11xx/1623205643.html&id=
+DeviceType: Digital Input
+Channels: 2
+Notes: 24 VDC, 10 µs input filter

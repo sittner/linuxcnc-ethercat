@@ -1,0 +1,9 @@
+---
+Device: StMDS5k
+VendorID: 0x000000b9
+VendorName: STÖBER ANTRIEBSTECHNIK GmbH & Co. KG
+PID: 0x00001388
+Description: Stober POSIDRIVE MDS 5000 Servo Inverter
+DocumentationURL: https://www.stoeber.de/en/solutions/inverter/
+DeviceType: Servo Controller
+Notes: Discontinued, finding Ethercat parameter documentation is difficult.

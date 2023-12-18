@@ -1,0 +1,10 @@
+---
+Device: EL1008
+VendorID: 0x00000002
+VendorName: Beckhoff
+PID: 0x03F03052
+Description: Beckhoff EL1008 8-port digital input
+DocumentationURL: https://infosys.beckhoff.com/english.php?content=../content/1033/el10xx_el11xx/1623205643.html&id=
+DeviceType: Digital Input
+Channels: 8
+Notes: 24 VDC, 3 ms input filter

@@ -1,0 +1,10 @@
+---
+Device: EL1004
+VendorID: 0x00000002
+VendorName: Beckhoff
+PID: 0x03EC3052
+Description: Beckhoff EL1004 4-port digital input
+DocumentationURL: https://infosys.beckhoff.com/english.php?content=../content/1033/el10xx_el11xx/1623205643.html&id=
+DeviceType: Digital Input
+Channels: 4
+Notes: 24 VDC, 3 ms input filter

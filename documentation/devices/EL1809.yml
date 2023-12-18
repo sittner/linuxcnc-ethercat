@@ -1,0 +1,10 @@
+---
+Device: EL1809
+VendorID: 0x00000002
+VendorName: Beckhoff
+PID: 0x07113052
+Description: Beckhoff EL1809 16-port digital input
+DocumentationURL: https://infosys.beckhoff.com/english.php?content=../content/1033/el10xx_el11xx/1623216395.html&id=
+DeviceType: Digital Input
+Channels: 16
+Notes: 24 VDC, high density, 3 ms

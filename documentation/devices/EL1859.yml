@@ -1,0 +1,10 @@
+---
+Device: EL1859
+VendorID: 0x00000002
+VendorName: Beckhoff
+PID: 0x07433052
+Description: Beckhoff EL1859 8-port 1-wire digital interface
+DocumentationURL: https://infosys.beckhoff.com/english.php?content=../content/1033/el10xx_el11xx/1623216395.html&id=
+DeviceType: Digital Input
+Channels: 8
+Notes: 24 VDC, 1-wire, 3 ms

@@ -1,0 +1,9 @@
+---
+Device: EK1101
+VendorID: 0x00000002
+VendorName: Beckhoff
+PID: 0x044D2C52
+Description: Beckhoff EK1101 EtherCAT Coupler with ID switch
+DocumentationURL: https://www.beckhoff.com/en-us/products/i-o/ethercat-terminals/ek1xxx-bk1xx0-ethercat-coupler/ek1101.html
+DeviceType: Coupler
+Notes: Connects Beckhoff EL* modules to 100base-TX networks, and injects DC power into the EL bus.

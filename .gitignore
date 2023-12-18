@@ -24,6 +24,9 @@ debian/*.log
 debian/*.substvars
 debian/linuxcnc-ethercat/
 
+# Binaries
+scripts/devicetable/devicetable
+
 # emacs tmp files
 \#*\#
 .\#*

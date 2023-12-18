@@ -1,0 +1,10 @@
+---
+Device: EL1918_LOGIC
+VendorID: 0x00000002
+VendorName: Beckhoff
+PID: 0x077e3052
+Description: Beckhoff EL1918 8-port digital input w/ TwinSAFE Logic
+DocumentationURL: https://www.beckhoff.com/en-us/products/automation/twinsafe/twinsafe-hardware/el1918.html
+DeviceType: Digital Input
+Channels: 8
+Notes: 24 VDC, with TwinSAFE safety hardware and TwinSAFE logic

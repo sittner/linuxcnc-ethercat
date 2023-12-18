@@ -1,0 +1,8 @@
+---
+Device: Ph3LM2RM
+VendorID: 0x00000907
+VendorName: Modusoft
+PID: 0x10000001
+Description: Modusoft 3lm2rm
+DocumentationURL: https://www.modusoft.de/linux-cnc/
+DeviceType: Unknown

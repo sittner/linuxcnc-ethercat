@@ -1,0 +1,9 @@
+---
+Device: EK1122
+VendorID: 0x00000002
+VendorName: Beckhoff
+PID: 0x04622C52
+Description: Beckhoff EK1122 2-port EtherCAT junction
+DocumentationURL: https://www.beckhoff.com/en-us/products/i-o/ethercat-terminals/ek1xxx-bk1xx0-ethercat-coupler/ek1122.html
+DeviceType: Coupler
+Notes: Adds 2 RJ45 Ethernet ports in-line, allowing star topologies.
