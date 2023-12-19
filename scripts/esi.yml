@@ -546,8 +546,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2000-0250
-  ProductCode: "0x7d05012"
-  RevisionNo: "0x1000fa"
+  ProductCode: "0x07d05012"
+  RevisionNo: "0x001000fa"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2000-0250 Motor module 250 mm, 50V
   DeviceGroup: XTS
@@ -555,8 +555,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2000-0250
-  ProductCode: "0x7d05012"
-  RevisionNo: "0x1100fa"
+  ProductCode: "0x07d05012"
+  RevisionNo: "0x001100fa"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2000-0250 Motor module 250 mm, 50V
   DeviceGroup: XTS
@@ -564,8 +564,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2000-0250
-  ProductCode: "0x7d05012"
-  RevisionNo: "0x1200fa"
+  ProductCode: "0x07d05012"
+  RevisionNo: "0x001200fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2000-0250 Motor module 250 mm, 50V
   DeviceGroup: XTS
@@ -627,8 +627,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2001-0250
-  ProductCode: "0x7d15012"
-  RevisionNo: "0x1000fa"
+  ProductCode: "0x07d15012"
+  RevisionNo: "0x001000fa"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2001-0250 Motor module with feed 250 mm, 50V
   DeviceGroup: XTS
@@ -636,8 +636,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2001-0250
-  ProductCode: "0x7d15012"
-  RevisionNo: "0x1100fa"
+  ProductCode: "0x07d15012"
+  RevisionNo: "0x001100fa"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2001-0250 Motor module with feed 250 mm, 50V
   DeviceGroup: XTS
@@ -645,8 +645,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2001-0250
-  ProductCode: "0x7d15012"
-  RevisionNo: "0x1200fa"
+  ProductCode: "0x07d15012"
+  RevisionNo: "0x001200fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2001-0250 Motor module with feed 250 mm, 50V
   DeviceGroup: XTS
@@ -654,8 +654,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2001-0250
-  ProductCode: "0x7d15012"
-  RevisionNo: "0x1300fa"
+  ProductCode: "0x07d15012"
+  RevisionNo: "0x001300fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2001-0250 Motor module with feed 250 mm, 50V
   DeviceGroup: XTS
@@ -663,8 +663,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2001-0250
-  ProductCode: "0x7d15012"
-  RevisionNo: "0x1400fa"
+  ProductCode: "0x07d15012"
+  RevisionNo: "0x001400fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2001-0250 Motor module with feed 250 mm, 48V
   DeviceGroup: XTS
@@ -771,7 +771,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2020-0250
-  ProductCode: "0x7e45012"
+  ProductCode: "0x07e45012"
   RevisionNo: "0x001200fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2020-0250 Motor module, +22.5°, 250mm, 50V
@@ -780,7 +780,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2020-0250
-  ProductCode: "0x7e45012"
+  ProductCode: "0x07e45012"
   RevisionNo: "0x001300fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2020-0250 Motor module, +22.5°, 250mm, 50V
@@ -789,7 +789,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2020-0250
-  ProductCode: "0x7e45012"
+  ProductCode: "0x07e45012"
   RevisionNo: "0x001400fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2020-0250 Motor module, +22.5°, 250mm, 48V
@@ -798,7 +798,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2020-0250
-  ProductCode: "0x7e45012"
+  ProductCode: "0x07e45012"
   RevisionNo: "0x001500fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2020-0250 Motor module, +22.5°, 250mm, 48V
@@ -807,7 +807,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2020-0250
-  ProductCode: "0x7e45012"
+  ProductCode: "0x07e45012"
   RevisionNo: "0x001600fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2020-0250 Motor module, +22.5°, 250mm, 48V
@@ -816,7 +816,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2020-0250
-  ProductCode: "0x7e45012"
+  ProductCode: "0x07e45012"
   RevisionNo: "0x001700fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2020-0250 Motor module, +22.5°, 250mm, 48V
@@ -825,7 +825,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2020-0250
-  ProductCode: "0x7e45012"
+  ProductCode: "0x07e45012"
   RevisionNo: "0x001800fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2020-0250 Motor module, +22.5°, 250mm, 48V
@@ -834,7 +834,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2021-0250
-  ProductCode: "0x7e55012"
+  ProductCode: "0x07e55012"
   RevisionNo: "0x001200fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2021-0250 Motor module with feed , +22.5°, 250mm, 50V
@@ -843,7 +843,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2021-0250
-  ProductCode: "0x7e55012"
+  ProductCode: "0x07e55012"
   RevisionNo: "0x001300fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2021-0250 Motor module with feed , +22.5°, 250mm, 50V
@@ -852,7 +852,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2021-0250
-  ProductCode: "0x7e55012"
+  ProductCode: "0x07e55012"
   RevisionNo: "0x001400fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2021-0250 Motor module with feed , +22.5°, 250mm, 48V
@@ -861,7 +861,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2021-0250
-  ProductCode: "0x7e55012"
+  ProductCode: "0x07e55012"
   RevisionNo: "0x001500fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2021-0250 Motor module with feed , +22.5°, 250mm, 48V
@@ -870,7 +870,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2021-0250
-  ProductCode: "0x7e55012"
+  ProductCode: "0x07e55012"
   RevisionNo: "0x001600fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2021-0250 Motor module with feed , +22.5°, 250mm, 48V
@@ -879,7 +879,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2021-0250
-  ProductCode: "0x7e55012"
+  ProductCode: "0x07e55012"
   RevisionNo: "0x001700fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2021-0250 Motor module with feed , +22.5°, 250mm, 48V
@@ -888,7 +888,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2021-0250
-  ProductCode: "0x7e55012"
+  ProductCode: "0x07e55012"
   RevisionNo: "0x001800fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2021-0250 Motor module with feed , +22.5°, 250mm, 48V
@@ -897,7 +897,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2025-0250
-  ProductCode: "0x7e95012"
+  ProductCode: "0x07e95012"
   RevisionNo: "0x001200fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2025-0250 Motor module, -22.5°, 250mm, 50V
@@ -906,7 +906,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2025-0250
-  ProductCode: "0x7e95012"
+  ProductCode: "0x07e95012"
   RevisionNo: "0x001300fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2025-0250 Motor module, -22.5°, 250mm, 50V
@@ -915,7 +915,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2025-0250
-  ProductCode: "0x7e95012"
+  ProductCode: "0x07e95012"
   RevisionNo: "0x001400fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2025-0250 Motor module, -22.5°, 250mm, 48V
@@ -924,7 +924,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2025-0250
-  ProductCode: "0x7e95012"
+  ProductCode: "0x07e95012"
   RevisionNo: "0x001500fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2025-0250 Motor module, -22.5°, 250mm, 48V
@@ -933,7 +933,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2025-0250
-  ProductCode: "0x7e95012"
+  ProductCode: "0x07e95012"
   RevisionNo: "0x001600fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2025-0250 Motor module, -22.5°, 250mm, 48V
@@ -942,7 +942,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2025-0250
-  ProductCode: "0x7e95012"
+  ProductCode: "0x07e95012"
   RevisionNo: "0x001700fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2025-0250 Motor module, -22.5°, 250mm, 48V
@@ -951,7 +951,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2025-0250
-  ProductCode: "0x7e95012"
+  ProductCode: "0x07e95012"
   RevisionNo: "0x001800fa"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2025-0250 Motor module, -22.5°, 250mm, 48V
@@ -1158,7 +1158,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001001f4"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 50V
@@ -1167,7 +1167,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001101f4"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 50V
@@ -1176,7 +1176,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001201f4"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 50V
@@ -1185,7 +1185,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001301f4"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 50V
@@ -1194,7 +1194,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001401f4"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 48V
@@ -1203,7 +1203,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001501f4"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 48V
@@ -1212,7 +1212,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001601f4"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 48V
@@ -1221,7 +1221,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001701f4"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 48V
@@ -1230,7 +1230,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001801f4"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0500 Motor module, 90° clothoid, EtherCAT In, 48V
@@ -1239,7 +1239,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001001f5"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 50V
@@ -1248,7 +1248,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001101f5"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 50V
@@ -1257,7 +1257,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001201f5"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 50V
@@ -1266,7 +1266,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001301f5"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 50V
@@ -1275,7 +1275,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001401f5"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 48V
@@ -1284,7 +1284,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001501f5"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 48V
@@ -1293,7 +1293,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001601f5"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 48V
@@ -1302,7 +1302,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001701f5"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 48V
@@ -1311,7 +1311,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: AT2050-0501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x001801f5"
   URL: http://www.beckhoff.com/AT2000
   Name: AT2050-0501 Motor module, 90° clothoid, EtherCAT Out, 48V
@@ -1437,7 +1437,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs]
   Type: AT2050-5500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x0010157c"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-5500 Sensor line 90° clothoid, EtherCAT In
@@ -1446,7 +1446,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs]
   Type: AT2050-5500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x0011157c"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-5500 Sensor line 90° clothoid, EtherCAT In
@@ -1455,7 +1455,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs]
   Type: AT2050-5500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x0012157c"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-5500 Sensor line 90° clothoid, EtherCAT In
@@ -1464,7 +1464,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs]
   Type: AT2050-5500
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x0013157c"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-5500 Sensor line 90° clothoid, EtherCAT In
@@ -1473,7 +1473,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs]
   Type: AT2050-5501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x0010157d"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-5501 Sensor line 90° clothoid, EtherCAT Out
@@ -1482,7 +1482,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs]
   Type: AT2050-5501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x0011157d"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-5501 Sensor line 90° clothoid, EtherCAT Out
@@ -1491,7 +1491,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs]
   Type: AT2050-5501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x0012157d"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-5501 Sensor line 90° clothoid, EtherCAT Out
@@ -1500,7 +1500,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs]
   Type: AT2050-5501
-  ProductCode: "0x8025012"
+  ProductCode: "0x08025012"
   RevisionNo: "0x0013157d"
   URL: http://www.beckhoff.com/XTS/
   Name: AT2050-5501 Sensor line 90° clothoid, EtherCAT Out
@@ -6610,7 +6610,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: BK1150
-  ProductCode: "0x47e2c22"
+  ProductCode: "0x047e2c22"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/BK1150
   Name: BK1150 EtherCAT Fieldbus coupler
@@ -6619,7 +6619,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: BK1150
-  ProductCode: "0x47e2c22"
+  ProductCode: "0x047e2c22"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/BK1150
   Name: BK1150 EtherCAT Fieldbus coupler
@@ -6628,7 +6628,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: BK1150
-  ProductCode: "0x47e2c22"
+  ProductCode: "0x047e2c22"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/BK1150
   Name: BK1150 EtherCAT Fieldbus coupler
@@ -6637,7 +6637,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: BK1150
-  ProductCode: "0x47e2c22"
+  ProductCode: "0x047e2c22"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/BK1150
   Name: BK1150 EtherCAT Fieldbus coupler
@@ -7016,7 +7016,7 @@
   Vendor: Beckhoff Automation GmbH & Co. KG
   VendorID: "0x00000002"
 - Type: CU2508
-  ProductCode: "0x9cc5432"
+  ProductCode: "0x09cc5432"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/CU2508
   Name: CU2508 Configuration Port
@@ -7024,7 +7024,7 @@
   Vendor: Beckhoff Automation GmbH & Co. KG
   VendorID: "0x00000002"
 - Type: CU2508
-  ProductCode: "0x9cc5432"
+  ProductCode: "0x09cc5432"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/CU2508
   Name: CU2508 Configuration Port
@@ -7032,7 +7032,7 @@
   Vendor: Beckhoff Automation GmbH & Co. KG
   VendorID: "0x00000002"
 - Type: CU2508
-  ProductCode: "0x9cc5432"
+  ProductCode: "0x09cc5432"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/CU2508
   Name: CU2508 Configuration Port
@@ -7608,7 +7608,7 @@
     current: "120"
   fmmu: [Inputs, MBoxState]
   Type: EJ3004
-  ProductCode: "0xbbc2852"
+  ProductCode: "0x0bbc2852"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EJ3004
   Name: EJ3004 4Ch. Ana. Input +/-10V
@@ -7619,7 +7619,7 @@
     current: "120"
   fmmu: [Inputs, MBoxState]
   Type: EJ3004
-  ProductCode: "0xbbc2852"
+  ProductCode: "0x0bbc2852"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EJ3004
   Name: EJ3004 4Ch. Ana. Input +/-10V
@@ -7641,8 +7641,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EJ3058
-  ProductCode: "0xbf22852"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bf22852"
+  RevisionNo: "0x00140000"
   URL: https://www.beckhoff.com/EJ3058
   Name: EJ3058 8Ch. Ana. Input 4-20mA
   DeviceGroup: Analog input terminals (EJ3xxx)
@@ -7652,8 +7652,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EJ3068
-  ProductCode: "0xbfc2852"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bfc2852"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EJ3068
   Name: EJ3068 8Ch. Ana. Input 0-10V
   DeviceGroup: Analog input terminals (EJ3xxx)
@@ -7663,8 +7663,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EJ3068
-  ProductCode: "0xbfc2852"
-  RevisionNo: "0x150000"
+  ProductCode: "0x0bfc2852"
+  RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EJ3068
   Name: EJ3068 8Ch. Ana. Input 0-10V
   DeviceGroup: Analog input terminals (EJ3xxx)
@@ -11408,7 +11408,7 @@
     current: "130"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL1258
-  ProductCode: "0x4ea3052"
+  ProductCode: "0x04ea3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL1258
   Name: EL1258 8Ch. Dig Input 24V with Multi-Time-Stamp
@@ -11441,7 +11441,7 @@
     current: "130"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL1259
-  ProductCode: "0x4eb3052"
+  ProductCode: "0x04eb3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL1259
   Name: EL1259 8Ch. Dig Input 24V/8Ch. Dig. Output 24V with Multi-Time-Stamp
@@ -12024,7 +12024,7 @@
     current: "150"
   fmmu: [Outputs, MBoxState]
   Type: EL2502
-  ProductCode: "0x9c63052"
+  ProductCode: "0x09c63052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL2502
   Name: EL2502 2Ch. PWM output, 24V
@@ -12035,7 +12035,7 @@
     current: "150"
   fmmu: [Outputs, MBoxState]
   Type: EL2502
-  ProductCode: "0x9c63052"
+  ProductCode: "0x09c63052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL2502
   Name: EL2502 2Ch. PWM output, 24V
@@ -12046,7 +12046,7 @@
     current: "190"
   fmmu: [Outputs, MBoxState]
   Type: EL2502
-  ProductCode: "0x9c63052"
+  ProductCode: "0x09c63052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL2502
   Name: EL2502 2Ch. PWM output, 24V
@@ -12057,7 +12057,7 @@
     current: "150"
   fmmu: [Outputs, MBoxState]
   Type: EL2502
-  ProductCode: "0x9c63052"
+  ProductCode: "0x09c63052"
   RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL2502
   Name: EL2502 2Ch. PWM output, 24V
@@ -12068,7 +12068,7 @@
     current: "150"
   fmmu: [Outputs, MBoxState]
   Type: EL2502
-  ProductCode: "0x9c63052"
+  ProductCode: "0x09c63052"
   RevisionNo: "0x00170000"
   URL: http://www.beckhoff.com/EL2502
   Name: EL2502 2Ch. PWM output, 24V
@@ -12079,7 +12079,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL2502
-  ProductCode: "0x9c63052"
+  ProductCode: "0x09c63052"
   RevisionNo: "0x00180000"
   URL: http://www.beckhoff.com/EL2502
   Name: EL2502 2Ch. PWM output, 24V
@@ -12146,7 +12146,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521
   ProductCode: "0x09d93052"
-  RevisionNo: "0x3f80000"
+  RevisionNo: "0x03f80000"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521 1Ch. Pulse Train Output
   DeviceGroup: Digital Output Terminals (EL2xxx)
@@ -12157,7 +12157,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521
   ProductCode: "0x09d93052"
-  RevisionNo: "0x3f90000"
+  RevisionNo: "0x03f90000"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521 1Ch. Pulse Train Output
   DeviceGroup: Digital Output Terminals (EL2xxx)
@@ -12178,7 +12178,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x03fb0000"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521 1Ch. Pulse Train Output
@@ -12189,7 +12189,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x03fc0000"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521 1Ch. Pulse Train Output
@@ -12200,7 +12200,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x03fd0000"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521 1Ch. Pulse Train Output
@@ -12223,7 +12223,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0024
   ProductCode: "0x09d93052"
-  RevisionNo: "0x3f80018"
+  RevisionNo: "0x03f80018"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0024 1Ch. Pulse Train 24V DC Output
   DeviceGroup: Digital Output Terminals (EL2xxx)
@@ -12244,7 +12244,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0024
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x03fa0018"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0024 1Ch. Pulse Train 24V DC Output
@@ -12255,7 +12255,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0024
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x03fb0018"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0024 1Ch. Pulse Train 24V DC Output
@@ -12266,7 +12266,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0024
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x03fc0018"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0024 1Ch. Pulse Train 24V DC Output
@@ -12310,7 +12310,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0025
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x03fa0019"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0025 1Ch. Pulse Train 24V DC Output negative
@@ -12321,7 +12321,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0025
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x03fb0019"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0025 1Ch. Pulse Train 24V DC Output negative
@@ -12332,7 +12332,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0025
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x03fc0019"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0025 1Ch. Pulse Train 24V DC Output negative
@@ -12376,7 +12376,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0124
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x0012007c"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0124 1Ch. Pulse Train 24V DC Output Capture/Compare
@@ -12387,7 +12387,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0124
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x0013007c"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0124 1Ch. Pulse Train 24V DC Output Capture/Compare
@@ -12398,7 +12398,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-0124
-  ProductCode: "0x9d93052"
+  ProductCode: "0x09d93052"
   RevisionNo: "0x0014007c"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-0124 1Ch. Pulse Train 24V DC Output Capture/Compare
@@ -12453,8 +12453,8 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-1001
-  ProductCode: "0x9d93052"
-  RevisionNo: "0x3fa03e9"
+  ProductCode: "0x09d93052"
+  RevisionNo: "0x03fa03e9"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-1001 1Ch. Pulse Train Output
   DeviceGroup: Digital Output Terminals (EL2xxx)
@@ -12464,8 +12464,8 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-1001
-  ProductCode: "0x9d93052"
-  RevisionNo: "0x3fb03e9"
+  ProductCode: "0x09d93052"
+  RevisionNo: "0x03fb03e9"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-1001 1Ch. Pulse Train Output
   DeviceGroup: Digital Output Terminals (EL2xxx)
@@ -12475,8 +12475,8 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2521-1001
-  ProductCode: "0x9d93052"
-  RevisionNo: "0x3fc03e9"
+  ProductCode: "0x09d93052"
+  RevisionNo: "0x03fc03e9"
   URL: http://www.beckhoff.com/EL2521
   Name: EL2521-1001 1Ch. Pulse Train Output
   DeviceGroup: Digital Output Terminals (EL2xxx)
@@ -12530,7 +12530,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535 2Ch. Pulse Width Current Output (24V, 1 A)
@@ -12541,7 +12541,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535 2Ch. Pulse Width Current Output (24V, 1 A)
@@ -12552,7 +12552,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535 2Ch. Pulse Width Current Output (24V, 1 A)
@@ -12563,7 +12563,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535 2Ch. Pulse Width Current Output (24V, 1 A)
@@ -12607,7 +12607,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0002
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00100002"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0002 2Ch. Pulse Width Current Output (24V, 2 A)
@@ -12618,7 +12618,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0002
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00110002"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0002 2Ch. Pulse Width Current Output (24V, 2 A)
@@ -12629,7 +12629,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0002
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00120002"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0002 2Ch. Pulse Width Current Output (24V, 2 A)
@@ -12640,7 +12640,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0002
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00130002"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0002 2Ch. Pulse Width Current Output (24V, 2 A)
@@ -12651,7 +12651,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0002
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00140002"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0002 2Ch. Pulse Width Current Output (24V, 2 A)
@@ -12717,7 +12717,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0050
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00100032"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0050 2Ch. Pulse Width Current Output (24V, 50 mA)
@@ -12728,7 +12728,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0050
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00110032"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0050 2Ch. Pulse Width Current Output (24V, 50 mA)
@@ -12739,7 +12739,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0050
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00120032"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0050 2Ch. Pulse Width Current Output (24V, 50 mA)
@@ -12750,7 +12750,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0050
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00130032"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0050 2Ch. Pulse Width Current Output (24V, 50 mA)
@@ -12761,7 +12761,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0050
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00140032"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0050 2Ch. Pulse Width Current Output (24V, 50 mA)
@@ -12805,7 +12805,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0100
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00130064"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0100 2Ch. Pulse Width Current Output (24V, 100 mA)
@@ -12816,7 +12816,7 @@
     current: "110"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2535-0100
-  ProductCode: "0x9e73052"
+  ProductCode: "0x09e73052"
   RevisionNo: "0x00140064"
   URL: http://www.beckhoff.com/EL2535
   Name: EL2535-0100 2Ch. Pulse Width Current Output (24V, 100 mA)
@@ -13740,7 +13740,7 @@
     current: "130"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL2258
-  ProductCode: "0x8d23052"
+  ProductCode: "0x08d23052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL2258
   Name: EL2258 8Ch. Dig Output 24V with Multi-Time-Stamp
@@ -14477,7 +14477,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3001
-  ProductCode: "0xbb93052"
+  ProductCode: "0x0bb93052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3001
   Name: EL3001 1Ch. Ana. Input +/-10V
@@ -14488,7 +14488,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3001
-  ProductCode: "0xbb93052"
+  ProductCode: "0x0bb93052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3001
   Name: EL3001 1Ch. Ana. Input +/-10V
@@ -14499,7 +14499,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3001
-  ProductCode: "0xbb93052"
+  ProductCode: "0x0bb93052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3001
   Name: EL3001 1Ch. Ana. Input +/-10V
@@ -14510,7 +14510,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3001
-  ProductCode: "0xbb93052"
+  ProductCode: "0x0bb93052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3001
   Name: EL3001 1Ch. Ana. Input +/-10V
@@ -14521,8 +14521,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3001
-  ProductCode: "0xbb93052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bb93052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3001
   Name: EL3001 1Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14532,7 +14532,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3001
-  ProductCode: "0xbb93052"
+  ProductCode: "0x0bb93052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3001
   Name: EL3001 1Ch. Ana. Input +/-10V
@@ -14543,8 +14543,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3001
-  ProductCode: "0xbb93052"
-  RevisionNo: "0x160000"
+  ProductCode: "0x0bb93052"
+  RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3001
   Name: EL3001 1Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14554,7 +14554,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3002
-  ProductCode: "0xbba3052"
+  ProductCode: "0x0bba3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3002
   Name: EL3002 2Ch. Ana. Input +/-10V
@@ -14565,7 +14565,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3002
-  ProductCode: "0xbba3052"
+  ProductCode: "0x0bba3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3002
   Name: EL3002 2Ch. Ana. Input +/-10V
@@ -14576,7 +14576,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3002
-  ProductCode: "0xbba3052"
+  ProductCode: "0x0bba3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3002
   Name: EL3002 2Ch. Ana. Input +/-10V
@@ -14587,7 +14587,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3002
-  ProductCode: "0xbba3052"
+  ProductCode: "0x0bba3052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3002
   Name: EL3002 2Ch. Ana. Input +/-10V
@@ -14598,8 +14598,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3002
-  ProductCode: "0xbba3052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bba3052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3002
   Name: EL3002 2Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14609,8 +14609,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3002
-  ProductCode: "0xbba3052"
-  RevisionNo: "0x150000"
+  ProductCode: "0x0bba3052"
+  RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3002
   Name: EL3002 2Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14620,8 +14620,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3002
-  ProductCode: "0xbba3052"
-  RevisionNo: "0x160000"
+  ProductCode: "0x0bba3052"
+  RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3002
   Name: EL3002 2Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14631,7 +14631,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3004
-  ProductCode: "0xbbc3052"
+  ProductCode: "0x0bbc3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3004
   Name: EL3004 4Ch. Ana. Input +/-10V
@@ -14642,7 +14642,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3004
-  ProductCode: "0xbbc3052"
+  ProductCode: "0x0bbc3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3004
   Name: EL3004 4Ch. Ana. Input +/-10V
@@ -14653,7 +14653,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3004
-  ProductCode: "0xbbc3052"
+  ProductCode: "0x0bbc3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3004
   Name: EL3004 4Ch. Ana. Input +/-10V
@@ -14664,7 +14664,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3004
-  ProductCode: "0xbbc3052"
+  ProductCode: "0x0bbc3052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3004
   Name: EL3004 4Ch. Ana. Input +/-10V
@@ -14675,8 +14675,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3004
-  ProductCode: "0xbbc3052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bbc3052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3004
   Name: EL3004 4Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14686,8 +14686,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3004
-  ProductCode: "0xbbc3052"
-  RevisionNo: "0x150000"
+  ProductCode: "0x0bbc3052"
+  RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3004
   Name: EL3004 4Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14697,8 +14697,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3004
-  ProductCode: "0xbbc3052"
-  RevisionNo: "0x160000"
+  ProductCode: "0x0bbc3052"
+  RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3004
   Name: EL3004 4Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14708,7 +14708,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3008
-  ProductCode: "0xbc03052"
+  ProductCode: "0x0bc03052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3008
   Name: EL3008 8Ch. Ana. Input +/-10V
@@ -14719,7 +14719,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3008
-  ProductCode: "0xbc03052"
+  ProductCode: "0x0bc03052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3008
   Name: EL3008 8Ch. Ana. Input +/-10V
@@ -14730,7 +14730,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3008
-  ProductCode: "0xbc03052"
+  ProductCode: "0x0bc03052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3008
   Name: EL3008 8Ch. Ana. Input +/-10V
@@ -14741,7 +14741,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3008
-  ProductCode: "0xbc03052"
+  ProductCode: "0x0bc03052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3008
   Name: EL3008 8Ch. Ana. Input +/-10V
@@ -14752,8 +14752,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3008
-  ProductCode: "0xbc03052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bc03052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3008
   Name: EL3008 8Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14763,8 +14763,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3008
-  ProductCode: "0xbc03052"
-  RevisionNo: "0x150000"
+  ProductCode: "0x0bc03052"
+  RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3008
   Name: EL3008 8Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14774,8 +14774,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3008
-  ProductCode: "0xbc03052"
-  RevisionNo: "0x160000"
+  ProductCode: "0x0bc03052"
+  RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3008
   Name: EL3008 8Ch. Ana. Input +/-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14785,7 +14785,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3011
-  ProductCode: "0xbc33052"
+  ProductCode: "0x0bc33052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3011
   Name: EL3011 4Ch. Ana. Input 0-20mA DIFF
@@ -14796,7 +14796,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3011
-  ProductCode: "0xbc33052"
+  ProductCode: "0x0bc33052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3011
   Name: EL3011 4Ch. Ana. Input 0-20mA DIFF
@@ -14807,8 +14807,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3011
-  ProductCode: "0xbc33052"
-  RevisionNo: "0x120000"
+  ProductCode: "0x0bc33052"
+  RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3011
   Name: EL3011 4Ch. Ana. Input 0-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14818,8 +14818,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3011
-  ProductCode: "0xbc33052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bc33052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3011
   Name: EL3011 4Ch. Ana. Input 0-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14829,8 +14829,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3011
-  ProductCode: "0xbc33052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bc33052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3011
   Name: EL3011 1Ch. Ana. Input 0-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14840,7 +14840,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3012
-  ProductCode: "0xbc43052"
+  ProductCode: "0x0bc43052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3012
   Name: EL3012 4Ch. Ana. Input 0-20mA DIFF
@@ -14851,7 +14851,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3012
-  ProductCode: "0xbc43052"
+  ProductCode: "0x0bc43052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3012
   Name: EL3012 4Ch. Ana. Input 0-20mA DIFF
@@ -14862,8 +14862,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3012
-  ProductCode: "0xbc43052"
-  RevisionNo: "0x120000"
+  ProductCode: "0x0bc43052"
+  RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3012
   Name: EL3012 4Ch. Ana. Input 0-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14873,8 +14873,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3012
-  ProductCode: "0xbc43052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bc43052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3012
   Name: EL3012 4Ch. Ana. Input 0-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14884,8 +14884,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3012
-  ProductCode: "0xbc43052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bc43052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3012
   Name: EL3012 2Ch. Ana. Input 0-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14895,7 +14895,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3014
-  ProductCode: "0xbc63052"
+  ProductCode: "0x0bc63052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3014
   Name: EL3014 4Ch. Ana. Input 0-20mA DIFF
@@ -14906,7 +14906,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3014
-  ProductCode: "0xbc63052"
+  ProductCode: "0x0bc63052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3014
   Name: EL3014 4Ch. Ana. Input 0-20mA DIFF
@@ -14917,8 +14917,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3014
-  ProductCode: "0xbc63052"
-  RevisionNo: "0x120000"
+  ProductCode: "0x0bc63052"
+  RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3014
   Name: EL3014 4Ch. Ana. Input 0-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14928,8 +14928,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3014
-  ProductCode: "0xbc63052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bc63052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3014
   Name: EL3014 4Ch. Ana. Input 0-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14939,7 +14939,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3021
-  ProductCode: "0xbcd3052"
+  ProductCode: "0x0bcd3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3021
   Name: EL3021 4Ch. Ana. Input 4-20mA DIFF
@@ -14950,7 +14950,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3021
-  ProductCode: "0xbcd3052"
+  ProductCode: "0x0bcd3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3021
   Name: EL3021 4Ch. Ana. Input 4-20mA DIFF
@@ -14961,8 +14961,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3021
-  ProductCode: "0xbcd3052"
-  RevisionNo: "0x120000"
+  ProductCode: "0x0bcd3052"
+  RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3021
   Name: EL3021 4Ch. Ana. Input 4-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14972,8 +14972,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3021
-  ProductCode: "0xbcd3052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bcd3052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3021
   Name: EL3021 4Ch. Ana. Input 4-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14983,8 +14983,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3021
-  ProductCode: "0xbcd3052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bcd3052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3021
   Name: EL3021 1Ch. Ana. Input 4-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -14994,7 +14994,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3022
-  ProductCode: "0xbce3052"
+  ProductCode: "0x0bce3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3022
   Name: EL3022 4Ch. Ana. Input 4-20mA DIFF
@@ -15005,7 +15005,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3022
-  ProductCode: "0xbce3052"
+  ProductCode: "0x0bce3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3022
   Name: EL3022 4Ch. Ana. Input 4-20mA DIFF
@@ -15016,8 +15016,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3022
-  ProductCode: "0xbce3052"
-  RevisionNo: "0x120000"
+  ProductCode: "0x0bce3052"
+  RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3022
   Name: EL3022 4Ch. Ana. Input 4-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15027,8 +15027,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3022
-  ProductCode: "0xbce3052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bce3052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3022
   Name: EL3022 4Ch. Ana. Input 4-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15038,8 +15038,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3022
-  ProductCode: "0xbce3052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bce3052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3022
   Name: EL3022 2Ch. Ana. Input 4-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15049,7 +15049,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3024
-  ProductCode: "0xbd03052"
+  ProductCode: "0x0bd03052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3024
   Name: EL3024 4Ch. Ana. Input 4-20mA DIFF
@@ -15060,7 +15060,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3024
-  ProductCode: "0xbd03052"
+  ProductCode: "0x0bd03052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3024
   Name: EL3024 4Ch. Ana. Input 4-20mA DIFF
@@ -15071,8 +15071,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3024
-  ProductCode: "0xbd03052"
-  RevisionNo: "0x120000"
+  ProductCode: "0x0bd03052"
+  RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3024
   Name: EL3024 4Ch. Ana. Input 4-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15082,8 +15082,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3024
-  ProductCode: "0xbd03052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bd03052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3024
   Name: EL3024 4Ch. Ana. Input 4-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15093,8 +15093,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3024-0018
-  ProductCode: "0xbd03052"
-  RevisionNo: "0x130012"
+  ProductCode: "0x0bd03052"
+  RevisionNo: "0x00130012"
   URL: http://www.beckhoff.com/EL3024
   Name: EL3024-0018 4Ch. Ana. Input 4-20mA DIFF
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15104,7 +15104,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3041
-  ProductCode: "0xbe13052"
+  ProductCode: "0x0be13052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3041
   Name: EL3041 1Ch. Ana. Input 0-20mA
@@ -15115,7 +15115,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3041
-  ProductCode: "0xbe13052"
+  ProductCode: "0x0be13052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3041 1Ch. Ana. Input 0-20mA
@@ -15126,7 +15126,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3041
-  ProductCode: "0xbe13052"
+  ProductCode: "0x0be13052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3041 1Ch. Ana. Input 0-20mA
@@ -15137,7 +15137,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3041
-  ProductCode: "0xbe13052"
+  ProductCode: "0x0be13052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3041 1Ch. Ana. Input 0-20mA
@@ -15148,7 +15148,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3041
-  ProductCode: "0xbe13052"
+  ProductCode: "0x0be13052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3041 1Ch. Ana. Input 0-20mA
@@ -15170,7 +15170,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042 2Ch. Ana. Input 0-20mA
@@ -15181,7 +15181,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042 2Ch. Ana. Input 0-20mA
@@ -15192,7 +15192,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042 2Ch. Ana. Input 0-20mA
@@ -15203,8 +15203,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042
-  ProductCode: "0xbe23052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0be23052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042 2Ch. Ana. Input 0-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15214,7 +15214,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042 2Ch. Ana. Input 0-20mA
@@ -15236,7 +15236,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042-0017
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00100011"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042-0017 2Ch. Ana. Input 0-20mA
@@ -15247,7 +15247,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042-0017
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00110011"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042-0017 2Ch. Ana. Input 0-20mA
@@ -15258,7 +15258,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042-0017
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00120011"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042-0017 2Ch. Ana. Input 0-20mA
@@ -15269,7 +15269,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042-0017
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00130011"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042-0017 2Ch. Ana. Input 0-20mA
@@ -15280,7 +15280,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042-0017
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00140011"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042-0017 2Ch. Ana. Input 0-20mA
@@ -15291,7 +15291,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3042-0017
-  ProductCode: "0xbe23052"
+  ProductCode: "0x0be23052"
   RevisionNo: "0x00150011"
   URL: http://www.beckhoff.com/EL3042
   Name: EL3042-0017 2Ch. Ana. Input 0-20mA
@@ -15313,7 +15313,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3044
-  ProductCode: "0xbe43052"
+  ProductCode: "0x0be43052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3044
   Name: EL3044 4Ch. Ana. Input 0-20mA
@@ -15324,7 +15324,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3044
-  ProductCode: "0xbe43052"
+  ProductCode: "0x0be43052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3044
   Name: EL3044 4Ch. Ana. Input 0-20mA
@@ -15335,7 +15335,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3044
-  ProductCode: "0xbe43052"
+  ProductCode: "0x0be43052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3044
   Name: EL3044 4Ch. Ana. Input 0-20mA
@@ -15346,8 +15346,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3044
-  ProductCode: "0xbe43052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0be43052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3044
   Name: EL3044 4Ch. Ana. Input 0-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15357,8 +15357,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3044
-  ProductCode: "0xbe43052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0be43052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3044
   Name: EL3044 4Ch. Ana. Input 0-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15379,7 +15379,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3048
-  ProductCode: "0xbe83052"
+  ProductCode: "0x0be83052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3048
   Name: EL3048 8Ch. Ana. Input 0-20mA
@@ -15390,7 +15390,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3048
-  ProductCode: "0xbe83052"
+  ProductCode: "0x0be83052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3048
   Name: EL3048 8Ch. Ana. Input 0-20mA
@@ -15401,7 +15401,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3048
-  ProductCode: "0xbe83052"
+  ProductCode: "0x0be83052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3048
   Name: EL3048 8Ch. Ana. Input 0-20mA
@@ -15412,8 +15412,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3048
-  ProductCode: "0xbe83052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0be83052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3048
   Name: EL3048 8Ch. Ana. Input 0-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15423,8 +15423,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3048
-  ProductCode: "0xbe83052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0be83052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3048
   Name: EL3048 8Ch. Ana. Input 0-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15445,7 +15445,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3051
-  ProductCode: "0xbeb3052"
+  ProductCode: "0x0beb3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3051
   Name: EL3051 1Ch. Ana. Input 4-20mA
@@ -15456,7 +15456,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3051
-  ProductCode: "0xbeb3052"
+  ProductCode: "0x0beb3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3051
   Name: EL3051 1Ch. Ana. Input 4-20mA
@@ -15467,7 +15467,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3051
-  ProductCode: "0xbeb3052"
+  ProductCode: "0x0beb3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3051
   Name: EL3051 1Ch. Ana. Input 4-20mA
@@ -15478,8 +15478,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3051
-  ProductCode: "0xbeb3052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0beb3052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3051
   Name: EL3051 1Ch. Ana. Input 4-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15489,8 +15489,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3051
-  ProductCode: "0xbeb3052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0beb3052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3051
   Name: EL3051 1Ch. Ana. Input 4-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15511,7 +15511,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3052
-  ProductCode: "0xbec3052"
+  ProductCode: "0x0bec3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3052
   Name: EL3052 2Ch. Ana. Input 4-20mA
@@ -15522,7 +15522,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3052
-  ProductCode: "0xbec3052"
+  ProductCode: "0x0bec3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3052
   Name: EL3052 2Ch. Ana. Input 4-20mA
@@ -15533,7 +15533,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3052
-  ProductCode: "0xbec3052"
+  ProductCode: "0x0bec3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3052
   Name: EL3052 2Ch. Ana. Input 4-20mA
@@ -15544,8 +15544,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3052
-  ProductCode: "0xbec3052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bec3052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3052
   Name: EL3052 2Ch. Ana. Input 4-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15555,8 +15555,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3052
-  ProductCode: "0xbec3052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bec3052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3052
   Name: EL3052 2Ch. Ana. Input 4-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15577,7 +15577,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3054
-  ProductCode: "0xbee3052"
+  ProductCode: "0x0bee3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3054
   Name: EL3054 4Ch. Ana. Input 4-20mA
@@ -15588,7 +15588,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3054
-  ProductCode: "0xbee3052"
+  ProductCode: "0x0bee3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3054
   Name: EL3054 4Ch. Ana. Input 4-20mA
@@ -15599,7 +15599,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3054
-  ProductCode: "0xbee3052"
+  ProductCode: "0x0bee3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3054
   Name: EL3054 4Ch. Ana. Input 4-20mA
@@ -15610,8 +15610,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3054
-  ProductCode: "0xbee3052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bee3052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3054
   Name: EL3054 4Ch. Ana. Input 4-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15621,8 +15621,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3054
-  ProductCode: "0xbee3052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bee3052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3054
   Name: EL3054 4Ch. Ana. Input 4-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15654,7 +15654,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3058
-  ProductCode: "0xbf23052"
+  ProductCode: "0x0bf23052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3058
   Name: EL3058 8Ch. Ana. Input 4-20mA
@@ -15665,7 +15665,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3058
-  ProductCode: "0xbf23052"
+  ProductCode: "0x0bf23052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3058
   Name: EL3058 8Ch. Ana. Input 4-20mA
@@ -15676,7 +15676,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3058
-  ProductCode: "0xbf23052"
+  ProductCode: "0x0bf23052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3058
   Name: EL3058 8Ch. Ana. Input 4-20mA
@@ -15687,8 +15687,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3058
-  ProductCode: "0xbf23052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bf23052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3058
   Name: EL3058 8Ch. Ana. Input 4-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15698,8 +15698,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3058
-  ProductCode: "0xbf23052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bf23052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3058
   Name: EL3058 8Ch. Ana. Input 4-20mA
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15731,7 +15731,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3061
-  ProductCode: "0xbf53052"
+  ProductCode: "0x0bf53052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3061
   Name: EL3061 1Ch. Ana. Input 0-10V
@@ -15742,7 +15742,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3061
-  ProductCode: "0xbf53052"
+  ProductCode: "0x0bf53052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3061
   Name: EL3061 1Ch. Ana. Input 0-10V
@@ -15753,7 +15753,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3061
-  ProductCode: "0xbf53052"
+  ProductCode: "0x0bf53052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3061
   Name: EL3061 1Ch. Ana. Input 0-10V
@@ -15764,8 +15764,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3061
-  ProductCode: "0xbf53052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bf53052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3061
   Name: EL3061 1Ch. Ana. Input 0-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15775,8 +15775,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3061
-  ProductCode: "0xbf53052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bf53052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3061
   Name: EL3061 1Ch. Ana. Input 0-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15797,7 +15797,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062
-  ProductCode: "0xbf63052"
+  ProductCode: "0x0bf63052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062 2Ch. Ana. Input 0-10V
@@ -15808,7 +15808,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062
-  ProductCode: "0xbf63052"
+  ProductCode: "0x0bf63052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062 2Ch. Ana. Input 0-10V
@@ -15819,7 +15819,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062
-  ProductCode: "0xbf63052"
+  ProductCode: "0x0bf63052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062 2Ch. Ana. Input 0-10V
@@ -15830,8 +15830,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062
-  ProductCode: "0xbf63052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bf63052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062 2Ch. Ana. Input 0-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15841,8 +15841,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062
-  ProductCode: "0xbf63052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bf63052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062 2Ch. Ana. Input 0-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15863,8 +15863,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062-0015
-  ProductCode: "0xbf63052"
-  RevisionNo: "0x10000f"
+  ProductCode: "0x0bf63052"
+  RevisionNo: "0x0010000f"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062-0015 2Ch. Ana. Input 0-15V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15885,7 +15885,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062-0030
-  ProductCode: "0xbf63052"
+  ProductCode: "0x0bf63052"
   RevisionNo: "0x0011001e"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062-0030 2Ch. Ana. Input 0-30V
@@ -15896,7 +15896,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062-0030
-  ProductCode: "0xbf63052"
+  ProductCode: "0x0bf63052"
   RevisionNo: "0x0012001e"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062-0030 2Ch. Ana. Input 0-30V
@@ -15907,7 +15907,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062-0030
-  ProductCode: "0xbf63052"
+  ProductCode: "0x0bf63052"
   RevisionNo: "0x0013001e"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062-0030 2Ch. Ana. Input 0-30V
@@ -15918,8 +15918,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062-0030
-  ProductCode: "0xbf63052"
-  RevisionNo: "0x14001e"
+  ProductCode: "0x0bf63052"
+  RevisionNo: "0x0014001e"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062-0030 2Ch. Ana. Input 0-30V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15929,8 +15929,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3062-0030
-  ProductCode: "0xbf63052"
-  RevisionNo: "0x15001e"
+  ProductCode: "0x0bf63052"
+  RevisionNo: "0x0015001e"
   URL: http://www.beckhoff.com/EL3062
   Name: EL3062-0030 2Ch. Ana. Input 0-30V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -15962,7 +15962,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3064
-  ProductCode: "0xbf83052"
+  ProductCode: "0x0bf83052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3064
   Name: EL3064 4Ch. Ana. Input 0-10V
@@ -15973,7 +15973,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3064
-  ProductCode: "0xbf83052"
+  ProductCode: "0x0bf83052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3064
   Name: EL3064 4Ch. Ana. Input 0-10V
@@ -15984,7 +15984,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3064
-  ProductCode: "0xbf83052"
+  ProductCode: "0x0bf83052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3064
   Name: EL3064 4Ch. Ana. Input 0-10V
@@ -15995,8 +15995,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3064
-  ProductCode: "0xbf83052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bf83052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3064
   Name: EL3064 4Ch. Ana. Input 0-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -16006,8 +16006,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3064
-  ProductCode: "0xbf83052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bf83052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3064
   Name: EL3064 4Ch. Ana. Input 0-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -16028,7 +16028,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3068
-  ProductCode: "0xbfc3052"
+  ProductCode: "0x0bfc3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3068
   Name: EL3068 8Ch. Ana. Input 0-10V
@@ -16039,7 +16039,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3068
-  ProductCode: "0xbfc3052"
+  ProductCode: "0x0bfc3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3068
   Name: EL3068 8Ch. Ana. Input 0-10V
@@ -16050,7 +16050,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3068
-  ProductCode: "0xbfc3052"
+  ProductCode: "0x0bfc3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3068
   Name: EL3068 8Ch. Ana. Input 0-10V
@@ -16061,8 +16061,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3068
-  ProductCode: "0xbfc3052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x0bfc3052"
+  RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3068
   Name: EL3068 8Ch. Ana. Input 0-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -16072,8 +16072,8 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3068
-  ProductCode: "0xbfc3052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x0bfc3052"
+  RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3068
   Name: EL3068 8Ch. Ana. Input 0-10V
   DeviceGroup: Analog Input Terminals (EL3xxx)
@@ -16116,7 +16116,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3101
-  ProductCode: "0xc1d3052"
+  ProductCode: "0x0c1d3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3101
   Name: EL3101 1Ch. Ana. Input +/-10V Diff.
@@ -16127,7 +16127,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3101
-  ProductCode: "0xc1d3052"
+  ProductCode: "0x0c1d3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3101
   Name: EL3101 1Ch. Ana. Input +/-10V Diff.
@@ -17320,7 +17320,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201 1Ch. Ana. Input PT100 (RTD)
@@ -17331,7 +17331,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201 1Ch. Ana. Input PT100 (RTD)
@@ -17342,7 +17342,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201 1Ch. Ana. Input PT100 (RTD)
@@ -17353,7 +17353,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201 1Ch. Ana. Input PT100 (RTD)
@@ -17364,7 +17364,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201 1Ch. Ana. Input PT100 (RTD)
@@ -17375,7 +17375,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201 1Ch. Ana. Input PT100 (RTD)
@@ -17386,7 +17386,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201 1Ch. Ana. Input PT100 (RTD)
@@ -17397,7 +17397,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0010
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x0010000a"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0010 1Ch. Ana. Input PT100 (RTD), High Precision
@@ -17408,7 +17408,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0010
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x0011000a"
   URL: http://www.beckhoff.com/EL3201
   Name: "EL3201-0010 1Ch. Ana. Input PT100 (RTD), High Precision\t"
@@ -17419,7 +17419,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0010
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x0012000a"
   URL: http://www.beckhoff.com/EL3201
   Name: "EL3201-0010 1Ch. Ana. Input PT100 (RTD), High Precision\t"
@@ -17430,7 +17430,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0010
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x0013000a"
   URL: http://www.beckhoff.com/EL3201
   Name: "EL3201-0010 1Ch. Ana. Input PT100 (RTD), High Precision\t"
@@ -17441,7 +17441,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0010
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x0014000a"
   URL: http://www.beckhoff.com/EL3201
   Name: "EL3201-0010 1Ch. Ana. Input PT100 (RTD), High Precision\t"
@@ -17452,7 +17452,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0010
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x0015000a"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0010 1Ch. Ana. Input PT100 (RTD), High Precision
@@ -17463,7 +17463,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0010
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x0016000a"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0010 1Ch. Ana. Input PT100 (RTD), High Precision
@@ -17474,7 +17474,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0020
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00100014"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0020 1Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17485,7 +17485,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0020
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00110014"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0020 1Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17496,7 +17496,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0020
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00120014"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0020 1Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17507,7 +17507,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0020
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00130014"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0020 1Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17518,7 +17518,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0020
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00140014"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0020 1Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17529,7 +17529,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0020
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00150014"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0020 1Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17540,7 +17540,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0020
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x00160014"
   URL: http://www.beckhoff.com/EL3201
   Name: EL3201-0020 1Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17551,7 +17551,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202 2Ch. Ana. Input PT100 (RTD)
@@ -17562,7 +17562,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202 2Ch. Ana. Input PT100 (RTD)
@@ -17573,7 +17573,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202 2Ch. Ana. Input PT100 (RTD)
@@ -17584,7 +17584,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202 2Ch. Ana. Input PT100 (RTD)
@@ -17595,7 +17595,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202 2Ch. Ana. Input PT100 (RTD)
@@ -17606,7 +17606,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202 2Ch. Ana. Input PT100 (RTD)
@@ -17617,7 +17617,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202 2Ch. Ana. Input PT100 (RTD)
@@ -17628,7 +17628,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0010
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x0010000a"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0010 2Ch. Ana. Input PT100 (RTD), High Precision
@@ -17639,7 +17639,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0010
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x0011000a"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0010 2Ch. Ana. Input PT100 (RTD), High Precision
@@ -17650,7 +17650,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0010
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x0012000a"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0010 2Ch. Ana. Input PT100 (RTD), High Precision
@@ -17661,7 +17661,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0010
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x0013000a"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0010 2Ch. Ana. Input PT100 (RTD), High Precision
@@ -17672,7 +17672,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0010
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x0014000a"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0010 2Ch. Ana. Input PT100 (RTD), High Precision
@@ -17683,7 +17683,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0010
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x0015000a"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0010 2Ch. Ana. Input PT100 (RTD), High Precision
@@ -17694,7 +17694,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0010
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x0016000a"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0010 2Ch. Ana. Input PT100 (RTD), High Precision
@@ -17705,7 +17705,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0020
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00110014"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0020 2Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17716,7 +17716,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0020
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00120014"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0020 2Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17727,7 +17727,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0020
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00130014"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0020 2Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17738,7 +17738,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0020
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00140014"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0020 2Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17749,7 +17749,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0020
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00150014"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0020 2Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17760,7 +17760,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0020
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x00160014"
   URL: http://www.beckhoff.com/EL3202
   Name: EL3202-0020 2Ch. Ana. Input PT100 (RTD), High Precision, calibrated
@@ -17771,7 +17771,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3204
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3204
   Name: EL3204 4Ch. Ana. Input PT100 (RTD)
@@ -17782,7 +17782,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3204
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3204
   Name: EL3204 4Ch. Ana. Input PT100 (RTD)
@@ -17793,7 +17793,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3204
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3204
   Name: EL3204 4Ch. Ana. Input PT100 (RTD)
@@ -17804,7 +17804,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3204
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3204
   Name: EL3204 4Ch. Ana. Input PT100 (RTD)
@@ -17815,7 +17815,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3204
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3204
   Name: EL3204 4Ch. Ana. Input PT100 (RTD)
@@ -17826,7 +17826,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3204
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3204
   Name: EL3204 4Ch. Ana. Input PT100 (RTD)
@@ -17837,7 +17837,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3204
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3204
   Name: EL3204 4Ch. Ana. Input PT100 (RTD)
@@ -17848,7 +17848,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3204-0162
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x001000a2"
   URL: http://www.beckhoff.com/EL3204-0162
   Name: EL3204-0162 2Ch. Ana. In. PT100 (RTD), 2Ch. Ana. In. +/-10V, 0-10V configurable
@@ -17859,7 +17859,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3204-0162
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x001100a2"
   URL: http://www.beckhoff.com/EL3204-0162
   Name: EL3204-0162 2Ch. Ana. In. PT100 (RTD), 2Ch. Ana. In. +/-10V, 0-10V configurable
@@ -17870,7 +17870,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3204-0162
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x001200a2"
   URL: http://www.beckhoff.com/EL3204-0162
   Name: EL3204-0162 2Ch. Ana. In. PT100 (RTD), 2Ch. Ana. In. +/-10V, 0-10V configurable
@@ -17881,7 +17881,7 @@
     current: "130"
   fmmu: [Inputs, MBoxState]
   Type: EL3204-0162
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x001300a2"
   URL: http://www.beckhoff.com/EL3204-0162
   Name: EL3204-0162 2Ch. Ana. In. PT100 (RTD), 2Ch. Ana. In. +/-10V, 0-10V configurable
@@ -17892,7 +17892,7 @@
     current: "150"
   fmmu: [Inputs, MBoxState]
   Type: EL3204-0200
-  ProductCode: "0xc843052"
+  ProductCode: "0x0c843052"
   RevisionNo: "0x001000c8"
   URL: http://www.beckhoff.com/EL3204
   Name: EL3204-0200 4Ch. Ana. In. PT1000 (RTD)
@@ -18013,7 +18013,7 @@
     current: "80"
   fmmu: [Inputs, MBoxState]
   Type: EL3255
-  ProductCode: "0xcb73052"
+  ProductCode: "0x0cb73052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3255
   Name: EL3255 5Ch. potentiometer measurement with sensor supply
@@ -18024,7 +18024,7 @@
     current: "80"
   fmmu: [Inputs, MBoxState]
   Type: EL3255
-  ProductCode: "0xcb73052"
+  ProductCode: "0x0cb73052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3255
   Name: EL3255 5Ch. potentiometer measurement with sensor supply
@@ -18035,7 +18035,7 @@
     current: "80"
   fmmu: [Inputs, MBoxState]
   Type: EL3255
-  ProductCode: "0xcb73052"
+  ProductCode: "0x0cb73052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3255
   Name: EL3255 5Ch. potentiometer measurement with sensor supply
@@ -18046,7 +18046,7 @@
     current: "80"
   fmmu: [Inputs, MBoxState]
   Type: EL3255
-  ProductCode: "0xcb73052"
+  ProductCode: "0x0cb73052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3255
   Name: EL3255 5Ch. potentiometer measurement with sensor supply
@@ -18101,7 +18101,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3311
-  ProductCode: "0xcef3052"
+  ProductCode: "0x0cef3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3311
   Name: EL3311 1Ch. Ana. Input Thermocouple (TC)
@@ -18112,7 +18112,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3311
-  ProductCode: "0xcef3052"
+  ProductCode: "0x0cef3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3311
   Name: EL3311 1Ch. Ana. Input Thermocouple (TC)
@@ -18123,7 +18123,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3311
-  ProductCode: "0xcef3052"
+  ProductCode: "0x0cef3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3311
   Name: EL3311 1Ch. Ana. Input Thermocouple (TC)
@@ -18134,7 +18134,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3311
-  ProductCode: "0xcef3052"
+  ProductCode: "0x0cef3052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3311
   Name: EL3311 1Ch. Ana. Input Thermocouple (TC)
@@ -18145,7 +18145,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3311
-  ProductCode: "0xcef3052"
+  ProductCode: "0x0cef3052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3311
   Name: EL3311 1Ch. Ana. Input Thermocouple (TC)
@@ -18156,7 +18156,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3311
-  ProductCode: "0xcef3052"
+  ProductCode: "0x0cef3052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3311
   Name: EL3311 1Ch. Ana. Input Thermocouple (TC)
@@ -18167,7 +18167,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3311
-  ProductCode: "0xcef3052"
+  ProductCode: "0x0cef3052"
   RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3311
   Name: EL3311 1Ch. Ana. Input Thermocouple (TC)
@@ -18178,7 +18178,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3311
-  ProductCode: "0xcef3052"
+  ProductCode: "0x0cef3052"
   RevisionNo: "0x00170000"
   URL: http://www.beckhoff.com/EL3311
   Name: EL3311 1Ch. Ana. Input Thermocouple (TC)
@@ -18189,7 +18189,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3311
-  ProductCode: "0xcef3052"
+  ProductCode: "0x0cef3052"
   RevisionNo: "0x00180000"
   URL: http://www.beckhoff.com/EL3311
   Name: EL3311 1Ch. Ana. Input Thermocouple (TC)
@@ -18200,7 +18200,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3312
-  ProductCode: "0xcf03052"
+  ProductCode: "0x0cf03052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3312
   Name: EL3312 2Ch. Ana. Input Thermocouple (TC)
@@ -18211,7 +18211,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3312
-  ProductCode: "0xcf03052"
+  ProductCode: "0x0cf03052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3312
   Name: EL3312 2Ch. Ana. Input Thermocouple (TC)
@@ -18222,7 +18222,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3312
-  ProductCode: "0xcf03052"
+  ProductCode: "0x0cf03052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3312
   Name: EL3312 2Ch. Ana. Input Thermocouple (TC)
@@ -18233,7 +18233,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3312
-  ProductCode: "0xcf03052"
+  ProductCode: "0x0cf03052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3312
   Name: EL3312 2Ch. Ana. Input Thermocouple (TC)
@@ -18244,7 +18244,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3312
-  ProductCode: "0xcf03052"
+  ProductCode: "0x0cf03052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3312
   Name: EL3312 2Ch. Ana. Input Thermocouple (TC)
@@ -18255,7 +18255,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3312
-  ProductCode: "0xcf03052"
+  ProductCode: "0x0cf03052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3312
   Name: EL3312 2Ch. Ana. Input Thermocouple (TC)
@@ -18266,7 +18266,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3312
-  ProductCode: "0xcf03052"
+  ProductCode: "0x0cf03052"
   RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3312
   Name: EL3312 2Ch. Ana. Input Thermocouple (TC)
@@ -18277,7 +18277,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3312
-  ProductCode: "0xcf03052"
+  ProductCode: "0x0cf03052"
   RevisionNo: "0x00170000"
   URL: http://www.beckhoff.com/EL3312
   Name: EL3312 2Ch. Ana. Input Thermocouple (TC)
@@ -18288,7 +18288,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3312
-  ProductCode: "0xcf03052"
+  ProductCode: "0x0cf03052"
   RevisionNo: "0x00180000"
   URL: http://www.beckhoff.com/EL3312
   Name: EL3312 2Ch. Ana. Input Thermocouple (TC)
@@ -18299,7 +18299,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18310,7 +18310,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18321,7 +18321,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18332,7 +18332,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18343,7 +18343,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18354,7 +18354,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18365,7 +18365,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18376,7 +18376,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00170000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18387,7 +18387,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00180000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18398,7 +18398,7 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3314
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x00190000"
   URL: http://www.beckhoff.com/EL3314
   Name: EL3314 4Ch. Ana. Input Thermocouple (TC)
@@ -18420,7 +18420,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3314-0010
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x0010000a"
   URL: http://www.beckhoff.com/EL3314-0010
   Name: EL3314-0010 4Ch. Ana Input Thermocouple (TC), High Precision
@@ -18431,7 +18431,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3314-0010
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x0011000a"
   URL: http://www.beckhoff.com/EL3314-0010
   Name: EL3314-0010 4Ch. Ana Input Thermocouple (TC), High Precision
@@ -18442,7 +18442,7 @@
     current: "200"
   fmmu: [Inputs, MBoxState]
   Type: EL3314-0010
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x0012000a"
   URL: http://www.beckhoff.com/EL3314-0010
   Name: EL3314-0010 4Ch. Ana Input Thermocouple (TC), High Precision
@@ -18453,7 +18453,7 @@
     current: "200"
   fmmu: [Inputs, MBoxState]
   Type: EL3314-0010
-  ProductCode: "0xcf23052"
+  ProductCode: "0x0cf23052"
   RevisionNo: "0x0013000a"
   URL: http://www.beckhoff.com/EL3314-0010
   Name: EL3314-0010 4Ch. Ana Input Thermocouple (TC), High Precision
@@ -18530,7 +18530,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3318
-  ProductCode: "0xcf63052"
+  ProductCode: "0x0cf63052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3318
   Name: EL3318 8Ch. Ana Input Thermocouple (TC)
@@ -18541,7 +18541,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3318
-  ProductCode: "0xcf63052"
+  ProductCode: "0x0cf63052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3318
   Name: EL3318 8Ch. Ana Input Thermocouple (TC)
@@ -18552,7 +18552,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3318
-  ProductCode: "0xcf63052"
+  ProductCode: "0x0cf63052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3318
   Name: EL3318 8Ch. Ana Input Thermocouple (TC)
@@ -18563,7 +18563,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3318
-  ProductCode: "0xcf63052"
+  ProductCode: "0x0cf63052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3318
   Name: EL3318 8Ch. Ana Input Thermocouple (TC)
@@ -18574,7 +18574,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3318
-  ProductCode: "0xcf63052"
+  ProductCode: "0x0cf63052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3318
   Name: EL3318 8Ch. Ana Input Thermocouple (TC)
@@ -18585,7 +18585,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3318
-  ProductCode: "0xcf63052"
+  ProductCode: "0x0cf63052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3318
   Name: EL3318 8Ch. Ana Input Thermocouple (TC)
@@ -18596,7 +18596,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3318
-  ProductCode: "0xcf63052"
+  ProductCode: "0x0cf63052"
   RevisionNo: "0x00160000"
   URL: http://www.beckhoff.com/EL3318
   Name: EL3318 8Ch. Ana Input Thermocouple (TC)
@@ -18607,7 +18607,7 @@
     current: "170"
   fmmu: [Inputs, MBoxState]
   Type: EL3351
-  ProductCode: "0xd173052"
+  ProductCode: "0x0d173052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3351
   Name: 'EL3351 1Ch. Ana. Input Resistor Bridge Terminal, Diff. 16bit '
@@ -18618,7 +18618,7 @@
     current: "170"
   fmmu: [Inputs, MBoxState]
   Type: EL3351
-  ProductCode: "0xd173052"
+  ProductCode: "0x0d173052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3351
   Name: 'EL3351 1Ch. Ana. Input Resistor Bridge Terminal, Diff. 16bit '
@@ -18629,7 +18629,7 @@
     current: "170"
   fmmu: [Inputs, MBoxState]
   Type: EL3351
-  ProductCode: "0xd173052"
+  ProductCode: "0x0d173052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3351
   Name: 'EL3351 1Ch. Ana. Input Resistor Bridge Terminal, Diff. 16bit '
@@ -18640,7 +18640,7 @@
     current: "170"
   fmmu: [Inputs, MBoxState]
   Type: EL3351
-  ProductCode: "0xd173052"
+  ProductCode: "0x0d173052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3351
   Name: EL3351 1Ch. Ana. Input Resistor Bridge Terminal, Diff. 16bit
@@ -18651,7 +18651,7 @@
     current: "170"
   fmmu: [Inputs, MBoxState]
   Type: EL3351
-  ProductCode: "0xd173052"
+  ProductCode: "0x0d173052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3351
   Name: EL3351 1Ch. Ana. Input Resistor Bridge Terminal, Diff. 16bit
@@ -18662,7 +18662,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3356
-  ProductCode: "0xd1c3052"
+  ProductCode: "0x0d1c3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3356
   Name: EL3356 1Ch. Ana. Input Resistor Bridge Terminal, 16bit, High Precision
@@ -18673,7 +18673,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3356
-  ProductCode: "0xd1c3052"
+  ProductCode: "0x0d1c3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3356
   Name: EL3356 1Ch. Ana. Input Resistor Bridge Terminal, 16bit, High Precision
@@ -18684,7 +18684,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3356
-  ProductCode: "0xd1c3052"
+  ProductCode: "0x0d1c3052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3356
   Name: EL3356 1Ch. Ana. Input Resistor Bridge Terminal, 16bit, High Precision
@@ -18695,7 +18695,7 @@
     current: "210"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3356
-  ProductCode: "0xd1c3052"
+  ProductCode: "0x0d1c3052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3356
   Name: EL3356 1Ch. Ana. Input Resistor Bridge Terminal, 16bit, High Precision
@@ -18761,7 +18761,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3356-0010
-  ProductCode: "0xd1c3052"
+  ProductCode: "0x0d1c3052"
   RevisionNo: "0x0011000a"
   URL: http://www.beckhoff.com/EL3356-0010
   Name: EL3356-0010 1Ch. Ana. Input Resistor Bridge Terminal, 24bit, High Precision
@@ -18772,7 +18772,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3356-0010
-  ProductCode: "0xd1c3052"
+  ProductCode: "0x0d1c3052"
   RevisionNo: "0x0012000a"
   URL: http://www.beckhoff.com/EL3356-0010
   Name: EL3356-0010 1Ch. Ana. Input Resistor Bridge Terminal, 24bit, High Precision
@@ -18783,7 +18783,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3356-0010
-  ProductCode: "0xd1c3052"
+  ProductCode: "0x0d1c3052"
   RevisionNo: "0x0013000a"
   URL: http://www.beckhoff.com/EL3356-0010
   Name: EL3356-0010 1Ch. Ana. Input Resistor Bridge Terminal, 24bit, High Precision
@@ -18794,7 +18794,7 @@
     current: "280"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3356-0010
-  ProductCode: "0xd1c3052"
+  ProductCode: "0x0d1c3052"
   RevisionNo: "0x0014000a"
   URL: http://www.beckhoff.com/EL3356-0010
   Name: EL3356-0010 1Ch. Ana. Input Resistor Bridge Terminal, 24bit, High Precision
@@ -18882,7 +18882,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403 3Ch. Power Measuring
@@ -18893,7 +18893,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403 3Ch. Power Measuring
@@ -18904,7 +18904,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403 3Ch. Power Measuring
@@ -18959,7 +18959,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0010
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0011000a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0010 3Ch. Power Measuring, 5A
@@ -18970,7 +18970,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0010
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0012000a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0010 3Ch. Power Measuring, 5A
@@ -18981,7 +18981,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0010
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0013000a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0010 3Ch. Power Measuring, 5A
@@ -18992,7 +18992,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0010
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0014000a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0010 3Ch. Power Measuring, 5A
@@ -19003,7 +19003,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0010
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0015000a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0010 3Ch. Power Measuring, 5A
@@ -19047,7 +19047,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0026
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0011001a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0026 3Ch. Power Measuring
@@ -19058,7 +19058,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0026
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0012001a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0026 3Ch. Power Measuring
@@ -19069,7 +19069,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0026
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0013001a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0026 3Ch. Power Measuring
@@ -19080,7 +19080,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0026
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0014001a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0026 3Ch. Power Measuring
@@ -19091,7 +19091,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0026
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0015001a"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0026 3Ch. Power Measuring
@@ -19135,7 +19135,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0100
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x00110064"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0100 3Ch. Power Measuring, 100mA
@@ -19146,7 +19146,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0100
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x00120064"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0100 3Ch. Power Measuring, 100mA
@@ -19157,7 +19157,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0100
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x00130064"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0100 3Ch. Power Measuring, 100mA
@@ -19168,7 +19168,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0100
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x00140064"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0100 3Ch. Power Measuring, 100mA
@@ -19179,7 +19179,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0100
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x00150064"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0100 3Ch. Power Measuring, 100mA
@@ -19223,7 +19223,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0111
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0011006f"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0111 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19234,7 +19234,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0111
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0012006f"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0111 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19245,7 +19245,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0111
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0013006f"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0111 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19256,7 +19256,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0111
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0014006f"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0111 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19267,7 +19267,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0111
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0015006f"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0111 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19311,7 +19311,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0126
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0011007e"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0126 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19322,7 +19322,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0126
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0012007e"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0126 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19333,7 +19333,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0126
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0013007e"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0126 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19344,7 +19344,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0126
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0014007e"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0126 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19355,7 +19355,7 @@
     current: "120"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3403-0126
-  ProductCode: "0xd4b3052"
+  ProductCode: "0x0d4b3052"
   RevisionNo: "0x0015007e"
   URL: http://www.beckhoff.com/EL3403
   Name: EL3403-0126 3Ch. Power Measuring, 1A+100mA+10mA
@@ -19421,7 +19421,7 @@
     current: "160"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3413
-  ProductCode: "0xd553052"
+  ProductCode: "0x0d553052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3413
   Name: EL3413 3Ch. Power Measuring
@@ -19432,7 +19432,7 @@
     current: "160"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3413
-  ProductCode: "0xd553052"
+  ProductCode: "0x0d553052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3413
   Name: EL3413 3Ch. Power Measuring
@@ -19498,7 +19498,7 @@
     current: "160"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3413-0120
-  ProductCode: "0xd553052"
+  ProductCode: "0x0d553052"
   RevisionNo: "0x00110078"
   URL: http://www.beckhoff.com/EL3413
   Name: EL3413-0120 3Ch. Power Measuring
@@ -19520,7 +19520,7 @@
     current: "160"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3413-0120
-  ProductCode: "0xd553052"
+  ProductCode: "0x0d553052"
   RevisionNo: "0x00120078"
   URL: http://www.beckhoff.com/EL3413
   Name: EL3413-0120 3Ch. Power Measuring
@@ -19531,7 +19531,7 @@
     current: "160"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3413-0120
-  ProductCode: "0xd553052"
+  ProductCode: "0x0d553052"
   RevisionNo: "0x00130078"
   URL: http://www.beckhoff.com/EL3413
   Name: EL3413-0120 3Ch. Power Measuring
@@ -20378,7 +20378,7 @@
     current: "200"
   fmmu: [Inputs, MBoxState]
   Type: EL3773
-  ProductCode: "0xebd3052"
+  ProductCode: "0x0ebd3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3773
   Name: EL3773 3 Ch. Power Monitoring, Oversample
@@ -20389,7 +20389,7 @@
     current: "200"
   fmmu: [Inputs, MBoxState]
   Type: EL3773
-  ProductCode: "0xebd3052"
+  ProductCode: "0x0ebd3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3773
   Name: EL3773 3 Ch. Power Monitoring, Oversample
@@ -20400,7 +20400,7 @@
     current: "200"
   fmmu: [Inputs, MBoxState]
   Type: EL3773
-  ProductCode: "0xebd3052"
+  ProductCode: "0x0ebd3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3773
   Name: EL3773 3 Ch. Power Monitoring, Oversample
@@ -20499,7 +20499,7 @@
     current: "150"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3681-0030
-  ProductCode: "0xe613052"
+  ProductCode: "0x0e613052"
   RevisionNo: "0x0015001e"
   URL: http://www.beckhoff.com/EL3681-0030
   Name: EL3681-0030 Digital multimeter terminal, external calibrated
@@ -20510,7 +20510,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3201-0030
-  ProductCode: "0xc813052"
+  ProductCode: "0x0c813052"
   RevisionNo: "0x0016001e"
   URL: http://www.beckhoff.com/EL3201-0030
   Name: EL3201-0030 1Ch. Ana. Input PT100 (RTD), High Precision, external calibrated
@@ -20521,7 +20521,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3202-0030
-  ProductCode: "0xc823052"
+  ProductCode: "0x0c823052"
   RevisionNo: "0x0016001e"
   URL: http://www.beckhoff.com/EL3202-0030
   Name: EL3202-0030 2Ch. Ana. Input PT100 (RTD), High Precision, external calibrated
@@ -20554,7 +20554,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602 2Ch. Ana. Input +/-10Volt, Diff. 24bit
@@ -20565,7 +20565,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602 2Ch. Ana. Input +/-10Volt, Diff. 24bit
@@ -20576,7 +20576,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602 2Ch. Ana. Input +/-10Volt, Diff. 24bit
@@ -20587,7 +20587,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602 2Ch. Ana. Input +/-10Volt, Diff. 24bit
@@ -20598,7 +20598,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602-0002
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x00100002"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602-0002 2Ch. Ana. Input +/-200mV, Diff. 24bit
@@ -20609,7 +20609,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602-0002
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x00110002"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602-0002 2Ch. Ana. Input +/-200mV, Diff. 24bit
@@ -20620,7 +20620,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602-0002
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x00120002"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602-0002 2Ch. Ana. Input +/-200mV, Diff. 24bit
@@ -20631,7 +20631,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602-0010
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x0010000a"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602-0010 2Ch. Ana. Input +/-75mV, Diff. 24bit
@@ -20642,7 +20642,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602-0010
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x0011000a"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602-0010 2Ch. Ana. Input +/-75mV, Diff. 24bit
@@ -20653,7 +20653,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602-0010
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x0012000a"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602-0010 2Ch. Ana. Input +/-75mV, Diff. 24bit
@@ -20664,7 +20664,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602-0010
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x0013000a"
   URL: http://www.beckhoff.com/EL3602
   Name: EL3602-0010 2Ch. Ana. Input +/-75mV, Diff. 24bit
@@ -20675,7 +20675,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602-0020
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x00120014"
   URL: http://www.beckhoff.com/EL3602-0020
   Name: EL3602-0020 2Ch. Ana. Input +/-10V, Diff. 24bit, calibrated
@@ -20686,7 +20686,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3602-0020
-  ProductCode: "0xe123052"
+  ProductCode: "0x0e123052"
   RevisionNo: "0x00130014"
   URL: http://www.beckhoff.com/EL3602-0020
   Name: EL3602-0020 2Ch. Ana. Input +/-10V, Diff. 24bit, calibrated
@@ -20697,7 +20697,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3611-1030
-  ProductCode: "0xe1b3052"
+  ProductCode: "0x0e1b3052"
   RevisionNo: "0x00100406"
   URL: http://www.beckhoff.com/EL3612
   Name: EL3611-1030 1Ch. Ana. Input 0-20 mA, Diff. 24bit
@@ -20708,7 +20708,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3611-1030
-  ProductCode: "0xe1b3052"
+  ProductCode: "0x0e1b3052"
   RevisionNo: "0x00110406"
   URL: http://www.beckhoff.com/EL3612
   Name: EL3611-1030 1Ch. Ana. Input 0-20 mA, Diff. 24bit
@@ -20719,7 +20719,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3612
-  ProductCode: "0xe1c3052"
+  ProductCode: "0x0e1c3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3612
   Name: EL3612 2Ch. Ana. Input 0-20 mA, Diff. 24bit
@@ -20730,7 +20730,7 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: EL3612
-  ProductCode: "0xe1c3052"
+  ProductCode: "0x0e1c3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3612
   Name: EL3612 2Ch. Ana. Input 0-20 mA, Diff. 24bit
@@ -20807,7 +20807,7 @@
     current: "220"
   fmmu: [Inputs, MBoxState]
   Type: EL3632
-  ProductCode: "0xe303052"
+  ProductCode: "0x0e303052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL3632
   Name: EL3632 2Ch. IEPE Sensor
@@ -20818,7 +20818,7 @@
     current: "220"
   fmmu: [Inputs, MBoxState]
   Type: EL3632
-  ProductCode: "0xe303052"
+  ProductCode: "0x0e303052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3632
   Name: EL3632 2Ch. IEPE Sensor
@@ -20840,7 +20840,7 @@
     current: "220"
   fmmu: [Inputs, MBoxState]
   Type: EL3632
-  ProductCode: "0xe303052"
+  ProductCode: "0x0e303052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3632
   Name: EL3632 2Ch. IEPE Sensor
@@ -20895,7 +20895,7 @@
     current: "150"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3681
-  ProductCode: "0xe613052"
+  ProductCode: "0x0e613052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3681
   Name: EL3681 digital multimeter terminal
@@ -20906,7 +20906,7 @@
     current: "150"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3681
-  ProductCode: "0xe613052"
+  ProductCode: "0x0e613052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3681
   Name: EL3681 Digital multimeter terminal
@@ -20917,7 +20917,7 @@
     current: "150"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3681
-  ProductCode: "0xe613052"
+  ProductCode: "0x0e613052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3681
   Name: EL3681 Digital multimeter terminal
@@ -20928,7 +20928,7 @@
     current: "150"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3681
-  ProductCode: "0xe613052"
+  ProductCode: "0x0e613052"
   RevisionNo: "0x00140000"
   URL: http://www.beckhoff.com/EL3681
   Name: EL3681 Digital multimeter terminal
@@ -20939,7 +20939,7 @@
     current: "150"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3681
-  ProductCode: "0xe613052"
+  ProductCode: "0x0e613052"
   RevisionNo: "0x00150000"
   URL: http://www.beckhoff.com/EL3681
   Name: EL3681 Digital multimeter terminal
@@ -20950,7 +20950,7 @@
     current: "140"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3692
-  ProductCode: "0xe6c3052"
+  ProductCode: "0x0e6c3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL3692
   Name: EL3692 2Ch. resistance measurement terminal
@@ -20961,7 +20961,7 @@
     current: "220"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3692
-  ProductCode: "0xe6c3052"
+  ProductCode: "0x0e6c3052"
   RevisionNo: "0x00120000"
   URL: http://www.beckhoff.com/EL3692
   Name: EL3692 2Ch. resistance measurement terminal
@@ -20972,7 +20972,7 @@
     current: "220"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL3692
-  ProductCode: "0xe6c3052"
+  ProductCode: "0x0e6c3052"
   RevisionNo: "0x00130000"
   URL: http://www.beckhoff.com/EL3692
   Name: EL3692 2Ch. resistance measurement terminal
@@ -21071,7 +21071,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4001
-  ProductCode: "0xfa13052"
+  ProductCode: "0x0fa13052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4001
   Name: EL4001 1Ch. Ana. Output 0-10V, 12bit
@@ -21082,7 +21082,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4001
-  ProductCode: "0xfa13052"
+  ProductCode: "0x0fa13052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4001
   Name: EL4001 1Ch. Ana. Output 0-10V, 12bit
@@ -21137,7 +21137,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4002
-  ProductCode: "0xfa23052"
+  ProductCode: "0x0fa23052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4002
   Name: EL4002 2Ch. Ana. Output 0-10V, 12bit
@@ -21148,7 +21148,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4002
-  ProductCode: "0xfa23052"
+  ProductCode: "0x0fa23052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4002
   Name: EL4002 2Ch. Ana. Output 0-10V, 12bit
@@ -21203,7 +21203,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4004
-  ProductCode: "0xfa43052"
+  ProductCode: "0x0fa43052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4004
   Name: EL4004 4Ch. Ana. Output 0-10V, 12bit
@@ -21214,7 +21214,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4004
-  ProductCode: "0xfa43052"
+  ProductCode: "0x0fa43052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4004
   Name: EL4004 4Ch. Ana. Output 0-10V, 12bit
@@ -21269,7 +21269,7 @@
     current: "100"
   fmmu: [Outputs, MBoxState]
   Type: EL4008
-  ProductCode: "0xfa83052"
+  ProductCode: "0x0fa83052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4008
   Name: EL4008 8Ch. Ana. Output 0-10V, 12bit
@@ -21280,7 +21280,7 @@
     current: "100"
   fmmu: [Outputs, MBoxState]
   Type: EL4008
-  ProductCode: "0xfa83052"
+  ProductCode: "0x0fa83052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4008
   Name: EL4008 8Ch. Ana. Output 0-10V, 12bit
@@ -21335,7 +21335,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4011
-  ProductCode: "0xfab3052"
+  ProductCode: "0x0fab3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4011
   Name: EL4011 1Ch. Ana. Output 0-20mA, 12bit
@@ -21346,7 +21346,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4011
-  ProductCode: "0xfab3052"
+  ProductCode: "0x0fab3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4011
   Name: EL4011 1Ch. Ana. Output 0-20mA, 12bit
@@ -21401,7 +21401,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4012
-  ProductCode: "0xfac3052"
+  ProductCode: "0x0fac3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4012
   Name: EL4012 2Ch. Ana. Output 0-20mA, 12bit
@@ -21412,7 +21412,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4012
-  ProductCode: "0xfac3052"
+  ProductCode: "0x0fac3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4012
   Name: EL4012 2Ch. Ana. Output 0-20mA, 12bit
@@ -21467,7 +21467,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4014
-  ProductCode: "0xfae3052"
+  ProductCode: "0x0fae3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4014
   Name: EL4014 4Ch. Ana. Output 0-20mA, 12bit
@@ -21478,7 +21478,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4014
-  ProductCode: "0xfae3052"
+  ProductCode: "0x0fae3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4014
   Name: EL4014 4Ch. Ana. Output 0-20mA, 12bit
@@ -21533,7 +21533,7 @@
     current: "100"
   fmmu: [Outputs, MBoxState]
   Type: EL4018
-  ProductCode: "0xfb23052"
+  ProductCode: "0x0fb23052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4018
   Name: EL4018 8Ch. Ana. Output 0-20mA, 12bit
@@ -21544,7 +21544,7 @@
     current: "100"
   fmmu: [Outputs, MBoxState]
   Type: EL4018
-  ProductCode: "0xfb23052"
+  ProductCode: "0x0fb23052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4018
   Name: EL4018 8Ch. Ana. Output 0-20mA, 12bit
@@ -21599,7 +21599,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4021
-  ProductCode: "0xfb53052"
+  ProductCode: "0x0fb53052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4021
   Name: EL4021 1Ch. Ana. Output 4-20mA, 12bit
@@ -21610,7 +21610,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4021
-  ProductCode: "0xfb53052"
+  ProductCode: "0x0fb53052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4021
   Name: EL4021 1Ch. Ana. Output 4-20mA, 12bit
@@ -21676,7 +21676,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4022
-  ProductCode: "0xfb63052"
+  ProductCode: "0x0fb63052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4022
   Name: EL4022 2Ch. Ana. Output 4-20mA, 12bit
@@ -21687,7 +21687,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4022
-  ProductCode: "0xfb63052"
+  ProductCode: "0x0fb63052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4022
   Name: EL4022 2Ch. Ana. Output 4-20mA, 12bit
@@ -21753,7 +21753,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4024
-  ProductCode: "0xfb83052"
+  ProductCode: "0x0fb83052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4024
   Name: EL4024 4Ch. Ana. Output 4-20mA, 12bit
@@ -21764,7 +21764,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4024
-  ProductCode: "0xfb83052"
+  ProductCode: "0x0fb83052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4024
   Name: EL4024 4Ch. Ana. Output 4-20mA, 12bit
@@ -21830,7 +21830,7 @@
     current: "100"
   fmmu: [Outputs, MBoxState]
   Type: EL4028
-  ProductCode: "0xfbc3052"
+  ProductCode: "0x0fbc3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4028
   Name: EL4028 8Ch. Ana. Output 4-20mA, 12bit
@@ -21841,7 +21841,7 @@
     current: "100"
   fmmu: [Outputs, MBoxState]
   Type: EL4028
-  ProductCode: "0xfbc3052"
+  ProductCode: "0x0fbc3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4028
   Name: EL4028 8Ch. Ana. Output 4-20mA, 12bit
@@ -21907,7 +21907,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4031
-  ProductCode: "0xfbf3052"
+  ProductCode: "0x0fbf3052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4031
   Name: EL4031 1Ch. Ana. Output +/-10V, 12bit
@@ -21918,7 +21918,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4031
-  ProductCode: "0xfbf3052"
+  ProductCode: "0x0fbf3052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4031
   Name: EL4031 1Ch. Ana. Output +/-10V, 12bit
@@ -21973,7 +21973,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4032
-  ProductCode: "0xfc03052"
+  ProductCode: "0x0fc03052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4032
   Name: EL4032 2Ch. Ana. Output +/-10V, 12bit
@@ -21984,7 +21984,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4032
-  ProductCode: "0xfc03052"
+  ProductCode: "0x0fc03052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4032
   Name: EL4032 2Ch. Ana. Output +/-10V, 12bit
@@ -22039,7 +22039,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4034
-  ProductCode: "0xfc23052"
+  ProductCode: "0x0fc23052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4034
   Name: EL4034 4Ch. Ana. Output +/-10V, 12bit
@@ -22050,7 +22050,7 @@
     current: "140"
   fmmu: [Outputs, MBoxState]
   Type: EL4034
-  ProductCode: "0xfc23052"
+  ProductCode: "0x0fc23052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4034
   Name: EL4034 4Ch. Ana. Output +/-10V, 12bit
@@ -22105,7 +22105,7 @@
     current: "100"
   fmmu: [Outputs, MBoxState]
   Type: EL4038
-  ProductCode: "0xfc63052"
+  ProductCode: "0x0fc63052"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL4038
   Name: EL4038 8Ch. Ana. Output +/-10V, 12bit
@@ -22116,7 +22116,7 @@
     current: "100"
   fmmu: [Outputs, MBoxState]
   Type: EL4038
-  ProductCode: "0xfc63052"
+  ProductCode: "0x0fc63052"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL4038
   Name: EL4038 8Ch. Ana. Output +/-10V, 12bit
@@ -22183,7 +22183,7 @@
   fmmu: [Outputs, MBoxState]
   Type: EL4102
   ProductCode: "0x10063052"
-  RevisionNo: "0x3f80000"
+  RevisionNo: "0x03f80000"
   URL: http://www.beckhoff.com/EL4102
   Name: EL4102 2Ch. Ana. Output  0-10V, 16bit
   DeviceGroup: Analog Output Terminals (EL4xxx)
@@ -22315,7 +22315,7 @@
   fmmu: [Outputs, MBoxState]
   Type: EL4112
   ProductCode: "0x10103052"
-  RevisionNo: "0x3f80000"
+  RevisionNo: "0x03f80000"
   URL: http://www.beckhoff.com/EL4112
   Name: EL4112 2Ch. Ana. Output  0-20mA, 16bit
   DeviceGroup: Analog Output Terminals (EL4xxx)
@@ -22392,7 +22392,7 @@
   fmmu: [Outputs, MBoxState]
   Type: EL4112-0010
   ProductCode: "0x10103052"
-  RevisionNo: "0x3f8000a"
+  RevisionNo: "0x03f8000a"
   URL: http://www.beckhoff.com/EL4112
   Name: EL4112-0010 2Ch. Ana. Output +/-10mA, 16bit
   DeviceGroup: Analog Output Terminals (EL4xxx)
@@ -22535,7 +22535,7 @@
   fmmu: [Outputs, MBoxState]
   Type: EL4122
   ProductCode: "0x101a3052"
-  RevisionNo: "0x3f80000"
+  RevisionNo: "0x03f80000"
   URL: http://www.beckhoff.com/EL4122
   Name: EL4122 2Ch. Ana. Output  4-20mA, 16bit
   DeviceGroup: Analog Output Terminals (EL4xxx)
@@ -22678,7 +22678,7 @@
   fmmu: [Outputs, MBoxState]
   Type: EL4132
   ProductCode: "0x10243052"
-  RevisionNo: "0x3f80000"
+  RevisionNo: "0x03f80000"
   URL: http://www.beckhoff.com/EL4132
   Name: EL4132 2Ch. Ana. Output +/-10V, 16bit
   DeviceGroup: Analog Output Terminals (EL4xxx)
@@ -23338,7 +23338,7 @@
   fmmu: [Outputs, Inputs]
   Type: EL5101
   ProductCode: "0x13ed3052"
-  RevisionNo: "0x3f90000"
+  RevisionNo: "0x03f90000"
   URL: http://www.beckhoff.com/EL5101
   Name: EL5101 1Ch. Inc. Encoder 5V
   DeviceGroup: Measuring Terminals (EL5xxx)
@@ -24152,7 +24152,7 @@
   fmmu: [Inputs, MBoxState]
   Type: EL6688
   ProductCode: "0x1a203052"
-  RevisionNo: "0x100000"
+  RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL6688
   Name: EL6688 Time Reference IEEE1588 PTP
   DeviceGroup: Communication Terminals (EL6xxx)
@@ -25033,7 +25033,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL6752
   ProductCode: "0x1a603052"
-  RevisionNo: "0x100000"
+  RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL6752
   Name: EL6752 DeviceNet Master
   DeviceGroup: Communication Terminals (EL6xxx)
@@ -25099,7 +25099,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL6752-0010
   ProductCode: "0x1a603052"
-  RevisionNo: "0x10000a"
+  RevisionNo: "0x0010000a"
   URL: http://www.beckhoff.com/EL6752-0010
   Name: EL6752-0010 DeviceNet Slave
   DeviceGroup: Communication Terminals (EL6xxx)
@@ -30767,8 +30767,8 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL1904
-  ProductCode: "0x7703052"
-  RevisionNo: "0x100000"
+  ProductCode: "0x07703052"
+  RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EL1904
   Name: EL1904, 4 Ch. Safety Input 24V, TwinSAFE
   DeviceGroup: Safety Terminals
@@ -30778,8 +30778,8 @@
     current: "200"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EL1904
-  ProductCode: "0x7703052"
-  RevisionNo: "0x110000"
+  ProductCode: "0x07703052"
+  RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/EL1904
   Name: EL1904, 4 Ch. Safety Input 24V, TwinSAFE
   DeviceGroup: Safety Terminals
@@ -30855,8 +30855,8 @@
     current: "190"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EP1908
-  ProductCode: "0x7744052"
-  RevisionNo: "0x100000"
+  ProductCode: "0x07744052"
+  RevisionNo: "0x00100000"
   URL: ""
   Name: 'EP1908, 8 Ch. Safety Input 24V, TwinSAFE '
   DeviceGroup: Safety Terminals
@@ -30866,8 +30866,8 @@
     current: "190"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EP1908
-  ProductCode: "0x7744052"
-  RevisionNo: "0x110000"
+  ProductCode: "0x07744052"
+  RevisionNo: "0x00110000"
   URL: ""
   Name: 'EP1908, 8 Ch. Safety Input 24V, TwinSAFE '
   DeviceGroup: Safety Terminals
@@ -30877,8 +30877,8 @@
     current: "190"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EP1908
-  ProductCode: "0x7744052"
-  RevisionNo: "0x120000"
+  ProductCode: "0x07744052"
+  RevisionNo: "0x00120000"
   URL: ""
   Name: 'EP1908, 8 Ch. Safety Input 24V, TwinSAFE '
   DeviceGroup: Safety Terminals
@@ -30888,8 +30888,8 @@
     current: "190"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EP1908
-  ProductCode: "0x7744052"
-  RevisionNo: "0x130000"
+  ProductCode: "0x07744052"
+  RevisionNo: "0x00130000"
   URL: ""
   Name: 'EP1908, 8 Ch. Safety Input 24V, TwinSAFE '
   DeviceGroup: Safety Terminals
@@ -30899,8 +30899,8 @@
     current: "190"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EP1908
-  ProductCode: "0x7744052"
-  RevisionNo: "0x140000"
+  ProductCode: "0x07744052"
+  RevisionNo: "0x00140000"
   URL: ""
   Name: 'EP1908, 8 Ch. Safety Input 24V, TwinSAFE '
   DeviceGroup: Safety Terminals
@@ -30910,8 +30910,8 @@
     current: "190"
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EP1908
-  ProductCode: "0x7744052"
-  RevisionNo: "0x140002"
+  ProductCode: "0x07744052"
+  RevisionNo: "0x00140002"
   URL: ""
   Name: 'EP1908, 8 Ch. Safety Input 24V, TwinSAFE '
   DeviceGroup: Safety Terminals
@@ -30922,7 +30922,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: AX5805
   ProductCode: "0x16ad6012"
-  RevisionNo: "0x100000"
+  RevisionNo: "0x00100000"
   URL: ""
   Name: AX5805 (Safety Drive Option)
   DeviceGroup: Safety Terminals
@@ -30933,7 +30933,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: AX5805
   ProductCode: "0x16ad6012"
-  RevisionNo: "0x110000"
+  RevisionNo: "0x00110000"
   URL: ""
   Name: AX5805 (Safety Drive Option)
   DeviceGroup: Safety Terminals
@@ -30944,7 +30944,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: AX5805
   ProductCode: "0x16ad6012"
-  RevisionNo: "0x120000"
+  RevisionNo: "0x00120000"
   URL: ""
   Name: AX5805 (Safety Drive Option)
   DeviceGroup: Safety Terminals
@@ -30955,7 +30955,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: AX5806
   ProductCode: "0x16ae6012"
-  RevisionNo: "0x100000"
+  RevisionNo: "0x00100000"
   URL: ""
   Name: AX5806 (Safety Drive Option)
   DeviceGroup: Safety Terminals
@@ -31065,7 +31065,7 @@
   fmmu: [Outputs, Inputs, MBoxState]
   Type: EM7004
   ProductCode: "0x1b5c3452"
-  RevisionNo: "0x100000"
+  RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/EM7004
   Name: EM7004 4-Axis Interface Unit
   DeviceGroup: Drive and Axis Modules (EM7xxx)
@@ -31248,7 +31248,7 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1111
-  ProductCode: "0x4574052"
+  ProductCode: "0x04574052"
   RevisionNo: "0x00100000"
   URL: https://www.beckhoff.com/EP1111-0000
   Name: EP1111-0000 ID-Switch
@@ -31259,7 +31259,7 @@
     current: "90"
   fmmu: [Inputs, MBoxState]
   Type: EP1111
-  ProductCode: "0x4574052"
+  ProductCode: "0x04574052"
   RevisionNo: "0x00110000"
   URL: https://www.beckhoff.com/EP1111-0000
   Name: EP1111-0000 ID-Switch
@@ -31270,7 +31270,7 @@
     current: "90"
   fmmu: [Inputs, MBoxState]
   Type: EP1111
-  ProductCode: "0x4574052"
+  ProductCode: "0x04574052"
   RevisionNo: "0x00120000"
   URL: https://www.beckhoff.com/EP1111-0000
   Name: EP1111-0000 ID-Switch
@@ -31279,7 +31279,7 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1111
-  ProductCode: "0x4574052"
+  ProductCode: "0x04574052"
   RevisionNo: "0x00130000"
   URL: https://www.beckhoff.com/EP1111-0000
   Name: EP1111-0000 ID-Switch
@@ -31288,7 +31288,7 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1111
-  ProductCode: "0x4574052"
+  ProductCode: "0x04574052"
   RevisionNo: "0x00140000"
   URL: https://www.beckhoff.com/EP1111-0000
   Name: EP1111-0000 ID-Switch
@@ -31486,7 +31486,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP1518-0002
-  ProductCode: "0x5ee4052"
+  ProductCode: "0x05ee4052"
   RevisionNo: "0x00100002"
   URL: https://www.beckhoff.com/EP1518-0002
   Name: EP1518-0002 8 Ch. Dig. multi-function Input 24V
@@ -31495,7 +31495,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP1518-0002
-  ProductCode: "0x5ee4052"
+  ProductCode: "0x05ee4052"
   RevisionNo: "0x00110002"
   URL: https://www.beckhoff.com/EP1518-0002
   Name: EP1518-0002 8 Ch.digital multi-function input
@@ -31504,7 +31504,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP1518-0002
-  ProductCode: "0x5ee4052"
+  ProductCode: "0x05ee4052"
   RevisionNo: "0x00120002"
   URL: https://www.beckhoff.com/EP1518-0002
   Name: EP1518-0002 8 Ch.digital multi-function input
@@ -31585,8 +31585,8 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1816-0008
-  ProductCode: "0x7184052"
-  RevisionNo: "0x100008"
+  ProductCode: "0x07184052"
+  RevisionNo: "0x00100008"
   URL: https://www.beckhoff.com/EP1816-0008
   Name: EP1816-0008 16 Ch. Dig. Input 24V, 10µs, D-SUB25
   DeviceGroup: EtherCAT Fieldbus Boxes (EP1xxx)
@@ -31594,7 +31594,7 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1816-0008
-  ProductCode: "0x7184052"
+  ProductCode: "0x07184052"
   RevisionNo: "0x00110008"
   URL: https://www.beckhoff.com/EP1816-0008
   Name: EP1816-0008 16 Ch. Dig. Input 24V, 10µs, D-SUB25
@@ -31603,7 +31603,7 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1816-0008
-  ProductCode: "0x7184052"
+  ProductCode: "0x07184052"
   RevisionNo: "0x00120008"
   URL: https://www.beckhoff.com/EP1816-0008
   Name: EP1816-0008 16 Ch. Dig. Input 24V, 10µs, D-SUB25
@@ -31612,7 +31612,7 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1816-0008
-  ProductCode: "0x7184052"
+  ProductCode: "0x07184052"
   RevisionNo: "0x00130008"
   URL: https://www.beckhoff.com/EP1816-0008
   Name: EP1816-0008 16 Ch. Dig. Input 24V, 10µs, D-SUB25
@@ -31621,7 +31621,7 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1816-0008
-  ProductCode: "0x7184052"
+  ProductCode: "0x07184052"
   RevisionNo: "0x00140008"
   URL: https://www.beckhoff.com/EP1816-0008
   Name: EP1816-0008 16 Ch. Dig. Input 24V, 10µs, D-SUB25
@@ -31666,7 +31666,7 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1816-3008
-  ProductCode: "0x7184052"
+  ProductCode: "0x07184052"
   RevisionNo: "0x00110bc0"
   URL: https://www.beckhoff.com/EP1816-3008
   Name: EP1816-3008 16Ch. Dig. Input  24V 10µs Acceleration Sensor, DSUB-25
@@ -31675,8 +31675,8 @@
   VendorID: "0x00000002"
 - fmmu: [Inputs, MBoxState]
   Type: EP1816-3008
-  ProductCode: "0x7184052"
-  RevisionNo: "0x120bc0"
+  ProductCode: "0x07184052"
+  RevisionNo: "0x00120bc0"
   URL: https://www.beckhoff.com/EP1816-3008
   Name: EP1816-3008 16Ch. Dig. Input  24V 10µs Acceleration Sensor, DSUB-25
   DeviceGroup: EtherCAT Fieldbus Boxes (EP1xxx)
@@ -32161,7 +32161,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2316-0003
-  ProductCode: "0x90c4052"
+  ProductCode: "0x090c4052"
   RevisionNo: "0x00100003"
   URL: https://www.beckhoff.com/EP2316-0003
   Name: EP2316-0003 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, 10-Pole Plug Connector
@@ -32170,7 +32170,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2316-0003
-  ProductCode: "0x90c4052"
+  ProductCode: "0x090c4052"
   RevisionNo: "0x00110003"
   URL: https://www.beckhoff.com/EP2316-0003
   Name: EP2316-0003 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, 10-Pole Plug Connector
@@ -32179,7 +32179,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2316-0003
-  ProductCode: "0x90c4052"
+  ProductCode: "0x090c4052"
   RevisionNo: "0x00120003"
   URL: https://www.beckhoff.com/EP2316-0003
   Name: EP2316-0003 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, 10-Pole Plug Connector
@@ -32197,7 +32197,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2316-0008
-  ProductCode: "0x90c4052"
+  ProductCode: "0x090c4052"
   RevisionNo: "0x00100008"
   URL: https://www.beckhoff.com/EP2316-0008
   Name: EP2316-0008 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, D-SUB25
@@ -32206,7 +32206,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2316-0008
-  ProductCode: "0x90c4052"
+  ProductCode: "0x090c4052"
   RevisionNo: "0x00110008"
   URL: https://www.beckhoff.com/EP2316-0008
   Name: EP2316-0008 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, D-SUB25
@@ -32215,7 +32215,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2316-0008
-  ProductCode: "0x90c4052"
+  ProductCode: "0x090c4052"
   RevisionNo: "0x00120008"
   URL: https://www.beckhoff.com/EP2316-0008
   Name: EP2316-0008 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, D-SUB25
@@ -32224,7 +32224,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2316-0008
-  ProductCode: "0x90c4052"
+  ProductCode: "0x090c4052"
   RevisionNo: "0x00130008"
   URL: https://www.beckhoff.com/EP2316-0008
   Name: EP2316-0008 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, D-SUB25
@@ -32233,7 +32233,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2316-0008
-  ProductCode: "0x90c4052"
+  ProductCode: "0x090c4052"
   RevisionNo: "0x00140008"
   URL: https://www.beckhoff.com/EP2316-0008
   Name: EP2316-0008 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, D-SUB25
@@ -32242,7 +32242,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2316-0008
-  ProductCode: "0x90c4052"
+  ProductCode: "0x090c4052"
   RevisionNo: "0x00150008"
   URL: https://www.beckhoff.com/EP2316-0008
   Name: EP2316-0008 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, D-SUB25
@@ -32908,7 +32908,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, MBoxState]
   Type: EP2816-0004
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x00100004"
   URL: https://www.beckhoff.com/EP2816-0004
   Name: EP2816-0004 16 Ch. Dig. Output 24V, 0,5A, M16
@@ -32917,7 +32917,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0004
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x00110004"
   URL: https://www.beckhoff.com/EP2816-0004
   Name: EP2816-0004 16 Ch. Dig. Output 24V, 0,5A, M16
@@ -32926,7 +32926,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0004
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x00120004"
   URL: https://www.beckhoff.com/EP2816-0004
   Name: EP2816-0004 16CH. Dig. Output, Diagnostic, M16
@@ -32935,7 +32935,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0008
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x00100008"
   URL: https://www.beckhoff.com/EP2816-0008
   Name: EP2816-0008 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB25
@@ -32944,7 +32944,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0008
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x00110008"
   URL: https://www.beckhoff.com/EP2816-0008
   Name: EP2816-0008 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB25
@@ -32953,7 +32953,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0008
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x00120008"
   URL: https://www.beckhoff.com/EP2816-0008
   Name: EP2816-0008 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB25
@@ -32962,7 +32962,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0008
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x00130008"
   URL: https://www.beckhoff.com/EP2816-0008
   Name: EP2816-0008 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB25
@@ -32971,7 +32971,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0008
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x00140008"
   URL: https://www.beckhoff.com/EP2816-0008
   Name: EP2816-0008 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB25
@@ -32980,7 +32980,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0008
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x00150008"
   URL: https://www.beckhoff.com/EP2816-0008
   Name: EP2816-0008 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB25
@@ -32998,7 +32998,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0010
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x0010000a"
   URL: https://www.beckhoff.com/EP2816-0010
   Name: EP2816-0010 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB9
@@ -33007,7 +33007,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0010
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x0011000a"
   URL: https://www.beckhoff.com/EP2816-0010
   Name: EP2816-0010 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB9
@@ -33016,7 +33016,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0010
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x0012000a"
   URL: https://www.beckhoff.com/EP2816-0010
   Name: EP2816-0010 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB9
@@ -33025,7 +33025,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0010
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x0013000a"
   URL: https://www.beckhoff.com/EP2816-0010
   Name: EP2816-0010 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB9
@@ -33034,7 +33034,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0010
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x0014000a"
   URL: https://www.beckhoff.com/EP2816-0010
   Name: EP2816-0010 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB9
@@ -33043,7 +33043,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2816-0010
-  ProductCode: "0xb004052"
+  ProductCode: "0x0b004052"
   RevisionNo: "0x0015000a"
   URL: https://www.beckhoff.com/EP2816-0010
   Name: EP2816-0010 16 Ch. Dig. Output 24V, 0,5A, Diagnostic, D-SUB9
@@ -33061,7 +33061,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2817-0008
-  ProductCode: "0xb014052"
+  ProductCode: "0x0b014052"
   RevisionNo: "0x00100008"
   URL: https://www.beckhoff.com/EP2817-0008
   Name: EP2817-0008 24Ch. Dig. Output 24V 0,5A, Diagnostics, D-SUB25
@@ -33070,7 +33070,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2817-0008
-  ProductCode: "0xb014052"
+  ProductCode: "0x0b014052"
   RevisionNo: "0x00110008"
   URL: https://www.beckhoff.com/EP2817-0008
   Name: EP2817-0008 24Ch. Dig. Output 24V 0,5A, Diagnostics, DSUB-25
@@ -33079,8 +33079,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2817-0008
-  ProductCode: "0xb014052"
-  RevisionNo: "0x120008"
+  ProductCode: "0x0b014052"
+  RevisionNo: "0x00120008"
   URL: https://www.beckhoff.com/EP2817-0008
   Name: EP2817-0008 24Ch. Dig. Output 24V 0,5A, Diagnostics, DSUB-25
   DeviceGroup: EtherCAT Fieldbus Boxes (EP2xxx)
@@ -33088,8 +33088,8 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP2817-0008
-  ProductCode: "0xb014052"
-  RevisionNo: "0x130008"
+  ProductCode: "0x0b014052"
+  RevisionNo: "0x00130008"
   URL: https://www.beckhoff.com/EP2817-0008
   Name: EP2817-0008 24Ch. Dig. Output 24V 0,5A, Diagnostics, DSUB-25
   DeviceGroup: EtherCAT Fieldbus Boxes (EP2xxx)
@@ -33538,7 +33538,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: EP3744-0041
-  ProductCode: "0xea04052"
+  ProductCode: "0x0ea04052"
   RevisionNo: "0x00100029"
   URL: https://www.beckhoff.com/EP3744-0041
   Name: EP3744-0041 5Ch. Absolute Pressure 6Ch. Dig. Input 10us 2Ch. Dig. Output 24V 0,5A M8
@@ -39530,7 +39530,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: FC1100 EtherCAT PCI slave card
-  ProductCode: "0x44c0c62"
+  ProductCode: "0x044c0c62"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/FC1100
   Name: FC1100 EtherCAT PCI slave card
@@ -39539,7 +39539,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: FC1100 EtherCAT PCI slave card
-  ProductCode: "0x44c0c62"
+  ProductCode: "0x044c0c62"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/FC1100
   Name: FC1100 EtherCAT PCI slave card
@@ -39548,7 +39548,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: FC1121 EtherCAT PCIe slave card
-  ProductCode: "0x4610c62"
+  ProductCode: "0x04610c62"
   RevisionNo: "0x00100000"
   URL: http://www.beckhoff.com/FC1121
   Name: FC1121 EtherCAT PCIe slave card
@@ -39557,7 +39557,7 @@
   VendorID: "0x00000002"
 - fmmu: [Outputs, Inputs, MBoxState]
   Type: FC1121 EtherCAT PCIe slave card
-  ProductCode: "0x4610c62"
+  ProductCode: "0x04610c62"
   RevisionNo: "0x00110000"
   URL: http://www.beckhoff.com/FC1121
   Name: FC1121 EtherCAT PCIe slave card
@@ -39568,8 +39568,8 @@
     current: "190"
   fmmu: [Inputs, MBoxState]
   Type: FM3312-0010
-  ProductCode: "0xcf03462"
-  RevisionNo: "0x12000a"
+  ProductCode: "0x0cf03462"
+  RevisionNo: "0x0012000a"
   URL: ""
   Name: FM3312 12Ch. Ana. Input Thermocouple (TC)
   DeviceGroup: Misc
@@ -40794,7 +40794,7 @@
   Name: R88D-KN01L-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40809,7 +40809,7 @@
   Name: R88D-KN02L-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40824,7 +40824,7 @@
   Name: R88D-KN04L-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40839,7 +40839,7 @@
   Name: R88D-KN01H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40854,7 +40854,7 @@
   Name: R88D-KN02H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40869,7 +40869,7 @@
   Name: R88D-KN04H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40884,7 +40884,7 @@
   Name: R88D-KN08H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40899,7 +40899,7 @@
   Name: R88D-KN10H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40914,7 +40914,7 @@
   Name: R88D-KN15H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40929,7 +40929,7 @@
   Name: R88D-KN20H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40944,7 +40944,7 @@
   Name: R88D-KN30H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40959,7 +40959,7 @@
   Name: R88D-KN50H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40974,7 +40974,7 @@
   Name: R88D-KN75H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -40989,7 +40989,7 @@
   Name: R88D-KN150H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41004,7 +41004,7 @@
   Name: R88D-KN06F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41019,7 +41019,7 @@
   Name: R88D-KN10F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41034,7 +41034,7 @@
   Name: R88D-KN15F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41049,7 +41049,7 @@
   Name: R88D-KN20F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41064,7 +41064,7 @@
   Name: R88D-KN30F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41079,7 +41079,7 @@
   Name: R88D-KN50F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41094,7 +41094,7 @@
   Name: R88D-KN75F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41109,7 +41109,7 @@
   Name: R88D-KN150F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41124,7 +41124,7 @@
   Name: R88D-KN01L-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41139,7 +41139,7 @@
   Name: R88D-KN02L-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41154,7 +41154,7 @@
   Name: R88D-KN04L-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41169,7 +41169,7 @@
   Name: R88D-KN01H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41184,7 +41184,7 @@
   Name: R88D-KN02H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41199,7 +41199,7 @@
   Name: R88D-KN04H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41214,7 +41214,7 @@
   Name: R88D-KN08H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41229,7 +41229,7 @@
   Name: R88D-KN10H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41244,7 +41244,7 @@
   Name: R88D-KN15H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41259,7 +41259,7 @@
   Name: R88D-KN20H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41274,7 +41274,7 @@
   Name: R88D-KN30H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41289,7 +41289,7 @@
   Name: R88D-KN50H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41304,7 +41304,7 @@
   Name: R88D-KN75H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41319,7 +41319,7 @@
   Name: R88D-KN150H-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41334,7 +41334,7 @@
   Name: R88D-KN06F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41349,7 +41349,7 @@
   Name: R88D-KN10F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41364,7 +41364,7 @@
   Name: R88D-KN15F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41379,7 +41379,7 @@
   Name: R88D-KN20F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41394,7 +41394,7 @@
   Name: R88D-KN30F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41409,7 +41409,7 @@
   Name: R88D-KN50F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41424,7 +41424,7 @@
   Name: R88D-KN75F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41439,7 +41439,7 @@
   Name: R88D-KN150F-ECT-L G5 Series ServoDrive for Linear Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41454,7 +41454,7 @@
   Name: R88D-KNA5L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41469,7 +41469,7 @@
   Name: R88D-KN01L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41484,7 +41484,7 @@
   Name: R88D-KN02L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41499,7 +41499,7 @@
   Name: R88D-KN04L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41514,7 +41514,7 @@
   Name: R88D-KN01H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41529,7 +41529,7 @@
   Name: R88D-KN02H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41544,7 +41544,7 @@
   Name: R88D-KN04H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41559,7 +41559,7 @@
   Name: R88D-KN08H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41574,7 +41574,7 @@
   Name: R88D-KN10H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41589,7 +41589,7 @@
   Name: R88D-KN15H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41604,7 +41604,7 @@
   Name: R88D-KN20H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41619,7 +41619,7 @@
   Name: R88D-KN30H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41634,7 +41634,7 @@
   Name: R88D-KN50H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41649,7 +41649,7 @@
   Name: R88D-KN75H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41664,7 +41664,7 @@
   Name: R88D-KN150H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41679,7 +41679,7 @@
   Name: R88D-KN06F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41694,7 +41694,7 @@
   Name: R88D-KN10F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41709,7 +41709,7 @@
   Name: R88D-KN15F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41724,7 +41724,7 @@
   Name: R88D-KN20F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41739,7 +41739,7 @@
   Name: R88D-KN30F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41754,7 +41754,7 @@
   Name: R88D-KN50F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41769,7 +41769,7 @@
   Name: R88D-KN75F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41784,7 +41784,7 @@
   Name: R88D-KN150F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41799,7 +41799,7 @@
   Name: R88D-KNA5L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41814,7 +41814,7 @@
   Name: R88D-KN01L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41829,7 +41829,7 @@
   Name: R88D-KN02L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41844,7 +41844,7 @@
   Name: R88D-KN04L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41859,7 +41859,7 @@
   Name: R88D-KN01H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41874,7 +41874,7 @@
   Name: R88D-KN02H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41889,7 +41889,7 @@
   Name: R88D-KN04H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41904,7 +41904,7 @@
   Name: R88D-KN08H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41919,7 +41919,7 @@
   Name: R88D-KN10H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41934,7 +41934,7 @@
   Name: R88D-KN15H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41949,7 +41949,7 @@
   Name: R88D-KN20H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41964,7 +41964,7 @@
   Name: R88D-KN30H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41979,7 +41979,7 @@
   Name: R88D-KN50H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -41994,7 +41994,7 @@
   Name: R88D-KN75H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42009,7 +42009,7 @@
   Name: R88D-KN150H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42024,7 +42024,7 @@
   Name: R88D-KN06F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42039,7 +42039,7 @@
   Name: R88D-KN10F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42054,7 +42054,7 @@
   Name: R88D-KN15F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42069,7 +42069,7 @@
   Name: R88D-KN20F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42084,7 +42084,7 @@
   Name: R88D-KN30F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42099,7 +42099,7 @@
   Name: R88D-KN50F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42114,7 +42114,7 @@
   Name: R88D-KN75F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42129,7 +42129,7 @@
   Name: R88D-KN150F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42144,7 +42144,7 @@
   Name: R88D-KNA5L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42159,7 +42159,7 @@
   Name: R88D-KN01L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42174,7 +42174,7 @@
   Name: R88D-KN02L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42189,7 +42189,7 @@
   Name: R88D-KN04L-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42204,7 +42204,7 @@
   Name: R88D-KN01H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42219,7 +42219,7 @@
   Name: R88D-KN02H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42234,7 +42234,7 @@
   Name: R88D-KN04H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42249,7 +42249,7 @@
   Name: R88D-KN08H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42264,7 +42264,7 @@
   Name: R88D-KN10H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42279,7 +42279,7 @@
   Name: R88D-KN15H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42294,7 +42294,7 @@
   Name: R88D-KN20H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42309,7 +42309,7 @@
   Name: R88D-KN30H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42324,7 +42324,7 @@
   Name: R88D-KN50H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42339,7 +42339,7 @@
   Name: R88D-KN75H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42354,7 +42354,7 @@
   Name: R88D-KN150H-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42369,7 +42369,7 @@
   Name: R88D-KN06F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42384,7 +42384,7 @@
   Name: R88D-KN10F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42399,7 +42399,7 @@
   Name: R88D-KN15F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42414,7 +42414,7 @@
   Name: R88D-KN20F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42429,7 +42429,7 @@
   Name: R88D-KN30F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42444,7 +42444,7 @@
   Name: R88D-KN50F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42459,7 +42459,7 @@
   Name: R88D-KN75F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"
 - info:
     ports:
         - type: MII
@@ -42474,4 +42474,4 @@
   Name: R88D-KN150F-ECT G5 Series ServoDrive/Motor
   DeviceGroup: Servo Drives
   Vendor: オムロン株式会社
-  VendorID: "0x83"
+  VendorID: "0x00000083"

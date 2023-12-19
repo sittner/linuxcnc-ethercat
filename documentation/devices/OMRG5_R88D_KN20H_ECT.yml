@@ -1,11 +1,11 @@
 ---
 Device: OMRG5_R88D_KN20H_ECT
-VendorID: ""
-VendorName: ""
+VendorID: "0x00000083"
+VendorName: Omron
 PID: "0x00000056"
-Description: UNKNOWN
-DocumentationURL: ""
-DeviceType: ""
+Description: Omron R88D-KN20H-ECT G5 Series ServoDrive/Motor
+DocumentationURL: http://www.ia.omron.com/
+DeviceType: Servo Drives
 Notes: ""
 SrcFile: src/lcec_omrg5.c
 TestingStatus: ""

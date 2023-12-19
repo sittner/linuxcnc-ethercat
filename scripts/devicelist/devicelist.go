@@ -95,7 +95,7 @@ func buildESIMap(esiEntries []*ESIDefinition) map[string]*ESIDefinition {
 
 func buildVIDMap(src string) (map[string]string, error) {
 	vidMap := make(map[string]string)
-	vidRE := regexp.MustCompile("^#define (LCEC_[^_ ]+_VID) ([^ ]*)")
+	vidRE := regexp.MustCompile("^#define (LCEC_[^_ ]+_VID) +([^ ]*)")
 
 	file, err := os.Open(filepath.Join(src, "lcec.h"))
 	if err != nil {
@@ -136,8 +136,8 @@ func main() {
 		panic(err)
 	}
 
-	definePidRE := regexp.MustCompile("^#define LCEC_([^ ]+)_PID (0x[a-zA-Z0-9]+)")
-	defineVidRE := regexp.MustCompile("^#define LCEC_([^_ ]+)_VID ([^ ]*)")
+	definePidRE := regexp.MustCompile("^#define LCEC_([^ ]+)_PID +(0x[a-zA-Z0-9]+)")
+	defineVidRE := regexp.MustCompile("^#define LCEC_([^_ ]+)_VID +([^ ]*)")
 
 	allDefs := []*DeviceDefinition{}
 

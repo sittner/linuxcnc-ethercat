@@ -4,7 +4,7 @@ VendorID: "0x00000002"
 VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x16ad6012"
 Description: Beckhoff AX5805 (Safety Drive Option)
-DocumentationURL: ""
+DocumentationURL: "http://beckhoff.com/AX5805"
 DeviceType: Safety Terminals
 Notes: ""
 SrcFile: src/lcec_ax5805.c

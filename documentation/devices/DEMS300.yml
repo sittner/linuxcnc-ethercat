@@ -1,11 +1,11 @@
 ---
 Device: DEMS300
-VendorID: ""
-VendorName: ""
+VendorID: "0x000001dd"
+VendorName: "Delta"
 PID: "0x10400200"
-Description: UNKNOWN
-DocumentationURL: ""
-DeviceType: ""
+Description: "Delta MS-300 AC Motor Drive"
+DocumentationURL: "https://www.deltaww.com/en-us/products/AC-Motor-Drives/3449"
+DeviceType: "AC Motor Drive"
 Notes: ""
 SrcFile: src/lcec_dems300.c
 TestingStatus: ""

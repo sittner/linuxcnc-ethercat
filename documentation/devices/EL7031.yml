@@ -1,0 +1,11 @@
+---
+Device: EL7031
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x1b773052"
+Description: Beckhoff EL7031 1Ch. Stepper motor output stage (24V, 1.5A)
+DocumentationURL: http://www.beckhoff.com/EL7031
+DeviceType: Drive and Axis Terminals (EL7xxx)
+Notes: ""
+SrcFile: src/lcec_el70x1.c
+TestingStatus: ""

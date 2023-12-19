@@ -1,11 +1,11 @@
 ---
 Device: EL3202
 VendorID: "0x00000002"
-VendorName: ""
+VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x0c823052"
-Description: UNKNOWN
-DocumentationURL: ""
-DeviceType: ""
+Description: Beckhoff EL3202 2Ch. Ana. Input PT100 (RTD)
+DocumentationURL: http://www.beckhoff.com/EL3202
+DeviceType: Analog Input Terminals (EL3xxx)
 Notes: ""
 SrcFile: src/lcec_el3202.c
-TestingStatus: "Uncertain; @scottlaird has several"
+TestingStatus: ""

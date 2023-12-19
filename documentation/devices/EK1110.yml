@@ -1,0 +1,11 @@
+---
+Device: EK1110
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x04562c52"
+Description: Beckhoff EK1110 EtherCAT extension
+DocumentationURL: http://www.beckhoff.com/EK1110
+DeviceType: System Terminals
+Notes: ""
+SrcFile: src/lcec_ek1100.c
+TestingStatus: ""

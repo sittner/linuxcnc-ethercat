@@ -14,7 +14,13 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff AX5118-0000-0214 EtherCAT Drive (SoE, 1 Ch.)](http://www.beckhoff.com/ax51xx/) | [AX5118](../src/lcec_ax5100.c) | 0x00000002:0x13fe6012 | AX5yxx-0000-021x |  | 
 [Beckhoff AX5203-0000-0214 EtherCAT Drive (SoE, 2 Ch.)](http://www.beckhoff.com/ax52xx/) | [AX5203](../src/lcec_ax5200.c) | 0x00000002:0x14536012 | AX5yxx-0000-021x |  | 
 [Beckhoff AX5206-0000-0214 EtherCAT Drive (SoE, 2 Ch.)](http://www.beckhoff.com/ax52xx/) | [AX5206](../src/lcec_ax5200.c) | 0x00000002:0x14566012 | AX5yxx-0000-021x |  | 
-Beckhoff AX5805 (Safety Drive Option) | [AX5805](../src/lcec_ax5805.c) | 0x00000002:0x16ad6012 | Safety Terminals |  | 
+[Beckhoff AX5805 (Safety Drive Option)](http://beckhoff.com/AX5805) | [AX5805](../src/lcec_ax5805.c) | 0x00000002:0x16ad6012 | Safety Terminals |  | 
+[Delta ASDA-A2-E](https://www.deltaww.com/en-us/products/Servo-Systems-AC-Servo-Motors-and-Drives/23) | [DEASDA](../src/lcec_deasda.c) | 0x000001dd:0x10305070 | Servo Drive |  | 
+[Delta MS-300 AC Motor Drive](https://www.deltaww.com/en-us/products/AC-Motor-Drives/3449) | [DEMS300](../src/lcec_dems300.c) | 0x000001dd:0x10400200 | AC Motor Drive |  | 
+[Beckhoff EK1100 EtherCAT Coupler (0.5A E-Bus)](http://www.beckhoff.com/EK1100) | [EK1100](../src/lcec_ek1100.c) | 0x00000002:0x044c2c52 | System Couplers |  | 
+[Beckhoff EK1101 EtherCAT Coupler (2A E-Bus, ID switch)](http://www.beckhoff.com/EK1101) | [EK1101](../src/lcec_ek1100.c) | 0x00000002:0x044d2c52 | System Couplers |  | 
+[Beckhoff EK1110 EtherCAT extension](http://www.beckhoff.com/EK1110) | [EK1110](../src/lcec_ek1100.c) | 0x00000002:0x04562c52 | System Terminals |  | 
+[Beckhoff EK1122 2 port EtherCAT junction](http://www.beckhoff.com/EK1122) | [EK1122](../src/lcec_ek1100.c) | 0x00000002:0x04622c52 | System Terminals |  | 
 [Beckhoff EL1002 2Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1002) | [EL1002](../src/lcec_el1xxx.c) | 0x00000002:0x03ea3052 | Digital Input Terminals (EL1xxx) |  | 
 [Beckhoff EL1004 4Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1004) | [EL1004](../src/lcec_el1xxx.c) | 0x00000002:0x03ec3052 | Digital Input Terminals (EL1xxx) |  | 
 [Beckhoff EL1008 8Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1008) | [EL1008](../src/lcec_el1xxx.c) | 0x00000002:0x03f03052 | Digital Input Terminals (EL1xxx) |  | 
@@ -39,6 +45,7 @@ Beckhoff AX5805 (Safety Drive Option) | [AX5805](../src/lcec_ax5805.c) | 0x00000
 [Beckhoff EL1819 16Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1819) | [EL1819](../src/lcec_el1xxx.c) | 0x00000002:0x071b3052 | Digital Input Terminals (EL1xxx) |  | 
 [Beckhoff EL1859 8Ch. Dig. Input 24V, 3ms, 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL1859) | [EL1859](../src/lcec_el1859.c) | 0x00000002:0x07433052 | Digital Input Terminals (EL1xxx) |  | 
 [Beckhoff EL1904, 4 Ch. Safety Input 24V, TwinSAFE](http://www.beckhoff.com/EL1904) | [EL1904](../src/lcec_el1904.c) | 0x00000002:0x07703052 | Safety Terminals |  | 
+[Beckhoff EL1918, 8Ch. Safety Input 24V, TwinSAFE](http://www.beckhoff.com/EL1918) | [EL1918_LOGIC](../src/lcec_el1918_logic.c) | 0x00000002:0x077e3052 | Safety Terminals |  | 
 [Beckhoff EL2002 2Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2002) | [EL2002](../src/lcec_el2xxx.c) | 0x00000002:0x07d23052 | Digital Output Terminals (EL2xxx) |  | 
 [Beckhoff EL2004 4Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2004) | [EL2004](../src/lcec_el2xxx.c) | 0x00000002:0x07d43052 | Digital Output Terminals (EL2xxx) |  | 
 [Beckhoff EL2008 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2008) | [EL2008](../src/lcec_el2xxx.c) | 0x00000002:0x07d83052 | Digital Output Terminals (EL2xxx) | Uncertain; @scottlaird has several | 
@@ -60,6 +67,7 @@ Beckhoff AX5805 (Safety Drive Option) | [AX5805](../src/lcec_ax5805.c) | 0x00000
 [Beckhoff EL2808 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2808) | [EL2808](../src/lcec_el2xxx.c) | 0x00000002:0x0af83052 | Digital Output Terminals (EL2xxx) | Uncertain; @scottlaird has several | 
 [Beckhoff EL2809 16Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2809) | [EL2809](../src/lcec_el2xxx.c) | 0x00000002:0x0af93052 | Digital Output Terminals (EL2xxx) |  | 
 [Beckhoff EL2904, 4 Ch. Safety Output 24V, 0.5A, TwinSAFE](http://www.beckhoff.com/EL2904) | [EL2904](../src/lcec_el2904.c) | 0x00000002:0x0b583052 | Safety Terminals |  | 
+[Beckhoff EL3004 4Ch. Ana. Input +/-10V](http://www.beckhoff.com/EL3004) | [EL3004](../src/lcec_el30x4.c) | 0x00000002:0x0bbc3052 | Analog Input Terminals (EL3xxx) |  | 
 [Beckhoff EL3044 4Ch. Ana. Input 0-20mA](http://www.beckhoff.com/EL3044) | [EL3044](../src/lcec_el30x4.c) | 0x00000002:0x0be43052 | Analog Input Terminals (EL3xxx) |  | 
 [Beckhoff EL3054 4Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3054) | [EL3054](../src/lcec_el30x4.c) | 0x00000002:0x0bee3052 | Analog Input Terminals (EL3xxx) |  | 
 [Beckhoff EL3064 4Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3064) | [EL3064](../src/lcec_el30x4.c) | 0x00000002:0x0bf83052 | Analog Input Terminals (EL3xxx) |  | 
@@ -70,6 +78,7 @@ Beckhoff AX5805 (Safety Drive Option) | [AX5805](../src/lcec_ax5805.c) | 0x00000
 [Beckhoff EL3152 2Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3152) | [EL3152](../src/lcec_el31x2.c) | 0x00000002:0x0c503052 | Analog Input Terminals (EL3xxx) |  | 
 [Beckhoff EL3162 2Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3162) | [EL3162](../src/lcec_el31x2.c) | 0x00000002:0x0c5a3052 | Analog Input Terminals (EL3xxx) | Uncertain; @scottlaird has one | 
 [Beckhoff EL3164 4Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3164) | [EL3164](../src/lcec_el31x4.c) | 0x00000002:0x0c5c3052 | Analog Input Terminals (EL3xxx) |  | 
+[Beckhoff EL3202 2Ch. Ana. Input PT100 (RTD)](http://www.beckhoff.com/EL3202) | [EL3202](../src/lcec_el3202.c) | 0x00000002:0x0c823052 | Analog Input Terminals (EL3xxx) |  | 
 [Beckhoff EL3255 5Ch. potentiometer measurement with sensor supply](http://www.beckhoff.com/EL3255) | [EL3255](../src/lcec_el3255.c) | 0x00000002:0x0cb73052 | Analog Input Terminals (EL3xxx) |  | 
 [Beckhoff EL3403 3Ch. Power Measuring](http://www.beckhoff.com/EL3403) | [EL3403](../src/lcec_el3403.c) | 0x00000002:0x0d4b3052 | Analog Input Terminals (EL3xxx) | Uncertain; @scottlaird has several | 3-phase AC power measurement
 [Beckhoff EL4001 1Ch. Ana. Output 0-10V, 12bit](http://www.beckhoff.com/EL4001) | [EL4001](../src/lcec_el40x1.c) | 0x00000002:0x0fa13052 | Analog Output Terminals (EL4xxx) |  | 
@@ -97,9 +106,15 @@ Beckhoff AX5805 (Safety Drive Option) | [AX5805](../src/lcec_ax5805.c) | 0x00000
 [Beckhoff EL5152 2Ch. Inc. Encoder](http://www.beckhoff.com/EL5152) | [EL5152](../src/lcec_el5152.c) | 0x00000002:0x14203052 | Measuring Terminals (EL5xxx) |  | 
 [Beckhoff EL6090 Display terminal](http://www.beckhoff.com/EL6090) | [EL6090](../src/lcec_el6090.c) | 0x00000002:0x17ca3052 | Communication Terminals (EL6xxx) | Uncertain; @scottlaird has one, but the driver was just merged. | 
 [Beckhoff EL6900, TwinSAFE PLC](http://www.beckhoff.com/EL6900) | [EL6900](../src/lcec_el6900.c) | 0x00000002:0x1af43052 | Safety Terminals |  | 
+[Beckhoff EL7031 1Ch. Stepper motor output stage (24V, 1.5A)](http://www.beckhoff.com/EL7031) | [EL7031](../src/lcec_el70x1.c) | 0x00000002:0x1b773052 | Drive and Axis Terminals (EL7xxx) |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EL7041](../src/lcec_el7041.c) | 0x00000002:0x1b813052 | Drive and Axis Terminals (EL7xxx) |  | 
+[Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EL7041_0052](../src/lcec_el70x1.c) | 0x00000002:0x1b813052 | Drive and Axis Terminals (EL7xxx) |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EL7041_1000](../src/lcec_el7041.c) | 0x00000002:0x1b813052 | Drive and Axis Terminals (EL7xxx) |  | 
+[Beckhoff EL7201 1Ch. MDP742 Servo motor output stage (50V, 4A)](http://www.beckhoff.com/EL7201) | [EL7201_9014](../src/lcec_el7211.c) | 0x00000002:0x1c213052 | Drive and Axis Terminals (EL7xxx) |  | 
+[Beckhoff EL7211 1Ch. MDP742 Servo motor output stage (50V, 4.5A RMS)](http://www.beckhoff.com/EL7211) | [EL7211](../src/lcec_el7211.c) | 0x00000002:0x1c2b3052 | Drive and Axis Terminals (EL7xxx) |  | 
+[Beckhoff EL7221 1Ch. MDP742 Servo motor output stage (50V, 8A RMS)](http://www.beckhoff.com/EL7211) | [EL7221](../src/lcec_el7211.c) | 0x00000002:0x1c353052 | Drive and Axis Terminals (EL7xxx) |  | 
 [Beckhoff EL7342 2Ch. DC motor output stage (50V, 3.5A)](http://www.beckhoff.com/EL7342) | [EL7342](../src/lcec_el7342.c) | 0x00000002:0x1cae3052 | Drive and Axis Terminals (EL7xxx) |  | 
+[Beckhoff EL7411 BLDC Terminal with incremental encoder/Hall, 50 V DC, 4.5 A](http://www.beckhoff.com/EL7411) | [EL7411](../src/lcec_el7411.c) | 0x00000002:0x1cf33052 | Drive and Axis Terminals (EL7xxx) |  | 
 [Beckhoff EL9505 Power supply terminal 5V](http://www.beckhoff.com/EL9505) | [EL9505](../src/lcec_el95xx.c) | 0x00000002:0x25213052 | System Terminals |  | 
 [Beckhoff EL9508 Power supply terminal 8V](http://www.beckhoff.com/EL9508) | [EL9508](../src/lcec_el95xx.c) | 0x00000002:0x25243052 | System Terminals |  | 
 [Beckhoff EL9510 Power supply terminal 10V](http://www.beckhoff.com/EL9510) | [EL9510](../src/lcec_el95xx.c) | 0x00000002:0x25263052 | System Terminals |  | 
@@ -122,7 +137,31 @@ Beckhoff AX5805 (Safety Drive Option) | [AX5805](../src/lcec_ax5805.c) | 0x00000
 [Beckhoff EP2349-0021 16 Ch. Dig. Input/Output 24V, 10µs, 0,5A, M8](https://www.beckhoff.com/EP2349-0021) | [EP2349](../src/lcec_ep23xx.c) | 0x00000002:0x092d4052 | EtherCAT Fieldbus Boxes (EP23xx) |  | 
 [Beckhoff EP2809-0021 16 Ch. Dig. Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2809-0021) | [EP2809](../src/lcec_el2xxx.c) | 0x00000002:0x0af94052 | EtherCAT Fieldbus Boxes (EP2xxx) |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EP7041](../src/lcec_el7041.c) | 0x00000002:0x1b813052 | Drive and Axis Terminals (EL7xxx) | Uncertain; @scottlaird has several EP7041-0002 | 
+[Omron R88D-KN01H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN01H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000005 | Servo Drives |  | 
+[Omron R88D-KN01L-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN01L_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000002 | Servo Drives |  | 
+[Omron R88D-KN02H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN02H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000006 | Servo Drives |  | 
+[Omron R88D-KN02L-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN02L_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000003 | Servo Drives |  | 
+[Omron R88D-KN04H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN04H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000007 | Servo Drives |  | 
+[Omron R88D-KN04L-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN04L_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000004 | Servo Drives |  | 
+[Omron R88D-KN06F-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN06F_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000000b | Servo Drives |  | 
+[Omron R88D-KN08H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN08H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000008 | Servo Drives |  | 
+[Omron R88D-KN10F-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN10F_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000000c | Servo Drives |  | 
+[Omron R88D-KN10H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN10H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000009 | Servo Drives |  | 
+[Omron R88D-KN150F-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN150F_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000005f | Servo Drives |  | 
+[Omron R88D-KN150H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN150H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000005a | Servo Drives |  | 
+[Omron R88D-KN15F-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN15F_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000000d | Servo Drives |  | 
+[Omron R88D-KN15H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN15H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000000a | Servo Drives |  | 
+[Omron R88D-KN20F-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN20F_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000005b | Servo Drives |  | 
+[Omron R88D-KN20H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN20H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000056 | Servo Drives |  | 
+[Omron R88D-KN30F-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN30F_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000005c | Servo Drives |  | 
+[Omron R88D-KN30H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN30H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000057 | Servo Drives |  | 
+[Omron R88D-KN50F-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN50F_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000005d | Servo Drives |  | 
+[Omron R88D-KN50H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN50H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000058 | Servo Drives |  | 
+[Omron R88D-KN75F-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN75F_ECT](../src/lcec_omrg5.c) | 0x00000083:0x0000005e | Servo Drives |  | 
+[Omron R88D-KN75H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN75H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000059 | Servo Drives |  | 
+[Omron R88D-KNA5L-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KNA5L_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000001 | Servo Drives |  | 
+[Stoeber Posidrive MDS 5000](https://www.ethercat.org/en/products/CE4C65D2ED8B4F39A8166D6CEDB2C872.htm) | [STMDS5K](../src/lcec_stmds5k.c) | 0x000000b9:0x00001388 | Servo Drive |  | 
 
-There are an additional 31 devices supported that do not have enough
+There are an additional 1 devices supported that do not have enough
 documentation to display here.  Please look at the `documentation/devices/` files
 and update them if you're able.

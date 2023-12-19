@@ -1,11 +1,11 @@
 ---
 Device: EL3004
 VendorID: "0x00000002"
-VendorName: ""
+VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x0bbc3052"
-Description: UNKNOWN
-DocumentationURL: ""
-DeviceType: ""
+Description: Beckhoff EL3004 4Ch. Ana. Input +/-10V
+DocumentationURL: http://www.beckhoff.com/EL3004
+DeviceType: Analog Input Terminals (EL3xxx)
 Notes: ""
 SrcFile: src/lcec_el30x4.c
 TestingStatus: ""

@@ -1,11 +1,11 @@
 ---
 Device: STMDS5K
-VendorID: ""
-VendorName: ""
+VendorID: "0x000000b9"
+VendorName: "Stoeber"
 PID: "0x00001388"
-Description: UNKNOWN
-DocumentationURL: ""
-DeviceType: ""
+Description: "Stoeber Posidrive MDS 5000"
+DocumentationURL: "https://www.ethercat.org/en/products/CE4C65D2ED8B4F39A8166D6CEDB2C872.htm"
+DeviceType: "Servo Drive"
 Notes: ""
 SrcFile: src/lcec_stmds5k.c
 TestingStatus: ""

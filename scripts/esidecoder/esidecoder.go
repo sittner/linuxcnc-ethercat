@@ -151,8 +151,11 @@ func fixHexFormat(in string) string {
 	if in[0] == '#' {
 		out := []rune(in)
 		out[0] = '0'
-		
-		return strings.ToLower(string(out))
+		v, err := strconv.ParseInt(string(out), 0, 64)
+		if err != nil {
+			panic(err)
+		}
+		return fmt.Sprintf("0x%08x", v)
 	}
 
 	// Okay, it's probably just an integer.  Beckhoff likes that.  Convert to hex.

@@ -1,0 +1,11 @@
+---
+Device: EK1122
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x04622c52"
+Description: Beckhoff EK1122 2 port EtherCAT junction
+DocumentationURL: http://www.beckhoff.com/EK1122
+DeviceType: System Terminals
+Notes: ""
+SrcFile: src/lcec_ek1100.c
+TestingStatus: ""
