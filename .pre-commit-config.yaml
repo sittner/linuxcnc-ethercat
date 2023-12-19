@@ -11,4 +11,5 @@ repos:
       rev: 0.2.1 # or other specific tag
       hooks:
           - id: yamlfmt
+            args: [--preserve-quotes]
             exclude: scripts/esi.yml

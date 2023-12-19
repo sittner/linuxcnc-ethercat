@@ -1,0 +1,11 @@
+---
+Device: STMDS5K
+VendorID: ""
+VendorName: ""
+PID: "0x00001388"
+Description: UNKNOWN
+DocumentationURL: ""
+DeviceType: ""
+Notes: ""
+SrcFile: src/lcec_stmds5k.c
+TestingStatus: ""

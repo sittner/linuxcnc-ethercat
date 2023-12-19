@@ -1,10 +1,11 @@
 ---
 Device: AX5118
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x13fe6012
-Description: Beckhoff AX5118 Digital Compact Servo Drives, 1-channel
-DocumentationURL: https://www.beckhoff.com/en-us/products/motion/servo-drives/ax5000-digital-compact-servo-drives/ax5118.html
-DeviceType: Servo Controller
-Channels: 1
-Notes: 18A current limit
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x13fe6012"
+Description: Beckhoff AX5118-0000-0214 EtherCAT Drive (SoE, 1 Ch.)
+DocumentationURL: http://www.beckhoff.com/ax51xx/
+DeviceType: AX5yxx-0000-021x
+Notes: ""
+SrcFile: src/lcec_ax5100.c
+TestingStatus: ""

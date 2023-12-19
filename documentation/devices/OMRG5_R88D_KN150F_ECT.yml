@@ -1,0 +1,11 @@
+---
+Device: OMRG5_R88D_KN150F_ECT
+VendorID: ""
+VendorName: ""
+PID: "0x0000005f"
+Description: UNKNOWN
+DocumentationURL: ""
+DeviceType: ""
+Notes: ""
+SrcFile: src/lcec_omrg5.c
+TestingStatus: ""

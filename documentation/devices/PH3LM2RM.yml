@@ -1,0 +1,11 @@
+---
+Device: PH3LM2RM
+VendorID: "0x00000907"
+VendorName: ""
+PID: "0x10000001"
+Description: UNKNOWN
+DocumentationURL: ""
+DeviceType: ""
+Notes: ""
+SrcFile: src/lcec_ph3lm2rm.c
+TestingStatus: ""

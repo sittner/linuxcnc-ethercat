@@ -1,0 +1,11 @@
+---
+Device: DEASDA
+VendorID: ""
+VendorName: ""
+PID: "0x10305070"
+Description: UNKNOWN
+DocumentationURL: ""
+DeviceType: ""
+Notes: ""
+SrcFile: src/lcec_deasda.c
+TestingStatus: ""

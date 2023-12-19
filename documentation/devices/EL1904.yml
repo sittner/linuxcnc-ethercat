@@ -1,10 +1,11 @@
 ---
 Device: EL1904
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x07703052
-Description: Beckhoff EL1904 4-port digital input w/ TwinSAFE
-DocumentationURL: https://www.beckhoff.com/en-us/products/automation/twinsafe/twinsafe-hardware/el1904.html
-DeviceType: Digital Input
-Channels: 4
-Notes: 24 VDC, with TwinSAFE safety hardware
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x07703052"
+Description: Beckhoff EL1904, 4 Ch. Safety Input 24V, TwinSAFE
+DocumentationURL: http://www.beckhoff.com/EL1904
+DeviceType: Safety Terminals
+Notes: ""
+SrcFile: src/lcec_el1904.c
+TestingStatus: ""

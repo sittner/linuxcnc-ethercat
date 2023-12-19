@@ -1,8 +1,11 @@
 ---
 Device: EL2124
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x084C3052
-Description: TODO
-DocumentationURL: TODO
-DeviceType: TODO
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x084c3052"
+Description: Beckhoff EL2124 4Ch. Dig. Output 5V, 20mA
+DocumentationURL: http://www.beckhoff.com/EL2124
+DeviceType: Digital Output Terminals (EL2xxx)
+Notes: ""
+SrcFile: src/lcec_el2xxx.c
+TestingStatus: ""

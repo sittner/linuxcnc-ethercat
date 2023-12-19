@@ -1,10 +1,11 @@
 ---
 Device: EL1098
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x044A3052
-Description: Beckhoff EL1098 8-port digital input
-DocumentationURL: https://infosys.beckhoff.com/english.php?content=../content/1033/el10xx_el11xx/1623205643.html&id=
-DeviceType: Digital Input
-Channels: 8
-Notes: 24 VDC, switching to negative potential, 10 µs
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x044a3052"
+Description: Beckhoff EL1098 8Ch. Dig. Input 24V, 10µs, negative
+DocumentationURL: http://www.beckhoff.com/EL1098
+DeviceType: Digital Input Terminals (EL1xxx)
+Notes: ""
+SrcFile: src/lcec_el1xxx.c
+TestingStatus: ""

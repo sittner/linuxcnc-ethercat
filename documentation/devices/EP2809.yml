@@ -1,8 +1,11 @@
 ---
 Device: EP2809
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x0AF94052
-Description: TODO
-DocumentationURL: TODO
-DeviceType: TODO
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0af94052"
+Description: Beckhoff EP2809-0021 16 Ch. Dig. Output 24V, 0,5A, M8
+DocumentationURL: https://www.beckhoff.com/EP2809-0021
+DeviceType: EtherCAT Fieldbus Boxes (EP2xxx)
+Notes: ""
+SrcFile: src/lcec_el2xxx.c
+TestingStatus: ""

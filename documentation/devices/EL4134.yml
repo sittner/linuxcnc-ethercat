@@ -1,8 +1,11 @@
 ---
 Device: EL4134
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x10263052
-Description: TODO
-DocumentationURL: TODO
-DeviceType: TODO
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x10263052"
+Description: Beckhoff EL4134 4Ch. Ana. Output -10/+10V, 16bit
+DocumentationURL: http://www.beckhoff.com/EL4134
+DeviceType: Analog Output Terminals (EL4xxx)
+Notes: ""
+SrcFile: src/lcec_el41x4.c
+TestingStatus: ""

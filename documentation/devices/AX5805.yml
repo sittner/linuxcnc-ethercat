@@ -1,8 +1,11 @@
 ---
 Device: AX5805
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x16AD6012
-Description: Beckhoff AX5805 TwinSAFE drive option card
-DocumentationURL: https://www.beckhoff.com/en-us/products/motion/servo-drives/ax5000-digital-compact-servo-drives/ax5805.html
-DeviceType: Servo Accessory
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x16ad6012"
+Description: Beckhoff AX5805 (Safety Drive Option)
+DocumentationURL: ""
+DeviceType: Safety Terminals
+Notes: ""
+SrcFile: src/lcec_ax5805.c
+TestingStatus: ""

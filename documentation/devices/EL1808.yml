@@ -1,10 +1,11 @@
 ---
 Device: EL1808
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x07103052
-Description: Beckhoff EL1808 8-port digital input
-DocumentationURL: https://infosys.beckhoff.com/english.php?content=../content/1033/el10xx_el11xx/1623205643.html&id=
-DeviceType: Digital Input
-Channels: 8
-Notes: 24 VDC, high density, 3 ms
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x07103052"
+Description: Beckhoff EL1808 8Ch. Dig. Input 24V, 3ms
+DocumentationURL: http://www.beckhoff.com/EL1808
+DeviceType: Digital Input Terminals (EL1xxx)
+Notes: ""
+SrcFile: src/lcec_el1xxx.c
+TestingStatus: ""

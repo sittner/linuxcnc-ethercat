@@ -1,8 +1,11 @@
 ---
 Device: EM7004
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x1B5C3452
-Description: TODO
-DocumentationURL: TODO
-DeviceType: TODO
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x1b5c3452"
+Description: Beckhoff EM7004 4-Axis Interface Unit
+DocumentationURL: http://www.beckhoff.com/EM7004
+DeviceType: Drive and Axis Modules (EM7xxx)
+Notes: ""
+SrcFile: src/lcec_em7004.c
+TestingStatus: ""

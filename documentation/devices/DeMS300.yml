@@ -1,8 +1,0 @@
----
-Device: DeMS300
-VendorID: 0x000001dd
-VendorName: Delta Electronics
-PID: 0x10400200
-Description: Delta MS300 AC Motor Controller
-DocumentationURL: https://www.deltaww.com/en-us/products/AC-Motor-Drives/3449
-DeviceType: AC Controller

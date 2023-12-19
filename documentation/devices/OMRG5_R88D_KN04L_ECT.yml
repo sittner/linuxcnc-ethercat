@@ -1,0 +1,11 @@
+---
+Device: OMRG5_R88D_KN04L_ECT
+VendorID: ""
+VendorName: ""
+PID: "0x00000004"
+Description: UNKNOWN
+DocumentationURL: ""
+DeviceType: ""
+Notes: ""
+SrcFile: src/lcec_omrg5.c
+TestingStatus: ""

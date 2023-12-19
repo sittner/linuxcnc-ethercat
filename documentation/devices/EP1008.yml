@@ -1,8 +1,11 @@
 ---
 Device: EP1008
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x03f04052
-Description: TODO
-DocumentationURL: TODO
-DeviceType: TODO
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x03f04052"
+Description: Beckhoff EP1008-0001 8 Ch. Dig. Input 24V, 3ms, M8
+DocumentationURL: https://www.beckhoff.com/EP1008-0001
+DeviceType: EtherCAT Fieldbus Boxes (EP1xxx)
+Notes: ""
+SrcFile: src/lcec_el1xxx.c
+TestingStatus: ""

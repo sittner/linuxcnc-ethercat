@@ -3,15 +3,25 @@
 This directory contains tools used to maintain this package; nothing
 in here should be needed to build or use LinuxCNC-Ethercat.
 
-## `devicelist.sh`
+## `update-esi.sh`
+
+This updates `scripts/esi.yml` using data from manufacturer websites.
+This should provide details on all known Ethercat devices.  This data
+is used by `update-devicelist.sh`, beloww.
+
+Currently, we fetch ESI data from Beckhoff and Omron.  Additional
+manufacturers can be added fairly easily.
+
+This uses Go code in `scripts/esidecoder/esidecoder.go`.
+
+## `update-devicelist.sh`
 
 This shell script generates a list of all Ethercat PIDs supported by
 all drivers included in this package and creates files in
-`documentation/drivers/*.yml` that describe (very briefly) the supported devices.
+`documentation/drivers/*.yml` that describe the supported devices.
+This uses ESI data from `update-esi.sh`, above.
 
-At the moment, it only generates new files and doesn't touch existing
-ones, allowing them to be edited manually for added detail.  This may
-change in the future.
+This uses Go code in `scripts/devicelist/devicelist.go`.
 
 ## `update-devicetable.sh`
 
@@ -21,14 +31,3 @@ devices.
 
 This uses Go code in `scripts/devicetable/devicetable.go`
 
-## `update-esi.sh`
-
-This updates `scripts/esi.yml` using data from manufacturer websites.
-This should provide details on all known Ethercat devices, and can be
-used to make `documentation/drivers/*.yml` files more accurate,
-although this final step hasn't been done yet.
-
-Currently, we fetch ESI data from Beckhoff and Omron.  Additional
-manufacturers can be added fairly easily.
-
-This uses Go code in `scripts/esidecoder/esidecoder.go`.

@@ -19,6 +19,8 @@ type DeviceDefinition struct {
 	DeviceType       string `yaml:"DeviceType"`
 	Channels         int    `yaml:"Channels"`
 	Notes            string `yaml:"Notes"`
+	SrcFile          string `yaml:"SrcFile"`
+	TestingStatus    string `yaml:"TestingStatus"`
 }
 
 var pathFlag = flag.String("path", "../../documentation/devices/", "Path to *.yml files for device documentation")
@@ -62,7 +64,7 @@ func main() {
 		//
 		// Longer-term, we may wish to gripe when we find
 		// them, or replace `TODO` with `???` or similar.
-		if strings.TrimSpace(entry.Description) != "TODO" {
+		if strings.TrimSpace(entry.Description) != "UNKNOWN" {
 			entries = append(entries, entry)
 		} else {
 			otherfiles++
@@ -75,18 +77,18 @@ func main() {
 	fmt.Printf("has code to support today.  Not all of these are well-tested.*\n")
 	fmt.Printf("\n")
 
-	fmt.Printf("Description | Name in Source Code | EtherCAT VID:PID | Device Type | Channels | Notes\n")
-	fmt.Printf("----------- | ------------------- | ---------------- | ----------- | -------: | ------\n")
+	fmt.Printf("Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes\n")
+	fmt.Printf("----------- | ------ | ---------------- | ----------- | -------------- | ------\n")
 	for _, e := range entries {
 		name := e.Description
-		if e.DocumentationURL[0:4] == "http" {
+		if len(e.DocumentationURL) > 4 && e.DocumentationURL[0:4] == "http" {
 			name = fmt.Sprintf("[%s](%s)", e.Description, e.DocumentationURL)
 		}
-		channels := fmt.Sprintf("%d", e.Channels)
-		if e.Channels == 0 {
-			channels = ""
+		srcName := e.Device
+		if e.SrcFile != "" {
+			srcName = fmt.Sprintf("[%s](../%s)", e.Device, e.SrcFile)
 		}
-		fmt.Printf("%s | %s | %s:%s | %s | %s | %s\n", name, e.Device, e.VendorID, e.PID, e.DeviceType, channels, e.Notes)
+		fmt.Printf("%s | %s | %s:%s | %s | %s | %s\n", name, srcName, e.VendorID, e.PID, e.DeviceType, e.TestingStatus, e.Notes)
 	}
 
 	fmt.Printf("\n")

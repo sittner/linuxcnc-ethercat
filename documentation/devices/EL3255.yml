@@ -1,8 +1,11 @@
 ---
 Device: EL3255
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x0CB73052
-Description: TODO
-DocumentationURL: TODO
-DeviceType: TODO
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0cb73052"
+Description: Beckhoff EL3255 5Ch. potentiometer measurement with sensor supply
+DocumentationURL: http://www.beckhoff.com/EL3255
+DeviceType: Analog Input Terminals (EL3xxx)
+Notes: ""
+SrcFile: src/lcec_el3255.c
+TestingStatus: ""

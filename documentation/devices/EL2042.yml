@@ -1,8 +1,11 @@
 ---
 Device: EL2042
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x07FA3052
-Description: TODO
-DocumentationURL: TODO
-DeviceType: TODO
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x07fa3052"
+Description: Beckhoff EL2042 2Ch. Dig. Output 24V, 4A
+DocumentationURL: http://www.beckhoff.com/EL2042
+DeviceType: Digital Output Terminals (EL2xxx)
+Notes: ""
+SrcFile: src/lcec_el2xxx.c
+TestingStatus: ""

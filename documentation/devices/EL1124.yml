@@ -1,10 +1,11 @@
 ---
 Device: EL1124
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x04643052
-Description: Beckhoff EL1124 4-port digital input
-DocumentationURL: https://infosys.beckhoff.com/english.php?content=../content/1033/el10xx_el11xx/1623205643.html&id=
-DeviceType: Digital Input
-Channels: 4
-Notes: 5 VDC
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x04643052"
+Description: Beckhoff EL1124 4Ch. Dig. Input 5V, 10µs, Sensor Power
+DocumentationURL: http://www.beckhoff.com/EL1124
+DeviceType: Digital Input Terminals (EL1xxx)
+Notes: ""
+SrcFile: src/lcec_el1xxx.c
+TestingStatus: ""

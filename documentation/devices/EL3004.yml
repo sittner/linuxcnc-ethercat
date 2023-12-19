@@ -1,8 +1,11 @@
 ---
 Device: EL3004
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x0bbc3052
-Description: TODO
-DocumentationURL: TODO
-DeviceType: TODO
+VendorID: "0x00000002"
+VendorName: ""
+PID: "0x0bbc3052"
+Description: UNKNOWN
+DocumentationURL: ""
+DeviceType: ""
+Notes: ""
+SrcFile: src/lcec_el30x4.c
+TestingStatus: ""

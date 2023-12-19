@@ -1,10 +1,11 @@
 ---
 Device: AX5206
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x14566012
-Description: Beckhoff AX5206 Digital Compact Servo Drive, 2-channel
-DocumentationURL: https://www.beckhoff.com/en-us/products/motion/servo-drives/ax5000-digital-compact-servo-drives/ax5206.html
-DeviceType: Servo Controller
-Channels: 2
-Notes: 6A current limit
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x14566012"
+Description: Beckhoff AX5206-0000-0214 EtherCAT Drive (SoE, 2 Ch.)
+DocumentationURL: http://www.beckhoff.com/ax52xx/
+DeviceType: AX5yxx-0000-021x
+Notes: ""
+SrcFile: src/lcec_ax5200.c
+TestingStatus: ""

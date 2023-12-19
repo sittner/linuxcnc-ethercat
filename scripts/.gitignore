@@ -1,3 +1,5 @@
 *.zip
 tmpesi/
 esidecoder/esidecoder
+devicelist/devicelist
+devicetable/devicetable

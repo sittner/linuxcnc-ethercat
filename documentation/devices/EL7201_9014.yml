@@ -1,8 +1,11 @@
 ---
 Device: EL7201_9014
-VendorID: 0x00000002
-VendorName: Beckhoff
-PID: 0x1C213052
-Description: TODO
-DocumentationURL: TODO
-DeviceType: TODO
+VendorID: ""
+VendorName: ""
+PID: "0x1c213052"
+Description: UNKNOWN
+DocumentationURL: ""
+DeviceType: ""
+Notes: ""
+SrcFile: src/lcec_el7211.c
+TestingStatus: ""
