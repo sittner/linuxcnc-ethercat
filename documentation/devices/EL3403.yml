@@ -6,6 +6,6 @@ PID: "0x0d4b3052"
 Description: Beckhoff EL3403 3Ch. Power Measuring
 DocumentationURL: http://www.beckhoff.com/EL3403
 DeviceType: Analog Input Terminals (EL3xxx)
-Notes: ""
+Notes: "3-phase AC power measurement"
 SrcFile: src/lcec_el3403.c
-TestingStatus: ""
+TestingStatus: "Uncertain; @scottlaird has several"

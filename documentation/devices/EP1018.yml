@@ -8,4 +8,4 @@ DocumentationURL: https://www.beckhoff.com/EP1018-0001
 DeviceType: EtherCAT Fieldbus Boxes (EP1xxx)
 Notes: ""
 SrcFile: src/lcec_el1xxx.c
-TestingStatus: ""
+TestingStatus: "Uncertain; @scottlaird has several"

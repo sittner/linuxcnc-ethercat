@@ -8,4 +8,4 @@ DocumentationURL: https://www.beckhoff.com/EP2338-0001
 DeviceType: EtherCAT Fieldbus Boxes (EP23xx)
 Notes: ""
 SrcFile: src/lcec_ep23xx.c
-TestingStatus: ""
+TestingStatus: "Uncertain; @scottlaird has several"

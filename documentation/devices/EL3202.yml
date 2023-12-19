@@ -8,4 +8,4 @@ DocumentationURL: ""
 DeviceType: ""
 Notes: ""
 SrcFile: src/lcec_el3202.c
-TestingStatus: ""
+TestingStatus: "Uncertain; @scottlaird has several"

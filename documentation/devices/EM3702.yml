@@ -8,4 +8,4 @@ DocumentationURL: http://www.beckhoff.com/EM3702
 DeviceType: Analog Input Modules (EM3xxx)
 Notes: ""
 SrcFile: src/lcec_em37xx.c
-TestingStatus: ""
+TestingStatus: "Uncertain; @scottlaird has one"

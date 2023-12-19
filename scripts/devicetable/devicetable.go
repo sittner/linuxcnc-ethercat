@@ -28,7 +28,7 @@ var pathFlag = flag.String("path", "../../documentation/devices/", "Path to *.ym
 func parsefile(filename string) (*DeviceDefinition, error) {
 	data, err := os.ReadFile(filename)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read file: %v")
+		return nil, fmt.Errorf("unable to read file: %v", filename)
 	}
 
 	entry := &DeviceDefinition{}
@@ -53,21 +53,24 @@ func main() {
 	}
 
 	for _, file := range files {
-		entry, err := parsefile(filepath.Join(*pathFlag, file.Name()))
-		if err != nil {
-			panic(err)
-		}
+		name := file.Name()
+		if name[0] != '.' && strings.Contains(name, ".yml") {
+			entry, err := parsefile(filepath.Join(*pathFlag, name))
+			if err != nil {
+				panic(err)
+			}
 
-		// The `devicelist.sh` script autogenerates entries
-		// with `Device: TODO`.  For now, let's filter them
-		// out.
-		//
-		// Longer-term, we may wish to gripe when we find
-		// them, or replace `TODO` with `???` or similar.
-		if strings.TrimSpace(entry.Description) != "UNKNOWN" {
-			entries = append(entries, entry)
-		} else {
-			otherfiles++
+			// The `devicelist.sh` script autogenerates entries
+			// with `Device: TODO`.  For now, let's filter them
+			// out.
+			//
+			// Longer-term, we may wish to gripe when we find
+			// them, or replace `TODO` with `???` or similar.
+			if strings.TrimSpace(entry.Description) != "UNKNOWN" {
+				entries = append(entries, entry)
+			} else {
+				otherfiles++
+			}
 		}
 	}
 

@@ -8,4 +8,4 @@ DocumentationURL: http://www.beckhoff.com/EL7041
 DeviceType: Drive and Axis Terminals (EL7xxx)
 Notes: ""
 SrcFile: src/lcec_el7041.c
-TestingStatus: ""
+TestingStatus: "Uncertain; @scottlaird has several EP7041-0002"
