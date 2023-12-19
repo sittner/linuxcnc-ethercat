@@ -5,8 +5,10 @@ repos:
       hooks:
           - id: yamllint
             args: [--format, parsable, -d, '{extends: default, rules: {line-length: {max: 200}}}']
+            exclude: scripts/esi.yml
 
     - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
       rev: 0.2.1 # or other specific tag
       hooks:
           - id: yamlfmt
+            exclude: scripts/esi.yml

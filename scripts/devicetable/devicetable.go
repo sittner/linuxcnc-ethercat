@@ -40,6 +40,8 @@ func parsefile(filename string) (*DeviceDefinition, error) {
 }
 
 func main() {
+	flag.Parse()
+
 	entries := []*DeviceDefinition{}
 	otherfiles := 0
 
