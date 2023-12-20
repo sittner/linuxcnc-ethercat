@@ -1,0 +1,148 @@
+---
+name: Release process
+
+on:  # yamllint disable-line rule:truthy
+    pull_request:
+        branches: [master]
+        types: closed
+
+permissions:
+    contents: read  # to fetch code (actions/checkout)
+
+jobs:
+
+    # Build LinuxCNC-Ethercat debian package
+    #
+    # Unclear if this is supposed to push debian/changelog back into
+    # git or what.  Somehow, we need to get this file through to
+    # build-debian-packages, below.
+    update-debian-changelog:
+        if: github.event.pull_request.merged == true
+        env:
+            CHANGELOG_AUTHOR_NAME: "Scott Laird"
+            CHANGELOG_AUTHOR_EMAIL: "scott@sigkill.org"
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Patch changelog (snapshot)
+              id: bump_changelog
+              uses: pi-top/git-debian-changelog-bump-action@master
+              with:
+                  release: true
+                  author_name: ${{ env.CHANGELOG_AUTHOR_NAME }}
+                  author_email: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
+
+            - name: Determine current version
+              run: |
+                  sudo apt install -y dpkg-dev
+                  echo "CURRENT_VERSION=$(dpkg-parsechangelog -Sversion)" >> $GITHUB_ENV
+
+            - name: Amend the last commit
+              run: |
+                  # from https://gist.github.com/Broxzier/1ed980b8b3822d213e98042fc6a92040
+                  git config --global user.email "scott+bot@sigkill.org"
+                  git config --global user.name "LinucCNC-Ethercat git bot"
+                  git commit -a --amend --no-edit
+                  git push --force-with-lease
+                  echo "complete"
+
+            #- name: Create Pull Request
+            #  uses: peter-evans/create-pull-request@v5
+            #  with:
+            #      commit-message: "${{ env.COMMIT_MESSAGE_PREFIX }} v${{ steps.bump_changelog.outputs.version }}"
+            #      branch: bump-changelog
+            #      title: "${{ env.COMMIT_MESSAGE_PREFIX }} v${{ steps.bump_changelog.outputs.version }}"
+            #      body: ""
+            #      base: master
+
+    # This is mostly copied from LinuxCNC's ci.yml as well.
+    build-debian-packges:
+        runs-on: ubuntu-latest
+        needs:
+            - update-debian-changelog
+        strategy:
+            matrix:
+                image: ["debian:buster", "debian:bullseye", "debian:bookworm", "debian:sid"]
+        env:
+            DEBEMAIL: scott@sigkill.org
+            DEBFULLNAME: LinuxCNC-EtherCAT Github CI Robot
+            DEBIAN_FRONTEND: noninteractive
+        container:
+            image: ${{ matrix.image }}
+          # IPC_OWNER is needed for shmget IPC_CREAT
+          # SYS_ADMIN is needed for shmctl IPC_SET
+            options: --cpus=2 --cap-add=IPC_OWNER --cap-add=SYS_ADMIN
+        steps:
+            - name: Dump GitHub context
+              env:
+                  GITHUB_CONTEXT: ${{ toJson(github) }}
+              run: echo "$GITHUB_CONTEXT"
+
+            - name: Add linuxcnc.org deb archive
+              env:
+                  DEBIAN_FRONTEND: noninteractive
+              run: |
+                  set -e
+                  set -x
+
+                  apt --quiet update
+                  apt --yes --quiet install --no-install-recommends gpg software-properties-common git docker.io sudo dpkg-dev
+
+                  #case "${{matrix.image}}" in
+                  #debian:sid|debian:bookworm)
+                  #exit 0
+                  #;;
+                  #*)
+                  #;;
+                  #esac
+                  apt --yes --quiet install --no-install-recommends gpg software-properties-common
+                  git clone https://github.com/LinuxCNC/linuxcnc.git linuxcnc
+                  gpg --homedir="${PWD}/linuxcnc/gnupg" --output /etc/apt/trusted.gpg.d/linuxcnc-deb-archive.gpg --export 3CB9FD148F374FEF
+                  DIST=$(echo ${{matrix.image}} | cut -d : -f 2)
+                  add-apt-repository "deb http://linuxcnc.org $DIST 2.9-uspace"
+                  apt --quiet update
+
+            - name: Install pre-dependencies
+              env:
+                  DEBIAN_FRONTEND: noninteractive
+              run: |
+                  set -e
+                  set -x
+                  apt --yes install linuxcnc-uspace
+                  apt --yes install yapps2
+
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+              # "fetch-depth: 0" fetches all of history, this is needed by
+              # our build system to determine the version from tags
+                  fetch-depth: 0
+
+            - name: Determine current version
+              run: |
+                  echo "CURRENT_VERSION=$(dpkg-parsechangelog -Sversion)" >> $GITHUB_ENV
+
+            - name: Build architecture-specific Debian packages
+              run: |
+                  set -e
+                  set -x
+                  git config --global --add safe.directory "${PWD}"
+                  #debian/configure
+                  #debian/update-dch-from-git
+                  #scripts/get-version-from-git | sed -re 's/^v(.*)$/\1/' >| VERSION; cat VERSION
+                  echo ${{ env.CURRENT_VERSION }}
+                  git diff
+                  apt --yes --quiet build-dep --arch-only .
+                  debuild -us -uc --build=any
+
+            - name: Test debian packages
+              env:
+                  DEBIAN_FRONTEND: noninteractive
+              run: |
+                  set -e
+                  set -x
+                  apt --yes --quiet install ../*.deb

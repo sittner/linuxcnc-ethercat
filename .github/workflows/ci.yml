@@ -68,10 +68,10 @@ jobs:
                   cd src
                   ./autogen.sh
                   ./configure \
-                    --with-realtime=uspace \
-                    --disable-check-runtime-deps \
-                    --disable-gtk \
-                    --enable-non-distributable=yes
+                  --with-realtime=uspace \
+                  --disable-check-runtime-deps \
+                  --disable-gtk \
+                  --enable-non-distributable=yes
                   make -O -j$((1+$(nproc))) default pycheck V=1
 
     # Build Ethercat Master, caching the result.
@@ -86,7 +86,6 @@ jobs:
               with:
                   key: ${{ runner.os }}-build-${{ env.cache-name }}
                   path: ethercat/
-
 
             - name: Fetch EtherCAT Master
               if: ${{ steps.cache-ethercatmaster.outputs.cache-hit != 'true' }}
@@ -156,3 +155,29 @@ jobs:
             - name: make
               run: |
                   make COMP=$GITHUB_WORKSPACE/linuxcnc/bin/halcompile -j$((1+$(nproc)))
+
+    # Build LinuxCNC-Ethercat debian package
+    prep-debian-package:
+        env:
+            CHANGELOG_AUTHOR_NAME: "Scott Laird"
+            CHANGELOG_AUTHOR_EMAIL: "scott@sigkill.org"
+        needs:
+            - build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Patch changelog (snapshot)
+              uses: pi-top/git-debian-changelog-bump-action@master
+              with:
+                  release: false
+                  author_name: ${{ env.CHANGELOG_AUTHOR_NAME }}
+                  author_email: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
+
+            - name: Determine current version
+              run: |
+                  sudo apt install -y dpkg-dev
+                  echo "CURRENT_VERSION=$(dpkg-parsechangelog -Sversion)" >> $GITHUB_ENV
