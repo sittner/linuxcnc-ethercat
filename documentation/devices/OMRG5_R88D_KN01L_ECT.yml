@@ -5,7 +5,7 @@ VendorName: Omron
 PID: "0x00000002"
 Description: Omron R88D-KN01L-ECT G5 Series ServoDrive/Motor
 DocumentationURL: http://www.ia.omron.com/
-DeviceType: Servo Drives
+DeviceType: Servo Drive
 Notes: ""
 SrcFile: src/lcec_omrg5.c
 TestingStatus: ""

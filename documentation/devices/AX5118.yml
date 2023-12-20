@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x13fe6012"
 Description: Beckhoff AX5118-0000-0214 EtherCAT Drive (SoE, 1 Ch.)
 DocumentationURL: http://www.beckhoff.com/ax51xx/
-DeviceType: AX5yxx-0000-021x
+DeviceType: Servo Drive
 Notes: ""
 SrcFile: src/lcec_ax5100.c
 TestingStatus: ""

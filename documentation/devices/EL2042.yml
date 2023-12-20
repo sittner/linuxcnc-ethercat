@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x07fa3052"
 Description: Beckhoff EL2042 2Ch. Dig. Output 24V, 4A
 DocumentationURL: http://www.beckhoff.com/EL2042
-DeviceType: Digital Output Terminals (EL2xxx)
+DeviceType: Digital Output
 Notes: ""
 SrcFile: src/lcec_el2xxx.c
 TestingStatus: ""

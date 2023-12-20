@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x07ec4052"
 Description: Beckhoff EP2028-0001 8 Ch. Dig. Output 24V, 2A, M8
 DocumentationURL: https://www.beckhoff.com/EP2028-0001
-DeviceType: EtherCAT Fieldbus Boxes (EP2xxx)
+DeviceType: Digital Output
 Notes: ""
 SrcFile: src/lcec_el2xxx.c
 TestingStatus: ""

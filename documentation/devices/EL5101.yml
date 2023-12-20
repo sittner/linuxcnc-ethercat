@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x13ed3052"
 Description: Beckhoff EL5101 1Ch. Encoder 5V
 DocumentationURL: http://www.beckhoff.com/EL5101
-DeviceType: Measuring Terminals (EL5xxx)
+DeviceType: Measuring Input
 Notes: ""
 SrcFile: src/lcec_el5101.c
 TestingStatus: ""

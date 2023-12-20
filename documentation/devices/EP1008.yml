@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x03f04052"
 Description: Beckhoff EP1008-0001 8 Ch. Dig. Input 24V, 3ms, M8
 DocumentationURL: https://www.beckhoff.com/EP1008-0001
-DeviceType: EtherCAT Fieldbus Boxes (EP1xxx)
+DeviceType: Digital Input
 Notes: ""
 SrcFile: src/lcec_el1xxx.c
 TestingStatus: "Uncertain; @scottlaird has several"

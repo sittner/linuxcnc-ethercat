@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x0fb53052"
 Description: Beckhoff EL4021 1Ch. Ana. Output 4-20mA, 12bit
 DocumentationURL: http://www.beckhoff.com/EL4021
-DeviceType: Analog Output Terminals (EL4xxx)
+DeviceType: Analog Output
 Notes: ""
 SrcFile: src/lcec_el40x1.c
 TestingStatus: ""

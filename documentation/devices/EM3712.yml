@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x0e803452"
 Description: Beckhoff EM3712  2Ch relative pressure measuring terminal -1,000...+1,000 hPa (-1...+1 bar)
 DocumentationURL: http://www.beckhoff.com/EM3712
-DeviceType: Analog Input Modules (EM3xxx)
+DeviceType: Analog Input
 Notes: ""
 SrcFile: src/lcec_em37xx.c
 TestingStatus: ""

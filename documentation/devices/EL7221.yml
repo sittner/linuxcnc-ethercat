@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x1c353052"
 Description: Beckhoff EL7221 1Ch. MDP742 Servo motor output stage (50V, 8A RMS)
 DocumentationURL: http://www.beckhoff.com/EL7211
-DeviceType: Drive and Axis Terminals (EL7xxx)
+DeviceType: Servo Drive
 Notes: ""
 SrcFile: src/lcec_el7211.c
 TestingStatus: ""

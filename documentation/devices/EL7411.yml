@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x1cf33052"
 Description: Beckhoff EL7411 BLDC Terminal with incremental encoder/Hall, 50 V DC, 4.5 A
 DocumentationURL: http://www.beckhoff.com/EL7411
-DeviceType: Drive and Axis Terminals (EL7xxx)
+DeviceType: BLDC Drive
 Notes: ""
 SrcFile: src/lcec_el7411.c
 TestingStatus: ""

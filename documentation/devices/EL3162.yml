@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x0c5a3052"
 Description: Beckhoff EL3162 2Ch. Ana. Input 0-10V
 DocumentationURL: http://www.beckhoff.com/EL3162
-DeviceType: Analog Input Terminals (EL3xxx)
+DeviceType: Analog Input
 Notes: ""
 SrcFile: src/lcec_el31x2.c
 TestingStatus: "Uncertain; @scottlaird has one"

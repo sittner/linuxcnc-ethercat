@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x1b5c3452"
 Description: Beckhoff EM7004 4-Axis Interface Unit
 DocumentationURL: http://www.beckhoff.com/EM7004
-DeviceType: Drive and Axis Modules (EM7xxx)
+DeviceType: Servo Drive
 Notes: ""
 SrcFile: src/lcec_em7004.c
 TestingStatus: ""

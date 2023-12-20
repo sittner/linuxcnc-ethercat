@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x090c4052"
 Description: Beckhoff EP2316-0003 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, 10-Pole Plug Connector
 DocumentationURL: https://www.beckhoff.com/EP2316-0003
-DeviceType: EtherCAT Fieldbus Boxes (EP23xx)
+DeviceType: Digital Input/Output
 Notes: ""
 SrcFile: src/lcec_ep2316.c
 TestingStatus: ""

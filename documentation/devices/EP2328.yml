@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x09184052"
 Description: Beckhoff EP2328-0001 4 CH. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 2A, M8
 DocumentationURL: https://www.beckhoff.com/EP2328-0001
-DeviceType: EtherCAT Fieldbus Boxes (EP23xx)
+DeviceType: Digital Input/Output
 Notes: ""
 SrcFile: src/lcec_ep23xx.c
 TestingStatus: ""

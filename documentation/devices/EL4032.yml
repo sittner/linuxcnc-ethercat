@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x0fc03052"
 Description: Beckhoff EL4032 2Ch. Ana. Output -10/+10V, 12bit
 DocumentationURL: http://www.beckhoff.com/EL4032
-DeviceType: Analog Output Terminals (EL4xxx)
+DeviceType: Analog Output
 Notes: ""
 SrcFile: src/lcec_el40x2.c
 TestingStatus: ""
