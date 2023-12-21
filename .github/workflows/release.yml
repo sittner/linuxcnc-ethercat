@@ -94,14 +94,16 @@ jobs:
                     - "debian:bullseye"
                     - "debian:bookworm"
                     - "debian:sid"
+                #arch:
+                #  - amd64
         env:
             DEBEMAIL: scott@sigkill.org
             DEBFULLNAME: LinuxCNC-EtherCAT Github CI Robot
             DEBIAN_FRONTEND: noninteractive
         container:
             image: ${{ matrix.image }}
-          # IPC_OWNER is needed for shmget IPC_CREAT
-          # SYS_ADMIN is needed for shmctl IPC_SET
+            # IPC_OWNER is needed for shmget IPC_CREAT
+            # SYS_ADMIN is needed for shmctl IPC_SET
             options: --cpus=2 --cap-add=IPC_OWNER --cap-add=SYS_ADMIN
         steps:
             - name: Add linuxcnc.org deb archive
@@ -157,7 +159,6 @@ jobs:
                   sudo cp etherlab.list /etc/apt/sources.list.d/etherlab.list
                   curl -fsSL "https://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_10/Release.key" | gpg --dearmor > ec.gpg
                   sudo cp ec.gpg /usr/share/keyrings/ethercat.gpg
-
 
                   apt --quiet update
                   apt --quiet --yes install ethercat-master libethercat-dev libpdserv3-dev librtipc-dev etherlab2
