@@ -160,7 +160,7 @@ jobs:
 
 
                   apt --quiet update
-                  apt install ethercat-master libethercat-dev libpdserv3-dev librtipc-dev etherlab2
+                  apt --quiet --yes install ethercat-master libethercat-dev libpdserv3-dev librtipc-dev etherlab2
 
             - name: Install pre-dependencies
               env:
