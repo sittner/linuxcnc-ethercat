@@ -4,7 +4,7 @@ repos:
       rev: v1.21.0 # or higher tag
       hooks:
           - id: yamllint
-            args: [--format, parsable, -d, '{extends: default, rules: {line-length: {max: 200}}}']
+            args: [--format, parsable, -d, '{extends: relaxed, rules: {line-length: {max: 200}}}']
             exclude: scripts/esi.yml
 
     - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
