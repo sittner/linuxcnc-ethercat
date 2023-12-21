@@ -1,3 +1,9 @@
+linuxcnc-ethercat (0.9.8) unstable; urgency=medium
+
+  * release: update opensuse install line
+
+ -- Scott Laird <scott@sigkill.org>  Thu, 21 Dec 2023 18:25:32 +0000
+
 linuxcnc-ethercat (0.9.7) unstable; urgency=medium
 
   * release: add curl
