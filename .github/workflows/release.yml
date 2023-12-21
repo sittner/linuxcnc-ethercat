@@ -33,7 +33,8 @@ jobs:
     # git or what.  Somehow, we need to get this file through to
     # build-debian-packages, below.
     update-debian-changelog:
-        if: github.event.pull_request.merged == true
+        # Only run if this commit has been tagged as part of a new release.
+        if: startswith(github.event.ref, 'refs/tags/v')
         env:
             CHANGELOG_AUTHOR_NAME: "Scott Laird"
             CHANGELOG_AUTHOR_EMAIL: "scott@sigkill.org"
