@@ -1,14 +1,14 @@
 ---
 repos:
     - repo: https://github.com/adrienverge/yamllint.git
-      rev: v1.21.0 # or higher tag
+      rev: v1.33.0 # or higher tag
       hooks:
           - id: yamllint
             args: [--format, parsable, -d, '{extends: relaxed, rules: {line-length: {max: 200}}}']
             exclude: scripts/esi.yml
 
     - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
-      rev: 0.2.1 # or other specific tag
+      rev: 0.2.3 # or other specific tag
       hooks:
           - id: yamlfmt
             args: [--preserve-quotes]
@@ -19,4 +19,3 @@ repos:
       hooks:
           - id: conventional-pre-commit
             stages: [commit-msg]
-            args: [build, ci, docs, feat, fix, perf, revert, style, test]
