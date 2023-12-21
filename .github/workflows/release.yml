@@ -62,7 +62,7 @@ jobs:
                   sudo apt install -y dpkg-dev
                   echo "CURRENT_VERSION=$(dpkg-parsechangelog -Sversion)" >> $GITHUB_ENV
 
-            - name: Amend the last commit
+            - name: Submit the last change to Git
               run: |
                   # from https://gist.github.com/Broxzier/1ed980b8b3822d213e98042fc6a92040
                   git config --global user.email "scott+bot@sigkill.org"
@@ -71,15 +71,6 @@ jobs:
                   git commit -m 'Automatically update debian/changelog'
                   git push
                   echo "complete"
-
-            #- name: Create Pull Request
-            #  uses: peter-evans/create-pull-request@v5
-            #  with:
-            #      commit-message: "${{ env.COMMIT_MESSAGE_PREFIX }} v${{ steps.bump_changelog.outputs.version }}"
-            #      branch: bump-changelog
-            #      title: "${{ env.COMMIT_MESSAGE_PREFIX }} v${{ steps.bump_changelog.outputs.version }}"
-            #      body: ""
-            #      base: master
 
     # This is mostly copied from LinuxCNC's ci.yml as well.
     build-debian-packges:
@@ -114,15 +105,8 @@ jobs:
                   set -x
 
                   apt --quiet update
-                  apt --yes --quiet install --no-install-recommends gpg software-properties-common git docker.io sudo dpkg-dev curl
+                  apt --yes --quiet install --no-install-recommends gpg software-properties-common git docker.io sudo dpkg-dev curl devscripts
 
-                  #case "${{matrix.image}}" in
-                  #debian:sid|debian:bookworm)
-                  #exit 0
-                  #;;
-                  #*)
-                  #;;
-                  #esac
                   apt --yes --quiet install --no-install-recommends gpg software-properties-common
                   git clone https://github.com/LinuxCNC/linuxcnc.git linuxcnc
                   gpg --homedir="${PWD}/linuxcnc/gnupg" --output /etc/apt/trusted.gpg.d/linuxcnc-deb-archive.gpg --export 3CB9FD148F374FEF
