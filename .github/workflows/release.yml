@@ -4,6 +4,8 @@ name: Release process
 on:  # yamllint disable-line rule:truthy
     pull_request:
         branches: ['**']
+    push:
+        branches: [master]
 
 permissions:
     contents: read  # to fetch code (actions/checkout)
