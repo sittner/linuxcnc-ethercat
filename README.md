@@ -9,6 +9,12 @@ Please bear with us while we do a bit of cleanup here, and then we'll
 start looking at adding additional maintainers and merging the backlog
 of drivers that has built up over the past few years.
 
+## Contributing
+
+See [the contributing documentation](CONTRIBUTING.md) for details.  If
+you have any issues with the contributing process, *please* file an
+issue here.  Everything is new, and it may be broken.
+
 
 ## Devices Supported
 
