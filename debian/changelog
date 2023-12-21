@@ -1,3 +1,97 @@
+linuxcnc-ethercat (0.9.5) unstable; urgency=medium
+
+  * - allow string modparam value
+  * - add support for named stdios for EL6900
+  * - removed unused PDO mappings for EL6900
+  * - removed EL6900 debug pins for fsoe data
+  * - optional preinit function per device to allow dynamic configuration (i.e. PDO mapping count) - FSOE parameters per device
+  * - fixed string modparam parsing
+  * - fixed EL6900 dynamic stdio mapping
+  * - added initial ax5805 support
+  * - fixed fsoe example for dynamic stdio mapping
+  * - moved fsoeConf initialization to slave preinit function
+  * - removed obsolete comment
+  * - added ax5100 support - created class for ax5xxx
+  * - added AX51xx support to AX5805
+  * - autodetect number of ax5805 channels
+  * - move fsoe config for AX5805 to AX5nxx driver
+  * Add support for Beckhoff EL30x4 (4-port 12-bit analog in) and EL3202 (2-port temperature in) modules.
+  * Added semi-functioning support for EL3403 3-phase power meter.  Still returns bogus results, but mine don't have power applied at the moment, so it *might* not be a bug.
+  * Minor EL3403 cleanups; now reads all-0 instead of -INT_MAX.
+  * Addition of a driver for EM37xx-series pressure sensors.
+  * Add product codes for EL3004, EL3044, and EL3054 to EL30x4 code.
+  * Replace my EL3403 module with A.Chimeno's from the LinuxCNC forum.
+  * Fix phantom sync error on 0x6000:0e.
+  * Add EP2308 support (still somewhat broken) and add IDs for EP10[01]8 devices.
+  * Initial driver for EP23xx combo in/out digial I/O boxes.
+  * Add support (untested) for EP2316 devices.
+  * Rename the EL7041 driver from el7041_1000 to simply el7041.
+  * Adding Card Definitions
+  * removed redundant changelog
+  * added support for EL1918 as TwinSAFE plc
+  * Support added for EL9576
+  * Support added for EL9576
+  * Added support for EL9576
+  * Support added for EL9576
+  * Removing Conflicts
+  * Adding EP2349
+  * Add Delta MS300 initial
+  * ms300 initial, el6900 pdo fix
+  * fixed merge comment
+  * removed txpdo state bit from el6900, due firmware change
+  * add additional AX5100 Types
+  * Add Delta MS300 initial
+  * fixed el1918 to adapt new el6900 config method
+  * added inverted inputs to EL1904
+  * clean up EL6900
+  * fixed el1918_logic pdo count calculation
+  * better buffer handling of dynamic fsoe data
+  * allow dynamic pdo mapping via params for ax5
+  * fixed dynamic pdo mapping index update
+  * added ax5 diagonistic number pin
+  * removed unused raw feedback pins
+  * fixed enc subclass initialization
+  * fixed PDO count calculation
+  * changed ramp scaling
+  * fix bug PDO Mapping MS300
+  * fix ms300 pdo count bug
+  * Ethercat Float Test
+  * added delta MS300 velo scale parameter
+  * Update for README.md of linuxcnc-ethercat/linuxcnc-ethercat.
+  * Create CODE_OF_CONDUCT.md
+  * Create CONTRIBUTING
+  * Create c-cpp.yml
+  * Update c-cpp.yml
+  * Update c-cpp.yml
+  * fixed typo
+  * added el5002 and el5032
+  * Add support for Beckhoff EL1804
+  * Fully implemented EP2316
+  * Removed old #defines
+  * Renamed diag pins
+  * Add EP2308, EP2318 and EP2328
+  * Add missing chnages to lcec_conf
+  * Add missing changes to lcec_main
+  * testing
+  * Simplifying CI dependencies
+  * Break the CI action up into multiple workflows, with Ethercat Master and LinuxCNC itself being cached between runs.
+  * Update CONTRIBUTING and add clang-format default
+  * add el6090
+  * initial per-device documentation
+  * Add script to fetch and decode ESI files from Beckhoff and Omron.
+  * Create device docs from ESI files
+  * Documentation update to list the devices that @scottlaird has on hand.
+  * Additional device documentation updates
+  * Update Beckhoff device descriptions for consistency
+  * debian packaging
+  * Add go-semantic-release CI hooks
+  * Run the release workflow on push as well as pull_request
+  * Run Debian release jobs on all builds
+  * Switch yamllint to relaxed mode
+  * Add write permissions to release workflow
+
+ -- Scott Laird <scott@sigkill.org>  Thu, 21 Dec 2023 06:48:18 +0000
+
 linuxcnc-ethercat (0.9.4) unstable; urgency=low
 
   * added EL7211 debug pins
