@@ -93,7 +93,7 @@ jobs:
                     - "debian:buster"
                     #- "debian:bullseye"
                     #- "debian:bookworm"
-                    - "debian:sid"
+                    #- "debian:sid"
                 #arch:
                 #  - amd64
         env:
