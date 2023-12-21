@@ -13,3 +13,10 @@ repos:
           - id: yamlfmt
             args: [--preserve-quotes]
             exclude: scripts/esi.yml
+
+    - repo: https://github.com/compilerla/conventional-pre-commit
+      rev: v3.0.0
+      hooks:
+          - id: conventional-pre-commit
+            stages: [commit-msg]
+            args: [build, ci, docs, feat, fix, perf, revert, style, test]
