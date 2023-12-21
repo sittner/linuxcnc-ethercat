@@ -68,7 +68,7 @@ jobs:
                   git config --global user.email "scott+bot@sigkill.org"
                   git config --global user.name "LinucCNC-Ethercat git bot"
                   git add debian/changelog
-                  git commit -m 'generated'
+                  git commit -m 'Automatically update debian/changelog'
                   git push
                   echo "complete"
 
@@ -89,7 +89,11 @@ jobs:
             - update-debian-changelog
         strategy:
             matrix:
-                image: ["debian:buster", "debian:bullseye", "debian:bookworm", "debian:sid"]
+                image:
+                    - "debian:buster"
+                    - "debian:bullseye"
+                    - "debian:bookworm"
+                    - "debian:sid"
         env:
             DEBEMAIL: scott@sigkill.org
             DEBFULLNAME: LinuxCNC-EtherCAT Github CI Robot
@@ -100,11 +104,6 @@ jobs:
           # SYS_ADMIN is needed for shmctl IPC_SET
             options: --cpus=2 --cap-add=IPC_OWNER --cap-add=SYS_ADMIN
         steps:
-            - name: Dump GitHub context
-              env:
-                  GITHUB_CONTEXT: ${{ toJson(github) }}
-              run: echo "$GITHUB_CONTEXT"
-
             - name: Add linuxcnc.org deb archive
               env:
                   DEBIAN_FRONTEND: noninteractive
@@ -128,6 +127,40 @@ jobs:
                   DIST=$(echo ${{matrix.image}} | cut -d : -f 2)
                   add-apt-repository "deb http://linuxcnc.org $DIST 2.9-uspace"
                   apt --quiet update
+
+            # We need to get packages for the Ethercat code from *someplace*, and
+            # I'd rather not build them ourselves.  It looks like the version that
+            # bone11111 has in OpenSuSE's build system is the defacto standard, so let's
+            # use those.
+            - name: Add build.opensuse.org Ethercat deb archive
+              env:
+                  DEBIAN_FRONTEND: noninteractive
+              run: |
+                  set -e
+                  set -x
+
+                  case "${{matrix.image}}" in
+                  debian:sid)
+                    echo "deb [trusted=yes] http://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_Unstable/ ./"> etherlab.list
+                    ;;
+                  debian:bookworm)
+                    echo "deb [trusted=yes] http://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_12/ ./"> etherlab.list
+                    ;;
+                  debian:bullseye)
+                    echo "deb [trusted=yes] http://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_11/ ./"> etherlab.list
+                    ;;
+                  debian:buster)
+                    echo "deb [trusted=yes] http://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_10/ ./"> etherlab.list
+                    ;;
+                  esac
+
+                  sudo cp etherlab.list /etc/apt/sources.list.d/etherlab.list
+                  curl -fsSL https://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_10/Release.key | gpg --dearmor > ec.gpg
+                  sudo cp ec.gpg /usr/share/keyrings/ethercat.gpg
+
+
+                  apt --quiet update
+                  apt install ethercat-master libethercat-dev libpdserv3-dev librtipc-dev etherlab2
 
             - name: Install pre-dependencies
               env:
