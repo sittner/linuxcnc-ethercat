@@ -4,6 +4,7 @@ name: Release process
 on:  # yamllint disable-line rule:truthy
     pull_request:
         branches: ['**']
+        types: [closed]
     push:
         branches: [master]
 
@@ -64,8 +65,9 @@ jobs:
                   # from https://gist.github.com/Broxzier/1ed980b8b3822d213e98042fc6a92040
                   git config --global user.email "scott+bot@sigkill.org"
                   git config --global user.name "LinucCNC-Ethercat git bot"
-                  git commit -a --amend --no-edit
-                  git push --force-with-lease
+                  git add debian/changelog
+                  git commit -m 'generated'
+                  git push
                   echo "complete"
 
             #- name: Create Pull Request
