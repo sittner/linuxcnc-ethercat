@@ -1,3 +1,9 @@
+linuxcnc-ethercat (0.9.14) unstable; urgency=medium
+
+  * ci: split release workflow
+
+ -- Scott Laird <scott@sigkill.org>  Thu, 21 Dec 2023 20:02:12 +0000
+
 linuxcnc-ethercat (0.9.13) unstable; urgency=medium
 
   * build: add conventional-commit pre-commit hook
