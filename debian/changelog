@@ -1,3 +1,9 @@
+linuxcnc-ethercat (0.9.12) unstable; urgency=medium
+
+  * UNRELEASED
+
+ -- Scott Laird <scott@sigkill.org>  Thu, 21 Dec 2023 19:06:13 +0000
+
 linuxcnc-ethercat (0.9.11) unstable; urgency=medium
 
   * UNRELEASED
