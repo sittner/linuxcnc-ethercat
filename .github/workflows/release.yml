@@ -112,7 +112,7 @@ jobs:
                   set -x
 
                   apt --quiet update
-                  apt --yes --quiet install --no-install-recommends gpg software-properties-common git docker.io sudo dpkg-dev
+                  apt --yes --quiet install --no-install-recommends gpg software-properties-common git docker.io sudo dpkg-dev curl
 
                   #case "${{matrix.image}}" in
                   #debian:sid|debian:bookworm)
@@ -155,7 +155,7 @@ jobs:
                   esac
 
                   sudo cp etherlab.list /etc/apt/sources.list.d/etherlab.list
-                  curl -fsSL https://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_10/Release.key | gpg --dearmor > ec.gpg
+                  curl -fsSL "https://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_10/Release.key" | gpg --dearmor > ec.gpg
                   sudo cp ec.gpg /usr/share/keyrings/ethercat.gpg
 
 
