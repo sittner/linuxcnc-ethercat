@@ -1,3 +1,9 @@
+linuxcnc-ethercat (0.9.10) unstable; urgency=medium
+
+  * UNRELEASED
+
+ -- Scott Laird <scott@sigkill.org>  Thu, 21 Dec 2023 18:47:28 +0000
+
 linuxcnc-ethercat (0.9.9) unstable; urgency=medium
 
   * disable bullseye and bookwork
