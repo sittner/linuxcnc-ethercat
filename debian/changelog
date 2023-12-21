@@ -24,21 +24,21 @@ linuxcnc-ethercat (0.9.6) unstable; urgency=medium
 
 linuxcnc-ethercat (0.9.5) unstable; urgency=medium
 
-  * - allow string modparam value
-  * - add support for named stdios for EL6900
-  * - removed unused PDO mappings for EL6900
-  * - removed EL6900 debug pins for fsoe data
-  * - optional preinit function per device to allow dynamic configuration (i.e. PDO mapping count) - FSOE parameters per device
-  * - fixed string modparam parsing
-  * - fixed EL6900 dynamic stdio mapping
-  * - added initial ax5805 support
-  * - fixed fsoe example for dynamic stdio mapping
-  * - moved fsoeConf initialization to slave preinit function
-  * - removed obsolete comment
-  * - added ax5100 support - created class for ax5xxx
-  * - added AX51xx support to AX5805
-  * - autodetect number of ax5805 channels
-  * - move fsoe config for AX5805 to AX5nxx driver
+  * allow string modparam value
+  * add support for named stdios for EL6900
+  * removed unused PDO mappings for EL6900
+  * removed EL6900 debug pins for fsoe data
+  * optional preinit function per device to allow dynamic configuration (i.e. PDO mapping count) - FSOE parameters per device
+  * fixed string modparam parsing
+  * fixed EL6900 dynamic stdio mapping
+  * added initial ax5805 support
+  * fixed fsoe example for dynamic stdio mapping
+  * moved fsoeConf initialization to slave preinit function
+  * removed obsolete comment
+  * added ax5100 support - created class for ax5xxx
+  * added AX51xx support to AX5805
+  * autodetect number of ax5805 channels
+  * move fsoe config for AX5805 to AX5nxx driver
   * Add support for Beckhoff EL30x4 (4-port 12-bit analog in) and EL3202 (2-port temperature in) modules.
   * Added semi-functioning support for EL3403 3-phase power meter.  Still returns bogus results, but mine don't have power applied at the moment, so it *might* not be a bug.
   * Minor EL3403 cleanups; now reads all-0 instead of -INT_MAX.
