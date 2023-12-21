@@ -1,3 +1,9 @@
+linuxcnc-ethercat (0.9.13) unstable; urgency=medium
+
+  * build: add conventional-commit pre-commit hook
+
+ -- Scott Laird <scott@sigkill.org>  Thu, 21 Dec 2023 19:40:50 +0000
+
 linuxcnc-ethercat (0.9.12) unstable; urgency=medium
 
   * UNRELEASED
