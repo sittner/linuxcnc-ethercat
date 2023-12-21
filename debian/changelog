@@ -1,3 +1,9 @@
+linuxcnc-ethercat (0.9.6) unstable; urgency=medium
+
+  * Add bone11111's opensuse .deb archive for EtherLab, and try building with that.
+
+ -- Scott Laird <scott@sigkill.org>  Thu, 21 Dec 2023 18:05:57 +0000
+
 linuxcnc-ethercat (0.9.5) unstable; urgency=medium
 
   * - allow string modparam value
