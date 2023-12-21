@@ -1,0 +1,143 @@
+---
+name: Release process
+
+on:  # yamllint disable-line rule:truthy
+    release:
+        # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
+        types: [published]
+
+permissions:
+    contents: read  # to fetch code (actions/checkout)
+
+jobs:
+    # This is mostly copied from LinuxCNC's ci.yml as well.
+    build-debian-packages:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                image:
+                    - "debian:buster"
+                    #- "debian:bullseye"
+                    #- "debian:bookworm"
+                    #- "debian:sid"
+                #arch:
+                #  - amd64
+        env:
+            DEBEMAIL: scott@sigkill.org
+            DEBFULLNAME: LinuxCNC-EtherCAT Github CI Robot
+            DEBIAN_FRONTEND: noninteractive
+        container:
+            image: ${{ matrix.image }}
+            # IPC_OWNER is needed for shmget IPC_CREAT
+            # SYS_ADMIN is needed for shmctl IPC_SET
+            options: --cpus=2 --cap-add=IPC_OWNER --cap-add=SYS_ADMIN
+        steps:
+            - name: Add linuxcnc.org deb archive
+              env:
+                  DEBIAN_FRONTEND: noninteractive
+              run: |
+                  set -e
+                  set -x
+
+                  apt --quiet update
+                  apt --yes --quiet install --no-install-recommends gpg software-properties-common git docker.io sudo dpkg-dev curl devscripts
+
+                  apt --yes --quiet install --no-install-recommends gpg software-properties-common
+                  git clone https://github.com/LinuxCNC/linuxcnc.git linuxcnc
+                  gpg --homedir="${PWD}/linuxcnc/gnupg" --output /etc/apt/trusted.gpg.d/linuxcnc-deb-archive.gpg --export 3CB9FD148F374FEF
+                  DIST=$(echo ${{matrix.image}} | cut -d : -f 2)
+                  add-apt-repository "deb http://linuxcnc.org $DIST 2.9-uspace"
+                  apt --quiet update
+
+            # We need to get packages for the Ethercat code from *someplace*, and
+            # I'd rather not build them ourselves.  It looks like the version that
+            # bone11111 has in OpenSuSE's build system is the defacto standard, so let's
+            # use those.
+            - name: Add build.opensuse.org Ethercat deb archive
+              env:
+                  DEBIAN_FRONTEND: noninteractive
+              run: |
+                  set -e
+                  set -x
+
+                  case "${{matrix.image}}" in
+                  debian:sid)
+                    echo "deb [trusted=yes] http://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_Unstable/ ./"> etherlab.list
+                    ;;
+                  debian:bookworm)
+                    echo "deb [trusted=yes] http://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_12/ ./"> etherlab.list
+                    ;;
+                  debian:bullseye)
+                    echo "deb [trusted=yes] http://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_11/ ./"> etherlab.list
+                    ;;
+                  debian:buster)
+                    echo "deb [trusted=yes] http://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_10/ ./"> etherlab.list
+                    ;;
+                  esac
+
+                  sudo cp etherlab.list /etc/apt/sources.list.d/etherlab.list
+                  curl -fsSL "https://download.opensuse.org/repositories/home:/bone11111:/branches:/science:/EtherLab/Debian_10/Release.key" | gpg --dearmor > ec.gpg
+                  sudo cp ec.gpg /usr/share/keyrings/ethercat.gpg
+
+                  apt --quiet update
+                  apt --quiet --yes install ethercat-master libethercat-dev libpdserv3-dev librtipc-dev etherlab2
+
+            - name: Install pre-dependencies
+              env:
+                  DEBIAN_FRONTEND: noninteractive
+              run: |
+                  set -e
+                  set -x
+                  apt --yes install linuxcnc-uspace
+                  apt --yes install yapps2
+
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+              # "fetch-depth: 0" fetches all of history, this is needed by
+              # our build system to determine the version from tags
+                  fetch-depth: 0
+
+            - name: Determine current version
+              run: |
+                  echo "CURRENT_VERSION=$(dpkg-parsechangelog -Sversion)" >> $GITHUB_ENV
+
+            - name: Build architecture-specific Debian packages
+              run: |
+                  set -e
+                  set -x
+                  git config --global --add safe.directory "${PWD}"
+                  #debian/configure
+                  #debian/update-dch-from-git
+                  #scripts/get-version-from-git | sed -re 's/^v(.*)$/\1/' >| VERSION; cat VERSION
+                  echo ${{ env.CURRENT_VERSION }}
+                  git diff
+                  apt --yes --quiet build-dep --arch-only .
+                  debuild -us -uc --build=any
+
+            - name: Test debian packages
+              env:
+                  DEBIAN_FRONTEND: noninteractive
+              run: |
+                  set -e
+                  set -x
+                  apt --yes --quiet install ../*.deb
+
+            - name: Upload linuxcnc-ethercat .deb to release
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: ../linuxcnc-ethercat_${{ env.CURRENT_VERSION }}_amd64.deb
+                  asset_name: deb/${{ matrix.image }}/mything
+                  overwrite: true
+                  make_latest: false
+
+            - name: Upload linuxcnc-ethercat-dbgsym .deb to release
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: ../linuxcnc-ethercat-dbgsym_${{ env.CURRENT_VERSION }}_amd64.deb
+                  asset_name: deb/${{ matrix.image }}/mything
+                  overwrite: true
+                  make_latest: false
+
