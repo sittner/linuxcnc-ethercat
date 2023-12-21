@@ -2,8 +2,9 @@
 name: Release process
 
 on:  # yamllint disable-line rule:truthy
-    push:
-        branches: [master]
+    pull_request:
+        branches: ['**']
+        types: [closed]
 
 permissions:
     contents: read  # to fetch code (actions/checkout)
@@ -31,7 +32,7 @@ jobs:
     # build-debian-packages, below.
     update-debian-changelog:
         # Only run if this commit has been tagged as part of a new release.
-        if: startswith(github.event.ref, 'refs/tags/v')
+        if: steps.release.outputs.version != ''
         env:
             CHANGELOG_AUTHOR_NAME: "Scott Laird"
             CHANGELOG_AUTHOR_EMAIL: "scott@sigkill.org"
@@ -69,4 +70,5 @@ jobs:
                   git commit -m 'Automatically update debian/changelog'
                   git push
                   echo "complete"
+
 
