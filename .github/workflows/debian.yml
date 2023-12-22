@@ -1,10 +1,11 @@
 ---
-name: Release process
+name: Create Debian Packages
 
 on:  # yamllint disable-line rule:truthy
     release:
         # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
         types: [published]
+    workflow_dispatch:  # Allow to be triggered manually for now.
 
 permissions:
     contents: read  # to fetch code (actions/checkout)

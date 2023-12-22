@@ -5,6 +5,7 @@ on:  # yamllint disable-line rule:truthy
     pull_request:
         branches: ['**']
         types: [closed]
+    workflow_dispatch:  # Allow to be triggered manually for now.
 
 permissions:
     contents: read  # to fetch code (actions/checkout)
@@ -13,32 +14,10 @@ jobs:
     # Create new releases of linuxcnc-ethercat using a version of the Semantic Release
     # method.  This draws release notes from properly-formatted commit messages.
     release:
-        runs-on: ubuntu-latest # Not the same as above
-        permissions:
-            contents: write
-        steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-go@v3
-              with:
-                  go-version: 1.19
-            - uses: go-semantic-release/action@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    # Build LinuxCNC-Ethercat debian package
-    #
-    # Unclear if this is supposed to push debian/changelog back into
-    # git or what.  Somehow, we need to get this file through to
-    # build-debian-packages, below.
-    update-debian-changelog:
-        # Only run if this commit has been tagged as part of a new release.
-        if: steps.release.outputs.version != ''
         env:
             CHANGELOG_AUTHOR_NAME: "Scott Laird"
             CHANGELOG_AUTHOR_EMAIL: "scott@sigkill.org"
-        runs-on: ubuntu-latest
-        needs:
-            - release
+        runs-on: ubuntu-latest # Not the same as above
         permissions:
             contents: write
         steps:
@@ -48,6 +27,17 @@ jobs:
                   fetch-depth: 0
                   token: ${{ secrets.GITHUB_TOKEN }}
 
+            - name: Setup Go
+              uses: actions/setup-go@v3
+              with:
+                  go-version: 1.19
+
+            - name: Release code
+              uses: go-semantic-release/action@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            # Stop here if no release is created.
             - name: Patch changelog (snapshot)
               id: bump_changelog
               uses: pi-top/git-debian-changelog-bump-action@master
@@ -64,10 +54,10 @@ jobs:
             - name: Submit the last change to Git
               run: |
                   # from https://gist.github.com/Broxzier/1ed980b8b3822d213e98042fc6a92040
-                  git config --global user.email "scott+bot@sigkill.org"
+                  git config --global user.email "scott+github-bot@sigkill.org"
                   git config --global user.name "LinucCNC-Ethercat git bot"
                   git add debian/changelog
-                  git commit -m 'Automatically update debian/changelog'
+                  git commit -m 'Automatically update debian/changelog for ${{ CURRENT_VERSION }}'
                   git push
                   echo "complete"
 
