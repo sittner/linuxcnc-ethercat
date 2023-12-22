@@ -81,7 +81,7 @@ jobs:
                   sudo cp ec.gpg /usr/share/keyrings/ethercat.gpg
 
                   apt --quiet update
-                  apt --quiet --yes install ethercat-master libethercat-dev libpdserv3-dev librtipc-dev etherlab2
+                  apt --yes --quiet install ethercat-master libethercat-dev libpdserv3-dev librtipc-dev etherlab2
 
             - name: Install pre-dependencies
               env:
@@ -89,8 +89,8 @@ jobs:
               run: |
                   set -e
                   set -x
-                  apt --yes install linuxcnc-uspace
-                  apt --yes install yapps2
+                  apt --yes --quiet install linuxcnc-uspace
+                  apt --yes --quiet install yapps2
 
             - name: Checkout
               uses: actions/checkout@v3
