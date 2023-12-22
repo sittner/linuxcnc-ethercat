@@ -11,6 +11,43 @@ permissions:
     contents: read  # to fetch code (actions/checkout)
 
 jobs:
+    update-changelog:
+        env:
+            CHANGELOG_AUTHOR_NAME: "Scott Laird"
+            CHANGELOG_AUTHOR_EMAIL: "scott@sigkill.org"
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code again
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Patch changelog (snapshot)
+              id: bump_changelog
+              env:
+                  DEBEMAIL: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
+                  DEBFULLNAME: ${{ env.CHANGELOG_AUTHOR_NAME }}
+              run: |
+                  set -e
+                  sudo apt --yes --quiet install git-buildpackage
+                  gbp dch -R -N ${GITHUB_REF:11}
+
+            - name: Determine current version
+              run: |
+                  sudo apt install -y dpkg-dev
+                  echo "CURRENT_VERSION=$(dpkg-parsechangelog -Sversion)" >> $GITHUB_ENV
+
+            - name: Submit the last change to Git
+              run: |
+                  # from https://gist.github.com/Broxzier/1ed980b8b3822d213e98042fc6a92040
+                  git config --global user.email "scott+github-bot@sigkill.org"
+                  git config --global user.name "LinucCNC-Ethercat git bot"
+                  git add debian/changelog
+                  git commit --amend --no-edit  # -m 'Automatically update debian/changelog for ${{ env.CURRENT_VERSION }}'
+                  git push
+                  echo "complete"
+
     # This is mostly copied from LinuxCNC's ci.yml as well.
     build-debian-packages:
         runs-on: ubuntu-latest
