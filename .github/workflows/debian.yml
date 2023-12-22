@@ -17,6 +17,11 @@ jobs:
             CHANGELOG_AUTHOR_EMAIL: "scott@sigkill.org"
         runs-on: ubuntu-latest
         steps:
+            - name: Dump GitHub context
+              env:
+                  GITHUB_CONTEXT: ${{ toJson(github) }}
+              run: echo "$GITHUB_CONTEXT"
+
             - name: Checkout code again
               uses: actions/checkout@v4
               with:
@@ -31,6 +36,7 @@ jobs:
               run: |
                   set -e
                   sudo apt --yes --quiet install git-buildpackage
+                  echo "GITHUB_REF=${GITHUB_REF}"
                   gbp dch -R -N ${GITHUB_REF:11}
 
             - name: Determine current version
