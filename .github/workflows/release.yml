@@ -57,7 +57,7 @@ jobs:
                   git config --global user.email "scott+github-bot@sigkill.org"
                   git config --global user.name "LinucCNC-Ethercat git bot"
                   git add debian/changelog
-                  git commit -m 'Automatically update debian/changelog for ${{ CURRENT_VERSION }}'
+                  git commit -m 'Automatically update debian/changelog for ${{ env.CURRENT_VERSION }}'
                   git push
                   echo "complete"
 
