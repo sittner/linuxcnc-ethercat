@@ -17,7 +17,7 @@ jobs:
         env:
             CHANGELOG_AUTHOR_NAME: "Scott Laird"
             CHANGELOG_AUTHOR_EMAIL: "scott@sigkill.org"
-        runs-on: ubuntu-latest # Not the same as above
+        runs-on: ubuntu-latest
         permissions:
             contents: write
         steps:
@@ -39,12 +39,15 @@ jobs:
 
             # Stop here if no release is created.
             - name: Patch changelog (snapshot)
+              #if: steps.release.outputs.changelog != ''
               id: bump_changelog
-              uses: pi-top/git-debian-changelog-bump-action@master
-              with:
-                  release: true
-                  author_name: ${{ env.CHANGELOG_AUTHOR_NAME }}
-                  author_email: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
+              env:
+                  DEBEMAIL: ${{ env.CHANGELOG_AUTHOR_EMAIL }}
+                  DEBFULLNAME: ${{ env.CHANGELOG_AUTHOR_NAME }}
+              run: |
+                  set -e
+                  sudo apt install git-buildpackage
+                  bgp dch -R -N ${{ steps.release.outputs.version }}
 
             - name: Determine current version
               run: |
@@ -60,5 +63,3 @@ jobs:
                   git commit -m 'Automatically update debian/changelog for ${{ env.CURRENT_VERSION }}'
                   git push
                   echo "complete"
-
-
