@@ -1,3 +1,16 @@
+linuxcnc-ethercat (0.9.15) unstable; urgency=medium
+
+  * ci: only run Debian changelog updater if a new version is being cut.
+  * ci: Add gbp.conf to try to match Debian versions with GH release versions
+  * docs: Update CONTRIBUTING
+  * fix(test): Remove TODO file
+  * fix(test): Only run the release process on the pull_request, not on the push.
+  * fix(test): Run the Debian changelog more aggressively.
+  * ci: more work on releases and debian building
+  * fix(test): Use the correct syntax for CURRENT_VERSION in release.yml
+
+ -- Scott Laird <scott@sigkill.org>  Fri, 22 Dec 2023 05:27:19 +0000
+
 linuxcnc-ethercat (0.9.14) unstable; urgency=medium
 
   * ci: split release workflow
