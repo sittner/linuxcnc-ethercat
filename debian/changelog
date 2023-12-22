@@ -1,3 +1,9 @@
+linuxcnc-ethercat (0.9.16) unstable; urgency=medium
+
+  * build(debian): Remove TODO from debian/docs
+
+ -- Scott Laird <scott@sigkill.org>  Fri, 22 Dec 2023 05:35:34 +0000
+
 linuxcnc-ethercat (0.9.15) unstable; urgency=medium
 
   * ci: only run Debian changelog updater if a new version is being cut.
