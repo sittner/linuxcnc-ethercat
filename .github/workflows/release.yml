@@ -5,6 +5,7 @@ on:  # yamllint disable-line rule:truthy
     pull_request:
         branches: ['**']
         types: [closed]
+    merge_group:
     workflow_dispatch:  # Allow to be triggered manually for now.
 
 permissions:

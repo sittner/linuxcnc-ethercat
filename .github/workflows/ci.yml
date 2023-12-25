@@ -16,6 +16,7 @@ on:  # yamllint disable-line rule:truthy
     push:
         branches: [master]
     pull_request:
+    merge_group:
     release:
         types: [published]
     check_suite:
