@@ -26,6 +26,35 @@ typedef struct {
   unsigned int pdo_bp;
 } lcec_el1xxx_pin_t;
 
+static lcec_typelist_t types[]={
+  { "EL1002", lcecSlaveTypeEL1002, LCEC_EL1xxx_VID, LCEC_EL1002_PID, LCEC_EL1002_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1004", lcecSlaveTypeEL1004, LCEC_EL1xxx_VID, LCEC_EL1004_PID, LCEC_EL1004_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1008", lcecSlaveTypeEL1008, LCEC_EL1xxx_VID, LCEC_EL1008_PID, LCEC_EL1008_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1012", lcecSlaveTypeEL1012, LCEC_EL1xxx_VID, LCEC_EL1012_PID, LCEC_EL1012_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1014", lcecSlaveTypeEL1014, LCEC_EL1xxx_VID, LCEC_EL1014_PID, LCEC_EL1014_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1018", lcecSlaveTypeEL1018, LCEC_EL1xxx_VID, LCEC_EL1018_PID, LCEC_EL1018_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1024", lcecSlaveTypeEL1024, LCEC_EL1xxx_VID, LCEC_EL1024_PID, LCEC_EL1024_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1034", lcecSlaveTypeEL1034, LCEC_EL1xxx_VID, LCEC_EL1034_PID, LCEC_EL1034_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1084", lcecSlaveTypeEL1084, LCEC_EL1xxx_VID, LCEC_EL1084_PID, LCEC_EL1084_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1088", lcecSlaveTypeEL1088, LCEC_EL1xxx_VID, LCEC_EL1088_PID, LCEC_EL1088_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1094", lcecSlaveTypeEL1094, LCEC_EL1xxx_VID, LCEC_EL1094_PID, LCEC_EL1094_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1098", lcecSlaveTypeEL1098, LCEC_EL1xxx_VID, LCEC_EL1098_PID, LCEC_EL1098_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1104", lcecSlaveTypeEL1104, LCEC_EL1xxx_VID, LCEC_EL1104_PID, LCEC_EL1104_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1114", lcecSlaveTypeEL1114, LCEC_EL1xxx_VID, LCEC_EL1114_PID, LCEC_EL1114_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1124", lcecSlaveTypeEL1124, LCEC_EL1xxx_VID, LCEC_EL1124_PID, LCEC_EL1124_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1134", lcecSlaveTypeEL1134, LCEC_EL1xxx_VID, LCEC_EL1134_PID, LCEC_EL1134_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1144", lcecSlaveTypeEL1144, LCEC_EL1xxx_VID, LCEC_EL1144_PID, LCEC_EL1144_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1804", lcecSlaveTypeEL1804, LCEC_EL1xxx_VID, LCEC_EL1804_PID, LCEC_EL1804_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1808", lcecSlaveTypeEL1808, LCEC_EL1xxx_VID, LCEC_EL1808_PID, LCEC_EL1808_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1809", lcecSlaveTypeEL1809, LCEC_EL1xxx_VID, LCEC_EL1809_PID, LCEC_EL1809_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EP1008", lcecSlaveTypeEP1008, LCEC_EL1xxx_VID, LCEC_EP1008_PID, LCEC_EP1008_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EP1018", lcecSlaveTypeEP1018, LCEC_EL1xxx_VID, LCEC_EP1018_PID, LCEC_EL1018_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EP1819", lcecSlaveTypeEL1819, LCEC_EL1xxx_VID, LCEC_EL1819_PID, LCEC_EL1819_PDOS, 0, NULL, lcec_el1xxx_init},
+  { NULL },
+};
+
+ADD_TYPES(types);
+     
 static const lcec_pindesc_t slave_pins[] = {
   { HAL_BIT, HAL_OUT, offsetof(lcec_el1xxx_pin_t, in), "%s.%s.%s.din-%d" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_el1xxx_pin_t, in_not), "%s.%s.%s.din-%d-not" },

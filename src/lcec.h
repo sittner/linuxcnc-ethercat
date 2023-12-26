@@ -56,6 +56,11 @@ do {                        \
 
 #define LCEC_MSG_PFX "LCEC: "
 
+// init macro
+#define ADD_TYPES(types) \
+static void AddTypes(void) __attribute__((constructor)); \
+static void AddTypes(void) { lcec_addtypes(types); }
+
 // vendor ids
 #define LCEC_BECKHOFF_VID 0x00000002
 #define LCEC_STOEBER_VID  0x000000b9
@@ -89,6 +94,17 @@ typedef int (*lcec_slave_preinit_t) (struct lcec_slave *slave);
 typedef int (*lcec_slave_init_t) (int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 typedef void (*lcec_slave_cleanup_t) (struct lcec_slave *slave);
 typedef void (*lcec_slave_rw_t) (struct lcec_slave *slave, long period);
+
+typedef struct lcec_typelist {
+  char *name;
+  LCEC_SLAVE_TYPE_T type;
+  uint32_t vid;
+  uint32_t pid;
+  int pdo_entry_count;
+  int is_fsoe_logic;
+  lcec_slave_preinit_t proc_preinit;
+  lcec_slave_init_t proc_init;
+} lcec_typelist_t;
 
 typedef struct {
   int slave_data_len;
@@ -257,6 +273,8 @@ void lcec_syncs_init(lcec_syncs_t *syncs);
 void lcec_syncs_add_sync(lcec_syncs_t *syncs, ec_direction_t dir, ec_watchdog_mode_t watchdog_mode);
 void lcec_syncs_add_pdo_info(lcec_syncs_t *syncs, uint16_t index);
 void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subindex, uint8_t bit_length);
+void lcec_addtype(lcec_typelist_t *type);
+void lcec_addtypes(lcec_typelist_t types[]);
 
 #endif
 

@@ -27,7 +27,6 @@
 #include "lcec_el1859.h"
 #include "lcec_el1904.h"
 #include "lcec_el1918_logic.h"
-#include "lcec_el1xxx.h"
 #include "lcec_el2202.h"
 #include "lcec_el2521.h"
 #include "lcec_el2904.h"
@@ -72,235 +71,233 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Sascha Ittner <sascha.ittner@modusoft.de>");
 MODULE_DESCRIPTION("Driver for EtherCAT devices");
 
-typedef struct lcec_typelist {
-  LCEC_SLAVE_TYPE_T type;
-  uint32_t vid;
-  uint32_t pid;
-  int pdo_entry_count;
-  int is_fsoe_logic;
-  lcec_slave_preinit_t proc_preinit;
-  lcec_slave_init_t proc_init;
-} lcec_typelist_t;
+
+typedef struct lcec_typelinkedlist {
+  lcec_typelist_t *type;
+  struct lcec_typelinkedlist *next;
+} lcec_typelinkedlist_t;
+
+static lcec_typelinkedlist_t *typeslist = NULL;
+
+void lcec_addtype(lcec_typelist_t *type) {
+  lcec_typelinkedlist_t *t, *l;
+
+  t = hal_malloc(sizeof(lcec_typelinkedlist_t));
+  t->type = type;
+  t->next = NULL;
+
+  if (typeslist == NULL) {
+    typeslist=t;
+  } else {
+    for (l=typeslist; l->next != NULL; l=l->next);
+    l->next = t;
+  }
+}
+
+void lcec_addtypes(lcec_typelist_t types[]) {
+  lcec_typelist_t *type;
+
+  for (type = types; type->name != NULL; type++) {
+    lcec_addtype(type);
+  }
+}
 
 static const lcec_typelist_t types[] = {
   // bus coupler
-  { lcecSlaveTypeEK1100, LCEC_EK1100_VID, LCEC_EK1100_PID, LCEC_EK1100_PDOS, 0, NULL, NULL},
-  { lcecSlaveTypeEK1101, LCEC_EK1100_VID, LCEC_EK1101_PID, LCEC_EK1101_PDOS, 0, NULL, NULL},
-  { lcecSlaveTypeEK1110, LCEC_EK1100_VID, LCEC_EK1110_PID, LCEC_EK1110_PDOS, 0, NULL, NULL},
-  { lcecSlaveTypeEK1122, LCEC_EK1100_VID, LCEC_EK1122_PID, LCEC_EK1122_PDOS, 0, NULL, NULL},
+  { "EK1100,", lcecSlaveTypeEK1100, LCEC_EK1100_VID, LCEC_EK1100_PID, LCEC_EK1100_PDOS, 0, NULL, NULL},
+  { "EK1101,", lcecSlaveTypeEK1101, LCEC_EK1100_VID, LCEC_EK1101_PID, LCEC_EK1101_PDOS, 0, NULL, NULL},
+  { "EK1110,", lcecSlaveTypeEK1110, LCEC_EK1100_VID, LCEC_EK1110_PID, LCEC_EK1110_PDOS, 0, NULL, NULL},
+  { "EK1122,", lcecSlaveTypeEK1122, LCEC_EK1100_VID, LCEC_EK1122_PID, LCEC_EK1122_PDOS, 0, NULL, NULL},
 
   // AX5000 servo drives
-  { lcecSlaveTypeAX5101, LCEC_AX5100_VID, LCEC_AX5101_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5103, LCEC_AX5100_VID, LCEC_AX5103_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5106, LCEC_AX5100_VID, LCEC_AX5106_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5112, LCEC_AX5100_VID, LCEC_AX5112_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5118, LCEC_AX5100_VID, LCEC_AX5118_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { lcecSlaveTypeAX5203, LCEC_AX5200_VID, LCEC_AX5203_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
-  { lcecSlaveTypeAX5206, LCEC_AX5200_VID, LCEC_AX5206_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
+  { "AX5101,", lcecSlaveTypeAX5101, LCEC_AX5100_VID, LCEC_AX5101_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { "AX5103,", lcecSlaveTypeAX5103, LCEC_AX5100_VID, LCEC_AX5103_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { "AX5106,", lcecSlaveTypeAX5106, LCEC_AX5100_VID, LCEC_AX5106_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { "AX5112,", lcecSlaveTypeAX5112, LCEC_AX5100_VID, LCEC_AX5112_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { "AX5118,", lcecSlaveTypeAX5118, LCEC_AX5100_VID, LCEC_AX5118_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { "AX5203,", lcecSlaveTypeAX5203, LCEC_AX5200_VID, LCEC_AX5203_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
+  { "AX5206,", lcecSlaveTypeAX5206, LCEC_AX5200_VID, LCEC_AX5206_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
 
-  // digital in
-  { lcecSlaveTypeEL1002, LCEC_EL1xxx_VID, LCEC_EL1002_PID, LCEC_EL1002_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1004, LCEC_EL1xxx_VID, LCEC_EL1004_PID, LCEC_EL1004_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1008, LCEC_EL1xxx_VID, LCEC_EL1008_PID, LCEC_EL1008_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1012, LCEC_EL1xxx_VID, LCEC_EL1012_PID, LCEC_EL1012_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1014, LCEC_EL1xxx_VID, LCEC_EL1014_PID, LCEC_EL1014_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1018, LCEC_EL1xxx_VID, LCEC_EL1018_PID, LCEC_EL1018_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1024, LCEC_EL1xxx_VID, LCEC_EL1024_PID, LCEC_EL1024_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1034, LCEC_EL1xxx_VID, LCEC_EL1034_PID, LCEC_EL1034_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1084, LCEC_EL1xxx_VID, LCEC_EL1084_PID, LCEC_EL1084_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1088, LCEC_EL1xxx_VID, LCEC_EL1088_PID, LCEC_EL1088_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1094, LCEC_EL1xxx_VID, LCEC_EL1094_PID, LCEC_EL1094_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1098, LCEC_EL1xxx_VID, LCEC_EL1098_PID, LCEC_EL1098_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1104, LCEC_EL1xxx_VID, LCEC_EL1104_PID, LCEC_EL1104_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1114, LCEC_EL1xxx_VID, LCEC_EL1114_PID, LCEC_EL1114_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1124, LCEC_EL1xxx_VID, LCEC_EL1124_PID, LCEC_EL1124_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1134, LCEC_EL1xxx_VID, LCEC_EL1134_PID, LCEC_EL1134_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1144, LCEC_EL1xxx_VID, LCEC_EL1144_PID, LCEC_EL1144_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1252, LCEC_EL1252_VID, LCEC_EL1252_PID, LCEC_EL1252_PDOS, 0, NULL, lcec_el1252_init},  // 2 fast channels with timestamp
-  { lcecSlaveTypeEL1804, LCEC_EL1xxx_VID, LCEC_EL1804_PID, LCEC_EL1804_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1808, LCEC_EL1xxx_VID, LCEC_EL1808_PID, LCEC_EL1808_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1809, LCEC_EL1xxx_VID, LCEC_EL1809_PID, LCEC_EL1809_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEP1008, LCEC_EL1xxx_VID, LCEC_EP1008_PID, LCEC_EP1008_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEP1018, LCEC_EL1xxx_VID, LCEC_EP1018_PID, LCEC_EL1018_PDOS, 0, NULL, lcec_el1xxx_init},
-  { lcecSlaveTypeEL1819, LCEC_EL1xxx_VID, LCEC_EL1819_PID, LCEC_EL1819_PDOS, 0, NULL, lcec_el1xxx_init},
+  // digital in; see also lcec_el1xxx.c
+  { "EL1252,", lcecSlaveTypeEL1252, LCEC_EL1252_VID, LCEC_EL1252_PID, LCEC_EL1252_PDOS, 0, NULL, lcec_el1252_init},  // 2 fast channels with timestamp
 
   // digital out
-  { lcecSlaveTypeEL2002, LCEC_EL2xxx_VID, LCEC_EL2002_PID, LCEC_EL2002_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2004, LCEC_EL2xxx_VID, LCEC_EL2004_PID, LCEC_EL2004_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2008, LCEC_EL2xxx_VID, LCEC_EL2008_PID, LCEC_EL2008_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2022, LCEC_EL2xxx_VID, LCEC_EL2022_PID, LCEC_EL2022_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2024, LCEC_EL2xxx_VID, LCEC_EL2024_PID, LCEC_EL2024_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2032, LCEC_EL2xxx_VID, LCEC_EL2032_PID, LCEC_EL2032_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2034, LCEC_EL2xxx_VID, LCEC_EL2034_PID, LCEC_EL2034_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2042, LCEC_EL2xxx_VID, LCEC_EL2042_PID, LCEC_EL2042_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2084, LCEC_EL2xxx_VID, LCEC_EL2084_PID, LCEC_EL2084_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2088, LCEC_EL2xxx_VID, LCEC_EL2088_PID, LCEC_EL2088_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2124, LCEC_EL2xxx_VID, LCEC_EL2124_PID, LCEC_EL2124_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2202, LCEC_EL2202_VID, LCEC_EL2202_PID, LCEC_EL2202_PDOS, 0, NULL, lcec_el2202_init}, // 2 fast channels with tristate
-  { lcecSlaveTypeEL2612, LCEC_EL2xxx_VID, LCEC_EL2612_PID, LCEC_EL2612_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2622, LCEC_EL2xxx_VID, LCEC_EL2622_PID, LCEC_EL2622_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2634, LCEC_EL2xxx_VID, LCEC_EL2634_PID, LCEC_EL2634_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2652, LCEC_EL2xxx_VID, LCEC_EL2652_PID, LCEC_EL2652_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2808, LCEC_EL2xxx_VID, LCEC_EL2808_PID, LCEC_EL2808_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2798, LCEC_EL2xxx_VID, LCEC_EL2798_PID, LCEC_EL2798_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEL2809, LCEC_EL2xxx_VID, LCEC_EL2809_PID, LCEC_EL2809_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2002,", lcecSlaveTypeEL2002, LCEC_EL2xxx_VID, LCEC_EL2002_PID, LCEC_EL2002_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2004,", lcecSlaveTypeEL2004, LCEC_EL2xxx_VID, LCEC_EL2004_PID, LCEC_EL2004_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2008,", lcecSlaveTypeEL2008, LCEC_EL2xxx_VID, LCEC_EL2008_PID, LCEC_EL2008_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2022,", lcecSlaveTypeEL2022, LCEC_EL2xxx_VID, LCEC_EL2022_PID, LCEC_EL2022_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2024,", lcecSlaveTypeEL2024, LCEC_EL2xxx_VID, LCEC_EL2024_PID, LCEC_EL2024_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2032,", lcecSlaveTypeEL2032, LCEC_EL2xxx_VID, LCEC_EL2032_PID, LCEC_EL2032_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2034,", lcecSlaveTypeEL2034, LCEC_EL2xxx_VID, LCEC_EL2034_PID, LCEC_EL2034_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2042,", lcecSlaveTypeEL2042, LCEC_EL2xxx_VID, LCEC_EL2042_PID, LCEC_EL2042_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2084,", lcecSlaveTypeEL2084, LCEC_EL2xxx_VID, LCEC_EL2084_PID, LCEC_EL2084_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2088,", lcecSlaveTypeEL2088, LCEC_EL2xxx_VID, LCEC_EL2088_PID, LCEC_EL2088_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2124,", lcecSlaveTypeEL2124, LCEC_EL2xxx_VID, LCEC_EL2124_PID, LCEC_EL2124_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2202,", lcecSlaveTypeEL2202, LCEC_EL2202_VID, LCEC_EL2202_PID, LCEC_EL2202_PDOS, 0, NULL, lcec_el2202_init}, // 2 fast channels with tristate
+  { "EL2612,", lcecSlaveTypeEL2612, LCEC_EL2xxx_VID, LCEC_EL2612_PID, LCEC_EL2612_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2622,", lcecSlaveTypeEL2622, LCEC_EL2xxx_VID, LCEC_EL2622_PID, LCEC_EL2622_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2634,", lcecSlaveTypeEL2634, LCEC_EL2xxx_VID, LCEC_EL2634_PID, LCEC_EL2634_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2652,", lcecSlaveTypeEL2652, LCEC_EL2xxx_VID, LCEC_EL2652_PID, LCEC_EL2652_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2808,", lcecSlaveTypeEL2808, LCEC_EL2xxx_VID, LCEC_EL2808_PID, LCEC_EL2808_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2798,", lcecSlaveTypeEL2798, LCEC_EL2xxx_VID, LCEC_EL2798_PID, LCEC_EL2798_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2809,", lcecSlaveTypeEL2809, LCEC_EL2xxx_VID, LCEC_EL2809_PID, LCEC_EL2809_PDOS, 0, NULL, lcec_el2xxx_init},
 
-  { lcecSlaveTypeEP2008, LCEC_EL2xxx_VID, LCEC_EP2008_PID, LCEC_EP2008_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEP2028, LCEC_EL2xxx_VID, LCEC_EP2028_PID, LCEC_EP2028_PDOS, 0, NULL, lcec_el2xxx_init},
-  { lcecSlaveTypeEP2809, LCEC_EL2xxx_VID, LCEC_EP2809_PID, LCEC_EP2809_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EP2008,", lcecSlaveTypeEP2008, LCEC_EL2xxx_VID, LCEC_EP2008_PID, LCEC_EP2008_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EP2028,", lcecSlaveTypeEP2028, LCEC_EL2xxx_VID, LCEC_EP2028_PID, LCEC_EP2028_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EP2809,", lcecSlaveTypeEP2809, LCEC_EL2xxx_VID, LCEC_EP2809_PID, LCEC_EP2809_PDOS, 0, NULL, lcec_el2xxx_init},
 
   // digital in/out
-  { lcecSlaveTypeEL1859, LCEC_EL1859_VID, LCEC_EL1859_PID, LCEC_EL1859_PDOS, 0, NULL, lcec_el1859_init},
-  { lcecSlaveTypeEP2308, LCEC_EP23xx_VID, LCEC_EP2308_PID, LCEC_EP2308_PDOS, 0, NULL, lcec_ep23xx_init},
-  { lcecSlaveTypeEP2318, LCEC_EP23xx_VID, LCEC_EP2318_PID, LCEC_EP2318_PDOS, 0, NULL, lcec_ep23xx_init},
-  { lcecSlaveTypeEP2328, LCEC_EP23xx_VID, LCEC_EP2328_PID, LCEC_EP2328_PDOS, 0, NULL, lcec_ep23xx_init},
-  { lcecSlaveTypeEP2338, LCEC_EP23xx_VID, LCEC_EP2338_PID, LCEC_EP2338_PDOS, 0, NULL, lcec_ep23xx_init},
-  { lcecSlaveTypeEP2349, LCEC_EP23xx_VID, LCEC_EP2349_PID, LCEC_EP2349_PDOS, 0, NULL, lcec_ep23xx_init},
-  { lcecSlaveTypeEP2316, LCEC_EP23xx_VID, LCEC_EP2316_PID, LCEC_EP2316_PDOS, 0, NULL, lcec_ep2316_init},
+  { "EL1859,", lcecSlaveTypeEL1859, LCEC_EL1859_VID, LCEC_EL1859_PID, LCEC_EL1859_PDOS, 0, NULL, lcec_el1859_init},
+  { "EP2308,", lcecSlaveTypeEP2308, LCEC_EP23xx_VID, LCEC_EP2308_PID, LCEC_EP2308_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2318,", lcecSlaveTypeEP2318, LCEC_EP23xx_VID, LCEC_EP2318_PID, LCEC_EP2318_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2328,", lcecSlaveTypeEP2328, LCEC_EP23xx_VID, LCEC_EP2328_PID, LCEC_EP2328_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2338,", lcecSlaveTypeEP2338, LCEC_EP23xx_VID, LCEC_EP2338_PID, LCEC_EP2338_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2349,", lcecSlaveTypeEP2349, LCEC_EP23xx_VID, LCEC_EP2349_PID, LCEC_EP2349_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2316,", lcecSlaveTypeEP2316, LCEC_EP23xx_VID, LCEC_EP2316_PID, LCEC_EP2316_PDOS, 0, NULL, lcec_ep2316_init},
 
   // analog in, 4ch, 12 bits
-  { lcecSlaveTypeEL3004, LCEC_EL30x4_VID, LCEC_EL3004_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
-  { lcecSlaveTypeEL3044, LCEC_EL30x4_VID, LCEC_EL3044_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
-  { lcecSlaveTypeEL3054, LCEC_EL30x4_VID, LCEC_EL3054_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
-  { lcecSlaveTypeEL3064, LCEC_EL30x4_VID, LCEC_EL3064_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
+  { "EL3004,", lcecSlaveTypeEL3004, LCEC_EL30x4_VID, LCEC_EL3004_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
+  { "EL3044,", lcecSlaveTypeEL3044, LCEC_EL30x4_VID, LCEC_EL3044_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
+  { "EL3054,", lcecSlaveTypeEL3054, LCEC_EL30x4_VID, LCEC_EL3054_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
+  { "EL3064,", lcecSlaveTypeEL3064, LCEC_EL30x4_VID, LCEC_EL3064_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
 
   // analog in, 2ch, 16 bits
-  { lcecSlaveTypeEL3102, LCEC_EL31x2_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { lcecSlaveTypeEL3112, LCEC_EL31x2_VID, LCEC_EL3112_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { lcecSlaveTypeEL3122, LCEC_EL31x2_VID, LCEC_EL3122_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { lcecSlaveTypeEL3142, LCEC_EL31x2_VID, LCEC_EL3142_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { lcecSlaveTypeEL3152, LCEC_EL31x2_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { lcecSlaveTypeEL3162, LCEC_EL31x2_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { lcecSlaveTypeEL3202, LCEC_EL3202_VID, LCEC_EL3202_PID, LCEC_EL3202_PDOS, 0, NULL, lcec_el3202_init},
+  { "EL3102,", lcecSlaveTypeEL3102, LCEC_EL31x2_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3112,", lcecSlaveTypeEL3112, LCEC_EL31x2_VID, LCEC_EL3112_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3122,", lcecSlaveTypeEL3122, LCEC_EL31x2_VID, LCEC_EL3122_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3142,", lcecSlaveTypeEL3142, LCEC_EL31x2_VID, LCEC_EL3142_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3152,", lcecSlaveTypeEL3152, LCEC_EL31x2_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3162,", lcecSlaveTypeEL3162, LCEC_EL31x2_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3202,", lcecSlaveTypeEL3202, LCEC_EL3202_VID, LCEC_EL3202_PID, LCEC_EL3202_PDOS, 0, NULL, lcec_el3202_init},
 
   // analog in, 2ch, 16 bits
-  { lcecSlaveTypeEL3164, LCEC_EL31x4_VID, LCEC_EL3164_PID, LCEC_EL31x4_PDOS, 0, NULL, lcec_el31x4_init},
+  { "EL3164,", lcecSlaveTypeEL3164, LCEC_EL31x4_VID, LCEC_EL3164_PID, LCEC_EL31x4_PDOS, 0, NULL, lcec_el31x4_init},
 
   // analog in, 5ch, 16 bits
-  { lcecSlaveTypeEL3255, LCEC_EL3255_VID, LCEC_EL3255_PID, LCEC_EL3255_PDOS, 0, NULL, lcec_el3255_init},
+  { "EL3255,", lcecSlaveTypeEL3255, LCEC_EL3255_VID, LCEC_EL3255_PID, LCEC_EL3255_PDOS, 0, NULL, lcec_el3255_init},
 
   // analog in, 3ch, 16 bits
-  { lcecSlaveTypeEL3403, LCEC_EL3403_VID, LCEC_EL3403_PID, LCEC_EL3403_PDOS, 0, NULL, lcec_el3403_init},
+  { "EL3403,", lcecSlaveTypeEL3403, LCEC_EL3403_VID, LCEC_EL3403_PID, LCEC_EL3403_PDOS, 0, NULL, lcec_el3403_init},
 
   // analog out, 1ch, 12 bits
-  { lcecSlaveTypeEL4001, LCEC_EL40x1_VID, LCEC_EL4001_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
-  { lcecSlaveTypeEL4011, LCEC_EL40x1_VID, LCEC_EL4011_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
-  { lcecSlaveTypeEL4021, LCEC_EL40x1_VID, LCEC_EL4021_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
-  { lcecSlaveTypeEL4031, LCEC_EL40x1_VID, LCEC_EL4031_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
+  { "EL4001,", lcecSlaveTypeEL4001, LCEC_EL40x1_VID, LCEC_EL4001_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
+  { "EL4011,", lcecSlaveTypeEL4011, LCEC_EL40x1_VID, LCEC_EL4011_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
+  { "EL4021,", lcecSlaveTypeEL4021, LCEC_EL40x1_VID, LCEC_EL4021_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
+  { "EL4031,", lcecSlaveTypeEL4031, LCEC_EL40x1_VID, LCEC_EL4031_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
 
   // analog out, 2ch, 12 bits
-  { lcecSlaveTypeEL4002, LCEC_EL40x2_VID, LCEC_EL4002_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
-  { lcecSlaveTypeEL4012, LCEC_EL40x2_VID, LCEC_EL4012_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
-  { lcecSlaveTypeEL4022, LCEC_EL40x2_VID, LCEC_EL4022_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
-  { lcecSlaveTypeEL4032, LCEC_EL40x2_VID, LCEC_EL4032_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
+  { "EL4002,", lcecSlaveTypeEL4002, LCEC_EL40x2_VID, LCEC_EL4002_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
+  { "EL4012,", lcecSlaveTypeEL4012, LCEC_EL40x2_VID, LCEC_EL4012_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
+  { "EL4022,", lcecSlaveTypeEL4022, LCEC_EL40x2_VID, LCEC_EL4022_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
+  { "EL4032,", lcecSlaveTypeEL4032, LCEC_EL40x2_VID, LCEC_EL4032_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
 
   // analog out, 2ch, 16 bits
-  { lcecSlaveTypeEL4102, LCEC_EL41x2_VID, LCEC_EL4102_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-  { lcecSlaveTypeEL4112, LCEC_EL41x2_VID, LCEC_EL4112_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-  { lcecSlaveTypeEL4122, LCEC_EL41x2_VID, LCEC_EL4122_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-  { lcecSlaveTypeEL4132, LCEC_EL41x2_VID, LCEC_EL4132_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
+  { "EL4102,", lcecSlaveTypeEL4102, LCEC_EL41x2_VID, LCEC_EL4102_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
+  { "EL4112,", lcecSlaveTypeEL4112, LCEC_EL41x2_VID, LCEC_EL4112_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
+  { "EL4122,", lcecSlaveTypeEL4122, LCEC_EL41x2_VID, LCEC_EL4122_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
+  { "EL4132,", lcecSlaveTypeEL4132, LCEC_EL41x2_VID, LCEC_EL4132_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
 
   // analog out, 4ch, 16 bits
-  { lcecSlaveTypeEL4104, LCEC_EL41x4_VID, LCEC_EL4104_PID, LCEC_EL41x4_PDOS, 0, NULL, lcec_el41x4_init},
-  { lcecSlaveTypeEL4134, LCEC_EL41x4_VID, LCEC_EL4134_PID, LCEC_EL41x4_PDOS, 0, NULL, lcec_el41x4_init},
+  { "EL4104,", lcecSlaveTypeEL4104, LCEC_EL41x4_VID, LCEC_EL4104_PID, LCEC_EL41x4_PDOS, 0, NULL, lcec_el41x4_init},
+  { "EL4134,", lcecSlaveTypeEL4134, LCEC_EL41x4_VID, LCEC_EL4134_PID, LCEC_EL41x4_PDOS, 0, NULL, lcec_el41x4_init},
 
   // analog out, 8ch, 12 bits
-  { lcecSlaveTypeEL4008, LCEC_EL40x8_VID, LCEC_EL4008_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-  { lcecSlaveTypeEL4018, LCEC_EL40x8_VID, LCEC_EL4018_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-  { lcecSlaveTypeEL4028, LCEC_EL40x8_VID, LCEC_EL4028_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-  { lcecSlaveTypeEL4038, LCEC_EL40x8_VID, LCEC_EL4038_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
+  { "EL4008,", lcecSlaveTypeEL4008, LCEC_EL40x8_VID, LCEC_EL4008_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
+  { "EL4018,", lcecSlaveTypeEL4018, LCEC_EL40x8_VID, LCEC_EL4018_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
+  { "EL4028,", lcecSlaveTypeEL4028, LCEC_EL40x8_VID, LCEC_EL4028_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
+  { "EL4038,", lcecSlaveTypeEL4038, LCEC_EL40x8_VID, LCEC_EL4038_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
 
   // encoder inputs
-  { lcecSlaveTypeEL5002, LCEC_EL5002_VID, LCEC_EL5002_PID, LCEC_EL5002_PDOS, 0, NULL, lcec_el5002_init},
-  { lcecSlaveTypeEL5032, LCEC_EL5032_VID, LCEC_EL5032_PID, LCEC_EL5032_PDOS, 0, NULL, lcec_el5032_init},
-  { lcecSlaveTypeEL5101, LCEC_EL5101_VID, LCEC_EL5101_PID, LCEC_EL5101_PDOS, 0, NULL, lcec_el5101_init},
-  { lcecSlaveTypeEL5151, LCEC_EL5151_VID, LCEC_EL5151_PID, LCEC_EL5151_PDOS, 0, NULL, lcec_el5151_init},
-  { lcecSlaveTypeEL5152, LCEC_EL5152_VID, LCEC_EL5152_PID, LCEC_EL5152_PDOS, 0, NULL, lcec_el5152_init},
+  { "EL5002,", lcecSlaveTypeEL5002, LCEC_EL5002_VID, LCEC_EL5002_PID, LCEC_EL5002_PDOS, 0, NULL, lcec_el5002_init},
+  { "EL5032,", lcecSlaveTypeEL5032, LCEC_EL5032_VID, LCEC_EL5032_PID, LCEC_EL5032_PDOS, 0, NULL, lcec_el5032_init},
+  { "EL5101,", lcecSlaveTypeEL5101, LCEC_EL5101_VID, LCEC_EL5101_PID, LCEC_EL5101_PDOS, 0, NULL, lcec_el5101_init},
+  { "EL5151,", lcecSlaveTypeEL5151, LCEC_EL5151_VID, LCEC_EL5151_PID, LCEC_EL5151_PDOS, 0, NULL, lcec_el5151_init},
+  { "EL5152,", lcecSlaveTypeEL5152, LCEC_EL5152_VID, LCEC_EL5152_PID, LCEC_EL5152_PDOS, 0, NULL, lcec_el5152_init},
 
   // pulse train (stepper) output
-  { lcecSlaveTypeEL2521, LCEC_EL2521_VID, LCEC_EL2521_PID, LCEC_EL2521_PDOS, 0, NULL, lcec_el2521_init},
+  { "EL2521,", lcecSlaveTypeEL2521, LCEC_EL2521_VID, LCEC_EL2521_PID, LCEC_EL2521_PDOS, 0, NULL, lcec_el2521_init},
 
   // stepper
-  { lcecSlaveTypeEL7031, LCEC_EL70x1_VID, LCEC_EL7031_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7031_init},
-  { lcecSlaveTypeEL7041, LCEC_EL7041_VID, LCEC_EL7041_PID, LCEC_EL7041_PDOS, 0, NULL, lcec_el7041_init},
-  { lcecSlaveTypeEL7041_1000, LCEC_EL7041_VID, LCEC_EL7041_1000_PID, LCEC_EL7041_1000_PDOS, 0, NULL, lcec_el7041_init},
-  { lcecSlaveTypeEP7041, LCEC_EL7041_VID, LCEC_EP7041_PID, LCEC_EP7041_PDOS, 0, NULL, lcec_el7041_init},
+  { "EL7031,", lcecSlaveTypeEL7031, LCEC_EL70x1_VID, LCEC_EL7031_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7031_init},
+  { "EL7041,", lcecSlaveTypeEL7041, LCEC_EL7041_VID, LCEC_EL7041_PID, LCEC_EL7041_PDOS, 0, NULL, lcec_el7041_init},
+  { "EL7041_1000,", lcecSlaveTypeEL7041_1000, LCEC_EL7041_VID, LCEC_EL7041_1000_PID, LCEC_EL7041_1000_PDOS, 0, NULL, lcec_el7041_init},
+  { "EP7041,", lcecSlaveTypeEP7041, LCEC_EL7041_VID, LCEC_EP7041_PID, LCEC_EP7041_PDOS, 0, NULL, lcec_el7041_init},
 
   // ac servo
-  { lcecSlaveTypeEL7201_9014, LCEC_EL7211_VID, LCEC_EL7201_9014_PID, LCEC_EL7201_9014_PDOS, 0, NULL, lcec_el7201_9014_init},
-  { lcecSlaveTypeEL7211, LCEC_EL7211_VID, LCEC_EL7211_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
-  { lcecSlaveTypeEL7221, LCEC_EL7211_VID, LCEC_EL7221_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
+  { "EL7201_9014,", lcecSlaveTypeEL7201_9014, LCEC_EL7211_VID, LCEC_EL7201_9014_PID, LCEC_EL7201_9014_PDOS, 0, NULL, lcec_el7201_9014_init},
+  { "EL7211,", lcecSlaveTypeEL7211, LCEC_EL7211_VID, LCEC_EL7211_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
+  { "EL7221,", lcecSlaveTypeEL7221, LCEC_EL7211_VID, LCEC_EL7221_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
 
   // dc servo
-  { lcecSlaveTypeEL7342, LCEC_EL7342_VID, LCEC_EL7342_PID, LCEC_EL7342_PDOS, 0, NULL, lcec_el7342_init},
+  { "EL7342,", lcecSlaveTypeEL7342, LCEC_EL7342_VID, LCEC_EL7342_PID, LCEC_EL7342_PDOS, 0, NULL, lcec_el7342_init},
 
   // BLDC
-  { lcecSlaveTypeEL7411, LCEC_EL7411_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, 0, NULL, lcec_el7411_init},
+  { "EL7411,", lcecSlaveTypeEL7411, LCEC_EL7411_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, 0, NULL, lcec_el7411_init},
 
   // power supply
-  { lcecSlaveTypeEL9505, LCEC_EL95xx_VID, LCEC_EL9505_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { lcecSlaveTypeEL9508, LCEC_EL95xx_VID, LCEC_EL9508_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { lcecSlaveTypeEL9510, LCEC_EL95xx_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { lcecSlaveTypeEL9512, LCEC_EL95xx_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { lcecSlaveTypeEL9515, LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { lcecSlaveTypeEL9576, LCEC_EL95xx_VID, LCEC_EL9576_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9505,", lcecSlaveTypeEL9505, LCEC_EL95xx_VID, LCEC_EL9505_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9508,", lcecSlaveTypeEL9508, LCEC_EL95xx_VID, LCEC_EL9508_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9510,", lcecSlaveTypeEL9510, LCEC_EL95xx_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9512,", lcecSlaveTypeEL9512, LCEC_EL95xx_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9515,", lcecSlaveTypeEL9515, LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9576,", lcecSlaveTypeEL9576, LCEC_EL95xx_VID, LCEC_EL9576_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
 
   // Display Terminal
-  { lcecSlaveTypeEL6090, LCEC_EL6090_VID, LCEC_EL6090_PID, LCEC_EL6090_PDOS, 0, NULL, lcec_el6090_init},
-  
+  { "EL6090,", lcecSlaveTypeEL6090, LCEC_EL6090_VID, LCEC_EL6090_PID, LCEC_EL6090_PDOS, 0, NULL, lcec_el6090_init},
+
   // FSoE devices
-  { lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init},
-  { lcecSlaveTypeEL1918_LOGIC, LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init},
-  { lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, 0, lcec_el1904_preinit, lcec_el1904_init},
-  { lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, 0, lcec_el2904_preinit, lcec_el2904_init},
-  { lcecSlaveTypeAX5805, LCEC_AX5805_VID, LCEC_AX5805_PID, 0, 0, lcec_ax5805_preinit, lcec_ax5805_init},
+  { "EL6900,", lcecSlaveTypeEL6900, LCEC_EL6900_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init},
+  { "EL1918_LOGIC,", lcecSlaveTypeEL1918_LOGIC, LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init},
+  { "EL1904,", lcecSlaveTypeEL1904, LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, 0, lcec_el1904_preinit, lcec_el1904_init},
+  { "EL2904,", lcecSlaveTypeEL2904, LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, 0, lcec_el2904_preinit, lcec_el2904_init},
+  { "AX5805,", lcecSlaveTypeAX5805, LCEC_AX5805_VID, LCEC_AX5805_PID, 0, 0, lcec_ax5805_preinit, lcec_ax5805_init},
 
   // pressure sensor
-  { lcecSlaveTypeEM3701, LCEC_EM37XX_VID, LCEC_EM3701_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
-  { lcecSlaveTypeEM3702, LCEC_EM37XX_VID, LCEC_EM3702_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
-  { lcecSlaveTypeEM3712, LCEC_EM37XX_VID, LCEC_EM3712_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
+  { "EM3701,", lcecSlaveTypeEM3701, LCEC_EM37XX_VID, LCEC_EM3701_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
+  { "EM3702,", lcecSlaveTypeEM3702, LCEC_EM37XX_VID, LCEC_EM3702_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
+  { "EM3712,", lcecSlaveTypeEM3712, LCEC_EM37XX_VID, LCEC_EM3712_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
 
   // multi axis interface
-  { lcecSlaveTypeEM7004, LCEC_EM7004_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, 0, NULL, lcec_em7004_init},
+  { "EM7004,", lcecSlaveTypeEM7004, LCEC_EM7004_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, 0, NULL, lcec_em7004_init},
 
   // stoeber MDS5000 series
-  { lcecSlaveTypeStMDS5k, LCEC_STMDS5K_VID, LCEC_STMDS5K_PID, 0, 0, lcec_stmds5k_preinit, lcec_stmds5k_init},
+  { "StMDS5k,", lcecSlaveTypeStMDS5k, LCEC_STMDS5K_VID, LCEC_STMDS5K_PID, 0, 0, lcec_stmds5k_preinit, lcec_stmds5k_init},
 
   // Delta ASDA series
-  { lcecSlaveTypeDeASDA, LCEC_DEASDA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, 0, NULL, lcec_deasda_init},
+  { "DeASDA,", lcecSlaveTypeDeASDA, LCEC_DEASDA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, 0, NULL, lcec_deasda_init},
 
   // Delta MS/MH300 series
-  { lcecSlaveTypeDeMS300, LCEC_DEMS300_VID, LCEC_DEMS300_PID, LCEC_DEMS300_PDOS, 0, NULL, lcec_dems300_init},
+  { "DeMS300,", lcecSlaveTypeDeMS300, LCEC_DEMS300_VID, LCEC_DEMS300_PID, LCEC_DEMS300_PDOS, 0, NULL, lcec_dems300_init},
 
   // Omron G5 series
-  { lcecSlaveTypeOmrG5_KNA5L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KNA5L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN01L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN01L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN02L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN02L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN04L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN04L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN01H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN01H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN02H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN02H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN04H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN04H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN08H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN08H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN10H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN10H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN15H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN15H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN20H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN20H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN30H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN30H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN50H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN50H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN75H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN75H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN150H, LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN150H_ECT_PID, LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN06F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN06F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN10F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN10F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN15F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN15F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN20F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN20F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN30F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN30F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN50F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN50F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN75F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN75F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { lcecSlaveTypeOmrG5_KN150F, LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN150F_ECT_PID, LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KNA5L,", lcecSlaveTypeOmrG5_KNA5L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KNA5L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN01L,", lcecSlaveTypeOmrG5_KN01L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN01L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN02L,", lcecSlaveTypeOmrG5_KN02L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN02L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN04L,", lcecSlaveTypeOmrG5_KN04L,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN04L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN01H,", lcecSlaveTypeOmrG5_KN01H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN01H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN02H,", lcecSlaveTypeOmrG5_KN02H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN02H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN04H,", lcecSlaveTypeOmrG5_KN04H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN04H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN08H,", lcecSlaveTypeOmrG5_KN08H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN08H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN10H,", lcecSlaveTypeOmrG5_KN10H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN10H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN15H,", lcecSlaveTypeOmrG5_KN15H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN15H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN20H,", lcecSlaveTypeOmrG5_KN20H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN20H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN30H,", lcecSlaveTypeOmrG5_KN30H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN30H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN50H,", lcecSlaveTypeOmrG5_KN50H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN50H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN75H,", lcecSlaveTypeOmrG5_KN75H,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN75H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN150H,", lcecSlaveTypeOmrG5_KN150H, LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN150H_ECT_PID, LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN06F,", lcecSlaveTypeOmrG5_KN06F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN06F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN10F,", lcecSlaveTypeOmrG5_KN10F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN10F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN15F,", lcecSlaveTypeOmrG5_KN15F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN15F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN20F,", lcecSlaveTypeOmrG5_KN20F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN20F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN30F,", lcecSlaveTypeOmrG5_KN30F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN30F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN50F,", lcecSlaveTypeOmrG5_KN50F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN50F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN75F,", lcecSlaveTypeOmrG5_KN75F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN75F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN150F,", lcecSlaveTypeOmrG5_KN150F, LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN150F_ECT_PID, LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
 
   // modusoft PH3LM2RM converter
-  { lcecSlaveTypePh3LM2RM, LCEC_PH3LM2RM_VID, LCEC_PH3LM2RM_PID, LCEC_PH3LM2RM_PDOS, 0, NULL, lcec_ph3lm2rm_init},
+  { "Ph3LM2RM,", lcecSlaveTypePh3LM2RM, LCEC_PH3LM2RM_VID, LCEC_PH3LM2RM_PID, LCEC_PH3LM2RM_PDOS, 0, NULL, lcec_ph3lm2rm_init},
 
-  { lcecSlaveTypeInvalid }
+  { NULL }
 };
 
 static const lcec_pindesc_t master_global_pins[] = {
@@ -419,70 +416,70 @@ int rtapi_app_main(void) {
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
       // read slave config
       if (!(slave->config = ecrt_master_slave_config(master->master, 0, slave->index, slave->vid, slave->pid))) {
-        rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to read slave %s.%s configuration\n", master->name, slave->name);
-        goto fail2;
+	rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to read slave %s.%s configuration\n", master->name, slave->name);
+	goto fail2;
       }
 
       // initialize sdos
       if (slave->sdo_config != NULL) {
-        for (sdo_config = slave->sdo_config; sdo_config->index != 0xffff; sdo_config = (lcec_slave_sdoconf_t *) &sdo_config->data[sdo_config->length]) {
-          if (sdo_config->subindex == LCEC_CONF_SDO_COMPLETE_SUBIDX) {
-            if (ecrt_slave_config_complete_sdo(slave->config, sdo_config->index, &sdo_config->data[0], sdo_config->length) != 0) {
-              rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo %04x (complete)\n", master->name, slave->name, sdo_config->index);
-            }
-          } else {
-            if (ecrt_slave_config_sdo(slave->config, sdo_config->index, sdo_config->subindex, &sdo_config->data[0], sdo_config->length) != 0) {
-              rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo %04x:%02x\n", master->name, slave->name, sdo_config->index, sdo_config->subindex);
-            }
-          }
-        }
+	for (sdo_config = slave->sdo_config; sdo_config->index != 0xffff; sdo_config = (lcec_slave_sdoconf_t *) &sdo_config->data[sdo_config->length]) {
+	  if (sdo_config->subindex == LCEC_CONF_SDO_COMPLETE_SUBIDX) {
+	    if (ecrt_slave_config_complete_sdo(slave->config, sdo_config->index, &sdo_config->data[0], sdo_config->length) != 0) {
+	      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo %04x (complete)\n", master->name, slave->name, sdo_config->index);
+	    }
+	  } else {
+	    if (ecrt_slave_config_sdo(slave->config, sdo_config->index, sdo_config->subindex, &sdo_config->data[0], sdo_config->length) != 0) {
+	      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo %04x:%02x\n", master->name, slave->name, sdo_config->index, sdo_config->subindex);
+	    }
+	  }
+	}
       }
 
       // initialize idns
       if (slave->idn_config != NULL) {
-        for (idn_config = slave->idn_config; idn_config->state != 0; idn_config = (lcec_slave_idnconf_t *) &idn_config->data[idn_config->length]) {
-          if (ecrt_slave_config_idn(slave->config, idn_config->drive, idn_config->idn, idn_config->state, &idn_config->data[0], idn_config->length) != 0) {
-            rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s drive %d idn %c-%d-%d (state %d, length %u)\n", master->name, slave->name, idn_config->drive,
-              (idn_config->idn & 0x8000) ? 'P' : 'S', (idn_config->idn >> 12) & 0x0007, idn_config->idn & 0x0fff, idn_config->state, (unsigned int) idn_config->length);
-          }
-        }
+	for (idn_config = slave->idn_config; idn_config->state != 0; idn_config = (lcec_slave_idnconf_t *) &idn_config->data[idn_config->length]) {
+	  if (ecrt_slave_config_idn(slave->config, idn_config->drive, idn_config->idn, idn_config->state, &idn_config->data[0], idn_config->length) != 0) {
+	    rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s drive %d idn %c-%d-%d (state %d, length %u)\n", master->name, slave->name, idn_config->drive,
+	      (idn_config->idn & 0x8000) ? 'P' : 'S', (idn_config->idn >> 12) & 0x0007, idn_config->idn & 0x0fff, idn_config->state, (unsigned int) idn_config->length);
+	  }
+	}
       }
 
       // setup pdos
       if (slave->proc_init != NULL) {
-        if ((slave->proc_init(comp_id, slave, pdo_entry_regs)) != 0) {
-          goto fail2;
-        }
+	if ((slave->proc_init(comp_id, slave, pdo_entry_regs)) != 0) {
+	  goto fail2;
+	}
       }
       pdo_entry_regs += slave->pdo_entry_count;
 
       // configure dc for this slave
       if (slave->dc_conf != NULL) {
-        ecrt_slave_config_dc(slave->config, slave->dc_conf->assignActivate,
-          slave->dc_conf->sync0Cycle, slave->dc_conf->sync0Shift,
-          slave->dc_conf->sync1Cycle, slave->dc_conf->sync1Shift);
-        rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "configuring DC for slave %s.%s: assignActivate=x%x sync0Cycle=%d sync0Shift=%d sync1Cycle=%d sync1Shift=%d\n",
-          master->name, slave->name, slave->dc_conf->assignActivate,
-          slave->dc_conf->sync0Cycle, slave->dc_conf->sync0Shift,
-          slave->dc_conf->sync1Cycle, slave->dc_conf->sync1Shift);
+	ecrt_slave_config_dc(slave->config, slave->dc_conf->assignActivate,
+	  slave->dc_conf->sync0Cycle, slave->dc_conf->sync0Shift,
+	  slave->dc_conf->sync1Cycle, slave->dc_conf->sync1Shift);
+	rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "configuring DC for slave %s.%s: assignActivate=x%x sync0Cycle=%d sync0Shift=%d sync1Cycle=%d sync1Shift=%d\n",
+	  master->name, slave->name, slave->dc_conf->assignActivate,
+	  slave->dc_conf->sync0Cycle, slave->dc_conf->sync0Shift,
+	  slave->dc_conf->sync1Cycle, slave->dc_conf->sync1Shift);
       }
 
       // Configure the slave's watchdog times.
       if (slave->wd_conf != NULL) {
-        ecrt_slave_config_watchdog(slave->config, slave->wd_conf->divider, slave->wd_conf->intervals);
+	ecrt_slave_config_watchdog(slave->config, slave->wd_conf->divider, slave->wd_conf->intervals);
       }
 
       // configure slave
       if (slave->sync_info != NULL) {
-        if (ecrt_slave_config_pdos(slave->config, EC_END, slave->sync_info)) {
-          rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s\n", master->name, slave->name);
-          goto fail2;
-        }
+	if (ecrt_slave_config_pdos(slave->config, EC_END, slave->sync_info)) {
+	  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s\n", master->name, slave->name);
+	  goto fail2;
+	}
       }
 
       // export state pins
       if ((slave->hal_state_data = lcec_init_slave_state_hal(master->name, slave->name)) == NULL) {
-        goto fail2;
+	goto fail2;
       }
     }
 
@@ -674,437 +671,445 @@ int lcec_parse_config(void) {
     // get type
     switch (conf_type) {
       case lcecConfTypeMaster:
-        // get config token
-        master_conf = (LCEC_CONF_MASTER_T *)conf;
-        conf += sizeof(LCEC_CONF_MASTER_T);
+	// get config token
+	master_conf = (LCEC_CONF_MASTER_T *)conf;
+	conf += sizeof(LCEC_CONF_MASTER_T);
 
-        // alloc master memory
-        master = lcec_zalloc(sizeof(lcec_master_t));
-        if (master == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate master %d structure memory\n", master_conf->index);
-          goto fail2;
-        }
+	// alloc master memory
+	master = lcec_zalloc(sizeof(lcec_master_t));
+	if (master == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate master %d structure memory\n", master_conf->index);
+	  goto fail2;
+	}
 
-        // initialize master
-        master->index = master_conf->index;
-        strncpy(master->name, master_conf->name, LCEC_CONF_STR_MAXLEN);
-        master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
-        master->app_time_period = master_conf->appTimePeriod;
-        master->sync_ref_cycles = master_conf->refClockSyncCycles;
+	// initialize master
+	master->index = master_conf->index;
+	strncpy(master->name, master_conf->name, LCEC_CONF_STR_MAXLEN);
+	master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
+	master->app_time_period = master_conf->appTimePeriod;
+	master->sync_ref_cycles = master_conf->refClockSyncCycles;
 
-        // add master to list
-        LCEC_LIST_APPEND(first_master, last_master, master);
-        break;
+	// add master to list
+	LCEC_LIST_APPEND(first_master, last_master, master);
+	break;
 
       case lcecConfTypeSlave:
-        // get config token
-        slave_conf = (LCEC_CONF_SLAVE_T *)conf;
-        conf += sizeof(LCEC_CONF_SLAVE_T);
+	// get config token
+	slave_conf = (LCEC_CONF_SLAVE_T *)conf;
+	conf += sizeof(LCEC_CONF_SLAVE_T);
 
-        // check for master
-        if (master == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Master node for slave missing\n");
-          goto fail2;
-        }
+	// check for master
+	if (master == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Master node for slave missing\n");
+	  goto fail2;
+	}
 
-        // check for valid slave type
-        if (slave_conf->type == lcecSlaveTypeGeneric) {
-          type = NULL;
-        } else {
-          for (type = types; type->type != slave_conf->type && type->type != lcecSlaveTypeInvalid; type++);
-          if (type->type == lcecSlaveTypeInvalid) {
-            rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "Invalid slave type %d\n", slave_conf->type);
-            continue;
-          }
-        }
+	// check for valid slave type
+	if (slave_conf->type == lcecSlaveTypeGeneric) {
+	  type = NULL;
+	} else {
+	  for (type = types; type->type != slave_conf->type && type->name != NULL; type++);
 
-        // create new slave
-        slave = lcec_zalloc(sizeof(lcec_slave_t));
-        if (slave == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s structure memory\n", master->name, slave_conf->name);
-          goto fail2;
-        }
+	  lcec_typelinkedlist_t *tl;
+	  if (type->name == NULL) {
+	    for (tl = typeslist; tl != NULL && tl->type->type != slave_conf->type && tl->type->name != NULL ; tl=tl->next);
 
-        // initialize slave
-        generic_pdo_entries = NULL;
-        generic_pdos = NULL;
-        generic_sync_managers = NULL;
-        generic_hal_data = NULL;
-        generic_hal_dir = 0;
-        sdo_config = NULL;
-        idn_config = NULL;
-        modparams = NULL;
+	    if (tl==NULL) {
+	      rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "Invalid slave type %d\n", slave_conf->type);
+	      continue;
+	    }
 
-        slave->index = slave_conf->index;
-        slave->type = slave_conf->type;
-        strncpy(slave->name, slave_conf->name, LCEC_CONF_STR_MAXLEN);
-        slave->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
-        slave->master = master;
+	    type = tl->type;
+	  }
+	}
 
-        // add slave to list
-        LCEC_LIST_APPEND(master->first_slave, master->last_slave, slave);
+	// create new slave
+	slave = lcec_zalloc(sizeof(lcec_slave_t));
+	if (slave == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unabl eto allocate slave %s.%s structure memory\n", master->name, slave_conf->name);
+	  goto fail2;
+	}
 
-        if (type != NULL) {
-          // normal slave
-          slave->vid = type->vid;
-          slave->pid = type->pid;
-          slave->pdo_entry_count = type->pdo_entry_count;
-          slave->is_fsoe_logic = type->is_fsoe_logic;
-          slave->proc_preinit = type->proc_preinit;
-          slave->proc_init = type->proc_init;
-        } else {
-          // generic slave
-          slave->vid = slave_conf->vid;
-          slave->pid = slave_conf->pid;
-          slave->pdo_entry_count = slave_conf->pdoMappingCount;
-          slave->proc_init = lcec_generic_init;
+	// initialize slave
+	generic_pdo_entries = NULL;
+	generic_pdos = NULL;
+	generic_sync_managers = NULL;
+	generic_hal_data = NULL;
+	generic_hal_dir = 0;
+	sdo_config = NULL;
+	idn_config = NULL;
+	modparams = NULL;
 
-          // alloc hal memory
-          if ((generic_hal_data = hal_malloc(sizeof(lcec_generic_pin_t) * slave_conf->pdoMappingCount)) == NULL) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for slave %s.%s failed\n", master->name, slave_conf->name);
-            goto fail2;
-          }
-          memset(generic_hal_data, 0, sizeof(lcec_generic_pin_t) * slave_conf->pdoMappingCount);
+	slave->index = slave_conf->index;
+	slave->type = slave_conf->type;
+	strncpy(slave->name, slave_conf->name, LCEC_CONF_STR_MAXLEN);
+	slave->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
+	slave->master = master;
 
-          // alloc pdo entry memory
-          generic_pdo_entries = lcec_zalloc(sizeof(ec_pdo_entry_info_t) * slave_conf->pdoEntryCount);
-          if (generic_pdo_entries == NULL) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic pdo entry memory\n", master->name, slave_conf->name);
-            goto fail2;
-          }
+	// add slave to list
+	LCEC_LIST_APPEND(master->first_slave, master->last_slave, slave);
 
-          // alloc pdo memory
-          generic_pdos = lcec_zalloc(sizeof(ec_pdo_info_t) * slave_conf->pdoCount);
-          if (generic_pdos == NULL) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic pdo memory\n", master->name, slave_conf->name);
-            goto fail2;
-          }
+	if (type != NULL) {
+	  // normal slave
+	  slave->vid = type->vid;
+	  slave->pid = type->pid;
+	  slave->pdo_entry_count = type->pdo_entry_count;
+	  slave->is_fsoe_logic = type->is_fsoe_logic;
+	  slave->proc_preinit = type->proc_preinit;
+	  slave->proc_init = type->proc_init;
+	} else {
+	  // generic slave
+	  slave->vid = slave_conf->vid;
+	  slave->pid = slave_conf->pid;
+	  slave->pdo_entry_count = slave_conf->pdoMappingCount;
+	  slave->proc_init = lcec_generic_init;
 
-          // alloc sync manager memory
-          generic_sync_managers = lcec_zalloc(sizeof(ec_sync_info_t) * (slave_conf->syncManagerCount + 1));
-          if (generic_sync_managers == NULL) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic sync manager memory\n", master->name, slave_conf->name);
-            goto fail2;
-          }
-          generic_sync_managers->index = 0xff;
-        }
+	  // alloc hal memory
+	  if ((generic_hal_data = hal_malloc(sizeof(lcec_generic_pin_t) * slave_conf->pdoMappingCount)) == NULL) {
+	    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for slave %s.%s failed\n", master->name, slave_conf->name);
+	    goto fail2;
+	  }
+	  memset(generic_hal_data, 0, sizeof(lcec_generic_pin_t) * slave_conf->pdoMappingCount);
 
-        // alloc sdo config memory
-        if (slave_conf->sdoConfigLength > 0) {
-          sdo_config = lcec_zalloc(slave_conf->sdoConfigLength + sizeof(lcec_slave_sdoconf_t));
-          if (sdo_config == NULL) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s sdo entry memory\n", master->name, slave_conf->name);
-            goto fail2;
-          }
-        }
+	  // alloc pdo entry memory
+	  generic_pdo_entries = lcec_zalloc(sizeof(ec_pdo_entry_info_t) * slave_conf->pdoEntryCount);
+	  if (generic_pdo_entries == NULL) {
+	    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic pdo entry memory\n", master->name, slave_conf->name);
+	    goto fail2;
+	  }
 
-        // alloc idn config memory
-        if (slave_conf->idnConfigLength > 0) {
-          idn_config = lcec_zalloc(slave_conf->idnConfigLength + sizeof(lcec_slave_idnconf_t));
-          if (idn_config == NULL) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s idn entry memory\n", master->name, slave_conf->name);
-            goto fail2;
-          }
-        }
+	  // alloc pdo memory
+	  generic_pdos = lcec_zalloc(sizeof(ec_pdo_info_t) * slave_conf->pdoCount);
+	  if (generic_pdos == NULL) {
+	    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic pdo memory\n", master->name, slave_conf->name);
+	    goto fail2;
+	  }
 
-        // alloc modparam memory
-        if (slave_conf->modParamCount > 0) {
-          modparams = lcec_zalloc(sizeof(lcec_slave_modparam_t) * (slave_conf->modParamCount + 1));
-          if (modparams == NULL) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s modparam memory\n", master->name, slave_conf->name);
-            goto fail2;
-          }
-          modparams[slave_conf->modParamCount].id = -1;
-        }
+	  // alloc sync manager memory
+	  generic_sync_managers = lcec_zalloc(sizeof(ec_sync_info_t) * (slave_conf->syncManagerCount + 1));
+	  if (generic_sync_managers == NULL) {
+	    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic sync manager memory\n", master->name, slave_conf->name);
+	    goto fail2;
+	  }
+	  generic_sync_managers->index = 0xff;
+	}
 
-        slave->hal_data = generic_hal_data;
-        slave->generic_pdo_entries = generic_pdo_entries;
-        slave->generic_pdos = generic_pdos;
-        slave->generic_sync_managers = generic_sync_managers;
-        if (slave_conf->configPdos) {
-          slave->sync_info = generic_sync_managers;
-        }
-        slave->sdo_config = sdo_config;
-        slave->idn_config = idn_config;
-        slave->modparams = modparams;
-        slave->dc_conf = NULL;
-        slave->wd_conf = NULL;
+	// alloc sdo config memory
+	if (slave_conf->sdoConfigLength > 0) {
+	  sdo_config = lcec_zalloc(slave_conf->sdoConfigLength + sizeof(lcec_slave_sdoconf_t));
+	  if (sdo_config == NULL) {
+	    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s sdo entry memory\n", master->name, slave_conf->name);
+	    goto fail2;
+	  }
+	}
 
-        // update slave count
-        slave_count++;
-        break;
+	// alloc idn config memory
+	if (slave_conf->idnConfigLength > 0) {
+	  idn_config = lcec_zalloc(slave_conf->idnConfigLength + sizeof(lcec_slave_idnconf_t));
+	  if (idn_config == NULL) {
+	    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s idn entry memory\n", master->name, slave_conf->name);
+	    goto fail2;
+	  }
+	}
+
+	// alloc modparam memory
+	if (slave_conf->modParamCount > 0) {
+	  modparams = lcec_zalloc(sizeof(lcec_slave_modparam_t) * (slave_conf->modParamCount + 1));
+	  if (modparams == NULL) {
+	    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s modparam memory\n", master->name, slave_conf->name);
+	    goto fail2;
+	  }
+	  modparams[slave_conf->modParamCount].id = -1;
+	}
+
+	slave->hal_data = generic_hal_data;
+	slave->generic_pdo_entries = generic_pdo_entries;
+	slave->generic_pdos = generic_pdos;
+	slave->generic_sync_managers = generic_sync_managers;
+	if (slave_conf->configPdos) {
+	  slave->sync_info = generic_sync_managers;
+	}
+	slave->sdo_config = sdo_config;
+	slave->idn_config = idn_config;
+	slave->modparams = modparams;
+	slave->dc_conf = NULL;
+	slave->wd_conf = NULL;
+
+	// update slave count
+	slave_count++;
+	break;
 
       case lcecConfTypeDcConf:
-        // get config token
-        dc_conf = (LCEC_CONF_DC_T *)conf;
-        conf += sizeof(LCEC_CONF_DC_T);
+	// get config token
+	dc_conf = (LCEC_CONF_DC_T *)conf;
+	conf += sizeof(LCEC_CONF_DC_T);
 
-        // check for slave
-        if (slave == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Slave node for dc config missing\n");
-          goto fail2;
-        }
+	// check for slave
+	if (slave == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Slave node for dc config missing\n");
+	  goto fail2;
+	}
 
-        // check for double dc config
-        if (slave->dc_conf != NULL) {
-          rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "Double dc config for slave %s.%s\n", master->name, slave->name);
-          continue;
-        }
+	// check for double dc config
+	if (slave->dc_conf != NULL) {
+	  rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "Double dc config for slave %s.%s\n", master->name, slave->name);
+	  continue;
+	}
 
-        // create new dc config
-        dc = lcec_zalloc(sizeof(lcec_slave_dc_t));
-        if (dc == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s dc config memory\n", master->name, slave->name);
-          goto fail2;
-        }
+	// create new dc config
+	dc = lcec_zalloc(sizeof(lcec_slave_dc_t));
+	if (dc == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s dc config memory\n", master->name, slave->name);
+	  goto fail2;
+	}
 
-        // initialize dc conf
-        dc->assignActivate = dc_conf->assignActivate;
-        dc->sync0Cycle = dc_conf->sync0Cycle;
-        dc->sync0Shift = dc_conf->sync0Shift;
-        dc->sync1Cycle = dc_conf->sync1Cycle;
-        dc->sync1Shift = dc_conf->sync1Shift;
+	// initialize dc conf
+	dc->assignActivate = dc_conf->assignActivate;
+	dc->sync0Cycle = dc_conf->sync0Cycle;
+	dc->sync0Shift = dc_conf->sync0Shift;
+	dc->sync1Cycle = dc_conf->sync1Cycle;
+	dc->sync1Shift = dc_conf->sync1Shift;
 
-        // add to slave
-        slave->dc_conf = dc;
-        break;
+	// add to slave
+	slave->dc_conf = dc;
+	break;
 
       case lcecConfTypeWatchdog:
-        // get config token
-        wd_conf = (LCEC_CONF_WATCHDOG_T *)conf;
-        conf += sizeof(LCEC_CONF_WATCHDOG_T);
+	// get config token
+	wd_conf = (LCEC_CONF_WATCHDOG_T *)conf;
+	conf += sizeof(LCEC_CONF_WATCHDOG_T);
 
-        // check for slave
-        if (slave == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Slave node for watchdog config missing\n");
-          goto fail2;
-        }
+	// check for slave
+	if (slave == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Slave node for watchdog config missing\n");
+	  goto fail2;
+	}
 
-        // check for double wd config
-        if (slave->wd_conf != NULL) {
-          rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "Double watchdog config for slave %s.%s\n", master->name, slave->name);
-          continue;
-        }
+	// check for double wd config
+	if (slave->wd_conf != NULL) {
+	  rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "Double watchdog config for slave %s.%s\n", master->name, slave->name);
+	  continue;
+	}
 
-        // create new wd config
-        wd = lcec_zalloc(sizeof(lcec_slave_watchdog_t));
-        if (wd == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s watchdog config memory\n", master->name, slave->name);
-          goto fail2;
-        }
+	// create new wd config
+	wd = lcec_zalloc(sizeof(lcec_slave_watchdog_t));
+	if (wd == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s watchdog config memory\n", master->name, slave->name);
+	  goto fail2;
+	}
 
-        // initialize wd conf
-        wd->divider = wd_conf->divider;
-        wd->intervals = wd_conf->intervals;
+	// initialize wd conf
+	wd->divider = wd_conf->divider;
+	wd->intervals = wd_conf->intervals;
 
-        // add to slave
-        slave->wd_conf = wd;
-        break;
+	// add to slave
+	slave->wd_conf = wd;
+	break;
 
       case lcecConfTypeSyncManager:
-        // get config token
-        sm_conf = (LCEC_CONF_SYNCMANAGER_T *)conf;
-        conf += sizeof(LCEC_CONF_SYNCMANAGER_T);
+	// get config token
+	sm_conf = (LCEC_CONF_SYNCMANAGER_T *)conf;
+	conf += sizeof(LCEC_CONF_SYNCMANAGER_T);
 
-        // check for syncmanager
-        if (generic_sync_managers == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Sync manager for generic device missing\n");
-          goto fail2;
-        }
+	// check for syncmanager
+	if (generic_sync_managers == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Sync manager for generic device missing\n");
+	  goto fail2;
+	}
 
-        // check for pdos
-        if (generic_pdos == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "PDOs for generic device missing\n");
-          goto fail2;
-        }
+	// check for pdos
+	if (generic_pdos == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "PDOs for generic device missing\n");
+	  goto fail2;
+	}
 
-        // initialize sync manager
-        generic_sync_managers->index = sm_conf->index;
-        generic_sync_managers->dir = sm_conf->dir;
-        generic_sync_managers->n_pdos = sm_conf->pdoCount;
-        generic_sync_managers->pdos = sm_conf->pdoCount == 0 ? NULL : generic_pdos;
+	// initialize sync manager
+	generic_sync_managers->index = sm_conf->index;
+	generic_sync_managers->dir = sm_conf->dir;
+	generic_sync_managers->n_pdos = sm_conf->pdoCount;
+	generic_sync_managers->pdos = sm_conf->pdoCount == 0 ? NULL : generic_pdos;
 
-        // get hal direction
-        switch (sm_conf->dir) {
-          case EC_DIR_INPUT:
-            generic_hal_dir = HAL_OUT;
-            break;
-          case EC_DIR_OUTPUT:
-            generic_hal_dir = HAL_IN;
-            break;
-          default:
-            generic_hal_dir = 0;
-        }
+	// get hal direction
+	switch (sm_conf->dir) {
+	  case EC_DIR_INPUT:
+	    generic_hal_dir = HAL_OUT;
+	    break;
+	  case EC_DIR_OUTPUT:
+	    generic_hal_dir = HAL_IN;
+	    break;
+	  default:
+	    generic_hal_dir = 0;
+	}
 
-        // next syncmanager
-        generic_sync_managers++;
-        generic_sync_managers->index = 0xff;
-        break;
+	// next syncmanager
+	generic_sync_managers++;
+	generic_sync_managers->index = 0xff;
+	break;
 
       case lcecConfTypePdo:
-        // get config token
-        pdo_conf = (LCEC_CONF_PDO_T *)conf;
-        conf += sizeof(LCEC_CONF_PDO_T);
+	// get config token
+	pdo_conf = (LCEC_CONF_PDO_T *)conf;
+	conf += sizeof(LCEC_CONF_PDO_T);
 
-        // check for pdos
-        if (generic_pdos == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "PDOs for generic device missing\n");
-          goto fail2;
-        }
+	// check for pdos
+	if (generic_pdos == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "PDOs for generic device missing\n");
+	  goto fail2;
+	}
 
-        // check for pdos entries
-        if (generic_pdo_entries == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "PDO entries for generic device missing\n");
-          goto fail2;
-        }
+	// check for pdos entries
+	if (generic_pdo_entries == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "PDO entries for generic device missing\n");
+	  goto fail2;
+	}
 
-        // initialize pdo
-        generic_pdos->index = pdo_conf->index;
-        generic_pdos->n_entries = pdo_conf->pdoEntryCount;
-        generic_pdos->entries = pdo_conf->pdoEntryCount == 0 ? NULL : generic_pdo_entries;
+	// initialize pdo
+	generic_pdos->index = pdo_conf->index;
+	generic_pdos->n_entries = pdo_conf->pdoEntryCount;
+	generic_pdos->entries = pdo_conf->pdoEntryCount == 0 ? NULL : generic_pdo_entries;
 
-        // next pdo
-        generic_pdos++;
-        break;
+	// next pdo
+	generic_pdos++;
+	break;
 
       case lcecConfTypePdoEntry:
-        // get config token
-        pe_conf = (LCEC_CONF_PDOENTRY_T *)conf;
-        conf += sizeof(LCEC_CONF_PDOENTRY_T);
+	// get config token
+	pe_conf = (LCEC_CONF_PDOENTRY_T *)conf;
+	conf += sizeof(LCEC_CONF_PDOENTRY_T);
 
-        // check for pdos entries
-        if (generic_pdo_entries == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "PDO entries for generic device missing\n");
-          goto fail2;
-        }
+	// check for pdos entries
+	if (generic_pdo_entries == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "PDO entries for generic device missing\n");
+	  goto fail2;
+	}
 
-        // check for hal data
-        if (generic_hal_data == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "HAL data for generic device missing\n");
-          goto fail2;
-        }
+	// check for hal data
+	if (generic_hal_data == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "HAL data for generic device missing\n");
+	  goto fail2;
+	}
 
-        // check for hal dir
-        if (generic_hal_dir == 0) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "HAL direction for generic device missing\n");
-          goto fail2;
-        }
+	// check for hal dir
+	if (generic_hal_dir == 0) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "HAL direction for generic device missing\n");
+	  goto fail2;
+	}
 
-        // initialize pdo entry
-        generic_pdo_entries->index = pe_conf->index;
-        generic_pdo_entries->subindex = pe_conf->subindex;
-        generic_pdo_entries->bit_length = pe_conf->bitLength;
+	// initialize pdo entry
+	generic_pdo_entries->index = pe_conf->index;
+	generic_pdo_entries->subindex = pe_conf->subindex;
+	generic_pdo_entries->bit_length = pe_conf->bitLength;
 
-        // initialize hal data
-        if (pe_conf->halPin[0] != 0) {
-          strncpy(generic_hal_data->name, pe_conf->halPin, LCEC_CONF_STR_MAXLEN);
-          generic_hal_data->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
-          generic_hal_data->type = pe_conf->halType;
-          generic_hal_data->subType = pe_conf->subType;
-          generic_hal_data->floatScale = pe_conf->floatScale;
-          generic_hal_data->floatOffset = pe_conf->floatOffset;
-          generic_hal_data->bitOffset = 0;
-          generic_hal_data->bitLength = pe_conf->bitLength;
-          generic_hal_data->dir = generic_hal_dir;
-          generic_hal_data->pdo_idx = pe_conf->index;
-          generic_hal_data->pdo_sidx = pe_conf->subindex;
-          generic_hal_data++;
-        }
+	// initialize hal data
+	if (pe_conf->halPin[0] != 0) {
+	  strncpy(generic_hal_data->name, pe_conf->halPin, LCEC_CONF_STR_MAXLEN);
+	  generic_hal_data->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
+	  generic_hal_data->type = pe_conf->halType;
+	  generic_hal_data->subType = pe_conf->subType;
+	  generic_hal_data->floatScale = pe_conf->floatScale;
+	  generic_hal_data->floatOffset = pe_conf->floatOffset;
+	  generic_hal_data->bitOffset = 0;
+	  generic_hal_data->bitLength = pe_conf->bitLength;
+	  generic_hal_data->dir = generic_hal_dir;
+	  generic_hal_data->pdo_idx = pe_conf->index;
+	  generic_hal_data->pdo_sidx = pe_conf->subindex;
+	  generic_hal_data++;
+	}
 
-        // next pdo entry
-        generic_pdo_entries++;
-        break;
+	// next pdo entry
+	generic_pdo_entries++;
+	break;
 
       case lcecConfTypeComplexEntry:
-        // get config token
-        ce_conf = (LCEC_CONF_COMPLEXENTRY_T *)conf;
-        conf += sizeof(LCEC_CONF_COMPLEXENTRY_T);
+	// get config token
+	ce_conf = (LCEC_CONF_COMPLEXENTRY_T *)conf;
+	conf += sizeof(LCEC_CONF_COMPLEXENTRY_T);
 
-        // check for pdoEntry
-        if (pe_conf == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "pdoEntry for generic device missing\n");
-          goto fail2;
-        }
+	// check for pdoEntry
+	if (pe_conf == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "pdoEntry for generic device missing\n");
+	  goto fail2;
+	}
 
-        // check for hal data
-        if (generic_hal_data == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "HAL data for generic device missing\n");
-          goto fail2;
-        }
+	// check for hal data
+	if (generic_hal_data == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "HAL data for generic device missing\n");
+	  goto fail2;
+	}
 
-        // initialize hal data
-        if (ce_conf->halPin[0] != 0) {
-          strncpy(generic_hal_data->name, ce_conf->halPin, LCEC_CONF_STR_MAXLEN);
-          generic_hal_data->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
-          generic_hal_data->type = ce_conf->halType;
-          generic_hal_data->subType = ce_conf->subType;
-          generic_hal_data->floatScale = ce_conf->floatScale;
-          generic_hal_data->floatOffset = ce_conf->floatOffset;
-          generic_hal_data->bitOffset = ce_conf->bitOffset;
-          generic_hal_data->bitLength = ce_conf->bitLength;
-          generic_hal_data->dir = generic_hal_dir;
-          generic_hal_data->pdo_idx = pe_conf->index;
-          generic_hal_data->pdo_sidx = pe_conf->subindex;
-          generic_hal_data++;
-        }
-        break;
+	// initialize hal data
+	if (ce_conf->halPin[0] != 0) {
+	  strncpy(generic_hal_data->name, ce_conf->halPin, LCEC_CONF_STR_MAXLEN);
+	  generic_hal_data->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
+	  generic_hal_data->type = ce_conf->halType;
+	  generic_hal_data->subType = ce_conf->subType;
+	  generic_hal_data->floatScale = ce_conf->floatScale;
+	  generic_hal_data->floatOffset = ce_conf->floatOffset;
+	  generic_hal_data->bitOffset = ce_conf->bitOffset;
+	  generic_hal_data->bitLength = ce_conf->bitLength;
+	  generic_hal_data->dir = generic_hal_dir;
+	  generic_hal_data->pdo_idx = pe_conf->index;
+	  generic_hal_data->pdo_sidx = pe_conf->subindex;
+	  generic_hal_data++;
+	}
+	break;
 
       case lcecConfTypeSdoConfig:
-        // get config token
-        sdo_conf = (LCEC_CONF_SDOCONF_T *)conf;
-        conf += sizeof(LCEC_CONF_SDOCONF_T) + sdo_conf->length;
+	// get config token
+	sdo_conf = (LCEC_CONF_SDOCONF_T *)conf;
+	conf += sizeof(LCEC_CONF_SDOCONF_T) + sdo_conf->length;
 
-        // copy attributes
-        sdo_config->index = sdo_conf->index;
-        sdo_config->subindex = sdo_conf->subindex;
-        sdo_config->length = sdo_conf->length;
+	// copy attributes
+	sdo_config->index = sdo_conf->index;
+	sdo_config->subindex = sdo_conf->subindex;
+	sdo_config->length = sdo_conf->length;
 
-        // copy data
-        memcpy(sdo_config->data, sdo_conf->data, sdo_config->length);
+	// copy data
+	memcpy(sdo_config->data, sdo_conf->data, sdo_config->length);
 
-        sdo_config = (lcec_slave_sdoconf_t *) &sdo_config->data[sdo_config->length];
-        sdo_config->index = 0xffff;
-        break;
+	sdo_config = (lcec_slave_sdoconf_t *) &sdo_config->data[sdo_config->length];
+	sdo_config->index = 0xffff;
+	break;
 
       case lcecConfTypeIdnConfig:
-        // get config token
-        idn_conf = (LCEC_CONF_IDNCONF_T *)conf;
-        conf += sizeof(LCEC_CONF_IDNCONF_T) + idn_conf->length;
+	// get config token
+	idn_conf = (LCEC_CONF_IDNCONF_T *)conf;
+	conf += sizeof(LCEC_CONF_IDNCONF_T) + idn_conf->length;
 
-        // copy attributes
-        idn_config->drive = idn_conf->drive;
-        idn_config->idn = idn_conf->idn;
-        idn_config->state = idn_conf->state;
-        idn_config->length = idn_conf->length;
+	// copy attributes
+	idn_config->drive = idn_conf->drive;
+	idn_config->idn = idn_conf->idn;
+	idn_config->state = idn_conf->state;
+	idn_config->length = idn_conf->length;
 
-        // copy data
-        memcpy(idn_config->data, idn_conf->data, idn_config->length);
+	// copy data
+	memcpy(idn_config->data, idn_conf->data, idn_config->length);
 
-        idn_config = (lcec_slave_idnconf_t *) &idn_config->data[idn_config->length];
-        break;
+	idn_config = (lcec_slave_idnconf_t *) &idn_config->data[idn_config->length];
+	break;
 
       case lcecConfTypeModParam:
-        // get config token
-        modparam_conf = (LCEC_CONF_MODPARAM_T *)conf;
-        conf += sizeof(LCEC_CONF_MODPARAM_T);
+	// get config token
+	modparam_conf = (LCEC_CONF_MODPARAM_T *)conf;
+	conf += sizeof(LCEC_CONF_MODPARAM_T);
 
-        // check for slave
-        if (slave == NULL) {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Slave node for modparam config missing\n");
-          goto fail2;
-        }
+	// check for slave
+	if (slave == NULL) {
+	  rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Slave node for modparam config missing\n");
+	  goto fail2;
+	}
 
-        // copy attributes
-        modparams->id = modparam_conf->id;
-        modparams->value = modparam_conf->value;
+	// copy attributes
+	modparams->id = modparam_conf->id;
+	modparams->value = modparam_conf->value;
 
-        // next entry
-        modparams++;
-        break;
+	// next entry
+	modparams++;
+	break;
 
       default:
-        rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unknown config item type\n");
-        goto fail2;
+	rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unknown config item type\n");
+	goto fail2;
     }
   }
 
@@ -1116,18 +1121,18 @@ int lcec_parse_config(void) {
     // stage 1 preinit: process all but FSOE logic devices
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
       if (!slave->is_fsoe_logic && slave->proc_preinit != NULL) {
-        if (slave->proc_preinit(slave) < 0) {
-          goto fail2;
-        }
+	if (slave->proc_preinit(slave) < 0) {
+	  goto fail2;
+	}
       }
     }
 
     // stage 2 preinit: process only FSOE logic devices (this depends on initialized fsoeConf data)
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
       if (slave->is_fsoe_logic  && slave->proc_preinit != NULL) {
-        if (slave->proc_preinit(slave) < 0) {
-          goto fail2;
-        }
+	if (slave->proc_preinit(slave) < 0) {
+	  goto fail2;
+	}
       }
     }
 
@@ -1171,33 +1176,33 @@ void lcec_clear_config(void) {
 
       // cleanup slave
       if (slave->proc_cleanup != NULL) {
-        slave->proc_cleanup(slave);
+	slave->proc_cleanup(slave);
       }
 
       // free slave
       if (slave->modparams != NULL) {
-        lcec_free(slave->modparams);
+	lcec_free(slave->modparams);
       }
       if (slave->sdo_config != NULL) {
-        lcec_free(slave->sdo_config);
+	lcec_free(slave->sdo_config);
       }
       if (slave->idn_config != NULL) {
-        lcec_free(slave->idn_config);
+	lcec_free(slave->idn_config);
       }
       if (slave->generic_pdo_entries != NULL) {
-        lcec_free(slave->generic_pdo_entries);
+	lcec_free(slave->generic_pdo_entries);
       }
       if (slave->generic_pdos != NULL) {
-        lcec_free(slave->generic_pdos);
+	lcec_free(slave->generic_pdos);
       }
       if (slave->generic_sync_managers != NULL) {
-        lcec_free(slave->generic_sync_managers);
+	lcec_free(slave->generic_sync_managers);
       }
       if (slave->dc_conf != NULL) {
-        lcec_free(slave->dc_conf);
+	lcec_free(slave->dc_conf);
       }
       if (slave->wd_conf != NULL) {
-        lcec_free(slave->wd_conf);
+	lcec_free(slave->wd_conf);
       }
       lcec_free(slave);
       slave = prev_slave;
@@ -1328,7 +1333,7 @@ void lcec_read_master(void *arg, long period) {
     master->period_last = period;
     if (master->app_time_period != period) {
       rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Invalid appTimePeriod of %u for master %s (should be %ld).\n",
-        master->app_time_period, master->name, period);
+	master->app_time_period, master->name, period);
     }
   }
 
@@ -1757,4 +1762,3 @@ void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subin
 
   (syncs->pdo_entry_count)++;
 }
-
