@@ -97,7 +97,6 @@ typedef void (*lcec_slave_rw_t) (struct lcec_slave *slave, long period);
 
 typedef struct lcec_typelist {
   char *name;
-  LCEC_SLAVE_TYPE_T type;
   uint32_t vid;
   uint32_t pid;
   int pdo_entry_count;
@@ -205,7 +204,6 @@ typedef struct lcec_slave {
   struct lcec_slave *next;
   struct lcec_master *master;
   int index;
-  LCEC_SLAVE_TYPE_T type;
   char name[LCEC_CONF_STR_MAXLEN];
   uint32_t vid;
   uint32_t pid;

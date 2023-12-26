@@ -56,7 +56,6 @@ typedef struct {
 
 typedef struct {
   const char *name;
-  LCEC_SLAVE_TYPE_T type;
   const LCEC_CONF_MODPARAM_DESC_T *modParams;
 } LCEC_CONF_TYPELIST_T;
 
@@ -150,221 +149,221 @@ static const LCEC_CONF_MODPARAM_DESC_T slaveEL5002Params[] = {
 
 static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
   // bus coupler
-  { "EK1100", lcecSlaveTypeEK1100, NULL },
-  { "EK1101", lcecSlaveTypeEK1101, NULL },
-  { "EK1110", lcecSlaveTypeEK1110, NULL },
-  { "EK1122", lcecSlaveTypeEK1122, NULL },
+  { "EK1100", NULL },
+  { "EK1101", NULL },
+  { "EK1110", NULL },
+  { "EK1122", NULL },
 
   // generic device
-  { "generic", lcecSlaveTypeGeneric, NULL },
+  { "generic", NULL },
 
   // AX5000 servo drives
-  { "AX5101", lcecSlaveTypeAX5101, slaveAX5Params },
-  { "AX5103", lcecSlaveTypeAX5103, slaveAX5Params },
-  { "AX5106", lcecSlaveTypeAX5106, slaveAX5Params },
-  { "AX5112", lcecSlaveTypeAX5112, slaveAX5Params },
-  { "AX5118", lcecSlaveTypeAX5118, slaveAX5Params },
-  { "AX5203", lcecSlaveTypeAX5203, slaveAX5Params },
-  { "AX5206", lcecSlaveTypeAX5206, slaveAX5Params },
+  { "AX5101", slaveAX5Params },
+  { "AX5103", slaveAX5Params },
+  { "AX5106", slaveAX5Params },
+  { "AX5112", slaveAX5Params },
+  { "AX5118", slaveAX5Params },
+  { "AX5203", slaveAX5Params },
+  { "AX5206", slaveAX5Params },
 
   // digital in
-  { "EL1002", lcecSlaveTypeEL1002, NULL },
-  { "EL1004", lcecSlaveTypeEL1004, NULL },
-  { "EL1008", lcecSlaveTypeEL1008, NULL },
-  { "EL1012", lcecSlaveTypeEL1012, NULL },
-  { "EL1014", lcecSlaveTypeEL1014, NULL },
-  { "EL1018", lcecSlaveTypeEL1018, NULL },
-  { "EL1024", lcecSlaveTypeEL1024, NULL },
-  { "EL1034", lcecSlaveTypeEL1034, NULL },
-  { "EL1084", lcecSlaveTypeEL1084, NULL },
-  { "EL1088", lcecSlaveTypeEL1088, NULL },
-  { "EL1094", lcecSlaveTypeEL1094, NULL },
-  { "EL1098", lcecSlaveTypeEL1098, NULL },
-  { "EL1104", lcecSlaveTypeEL1104, NULL },
-  { "EL1114", lcecSlaveTypeEL1114, NULL },
-  { "EL1124", lcecSlaveTypeEL1124, NULL },
-  { "EL1134", lcecSlaveTypeEL1134, NULL },
-  { "EL1144", lcecSlaveTypeEL1144, NULL },
-  { "EL1252", lcecSlaveTypeEL1252, NULL },
-  { "EL1804", lcecSlaveTypeEL1804, NULL },
-  { "EL1808", lcecSlaveTypeEL1808, NULL },
-  { "EL1809", lcecSlaveTypeEL1809, NULL },
-  { "EP1008", lcecSlaveTypeEP1008, NULL },
-  { "EP1018", lcecSlaveTypeEP1018, NULL },
-  { "EL1819", lcecSlaveTypeEL1819, NULL },
+  { "EL1002", NULL },
+  { "EL1004", NULL },
+  { "EL1008", NULL },
+  { "EL1012", NULL },
+  { "EL1014", NULL },
+  { "EL1018", NULL },
+  { "EL1024", NULL },
+  { "EL1034", NULL },
+  { "EL1084", NULL },
+  { "EL1088", NULL },
+  { "EL1094", NULL },
+  { "EL1098", NULL },
+  { "EL1104", NULL },
+  { "EL1114", NULL },
+  { "EL1124", NULL },
+  { "EL1134", NULL },
+  { "EL1144", NULL },
+  { "EL1252", NULL },
+  { "EL1804", NULL },
+  { "EL1808", NULL },
+  { "EL1809", NULL },
+  { "EP1008", NULL },
+  { "EP1018", NULL },
+  { "EL1819", NULL },
 
   // digital out
-  { "EL2002", lcecSlaveTypeEL2002, NULL },
-  { "EL2004", lcecSlaveTypeEL2004, NULL },
-  { "EL2008", lcecSlaveTypeEL2008, NULL },
-  { "EL2022", lcecSlaveTypeEL2022, NULL },
-  { "EL2024", lcecSlaveTypeEL2024, NULL },
-  { "EL2032", lcecSlaveTypeEL2032, NULL },
-  { "EL2034", lcecSlaveTypeEL2034, NULL },
-  { "EL2042", lcecSlaveTypeEL2042, NULL },
-  { "EL2084", lcecSlaveTypeEL2084, NULL },
-  { "EL2088", lcecSlaveTypeEL2088, NULL },
-  { "EL2124", lcecSlaveTypeEL2124, NULL },
-  { "EL2202", lcecSlaveTypeEL2202, NULL },
-  { "EL2612", lcecSlaveTypeEL2612, NULL },
-  { "EL2622", lcecSlaveTypeEL2622, NULL },
-  { "EL2634", lcecSlaveTypeEL2634, NULL },
-  { "EL2652", lcecSlaveTypeEL2652, NULL },
-  { "EL2808", lcecSlaveTypeEL2808, NULL },
-  { "EL2798", lcecSlaveTypeEL2798, NULL },
-  { "EL2809", lcecSlaveTypeEL2809, NULL },
+  { "EL2002", NULL },
+  { "EL2004", NULL },
+  { "EL2008", NULL },
+  { "EL2022", NULL },
+  { "EL2024", NULL },
+  { "EL2032", NULL },
+  { "EL2034", NULL },
+  { "EL2042", NULL },
+  { "EL2084", NULL },
+  { "EL2088", NULL },
+  { "EL2124", NULL },
+  { "EL2202", NULL },
+  { "EL2612", NULL },
+  { "EL2622", NULL },
+  { "EL2634", NULL },
+  { "EL2652", NULL },
+  { "EL2808", NULL },
+  { "EL2798", NULL },
+  { "EL2809", NULL },
 
-  { "EP2008", lcecSlaveTypeEP2008, NULL },
-  { "EP2028", lcecSlaveTypeEP2028, NULL },
-  { "EP2809", lcecSlaveTypeEP2809, NULL },
+  { "EP2008", NULL },
+  { "EP2028", NULL },
+  { "EP2809", NULL },
 
   // digital combo (in/out)
-  { "EL1859", lcecSlaveTypeEL1859, NULL },
-  { "EP2308", lcecSlaveTypeEP2308, NULL },
-  { "EP2316", lcecSlaveTypeEP2316, NULL },
-  { "EP2318", lcecSlaveTypeEP2318, NULL },
-  { "EP2328", lcecSlaveTypeEP2328, NULL },
-  { "EP2338", lcecSlaveTypeEP2338, NULL },
-  { "EP2349", lcecSlaveTypeEP2349, NULL },
+  { "EL1859", NULL },
+  { "EP2308", NULL },
+  { "EP2316", NULL },
+  { "EP2318", NULL },
+  { "EP2328", NULL },
+  { "EP2338", NULL },
+  { "EP2349", NULL },
   // analog in, 2ch, 16 bits
-  { "EL3004", lcecSlaveTypeEL3004, NULL },
-  { "EL3044", lcecSlaveTypeEL3044, NULL },
-  { "EL3054", lcecSlaveTypeEL3054, NULL },
-  { "EL3064", lcecSlaveTypeEL3064, NULL },
+  { "EL3004", NULL },
+  { "EL3044", NULL },
+  { "EL3054", NULL },
+  { "EL3064", NULL },
 
   // analog in, 2ch, 16 bits
-  { "EL3102", lcecSlaveTypeEL3102, NULL },
-  { "EL3112", lcecSlaveTypeEL3112, NULL },
-  { "EL3122", lcecSlaveTypeEL3122, NULL },
-  { "EL3142", lcecSlaveTypeEL3142, NULL },
-  { "EL3152", lcecSlaveTypeEL3152, NULL },
-  { "EL3162", lcecSlaveTypeEL3162, NULL },
-  { "EL3202", lcecSlaveTypeEL3202, NULL },
+  { "EL3102", NULL },
+  { "EL3112", NULL },
+  { "EL3122", NULL },
+  { "EL3142", NULL },
+  { "EL3152", NULL },
+  { "EL3162", NULL },
+  { "EL3202", NULL },
 
   // analog in, 4ch, 16 bits
-  { "EL3164", lcecSlaveTypeEL3164, NULL },
+  { "EL3164", NULL },
 
   // analog in, 5ch, 16 bits
-  { "EL3255", lcecSlaveTypeEL3255, NULL },
+  { "EL3255", NULL },
 
   // analog in, 3ch, 16 bits
-  { "EL3403", lcecSlaveTypeEL3403, NULL },
+  { "EL3403", NULL },
 
   // analog out, 1ch, 12 bits
-  { "EL4001", lcecSlaveTypeEL4001, NULL },
-  { "EL4011", lcecSlaveTypeEL4011, NULL },
-  { "EL4021", lcecSlaveTypeEL4021, NULL },
-  { "EL4031", lcecSlaveTypeEL4031, NULL },
+  { "EL4001", NULL },
+  { "EL4011", NULL },
+  { "EL4021", NULL },
+  { "EL4031", NULL },
 
   // analog out, 2ch, 12 bits
-  { "EL4002", lcecSlaveTypeEL4002, NULL },
-  { "EL4012", lcecSlaveTypeEL4012, NULL },
-  { "EL4022", lcecSlaveTypeEL4022, NULL },
-  { "EL4032", lcecSlaveTypeEL4032, NULL },
+  { "EL4002", NULL },
+  { "EL4012", NULL },
+  { "EL4022", NULL },
+  { "EL4032", NULL },
 
   // analog out, 2ch, 16 bits
-  { "EL4102", lcecSlaveTypeEL4102, NULL },
-  { "EL4112", lcecSlaveTypeEL4112, NULL },
-  { "EL4122", lcecSlaveTypeEL4122, NULL },
-  { "EL4132", lcecSlaveTypeEL4132, NULL },
+  { "EL4102", NULL },
+  { "EL4112", NULL },
+  { "EL4122", NULL },
+  { "EL4132", NULL },
 
   // analog out, 4ch, 16 bits
-  { "EL4104", lcecSlaveTypeEL4104, NULL },
-  { "EL4134", lcecSlaveTypeEL4134, NULL },
+  { "EL4104", NULL },
+  { "EL4134", NULL },
 
   // analog out, 8ch, 12 bits
-  { "EL4008", lcecSlaveTypeEL4008, NULL },
-  { "EL4018", lcecSlaveTypeEL4018, NULL },
-  { "EL4028", lcecSlaveTypeEL4028, NULL },
-  { "EL4038", lcecSlaveTypeEL4038, NULL },
+  { "EL4008", NULL },
+  { "EL4018", NULL },
+  { "EL4028", NULL },
+  { "EL4038", NULL },
 
   // encoder inputs
-  { "EL5002", lcecSlaveTypeEL5002, slaveEL5002Params },
-  { "EL5032", lcecSlaveTypeEL5032, NULL },
-  { "EL5101", lcecSlaveTypeEL5101, NULL },
-  { "EL5151", lcecSlaveTypeEL5151, NULL },
-  { "EL5152", lcecSlaveTypeEL5152, NULL },
+  { "EL5002", slaveEL5002Params },
+  { "EL5032", NULL },
+  { "EL5101", NULL },
+  { "EL5151", NULL },
+  { "EL5152", NULL },
 
   // pulse train (stepper) output
-  { "EL2521", lcecSlaveTypeEL2521, NULL },
+  { "EL2521", NULL },
 
   // stepper
-  { "EL7031", lcecSlaveTypeEL7031, slaveEL70x1Params },
-  { "EL7041", lcecSlaveTypeEL7041, NULL },
-  { "EL7041-0052", lcecSlaveTypeEL7041_0052, slaveEL70x1Params },
-  { "EL7041-1000", lcecSlaveTypeEL7041_1000, NULL },
-  { "EP7041", lcecSlaveTypeEP7041, NULL },
+  { "EL7031", slaveEL70x1Params },
+  { "EL7041", NULL },
+  { "EL7041-0052", slaveEL70x1Params },
+  { "EL7041-1000", NULL },
+  { "EP7041", NULL },
 
   // ac servo
-  { "EL7201-9014", lcecSlaveTypeEL7201_9014, NULL },
-  { "EL7211", lcecSlaveTypeEL7211, NULL },
-  { "EL7221", lcecSlaveTypeEL7221, NULL },
+  { "EL7201-9014", NULL },
+  { "EL7211", NULL },
+  { "EL7221", NULL },
 
   // dc servo
-  { "EL7342", lcecSlaveTypeEL7342, NULL },
+  { "EL7342", NULL },
 
   // BLDC
-  { "EL7411", lcecSlaveTypeEL7411, slaveEL7411Params },
+  { "EL7411", slaveEL7411Params },
 
   // power suppply
-  { "EL9505", lcecSlaveTypeEL9505, NULL },
-  { "EL9508", lcecSlaveTypeEL9508, NULL },
-  { "EL9510", lcecSlaveTypeEL9510, NULL },
-  { "EL9512", lcecSlaveTypeEL9512, NULL },
-  { "EL9515", lcecSlaveTypeEL9515, NULL },
-  { "EL9576", lcecSlaveTypeEL9576, NULL },
+  { "EL9505", NULL },
+  { "EL9508", NULL },
+  { "EL9510", NULL },
+  { "EL9512", NULL },
+  { "EL9515", NULL },
+  { "EL9576", NULL },
 
   // FSoE devices
-  { "EL6900", lcecSlaveTypeEL6900, slaveEL6900Params },
-  { "EL1918_LOGIC", lcecSlaveTypeEL1918_LOGIC, slaveEL1918_LOGICParams },
-  { "EL1904", lcecSlaveTypeEL1904, NULL },
-  { "EL2904", lcecSlaveTypeEL2904, NULL },
-  { "AX5805", lcecSlaveTypeAX5805, NULL },
+  { "EL6900", slaveEL6900Params },
+  { "EL1918_LOGIC", slaveEL1918_LOGICParams },
+  { "EL1904", NULL },
+  { "EL2904", NULL },
+  { "AX5805", NULL },
 
   // pressure sensor
-  { "EM3701", lcecSlaveTypeEM3701, NULL },
-  { "EM3702", lcecSlaveTypeEM3702, NULL },
-  { "EM3712", lcecSlaveTypeEM3712, NULL },
+  { "EM3701", NULL },
+  { "EM3702", NULL },
+  { "EM3712", NULL },
 
   // multi axis interface
-  { "EM7004", lcecSlaveTypeEM7004, NULL },
+  { "EM7004", NULL },
 
   // stoeber MDS5000 series
-  { "StMDS5k", lcecSlaveTypeStMDS5k, slaveStMDS5kParams },
+  { "StMDS5k", slaveStMDS5kParams },
 
   // Delta ASDA series
-  { "DeASDA", lcecSlaveTypeDeASDA, NULL },
+  { "DeASDA", NULL },
 
   // Delta MS/MH300 series
-  { "DeMS300", lcecSlaveTypeDeMS300, NULL },
+  { "DeMS300", NULL },
 
   // Omron G5 series
-  { "R88D-KNA5L-ECT", lcecSlaveTypeOmrG5_KNA5L, NULL },
-  { "R88D-KN01L-ECT", lcecSlaveTypeOmrG5_KN01L, NULL },
-  { "R88D-KN02L-ECT", lcecSlaveTypeOmrG5_KN02L, NULL },
-  { "R88D-KN04L-ECT", lcecSlaveTypeOmrG5_KN04L, NULL },
-  { "R88D-KN01H-ECT", lcecSlaveTypeOmrG5_KN01H, NULL },
-  { "R88D-KN02H-ECT", lcecSlaveTypeOmrG5_KN02H, NULL },
-  { "R88D-KN04H-ECT", lcecSlaveTypeOmrG5_KN04H, NULL },
-  { "R88D-KN08H-ECT", lcecSlaveTypeOmrG5_KN08H, NULL },
-  { "R88D-KN10H-ECT", lcecSlaveTypeOmrG5_KN10H, NULL },
-  { "R88D-KN15H-ECT", lcecSlaveTypeOmrG5_KN15H, NULL },
-  { "R88D-KN20H-ECT", lcecSlaveTypeOmrG5_KN20H, NULL },
-  { "R88D-KN30H-ECT", lcecSlaveTypeOmrG5_KN30H, NULL },
-  { "R88D-KN50H-ECT", lcecSlaveTypeOmrG5_KN50H, NULL },
-  { "R88D-KN75H-ECT", lcecSlaveTypeOmrG5_KN75H, NULL },
-  { "R88D-KN150H-ECT", lcecSlaveTypeOmrG5_KN150H, NULL },
-  { "R88D-KN06F-ECT", lcecSlaveTypeOmrG5_KN06F, NULL },
-  { "R88D-KN10F-ECT", lcecSlaveTypeOmrG5_KN10F, NULL },
-  { "R88D-KN15F-ECT", lcecSlaveTypeOmrG5_KN15F, NULL },
-  { "R88D-KN20F-ECT", lcecSlaveTypeOmrG5_KN20F, NULL },
-  { "R88D-KN30F-ECT", lcecSlaveTypeOmrG5_KN30F, NULL },
-  { "R88D-KN50F-ECT", lcecSlaveTypeOmrG5_KN50F, NULL },
-  { "R88D-KN75F-ECT", lcecSlaveTypeOmrG5_KN75F, NULL },
-  { "R88D-KN150F-ECT", lcecSlaveTypeOmrG5_KN150F, NULL },
+  { "R88D-KNA5L-ECT", NULL },
+  { "R88D-KN01L-ECT", NULL },
+  { "R88D-KN02L-ECT", NULL },
+  { "R88D-KN04L-ECT", NULL },
+  { "R88D-KN01H-ECT", NULL },
+  { "R88D-KN02H-ECT", NULL },
+  { "R88D-KN04H-ECT", NULL },
+  { "R88D-KN08H-ECT", NULL },
+  { "R88D-KN10H-ECT", NULL },
+  { "R88D-KN15H-ECT", NULL },
+  { "R88D-KN20H-ECT", NULL },
+  { "R88D-KN30H-ECT", NULL },
+  { "R88D-KN50H-ECT", NULL },
+  { "R88D-KN75H-ECT", NULL },
+  { "R88D-KN150H-ECT", NULL },
+  { "R88D-KN06F-ECT", NULL },
+  { "R88D-KN10F-ECT", NULL },
+  { "R88D-KN15F-ECT", NULL },
+  { "R88D-KN20F-ECT", NULL },
+  { "R88D-KN30F-ECT", NULL },
+  { "R88D-KN50F-ECT", NULL },
+  { "R88D-KN75F-ECT", NULL },
+  { "R88D-KN150F-ECT", NULL },
 
   // modusoft PH3LM2RM converter
-  { "Ph3LM2RM", lcecSlaveTypePh3LM2RM, NULL },
+  { "Ph3LM2RM", NULL },
 
   { NULL }
 };
@@ -638,7 +637,8 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
 
   const LCEC_CONF_TYPELIST_T *slaveType = NULL;
   p->confType = lcecConfTypeSlave;
-  p->type = lcecSlaveTypeInvalid;
+
+  int valid = 0;
 
   // pre parse slave type to avoid attribute ordering problems
   const char **iter = attr;
@@ -658,7 +658,7 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
         XML_StopParser(inst->parser, 0);
         return;
       }
-      p->type = slaveType->type;
+      valid = 1;
       continue;
     }
   }
@@ -667,8 +667,9 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
     const char *name = *(attr++);
     const char *val = *(attr++);
 
-    // skip slave type (already parsed)
+    // set slave typename
     if (strcmp(name, "type") == 0) {
+      strncpy(p->typename, val, LCEC_CONF_STR_MAXLEN);
       continue;
     }
 
@@ -686,7 +687,7 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
     }
 
     // generic only attributes
-    if (p->type == lcecSlaveTypeGeneric) {
+    if (!strcmp(p->name, "generic")) {
       // parse vid (hex value)
       if (strcmp(name, "vid") == 0) {
         p->vid = strtol(val, NULL, 16);
@@ -718,8 +719,8 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
   }
 
   // type is required
-  if (p->type == lcecSlaveTypeInvalid) {
-    fprintf(stderr, "%s: ERROR: Slave has no type attribute\n", modname);
+  if (!valid) {
+    fprintf(stderr, "%s: ERROR: Slave type is invalid\n", modname);
     XML_StopParser(inst->parser, 0);
     return;
   }
@@ -1085,7 +1086,7 @@ static void parseSyncManagerAttrs(LCEC_CONF_XML_INST_T *inst, int next, const ch
   LCEC_CONF_SYNCMANAGER_T *p;
 
   // only allowed on generic slave
-  if (state->currSlave->type != lcecSlaveTypeGeneric) {
+  if (strcmp(state->currSlave->name, "generic")) {
     fprintf(stderr, "%s: ERROR: syncManager is only allowed on generic slaves\n", modname);
     XML_StopParser(inst->parser, 0);
     return;
