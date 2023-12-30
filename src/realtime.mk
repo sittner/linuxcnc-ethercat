@@ -20,5 +20,17 @@ LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat
 
 all: modules
 
+# This is https://github.com/LinuxCNC/linuxcnc/pull/2610 patched in
+# here manually, once we're able to depend on it being in upstream
+# releases then we can remove this block entirely.
+lcec.so:
+	$(ECHO) Linking $@
+	$(Q)ld -d -r -o $*.tmp $^
+	$(Q)objcopy -j .rtapi_export -O binary $*.tmp $*.sym
+	$(Q)(echo '{ global : '; tr -s '\0' < $*.sym | xargs -r0 printf '%s;\n' | grep .; echo 'local : * ; };') > $*.ver
+	$(Q)$(CC) -shared -Bsymbolic $(LDFLAGS) -Wl,--version-script,$*.ver -o $@ $^ -lm
+	$(Q)$(CC) -shared -Bsymbolic $(LDFLAGS) -Wl,--version-script,$*.ver -o $@ $^ -lm $(EXTRA_LDFLAGS)
+	$(Q)chmod -x $@
+
 endif
 
