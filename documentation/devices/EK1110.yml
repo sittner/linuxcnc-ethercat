@@ -8,4 +8,4 @@ DocumentationURL: http://www.beckhoff.com/EK1110
 DeviceType: System Terminals
 Notes: ""
 SrcFile: src/lcec_ek1100.c
-TestingStatus: ""
+TestingStatus: "Part of @scottlaird's test suite"

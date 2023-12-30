@@ -8,4 +8,4 @@ DocumentationURL: http://www.beckhoff.com/EL2904
 DeviceType: Safety Terminals
 Notes: ""
 SrcFile: src/lcec_el2904.c
-TestingStatus: ""
+TestingStatus: "Part of @scottlaird's test suite, but not currently being evaluated."

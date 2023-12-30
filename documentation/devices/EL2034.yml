@@ -8,4 +8,4 @@ DocumentationURL: http://www.beckhoff.com/EL2034
 DeviceType: Digital Output
 Notes: ""
 SrcFile: src/lcec_el2xxx.c
-TestingStatus: ""
+TestingStatus: "Part of @scottlaird's test suite."
