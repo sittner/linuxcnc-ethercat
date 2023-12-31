@@ -219,6 +219,15 @@ hal_s32_t lcec_generic_read_s32(uint8_t *pd, lcec_generic_pin_t *hal_data) {
       sval |= (1 << i);
     }
   }
+
+  // sign-extend shorter length integers
+  switch (hal_data->bitLength) {
+  case 8:
+    return (int8_t)sval;
+  case 16:
+    return (int16_t)sval;
+  }
+  
   return sval;
 }
 
