@@ -24,4 +24,3 @@
 
 #define LCEC_EPOCAT_PDOS 15
 #endif
-
