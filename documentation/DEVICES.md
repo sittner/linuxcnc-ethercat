@@ -135,6 +135,7 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EP2349-0021 16 Ch. Dig. Input/Output 24V, 10µs, 0,5A, M8](https://www.beckhoff.com/EP2349-0021) | [EP2349](../src/lcec_ep23xx.c) | 0x00000002:0x092d4052 | Digital Input/Output |  | 
 [Beckhoff EP2809-0021 16 Ch. Dig. Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2809-0021) | [EP2809](../src/lcec_el2xxx.c) | 0x00000002:0x0af94052 | Digital Output |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EP7041](../src/lcec_el7041.c) | 0x00000002:0x1b813052 | Stepper Drive | Uncertain; @scottlaird has several EP7041-0002 | 
+[AB&T EpoCAT FR4000](https://www.bausano.net/en/hardware/epocat-fr-1000.html) | [EPOCAT](../src/devices/lcec_epocat.c) | 0x0000079A:0x00decade | Stepper Drive | Merged 2023-12-31, untested | by @abausano
 [Omron R88D-KN01H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN01H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000005 | Servo Drive |  | 
 [Omron R88D-KN01L-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN01L_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000002 | Servo Drive |  | 
 [Omron R88D-KN02H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KN02H_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000006 | Servo Drive |  | 

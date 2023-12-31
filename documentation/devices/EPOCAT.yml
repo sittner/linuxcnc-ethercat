@@ -1,0 +1,11 @@
+---
+Device: EPOCAT
+VendorID: "0x0000079A"
+VendorName: "AB&T"
+PID: "0x00decade"
+Description: "AB&T EpoCAT FR4000"
+DocumentationURL: "https://www.bausano.net/en/hardware/epocat-fr-1000.html"
+DeviceType: "Stepper Drive"
+Notes: "by @abausano"
+SrcFile: src/devices/lcec_epocat.c
+TestingStatus: "Merged 2023-12-31, untested"
