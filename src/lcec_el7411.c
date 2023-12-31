@@ -23,8 +23,29 @@
 
 static int lcec_el7411_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
+static lcec_modparam_desc_t lcec_el7411_modparams[] = {
+  { "dcLinkNominal", LCEC_EL7411_PARAM_DCLINK_NOM, MODPARAM_TYPE_U32 } ,
+  { "dcLinkMin", LCEC_EL7411_PARAM_DCLINK_MIN, MODPARAM_TYPE_U32 } ,
+  { "dcLinkMax", LCEC_EL7411_PARAM_DCLINK_MAX, MODPARAM_TYPE_U32 } ,
+  { "maxCurrent", LCEC_EL7411_PARAM_MAX_CURR, MODPARAM_TYPE_U32 } ,
+  { "ratedCurrent", LCEC_EL7411_PARAM_RATED_CURR, MODPARAM_TYPE_U32 } ,
+  { "ratedVoltage", LCEC_EL7411_PARAM_RATED_VOLT, MODPARAM_TYPE_U32 } ,
+  { "polePairs", LCEC_EL7411_PARAM_POLE_PAIRS, MODPARAM_TYPE_U32 } ,
+  { "coilRes", LCEC_EL7411_PARAM_RESISTANCE, MODPARAM_TYPE_U32 } ,
+  { "coilInd", LCEC_EL7411_PARAM_INDUCTANCE, MODPARAM_TYPE_U32 } ,
+  { "torqueConst", LCEC_EL7411_PARAM_TOURQUE_CONST, MODPARAM_TYPE_U32 } ,
+  { "voltageConst", LCEC_EL7411_PARAM_VOLTAGE_CONST, MODPARAM_TYPE_U32 } ,
+  { "rotorInertia", LCEC_EL7411_PARAM_ROTOR_INERTIA, MODPARAM_TYPE_U32 } ,
+  { "maxSpeed", LCEC_EL7411_PARAM_MAX_SPEED, MODPARAM_TYPE_U32 } ,
+  { "ratedSpeed", LCEC_EL7411_PARAM_RATED_SPEED, MODPARAM_TYPE_U32 } ,
+  { "thermalTimeConst", LCEC_EL7411_PARAM_TH_TIME_CONST, MODPARAM_TYPE_U32 } ,
+  { "hallVoltage", LCEC_EL7411_PARAM_HALL_VOLT, MODPARAM_TYPE_U32 } ,
+  { "hallAdjust", LCEC_EL7411_PARAM_HALL_ADJUST, MODPARAM_TYPE_S32 } ,
+  { NULL }
+};
+
 static lcec_typelist_t types[]={
-  { "EL7411", LCEC_EL7411_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, 0, NULL, lcec_el7411_init},
+  { "EL7411", LCEC_EL7411_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, 0, NULL, lcec_el7411_init, lcec_el7411_modparams},
   { NULL },
 };
 ADD_TYPES(types);

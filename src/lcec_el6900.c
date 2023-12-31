@@ -24,8 +24,15 @@ static void lcec_el6900_write(struct lcec_slave *slave, long period);
 static int lcec_el6900_preinit(struct lcec_slave *slave);
 static int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
+static lcec_modparam_desc_t lcec_el6900_modparams[] = {
+  { "fsoeSlaveIdx", LCEC_EL6900_PARAM_SLAVEID, MODPARAM_TYPE_U32 } ,
+  { "stdInName", LCEC_EL6900_PARAM_STDIN_NAME, MODPARAM_TYPE_STRING } ,
+  { "stdOutName", LCEC_EL6900_PARAM_STDOUT_NAME, MODPARAM_TYPE_STRING } ,
+  { NULL }
+};
+
 static lcec_typelist_t types[]={
-  { "EL6900", LCEC_EL6900_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init},
+  { "EL6900", LCEC_EL6900_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init, lcec_el6900_modparams},
   { NULL },
 };
 ADD_TYPES(types);

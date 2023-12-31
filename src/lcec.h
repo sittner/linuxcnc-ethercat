@@ -97,6 +97,20 @@ typedef int (*lcec_slave_init_t) (int comp_id, struct lcec_slave *slave, ec_pdo_
 typedef void (*lcec_slave_cleanup_t) (struct lcec_slave *slave);
 typedef void (*lcec_slave_rw_t) (struct lcec_slave *slave, long period);
 
+typedef enum {
+  MODPARAM_TYPE_BIT,
+  MODPARAM_TYPE_U32,
+  MODPARAM_TYPE_S32,
+  MODPARAM_TYPE_FLOAT,
+  MODPARAM_TYPE_STRING
+} lcec_modparam_type_t;
+
+typedef struct {
+  const char *name;
+  int id;
+  lcec_modparam_type_t type;
+} lcec_modparam_desc_t;
+
 typedef struct lcec_typelist {
   char *name;
   uint32_t vid;
@@ -105,6 +119,8 @@ typedef struct lcec_typelist {
   int is_fsoe_logic;
   lcec_slave_preinit_t proc_preinit;
   lcec_slave_init_t proc_init;
+  lcec_modparam_desc_t *modparams;
+  
 } lcec_typelist_t;
 
 typedef struct lcec_typelinkedlist {
@@ -278,7 +294,7 @@ void lcec_syncs_init(lcec_syncs_t *syncs);
 void lcec_syncs_add_sync(lcec_syncs_t *syncs, ec_direction_t dir, ec_watchdog_mode_t watchdog_mode);
 void lcec_syncs_add_pdo_info(lcec_syncs_t *syncs, uint16_t index);
 void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subindex, uint8_t bit_length);
-lcec_typelist_t *lcec_findslavetype(char *name);
+const lcec_typelist_t *lcec_findslavetype(const char *name);
 void lcec_addtype(lcec_typelist_t *type);
 void lcec_addtypes(lcec_typelist_t types[]);
 

@@ -24,8 +24,15 @@ static void lcec_el1918_logic_write(struct lcec_slave *slave, long period);
 static int lcec_el1918_logic_preinit(struct lcec_slave *slave);
 static int lcec_el1918_logic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
+static lcec_modparam_desc_t lcec_el1918_logic_modparams[] = {
+  { "fsoeSlaveIdx", LCEC_EL1918_LOGIC_PARAM_SLAVEID, MODPARAM_TYPE_U32 } ,
+  { "stdInName", LCEC_EL1918_LOGIC_PARAM_STDIN_NAME, MODPARAM_TYPE_STRING } ,
+  { "stdOutName", LCEC_EL1918_LOGIC_PARAM_STDOUT_NAME, MODPARAM_TYPE_STRING } ,
+  { NULL }
+};
+
 static lcec_typelist_t types[]={
-  { "EL1918_LOGIC", LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init},
+  { "EL1918_LOGIC", LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init, lcec_el1918_logic_modparams},
   { NULL },
 };
 ADD_TYPES(types);

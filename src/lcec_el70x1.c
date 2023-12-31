@@ -25,9 +25,18 @@ static int lcec_el7041_0052_init(int comp_id, struct lcec_slave *slave, ec_pdo_e
 static void lcec_el70x1_read(struct lcec_slave *slave, long period);
 static void lcec_el70x1_write(struct lcec_slave *slave, long period);
 
+static lcec_modparam_desc_t lcec_el70x1_modparams[] = {
+  { "maxCurrent", LCEC_EL70x1_PARAM_MAX_CURR, MODPARAM_TYPE_U32 } ,
+  { "redCurrent", LCEC_EL70x1_PARAM_RED_CURR, MODPARAM_TYPE_U32 } ,
+  { "nomVoltage", LCEC_EL70x1_PARAM_NOM_VOLT, MODPARAM_TYPE_U32 } ,
+  { "coilRes", LCEC_EL70x1_PARAM_COIL_RES, MODPARAM_TYPE_U32 } ,
+  { "motorEMF", LCEC_EL70x1_PARAM_MOTOR_EMF, MODPARAM_TYPE_U32 } ,
+  { NULL }
+};
+
 static lcec_typelist_t types[]={
-  { "EL7031", LCEC_EL70x1_VID, LCEC_EL7031_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7031_init},
-  { "EL7041-0052", LCEC_EL70x1_VID, LCEC_EL7041_0052_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7041_0052_init},
+  { "EL7031", LCEC_EL70x1_VID, LCEC_EL7031_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7031_init, lcec_el70x1_modparams},
+  { "EL7041-0052", LCEC_EL70x1_VID, LCEC_EL7041_0052_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7041_0052_init, lcec_el70x1_modparams},
   { NULL },
 };
 ADD_TYPES(types);

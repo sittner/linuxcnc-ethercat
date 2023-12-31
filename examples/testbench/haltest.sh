@@ -178,7 +178,7 @@ if ! grep 'lcec.0.D12.control' $OUT > /dev/null; then
     exit 1
 fi
 
-if [ $(fgrep 'lcec.0.D12.' $OUT | wc -l) != 11 ]; then
+if [ $(fgrep 'lcec.0.D12.' $OUT | wc -l) != 13 ]; then
     echo "ERROR: device D12 (EL6900) has too many pins"
     exit 1
 fi

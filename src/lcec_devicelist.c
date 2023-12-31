@@ -67,8 +67,8 @@ void lcec_addtypes(lcec_typelist_t types[]) {
 }
 
 // Find a slave type by name.
-lcec_typelist_t *lcec_findslavetype(char *name) {
-  lcec_typelist_t *type;
+const lcec_typelist_t *lcec_findslavetype(const char *name) {
+  const lcec_typelist_t *type;
   lcec_typelinkedlist_t *tl;
   
   // Look in the old-stype types[] array

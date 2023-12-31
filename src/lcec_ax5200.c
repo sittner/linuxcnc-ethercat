@@ -21,9 +21,15 @@
 
 static int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
+static lcec_modparam_desc_t lcec_ax5200_modparams[] = {
+  { "enableFB2", LCEC_AX5_PARAM_ENABLE_FB2, MODPARAM_TYPE_BIT } ,
+  { "enableDiag", LCEC_AX5_PARAM_ENABLE_DIAG, MODPARAM_TYPE_BIT } ,
+  { NULL }
+};
+
 static lcec_typelist_t types[]={
-  { "AX5203", LCEC_AX5200_VID, LCEC_AX5203_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
-  { "AX5206", LCEC_AX5200_VID, LCEC_AX5206_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
+  { "AX5203", LCEC_AX5200_VID, LCEC_AX5203_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init, lcec_ax5200_modparams},
+  { "AX5206", LCEC_AX5200_VID, LCEC_AX5206_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init, lcec_ax5200_modparams},
   { NULL },
 };
 ADD_TYPES(types);

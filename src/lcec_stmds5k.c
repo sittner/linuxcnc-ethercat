@@ -24,8 +24,14 @@
 static int lcec_stmds5k_preinit(struct lcec_slave *slave);
 static int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
+static lcec_modparam_desc_t lcec_stmds5k_modparams[]={
+  { "isMultiturn", LCEC_STMDS5K_PARAM_MULTITURN, MODPARAM_TYPE_BIT } ,
+  { "extEnc", LCEC_STMDS5K_PARAM_EXTENC, MODPARAM_TYPE_U32 } ,
+  { NULL }
+};
+
 static lcec_typelist_t types[]={
-  { "StMDS5k", LCEC_STMDS5K_VID, LCEC_STMDS5K_PID, 0, 0, lcec_stmds5k_preinit, lcec_stmds5k_init},
+  { "StMDS5k", LCEC_STMDS5K_VID, LCEC_STMDS5K_PID, 0, 0, lcec_stmds5k_preinit, lcec_stmds5k_init, lcec_stmds5k_modparams},
   { NULL },
 };
 

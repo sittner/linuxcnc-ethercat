@@ -31,342 +31,12 @@
 #include "lcec_conf.h"
 #include "lcec_conf_priv.h"
 
-#include "lcec_stmds5k.h"
-#include "lcec_el6900.h"
-#include "lcec_el1918_logic.h"
-#include "lcec_el5002.h"
-#include "lcec_el70x1.h"
-#include "lcec_el7411.h"
 #include "lcec_class_ax5.h"
-
-typedef enum {
-  MODPARAM_TYPE_BIT,
-  MODPARAM_TYPE_U32,
-  MODPARAM_TYPE_S32,
-  MODPARAM_TYPE_FLOAT,
-  MODPARAM_TYPE_STRING
-} LCEC_CONF_MODPARAM_TYPE_T;
-
-
-typedef struct {
-  const char *name;
-  int id;
-  LCEC_CONF_MODPARAM_TYPE_T type;
-} LCEC_CONF_MODPARAM_DESC_T;
-
-typedef struct {
-  const char *name;
-  const LCEC_CONF_MODPARAM_DESC_T *modParams;
-} LCEC_CONF_TYPELIST_T;
 
 typedef struct {
   hal_u32_t *master_count;
   hal_u32_t *slave_count;
 } LCEC_CONF_HAL_T;
-
-static const LCEC_CONF_MODPARAM_DESC_T slaveStMDS5kParams[] = {
-  { "isMultiturn", LCEC_STMDS5K_PARAM_MULTITURN, MODPARAM_TYPE_BIT } ,
-  { "extEnc", LCEC_STMDS5K_PARAM_EXTENC, MODPARAM_TYPE_U32 } ,
-  { NULL }
-};
-
-static const LCEC_CONF_MODPARAM_DESC_T slaveEL6900Params[] = {
-  { "fsoeSlaveIdx", LCEC_EL6900_PARAM_SLAVEID, MODPARAM_TYPE_U32 } ,
-  { "stdInName", LCEC_EL6900_PARAM_STDIN_NAME, MODPARAM_TYPE_STRING } ,
-  { "stdOutName", LCEC_EL6900_PARAM_STDOUT_NAME, MODPARAM_TYPE_STRING } ,
-  { NULL }
-};
-
-static const LCEC_CONF_MODPARAM_DESC_T slaveEL1918_LOGICParams[] = {
-  { "fsoeSlaveIdx", LCEC_EL1918_LOGIC_PARAM_SLAVEID, MODPARAM_TYPE_U32 } ,
-  { "stdInName", LCEC_EL1918_LOGIC_PARAM_STDIN_NAME, MODPARAM_TYPE_STRING } ,
-  { "stdOutName", LCEC_EL1918_LOGIC_PARAM_STDOUT_NAME, MODPARAM_TYPE_STRING } ,
-  { NULL }
-};
-
-static const LCEC_CONF_MODPARAM_DESC_T slaveEL70x1Params[] = {
-  { "maxCurrent", LCEC_EL70x1_PARAM_MAX_CURR, MODPARAM_TYPE_U32 } ,
-  { "redCurrent", LCEC_EL70x1_PARAM_RED_CURR, MODPARAM_TYPE_U32 } ,
-  { "nomVoltage", LCEC_EL70x1_PARAM_NOM_VOLT, MODPARAM_TYPE_U32 } ,
-  { "coilRes", LCEC_EL70x1_PARAM_COIL_RES, MODPARAM_TYPE_U32 } ,
-  { "motorEMF", LCEC_EL70x1_PARAM_MOTOR_EMF, MODPARAM_TYPE_U32 } ,
-  { NULL }
-};
-
-static const LCEC_CONF_MODPARAM_DESC_T slaveEL7411Params[] = {
-
-  { "dcLinkNominal", LCEC_EL7411_PARAM_DCLINK_NOM, MODPARAM_TYPE_U32 } ,
-  { "dcLinkMin", LCEC_EL7411_PARAM_DCLINK_MIN, MODPARAM_TYPE_U32 } ,
-  { "dcLinkMax", LCEC_EL7411_PARAM_DCLINK_MAX, MODPARAM_TYPE_U32 } ,
-  { "maxCurrent", LCEC_EL7411_PARAM_MAX_CURR, MODPARAM_TYPE_U32 } ,
-  { "ratedCurrent", LCEC_EL7411_PARAM_RATED_CURR, MODPARAM_TYPE_U32 } ,
-  { "ratedVoltage", LCEC_EL7411_PARAM_RATED_VOLT, MODPARAM_TYPE_U32 } ,
-  { "polePairs", LCEC_EL7411_PARAM_POLE_PAIRS, MODPARAM_TYPE_U32 } ,
-  { "coilRes", LCEC_EL7411_PARAM_RESISTANCE, MODPARAM_TYPE_U32 } ,
-  { "coilInd", LCEC_EL7411_PARAM_INDUCTANCE, MODPARAM_TYPE_U32 } ,
-  { "torqueConst", LCEC_EL7411_PARAM_TOURQUE_CONST, MODPARAM_TYPE_U32 } ,
-  { "voltageConst", LCEC_EL7411_PARAM_VOLTAGE_CONST, MODPARAM_TYPE_U32 } ,
-  { "rotorInertia", LCEC_EL7411_PARAM_ROTOR_INERTIA, MODPARAM_TYPE_U32 } ,
-  { "maxSpeed", LCEC_EL7411_PARAM_MAX_SPEED, MODPARAM_TYPE_U32 } ,
-  { "ratedSpeed", LCEC_EL7411_PARAM_RATED_SPEED, MODPARAM_TYPE_U32 } ,
-  { "thermalTimeConst", LCEC_EL7411_PARAM_TH_TIME_CONST, MODPARAM_TYPE_U32 } ,
-  { "hallVoltage", LCEC_EL7411_PARAM_HALL_VOLT, MODPARAM_TYPE_U32 } ,
-  { "hallAdjust", LCEC_EL7411_PARAM_HALL_ADJUST, MODPARAM_TYPE_S32 } ,
-  { NULL }
-};
-
-static const LCEC_CONF_MODPARAM_DESC_T slaveAX5Params[] = {
-  { "enableFB2", LCEC_AX5_PARAM_ENABLE_FB2, MODPARAM_TYPE_BIT } ,
-  { "enableDiag", LCEC_AX5_PARAM_ENABLE_DIAG, MODPARAM_TYPE_BIT } ,
-  { NULL }
-};
-
-static const LCEC_CONF_MODPARAM_DESC_T slaveEL5002Params[] = {
-  { "ch0DisFrameErr", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_DIS_FRAME_ERR, MODPARAM_TYPE_BIT } ,
-  { "ch0EnPwrFailChk", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_EN_PWR_FAIL_CHK, MODPARAM_TYPE_BIT } ,
-  { "ch0EnInhibitTime", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_EN_INHIBIT_TIME, MODPARAM_TYPE_BIT } ,
-  { "ch0Coding", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_CODING, MODPARAM_TYPE_U32 } ,
-  { "ch0Baudrate", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_BAUDRATE, MODPARAM_TYPE_U32 } ,
-  { "ch0ClkJitComp", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_CLK_JIT_COMP, MODPARAM_TYPE_U32 } ,
-  { "ch0FrameType", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_FRAME_TYPE, MODPARAM_TYPE_U32 } ,
-  { "ch0FrameSize", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_FRAME_SIZE, MODPARAM_TYPE_U32 } ,
-  { "ch0DataLen", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_DATA_LEN, MODPARAM_TYPE_U32 } ,
-  { "ch0MinInhibitTime", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_MIN_INHIBIT_TIME, MODPARAM_TYPE_U32 } ,
-  { "ch0NoClkBursts", LCEC_EL5002_PARAM_CH_0 || LCEC_EL5002_PARAM_NO_CLK_BURSTS, MODPARAM_TYPE_U32 } ,
-  { "ch1DisFrameErr", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_DIS_FRAME_ERR, MODPARAM_TYPE_BIT } ,
-  { "ch1EnPwrFailChk", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_EN_PWR_FAIL_CHK, MODPARAM_TYPE_BIT } ,
-  { "ch1EnInhibitTime", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_EN_INHIBIT_TIME, MODPARAM_TYPE_BIT } ,
-  { "ch1Coding", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_CODING, MODPARAM_TYPE_U32 } ,
-  { "ch1Baudrate", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_BAUDRATE, MODPARAM_TYPE_U32 } ,
-  { "ch1ClkJitComp", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_CLK_JIT_COMP, MODPARAM_TYPE_U32 } ,
-  { "ch1FrameType", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_FRAME_TYPE, MODPARAM_TYPE_U32 } ,
-  { "ch1FrameSize", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_FRAME_SIZE, MODPARAM_TYPE_U32 } ,
-  { "ch1DataLen", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_DATA_LEN, MODPARAM_TYPE_U32 } ,
-  { "ch1MinInhibitTime", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_MIN_INHIBIT_TIME, MODPARAM_TYPE_U32 } ,
-  { "ch1NoClkBursts", LCEC_EL5002_PARAM_CH_1 || LCEC_EL5002_PARAM_NO_CLK_BURSTS, MODPARAM_TYPE_U32 } ,
-  { NULL }
-};
-
-static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
-  // bus coupler
-  { "EK1100", NULL },
-  { "EK1101", NULL },
-  { "EK1110", NULL },
-  { "EK1122", NULL },
-
-  // generic device
-  { "generic", NULL },
-
-  // AX5000 servo drives
-  { "AX5101", slaveAX5Params },
-  { "AX5103", slaveAX5Params },
-  { "AX5106", slaveAX5Params },
-  { "AX5112", slaveAX5Params },
-  { "AX5118", slaveAX5Params },
-  { "AX5203", slaveAX5Params },
-  { "AX5206", slaveAX5Params },
-
-  // digital in
-  { "EL1002", NULL },
-  { "EL1004", NULL },
-  { "EL1008", NULL },
-  { "EL1012", NULL },
-  { "EL1014", NULL },
-  { "EL1018", NULL },
-  { "EL1024", NULL },
-  { "EL1034", NULL },
-  { "EL1084", NULL },
-  { "EL1088", NULL },
-  { "EL1094", NULL },
-  { "EL1098", NULL },
-  { "EL1104", NULL },
-  { "EL1114", NULL },
-  { "EL1124", NULL },
-  { "EL1134", NULL },
-  { "EL1144", NULL },
-  { "EL1252", NULL },
-  { "EL1804", NULL },
-  { "EL1808", NULL },
-  { "EL1809", NULL },
-  { "EP1008", NULL },
-  { "EP1018", NULL },
-  { "EL1819", NULL },
-
-  // digital out
-  { "EL2002", NULL },
-  { "EL2004", NULL },
-  { "EL2008", NULL },
-  { "EL2022", NULL },
-  { "EL2024", NULL },
-  { "EL2032", NULL },
-  { "EL2034", NULL },
-  { "EL2042", NULL },
-  { "EL2084", NULL },
-  { "EL2088", NULL },
-  { "EL2124", NULL },
-  { "EL2202", NULL },
-  { "EL2612", NULL },
-  { "EL2622", NULL },
-  { "EL2634", NULL },
-  { "EL2652", NULL },
-  { "EL2808", NULL },
-  { "EL2798", NULL },
-  { "EL2809", NULL },
-
-  { "EP2008", NULL },
-  { "EP2028", NULL },
-  { "EP2809", NULL },
-
-  // digital combo (in/out)
-  { "EL1859", NULL },
-  { "EP2308", NULL },
-  { "EP2316", NULL },
-  { "EP2318", NULL },
-  { "EP2328", NULL },
-  { "EP2338", NULL },
-  { "EP2349", NULL },
-  // analog in, 2ch, 16 bits
-  { "EL3004", NULL },
-  { "EL3044", NULL },
-  { "EL3054", NULL },
-  { "EL3064", NULL },
-
-  // analog in, 2ch, 16 bits
-  { "EL3102", NULL },
-  { "EL3112", NULL },
-  { "EL3122", NULL },
-  { "EL3142", NULL },
-  { "EL3152", NULL },
-  { "EL3162", NULL },
-  { "EL3202", NULL },
-
-  // analog in, 4ch, 16 bits
-  { "EL3164", NULL },
-
-  // analog in, 5ch, 16 bits
-  { "EL3255", NULL },
-
-  // analog in, 3ch, 16 bits
-  { "EL3403", NULL },
-
-  // analog out, 1ch, 12 bits
-  { "EL4001", NULL },
-  { "EL4011", NULL },
-  { "EL4021", NULL },
-  { "EL4031", NULL },
-
-  // analog out, 2ch, 12 bits
-  { "EL4002", NULL },
-  { "EL4012", NULL },
-  { "EL4022", NULL },
-  { "EL4032", NULL },
-
-  // analog out, 2ch, 16 bits
-  { "EL4102", NULL },
-  { "EL4112", NULL },
-  { "EL4122", NULL },
-  { "EL4132", NULL },
-
-  // analog out, 4ch, 16 bits
-  { "EL4104", NULL },
-  { "EL4134", NULL },
-
-  // analog out, 8ch, 12 bits
-  { "EL4008", NULL },
-  { "EL4018", NULL },
-  { "EL4028", NULL },
-  { "EL4038", NULL },
-
-  // encoder inputs
-  { "EL5002", slaveEL5002Params },
-  { "EL5032", NULL },
-  { "EL5101", NULL },
-  { "EL5151", NULL },
-  { "EL5152", NULL },
-
-  // pulse train (stepper) output
-  { "EL2521", NULL },
-
-  // stepper
-  { "EL7031", slaveEL70x1Params },
-  { "EL7041", NULL },
-  { "EL7041-0052", slaveEL70x1Params },
-  { "EL7041-1000", NULL },
-  { "EP7041", NULL },
-
-  // ac servo
-  { "EL7201-9014", NULL },
-  { "EL7211", NULL },
-  { "EL7221", NULL },
-
-  // dc servo
-  { "EL7342", NULL },
-
-  // BLDC
-  { "EL7411", slaveEL7411Params },
-
-  // power suppply
-  { "EL9505", NULL },
-  { "EL9508", NULL },
-  { "EL9510", NULL },
-  { "EL9512", NULL },
-  { "EL9515", NULL },
-  { "EL9576", NULL },
-
-  // FSoE devices
-  { "EL6900", slaveEL6900Params },
-  { "EL1918_LOGIC", slaveEL1918_LOGICParams },
-  { "EL1904", NULL },
-  { "EL2904", NULL },
-  { "AX5805", NULL },
-
-  // pressure sensor
-  { "EM3701", NULL },
-  { "EM3702", NULL },
-  { "EM3712", NULL },
-
-  // multi axis interface
-  { "EM7004", NULL },
-
-  // stoeber MDS5000 series
-  { "StMDS5k", slaveStMDS5kParams },
-
-  // Delta ASDA series
-  { "DeASDA", NULL },
-
-  // Delta MS/MH300 series
-  { "DeMS300", NULL },
-
-  // Omron G5 series
-  { "R88D-KNA5L-ECT", NULL },
-  { "R88D-KN01L-ECT", NULL },
-  { "R88D-KN02L-ECT", NULL },
-  { "R88D-KN04L-ECT", NULL },
-  { "R88D-KN01H-ECT", NULL },
-  { "R88D-KN02H-ECT", NULL },
-  { "R88D-KN04H-ECT", NULL },
-  { "R88D-KN08H-ECT", NULL },
-  { "R88D-KN10H-ECT", NULL },
-  { "R88D-KN15H-ECT", NULL },
-  { "R88D-KN20H-ECT", NULL },
-  { "R88D-KN30H-ECT", NULL },
-  { "R88D-KN50H-ECT", NULL },
-  { "R88D-KN75H-ECT", NULL },
-  { "R88D-KN150H-ECT", NULL },
-  { "R88D-KN06F-ECT", NULL },
-  { "R88D-KN10F-ECT", NULL },
-  { "R88D-KN15F-ECT", NULL },
-  { "R88D-KN20F-ECT", NULL },
-  { "R88D-KN30F-ECT", NULL },
-  { "R88D-KN50F-ECT", NULL },
-  { "R88D-KN75F-ECT", NULL },
-  { "R88D-KN150F-ECT", NULL },
-
-  // modusoft PH3LM2RM converter
-  { "Ph3LM2RM", NULL },
-
-  { NULL }
-};
 
 static int hal_comp_id;
 static LCEC_CONF_HAL_T *conf_hal_data;
@@ -378,7 +48,7 @@ typedef struct {
   LCEC_CONF_XML_INST_T xml;
 
   LCEC_CONF_MASTER_T *currMaster;
-  const LCEC_CONF_TYPELIST_T *currSlaveType;
+  const lcec_typelist_t *currSlaveType;
   LCEC_CONF_SLAVE_T *currSlave;
   LCEC_CONF_SYNCMANAGER_T *currSyncManager;
   LCEC_CONF_PDO_T *currPdo;
@@ -627,6 +297,8 @@ static void parseMasterAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **
 }
 
 static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
+  const lcec_typelist_t *slaveType;
+  
   LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
 
   LCEC_CONF_SLAVE_T *p = addOutputBuffer(&state->outputBuf, sizeof(LCEC_CONF_SLAVE_T));
@@ -635,7 +307,6 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
     return;
   }
 
-  const LCEC_CONF_TYPELIST_T *slaveType = NULL;
   p->confType = lcecConfTypeSlave;
 
   int valid = 0;
@@ -648,11 +319,8 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
 
     // parse slave type
     if (strcmp(name, "type") == 0) {
-      for (slaveType = slaveTypes; slaveType->name != NULL; slaveType++) {
-        if (strcmp(val, slaveType->name) == 0) {
-          break;
-        }
-      }
+      slaveType = lcec_findslavetype(val);
+
       if (slaveType->name == NULL) {
         fprintf(stderr, "%s: ERROR: Invalid slave type %s\n", modname, val);
         XML_StopParser(inst->parser, 0);
@@ -1492,10 +1160,10 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
   LCEC_CONF_XML_STATE_T *state = (LCEC_CONF_XML_STATE_T *) inst;
 
   const char *pname, *pval;
-  const LCEC_CONF_MODPARAM_DESC_T *modParams;
+  const lcec_modparam_desc_t *modparams;
 
-  if (state->currSlaveType->modParams == NULL) {
-    fprintf(stderr, "%s: ERROR: modParam not allowed for this slave\n", modname);
+  if (state->currSlaveType->modparams == NULL) {
+    fprintf(stderr, "%s: ERROR: modparam not allowed for this slave\n", modname);
     XML_StopParser(inst->parser, 0);
     return;
   }
@@ -1527,50 +1195,50 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
     }
 
     // handle error
-    fprintf(stderr, "%s: ERROR: Invalid modParam attribute %s\n", modname, name);
+    fprintf(stderr, "%s: ERROR: Invalid modparam attribute %s\n", modname, name);
     XML_StopParser(inst->parser, 0);
     return;
   }
 
   // name is required
   if (pname == NULL || pname[0] == 0) {
-    fprintf(stderr, "%s: ERROR: modParam has no name attribute\n", modname);
+    fprintf(stderr, "%s: ERROR: modparam has no name attribute\n", modname);
     XML_StopParser(inst->parser, 0);
     return;
   }
 
   // value is required
   if (pval == NULL || pval[0] == 0) {
-    fprintf(stderr, "%s: ERROR: modParam has no value attribute\n", modname);
+    fprintf(stderr, "%s: ERROR: modparam has no value attribute\n", modname);
     XML_StopParser(inst->parser, 0);
     return;
   }
 
   // search for matching param name
-  for (modParams = state->currSlaveType->modParams; modParams->name != NULL; modParams++) {
-    if (strcmp(pname, modParams->name) == 0) {
+  for (modparams = state->currSlaveType->modparams; modparams->name != NULL; modparams++) {
+    if (strcmp(pname, modparams->name) == 0) {
       break;
     }
   }
-  if (modParams->name == NULL) {
-    fprintf(stderr, "%s: ERROR: Invalid modParam '%s'\n", modname, pname);
+  if (modparams->name == NULL) {
+    fprintf(stderr, "%s: ERROR: Invalid modparam '%s'\n", modname, pname);
     XML_StopParser(inst->parser, 0);
     return;
   }
 
   // set id
-  p->id = modParams->id;
+  p->id = modparams->id;
 
   // try to parse value
   char *s = NULL;
-  switch (modParams->type) {
+  switch (modparams->type) {
     case MODPARAM_TYPE_BIT:
       if ((strcmp("1", pval) == 0) || (strcasecmp("TRUE", pval) == 0)) {
         p->value.bit = 1;
       } else if ((strcmp("0", pval) == 0) || (strcasecmp("FALSE", pval)) == 0) {
         p->value.bit = 0;
       } else {
-        fprintf(stderr, "%s: ERROR: Invalid modParam bit value '%s' for param '%s'\n", modname, pval, pname);
+        fprintf(stderr, "%s: ERROR: Invalid modparam bit value '%s' for param '%s'\n", modname, pval, pname);
         XML_StopParser(inst->parser, 0);
         return;
       }
@@ -1579,7 +1247,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
     case MODPARAM_TYPE_U32:
       p->value.u32 = strtoul(pval, &s, 0);
       if (*s != 0) {
-        fprintf(stderr, "%s: ERROR: Invalid modParam u32 value '%s' for param '%s'\n", modname, pval, pname);
+        fprintf(stderr, "%s: ERROR: Invalid modparam u32 value '%s' for param '%s'\n", modname, pval, pname);
         XML_StopParser(inst->parser, 0);
         return;
       }
@@ -1588,7 +1256,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
     case MODPARAM_TYPE_S32:
       p->value.s32 = strtol(pval, &s, 0);
       if (*s != 0) {
-        fprintf(stderr, "%s: ERROR: Invalid modParam s32 value '%s' for param '%s'\n", modname, pval, pname);
+        fprintf(stderr, "%s: ERROR: Invalid modparam s32 value '%s' for param '%s'\n", modname, pval, pname);
         XML_StopParser(inst->parser, 0);
         return;
       }
@@ -1597,7 +1265,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
     case MODPARAM_TYPE_FLOAT:
       p->value.flt = strtod(pval, &s);
       if (*s != 0) {
-        fprintf(stderr, "%s: ERROR: Invalid modParam float value '%s' for param '%s'\n", modname, pval, pname);
+        fprintf(stderr, "%s: ERROR: Invalid modparam float value '%s' for param '%s'\n", modname, pval, pname);
         XML_StopParser(inst->parser, 0);
         return;
       }
