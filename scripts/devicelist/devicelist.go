@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"log"
 	"gopkg.in/yaml.v3"
 	"os"
 	"path/filepath"
@@ -117,7 +118,7 @@ func main() {
 	fmt.Printf("Reading VIDs from lcec.h\n")
 	vidMap, err := buildVIDMap(*srcFlag)
 	if err != nil {
-		panic(err)
+		log.Fatalf("couldn't build VID map: %v", err)
 	}
 
 	fmt.Printf("vidMap is %#v\n", vidMap)
@@ -125,15 +126,33 @@ func main() {
 	fmt.Printf("Reading ESI file from %s\n", *esiFlag)
 	esiEntries, err := readESIFile(*esiFlag)
 	if err != nil {
-		panic(err)
+		log.Fatalf("couldn't read ESI file (%s): $v", *esiFlag, err)
 	}
 	fmt.Printf("Found %d entries\n", len(esiEntries))
 
 	esiMap := buildESIMap(esiEntries)
 
+	hFiles := []string{}
 	entries, err := os.ReadDir(*srcFlag)
 	if err != nil {
-		panic(err)
+		log.Fatalf("couldn't read source directory (%s): %v", *srcFlag, err)
+	}
+
+	for _, entry := range entries {
+		if strings.HasSuffix(entry.Name(), ".h") && strings.Contains(entry.Name(), "lcec_") {
+			hFiles = append(hFiles, filepath.Join(*srcFlag, entry.Name()))
+		}
+	}
+
+	entries, err = os.ReadDir(filepath.Join(*srcFlag, "devices"))
+	if err != nil {
+		log.Fatalf("couldn't read devices directory: %v", err)
+	}
+
+	for _, entry := range entries {
+		if strings.HasSuffix(entry.Name(), ".h") && strings.Contains(entry.Name(), "lcec_") {
+			hFiles = append(hFiles, filepath.Join(*srcFlag, "devices", entry.Name()))
+		}
 	}
 
 	definePidRE := regexp.MustCompile("^#define LCEC_([^ ]+)_PID +(0x[a-zA-Z0-9]+)")
@@ -141,78 +160,77 @@ func main() {
 
 	allDefs := []*DeviceDefinition{}
 
-	for _, entry := range entries {
-		if strings.HasSuffix(entry.Name(), ".h") && strings.Contains(entry.Name(), "lcec_") {
-			var vid string
-			defs := []*DeviceDefinition{}
-			stubs := 0
+	for _, filename := range hFiles {
+		var vid string
+		defs := []*DeviceDefinition{}
+		stubs := 0
 
-			fmt.Printf("Looking in %s...", entry.Name())
+		fmt.Printf("Looking in %s...", filename)
 
-			file, err := os.Open(filepath.Join(*srcFlag, entry.Name()))
-			if err != nil {
-				panic(err)
-			}
-
-			scanner := bufio.NewScanner(file)
-			for scanner.Scan() {
-				line := scanner.Text()
-
-				if match := defineVidRE.FindStringSubmatch(line); match != nil {
-					//fmt.Printf("Found VID of %s in %s\n", match[2], entry.Name())
-					if vid != "" {
-						err := fmt.Errorf("found multiple VIDs in file %q", entry.Name())
-						panic(err)
-					}
-
-					vid = vidMap[match[2]]
-				}
-
-				if match := definePidRE.FindStringSubmatch(line); match != nil {
-					srcFile, _, _ := strings.Cut(entry.Name(), ".h")
-					srcFile = fmt.Sprintf("src/%s.c", srcFile)
-					def := &DeviceDefinition{
-						Device:  match[1],
-						PID:     strings.ToLower(match[2]),
-						SrcFile: srcFile,
-					}
-
-					defs = append(defs, def)
-					//fmt.Printf("Found %q = %s in %s\n", match[1], match[2], entry.Name())
-				}
-			}
-
-			for _, def := range defs {
-				def.VendorID = vid
-				esi := esiMap[esiKey(def)]
-				if esi == nil {
-					//fmt.Printf("(ESI missing for %q, creating stub) ", esiKey(def))
-					stubs++
-					def.Description = "UNKNOWN"
-				} else {
-					def.VendorName = esi.VendorName
-					vendorSplit := strings.Split(def.VendorName, " ")
-					def.Description = fmt.Sprintf("%s %s", vendorSplit[0], esi.Name)
-					def.DocumentationURL = esi.URL
-					def.DeviceType = esi.DeviceType
-				}
-
-				//fmt.Printf("Got def: %#v\n", def)
-			}
-
-			fmt.Printf("found %d devices", len(defs))
-			if stubs > 0 {
-				fmt.Printf(" (%d missing ESI data)", stubs)
-			}
-			fmt.Printf("\n")
-			allDefs = append(allDefs, defs...)
+		file, err := os.Open(filename)
+		if err != nil {
+			log.Fatalf("can't open file %q: %v", filename, err)
 		}
+
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			line := scanner.Text()
+
+			if match := defineVidRE.FindStringSubmatch(line); match != nil {
+				//fmt.Printf("Found VID of %s in %s\n", match[2], filename)
+				if vid != "" {
+					err := fmt.Errorf("found multiple VIDs in file %q", filename)
+					panic(err)
+				}
+
+				vid = vidMap[match[2]]
+			}
+
+			if match := definePidRE.FindStringSubmatch(line); match != nil {
+				srcFile, _, _ := strings.Cut(filename[len(*srcFlag)+1:], ".h")
+				srcFile = fmt.Sprintf("src/%s.c", srcFile)
+				def := &DeviceDefinition{
+					Device:  match[1],
+					PID:     strings.ToLower(match[2]),
+					SrcFile: srcFile,
+				}
+
+				defs = append(defs, def)
+				//fmt.Printf("Found %q = %s in %s\n", match[1], match[2], filename)
+			}
+		}
+
+		for _, def := range defs {
+			def.VendorID = vid
+			esi := esiMap[esiKey(def)]
+			if esi == nil {
+				//fmt.Printf("(ESI missing for %q, creating stub) ", esiKey(def))
+				stubs++
+				def.Description = "UNKNOWN"
+			} else {
+				def.VendorName = esi.VendorName
+				vendorSplit := strings.Split(def.VendorName, " ")
+				def.Description = fmt.Sprintf("%s %s", vendorSplit[0], esi.Name)
+				def.DocumentationURL = esi.URL
+				def.DeviceType = esi.DeviceType
+			}
+
+			//fmt.Printf("Got def: %#v\n", def)
+		}
+
+		fmt.Printf("found %d devices", len(defs))
+		if stubs > 0 {
+			fmt.Printf(" (%d missing ESI data)", stubs)
+		}
+		fmt.Printf("\n")
+		allDefs = append(allDefs, defs...)
+
 	}
 
 	for _, def := range allDefs {
 		y, err := yaml.Marshal(def)
 		if err != nil {
-			panic(err)
+			log.Fatalf("unable to marshal yaml: %v", err)
 		}
 
 		if *deviceDirFlag == "" {
