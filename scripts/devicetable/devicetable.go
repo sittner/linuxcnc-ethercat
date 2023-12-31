@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"gopkg.in/yaml.v3"
+	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -50,7 +51,7 @@ func main() {
 
 	files, err := os.ReadDir(*pathFlag)
 	if err != nil {
-		panic(err)
+		log.Fatalf("Unable to read directory %q: %v", *pathFlag, err)
 	}
 
 	filenames := []string{}
@@ -65,7 +66,7 @@ func main() {
 		if name[0] != '.' && strings.Contains(name, ".yml") {
 			entry, err := parsefile(filepath.Join(*pathFlag, name))
 			if err != nil {
-				panic(err)
+				log.Fatalf("Unable to parse file %q: %v", name, err)
 			}
 
 			// The `devicelist.sh` script autogenerates entries
