@@ -27,12 +27,12 @@ The first part of the commit message is somewhat special, and a
 pre-commit will reject it unless it meets the right format.  In
 general, messages should look something like one of these:
 
-- build: Add missing dependency
-- ci: fix Github workflow action
-- docs: add instructions for installing on Raspberry Pi 3s
-- style: fix C formatting in el2xxx.c
-- fix(ep2316): add missing PDO
-- feat(el7941): add new module
+- `build: Add missing dependency`
+- `ci: fix Github workflow action`
+- `docs: add instructions for installing on Raspberry Pi 3s`
+- `style: fix C formatting in el2xxx.c`
+- `fix(ep2316): add missing PDO`
+- `feat(el7941): add new module`
 
 Specifically, the message must start with `<type>[(<scope>)]:`; scope
 is optional, but should generally be added if possible.  Type can be
