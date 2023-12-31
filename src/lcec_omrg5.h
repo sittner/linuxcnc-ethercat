@@ -47,8 +47,5 @@
 #define LCEC_OMRG5_R88D_KN150F_ECT_PID 0x0000005F
 
 #define LCEC_OMRG5_PDOS 13
-
-int lcec_omrg5_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

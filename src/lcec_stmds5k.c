@@ -21,6 +21,16 @@
 
 #include "lcec_class_enc.h"
 
+static int lcec_stmds5k_preinit(struct lcec_slave *slave);
+static int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "StMDS5k", LCEC_STMDS5K_VID, LCEC_STMDS5K_PID, 0, 0, lcec_stmds5k_preinit, lcec_stmds5k_init},
+  { NULL },
+};
+
+ADD_TYPES(types);
+
 #define STMDS5K_PCT_REG_FACTOR (0.5 * (double)0x7fff)
 #define STMDS5K_PCT_REG_DIV    (2.0 / (double)0x7fff)
 #define STMDS5K_TORQUE_DIV     (8.0 / (double)0x7fff)
@@ -207,13 +217,13 @@ static const lcec_stmds5k_extenc_conf_t lcec_stmds5k_extenc_conf[] = {
   { 0x289c, 0, 16, 16 },
 };
 
-const lcec_stmds5k_extenc_conf_t *lcec_stmds5k_get_extenc_conf(uint32_t type);
-void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data);
+static const lcec_stmds5k_extenc_conf_t *lcec_stmds5k_get_extenc_conf(uint32_t type);
+static void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data);
 
-void lcec_stmds5k_read(struct lcec_slave *slave, long period);
-void lcec_stmds5k_write(struct lcec_slave *slave, long period);
+static void lcec_stmds5k_read(struct lcec_slave *slave, long period);
+static void lcec_stmds5k_write(struct lcec_slave *slave, long period);
 
-int lcec_stmds5k_preinit(struct lcec_slave *slave) {
+static int lcec_stmds5k_preinit(struct lcec_slave *slave) {
   lcec_master_t *master = slave->master;
   LCEC_CONF_MODPARAM_VAL_T *pval;
 
@@ -232,7 +242,7 @@ int lcec_stmds5k_preinit(struct lcec_slave *slave) {
   return 0;
 }
 
-int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_stmds5k_data_t *hal_data;
   int err;
@@ -366,7 +376,7 @@ int lcec_stmds5k_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   return 0;
 }
 
-const lcec_stmds5k_extenc_conf_t *lcec_stmds5k_get_extenc_conf(uint32_t type) {
+static const lcec_stmds5k_extenc_conf_t *lcec_stmds5k_get_extenc_conf(uint32_t type) {
   if (type >= (sizeof(lcec_stmds5k_extenc_conf) / sizeof(lcec_stmds5k_extenc_conf_t))) {
     return NULL;
   }
@@ -374,7 +384,7 @@ const lcec_stmds5k_extenc_conf_t *lcec_stmds5k_get_extenc_conf(uint32_t type) {
   return &lcec_stmds5k_extenc_conf[type];
 }
 
-void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data) {
+static void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data) {
   // check for change in scale value
   if (hal_data->pos_scale != hal_data->pos_scale_old) {
     // scale value has changed, test and update it
@@ -401,7 +411,7 @@ void lcec_stmds5k_check_scales(lcec_stmds5k_data_t *hal_data) {
   }
 }
 
-void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
+static void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_stmds5k_data_t *hal_data = (lcec_stmds5k_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -464,7 +474,7 @@ void lcec_stmds5k_read(struct lcec_slave *slave, long period) {
   }
 }
 
-void lcec_stmds5k_write(struct lcec_slave *slave, long period) {
+static void lcec_stmds5k_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_stmds5k_data_t *hal_data = (lcec_stmds5k_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

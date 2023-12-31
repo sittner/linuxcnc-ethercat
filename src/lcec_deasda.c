@@ -21,6 +21,15 @@
 
 #include "lcec_class_enc.h"
 
+static int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "DeASDA", LCEC_DEASDA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, 0, NULL, lcec_deasda_init},
+  { NULL },
+};
+
+ADD_TYPES(types);
+
 #define DEASDA_PULSES_PER_REV_DEFLT (1280000)
 #define DEASDA_RPM_FACTOR           (0.1)
 #define DEASDA_RPM_RCPT             (1.0 / DEASDA_RPM_FACTOR)
@@ -147,12 +156,12 @@ static ec_sync_info_t lcec_deasda_syncs[] = {
     {0xff}
 };
 
-void lcec_deasda_check_scales(lcec_deasda_data_t *hal_data);
+static void lcec_deasda_check_scales(lcec_deasda_data_t *hal_data);
 
-void lcec_deasda_read(struct lcec_slave *slave, long period);
-void lcec_deasda_write(struct lcec_slave *slave, long period);
+static void lcec_deasda_read(struct lcec_slave *slave, long period);
+static void lcec_deasda_write(struct lcec_slave *slave, long period);
 
-int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_deasda_data_t *hal_data;
   int err;
@@ -252,7 +261,7 @@ void lcec_deasda_check_scales(lcec_deasda_data_t *hal_data) {
   }
 }
 
-void lcec_deasda_read(struct lcec_slave *slave, long period) {
+static void lcec_deasda_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_deasda_data_t *hal_data = (lcec_deasda_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -333,7 +342,7 @@ void lcec_deasda_read(struct lcec_slave *slave, long period) {
   class_enc_update(&hal_data->extenc, 1, hal_data->extenc_scale, pos_cnt, 0, 0);
 }
 
-void lcec_deasda_write(struct lcec_slave *slave, long period) {
+static void lcec_deasda_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_deasda_data_t *hal_data = (lcec_deasda_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

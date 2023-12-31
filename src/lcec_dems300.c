@@ -19,6 +19,15 @@
 #include "lcec.h"
 #include "lcec_dems300.h"
 
+static int lcec_dems300_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "DeMS300", LCEC_DEMS300_VID, LCEC_DEMS300_PID, LCEC_DEMS300_PDOS, 0, NULL, lcec_dems300_init},
+  { NULL },
+};
+
+ADD_TYPES(types);
+
 #define MS300_FAULT_AUTORESET_DELAY_NS 100000000LL
 #define OPMODE_VELOCITY 2
 
@@ -156,12 +165,12 @@ static ec_sync_info_t lcec_dems300_syncs[] = {
     {0xff}
 };
 
-void lcec_dems300_check_scales(lcec_dems300_data_t *hal_data);
+static void lcec_dems300_check_scales(lcec_dems300_data_t *hal_data);
 
-void lcec_dems300_read(struct lcec_slave *slave, long period);
-void lcec_dems300_write(struct lcec_slave *slave, long period);
+static void lcec_dems300_read(struct lcec_slave *slave, long period);
+static void lcec_dems300_write(struct lcec_slave *slave, long period);
 
-int lcec_dems300_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_dems300_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_dems300_data_t *hal_data;
   int err;
@@ -216,7 +225,7 @@ int lcec_dems300_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
   return 0;
 }
 
-void lcec_dems300_check_scales(lcec_dems300_data_t *hal_data) {
+static void lcec_dems300_check_scales(lcec_dems300_data_t *hal_data) {
   // check for change in scale value
   if (hal_data->vel_scale != hal_data->vel_scale_old) {
     // scale value has changed, test and update it
@@ -231,7 +240,7 @@ void lcec_dems300_check_scales(lcec_dems300_data_t *hal_data) {
   }
 }
 
-void lcec_dems300_read(struct lcec_slave *slave, long period) {
+static void lcec_dems300_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_dems300_data_t *hal_data = (lcec_dems300_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -307,7 +316,7 @@ void lcec_dems300_read(struct lcec_slave *slave, long period) {
 
 }
 
-void lcec_dems300_write(struct lcec_slave *slave, long period) {
+static void lcec_dems300_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_dems300_data_t *hal_data = (lcec_dems300_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

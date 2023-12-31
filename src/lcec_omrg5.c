@@ -22,6 +22,36 @@
 #define OMRG5_PULSES_PER_REV_DEFLT (1 << 20)
 #define OMRG5_FAULT_AUTORESET_DELAY_NS 100000000LL
 
+static int lcec_omrg5_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "OmrG5_KNA5L",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KNA5L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN01L",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN01L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN02L",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN02L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN04L",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN04L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN01H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN01H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN02H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN02H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN04H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN04H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN08H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN08H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN10H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN10H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN15H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN15H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN20H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN20H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN30H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN30H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN50H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN50H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN75H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN75H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN150H", LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN150H_ECT_PID, LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN06F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN06F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN10F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN10F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN15F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN15F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN20F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN20F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN30F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN30F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN50F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN50F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN75F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN75F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { "OmrG5_KN150F", LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN150F_ECT_PID, LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
+  { NULL },
+};
+
+ADD_TYPES(types);
 typedef struct {
   hal_float_t *pos_cmd;
   hal_s32_t *pos_cmd_raw;
@@ -170,12 +200,12 @@ static ec_sync_info_t lcec_omrg5_syncs[] = {
     {0xff}
 };
 
-void lcec_omrg5_check_scales(lcec_omrg5_data_t *hal_data);
+static void lcec_omrg5_check_scales(lcec_omrg5_data_t *hal_data);
 
-void lcec_omrg5_read(struct lcec_slave *slave, long period);
-void lcec_omrg5_write(struct lcec_slave *slave, long period);
+static void lcec_omrg5_read(struct lcec_slave *slave, long period);
+static void lcec_omrg5_write(struct lcec_slave *slave, long period);
 
-int lcec_omrg5_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_omrg5_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_omrg5_data_t *hal_data;
   int err;
@@ -234,7 +264,7 @@ int lcec_omrg5_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *p
   return 0;
 }
 
-void lcec_omrg5_check_scales(lcec_omrg5_data_t *hal_data) {
+static void lcec_omrg5_check_scales(lcec_omrg5_data_t *hal_data) {
   // check for change in scale value
   if (hal_data->pos_scale != hal_data->pos_scale_old) {
 
@@ -252,7 +282,7 @@ void lcec_omrg5_check_scales(lcec_omrg5_data_t *hal_data) {
   }
 }
 
-void lcec_omrg5_read(struct lcec_slave *slave, long period) {
+static void lcec_omrg5_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_omrg5_data_t *hal_data = (lcec_omrg5_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -317,7 +347,7 @@ void lcec_omrg5_read(struct lcec_slave *slave, long period) {
   }
 }
 
-void lcec_omrg5_write(struct lcec_slave *slave, long period) {
+static void lcec_omrg5_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_omrg5_data_t *hal_data = (lcec_omrg5_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

@@ -21,6 +21,15 @@
 
 #include "lcec_class_enc.h"
 
+static int lcec_ph3lm2rm_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "Ph3LM2RM", LCEC_PH3LM2RM_VID, LCEC_PH3LM2RM_PID, LCEC_PH3LM2RM_PDOS, 0, NULL, lcec_ph3lm2rm_init},
+  { NULL },
+};
+
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *latch_ena_pos;
   hal_bit_t *latch_ena_neg;
@@ -123,17 +132,17 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-int lcec_ph3lm2rm_enc_init(struct lcec_slave *slave, lcec_ph3lm2rm_enc_data_t *hal_data, const char *pfx, double scale);
-int lcec_ph3lm2rm_lm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int idx, lcec_ph3lm2rm_lm_data_t *hal_data, const char *pfx);
-int lcec_ph3lm2rm_rm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int idx, lcec_ph3lm2rm_rm_data_t *hal_data, const char *pfx);
+static int lcec_ph3lm2rm_enc_init(struct lcec_slave *slave, lcec_ph3lm2rm_enc_data_t *hal_data, const char *pfx, double scale);
+static int lcec_ph3lm2rm_lm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int idx, lcec_ph3lm2rm_lm_data_t *hal_data, const char *pfx);
+static int lcec_ph3lm2rm_rm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int idx, lcec_ph3lm2rm_rm_data_t *hal_data, const char *pfx);
 
-void lcec_ph3lm2rm_read(struct lcec_slave *slave, long period);
-void lcec_ph3lm2rm_write(struct lcec_slave *slave, long period);
+static void lcec_ph3lm2rm_read(struct lcec_slave *slave, long period);
+static void lcec_ph3lm2rm_write(struct lcec_slave *slave, long period);
 
-void lcec_ph3lm2rm_enc_read(uint8_t *pd, lcec_ph3lm2rm_enc_data_t *ch);
-void lcec_ph3lm2rm_enc_write(uint8_t *pd, lcec_ph3lm2rm_enc_data_t *ch);
+static void lcec_ph3lm2rm_enc_read(uint8_t *pd, lcec_ph3lm2rm_enc_data_t *ch);
+static void lcec_ph3lm2rm_enc_write(uint8_t *pd, lcec_ph3lm2rm_enc_data_t *ch);
 
-int lcec_ph3lm2rm_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_ph3lm2rm_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_ph3lm2rm_data_t *hal_data;
   char pfx[HAL_NAME_LEN];
@@ -180,7 +189,7 @@ int lcec_ph3lm2rm_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t
   return 0;
 }
 
-int lcec_ph3lm2rm_enc_init(struct lcec_slave *slave, lcec_ph3lm2rm_enc_data_t *hal_data, const char *pfx, double scale) {
+static int lcec_ph3lm2rm_enc_init(struct lcec_slave *slave, lcec_ph3lm2rm_enc_data_t *hal_data, const char *pfx, double scale) {
   lcec_master_t *master = slave->master;
   int err;
 
@@ -237,7 +246,7 @@ int lcec_ph3lm2rm_lm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entr
   return 0;
 }
 
-int lcec_ph3lm2rm_rm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int ios, lcec_ph3lm2rm_rm_data_t *hal_data, const char *pfx) {
+static int lcec_ph3lm2rm_rm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int ios, lcec_ph3lm2rm_rm_data_t *hal_data, const char *pfx) {
   lcec_master_t *master = slave->master;
   int err;
 
@@ -264,7 +273,7 @@ int lcec_ph3lm2rm_rm_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entr
   return 0;
 }
 
-void lcec_ph3lm2rm_read(struct lcec_slave *slave, long period) {
+static void lcec_ph3lm2rm_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_ph3lm2rm_data_t *hal_data = (lcec_ph3lm2rm_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -286,7 +295,7 @@ void lcec_ph3lm2rm_read(struct lcec_slave *slave, long period) {
   }
 }
 
-void lcec_ph3lm2rm_enc_read(uint8_t *pd, lcec_ph3lm2rm_enc_data_t *ch) {
+static void lcec_ph3lm2rm_enc_read(uint8_t *pd, lcec_ph3lm2rm_enc_data_t *ch) {
   uint32_t counter, latch; 
 
   // read bit values
@@ -309,7 +318,7 @@ void lcec_ph3lm2rm_enc_read(uint8_t *pd, lcec_ph3lm2rm_enc_data_t *ch) {
   }
 }
 
-void lcec_ph3lm2rm_write(struct lcec_slave *slave, long period) {
+static void lcec_ph3lm2rm_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_ph3lm2rm_data_t *hal_data = (lcec_ph3lm2rm_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -329,7 +338,7 @@ void lcec_ph3lm2rm_write(struct lcec_slave *slave, long period) {
   }
 }
 
-void lcec_ph3lm2rm_enc_write(uint8_t *pd, lcec_ph3lm2rm_enc_data_t *ch) {
+static void lcec_ph3lm2rm_enc_write(uint8_t *pd, lcec_ph3lm2rm_enc_data_t *ch) {
   // write bit values
   EC_WRITE_BIT(&pd[ch->latch_ena_pos_os], ch->latch_ena_pos_bp, *(ch->latch_ena_pos));
   EC_WRITE_BIT(&pd[ch->latch_ena_neg_os], ch->latch_ena_neg_bp, *(ch->latch_ena_neg));
