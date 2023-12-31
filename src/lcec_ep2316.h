@@ -25,8 +25,5 @@
 #define LCEC_EP2316_PID 0x090C4052
 
 #define LCEC_EP2316_PDOS 32  // 8 inputs, 8 diag inputs, 8 outputs, 8 auxiliary 
-
-int lcec_ep2316_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

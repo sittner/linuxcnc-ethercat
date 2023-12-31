@@ -19,6 +19,21 @@
 #include "lcec.h"
 #include "lcec_el95xx.h"
 
+static void lcec_el95xx_read(struct lcec_slave *slave, long period);
+static int lcec_el95xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  // power supply
+  { "EL9505", LCEC_EL95xx_VID, LCEC_EL9505_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9508", LCEC_EL95xx_VID, LCEC_EL9508_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9510", LCEC_EL95xx_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9512", LCEC_EL95xx_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9515", LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9576", LCEC_EL95xx_VID, LCEC_EL9576_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *power_ok;
   hal_bit_t *overload;
@@ -34,9 +49,7 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-void lcec_el95xx_read(struct lcec_slave *slave, long period);
-
-int lcec_el95xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el95xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el95xx_data_t *hal_data;
   int err;
@@ -64,7 +77,7 @@ int lcec_el95xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el95xx_read(struct lcec_slave *slave, long period) {
+static void lcec_el95xx_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el95xx_data_t *hal_data = (lcec_el95xx_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

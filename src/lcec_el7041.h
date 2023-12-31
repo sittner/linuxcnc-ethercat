@@ -30,7 +30,5 @@
 #define LCEC_EL7041_1000_PDOS  34
 #define LCEC_EP7041_PDOS  34
 
-int lcec_el7041_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

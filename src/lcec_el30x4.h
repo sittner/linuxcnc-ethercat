@@ -27,8 +27,5 @@
 #define LCEC_EL3064_PID 0x0bf83052
 #define LCEC_EL30x4_CHANS 4
 #define LCEC_EL30x4_PDOS  (LCEC_EL30x4_CHANS * 5)
-
-int lcec_el30x4_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

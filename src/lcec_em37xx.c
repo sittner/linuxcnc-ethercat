@@ -19,6 +19,17 @@
 #include "lcec.h"
 #include "lcec_em37xx.h"
 
+static void lcec_em37xx_read(struct lcec_slave *slave, long period);
+static int lcec_em37xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EM3701", LCEC_EM37XX_VID, LCEC_EM3701_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
+  { "EM3702", LCEC_EM37XX_VID, LCEC_EM3702_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
+  { "EM3712", LCEC_EM37XX_VID, LCEC_EM3712_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *overrange;
   hal_bit_t *underrange;
@@ -89,9 +100,7 @@ static ec_sync_info_t lcec_em37xx_syncs[] = {
     {0xff}
 };
 
-void lcec_em37xx_read(struct lcec_slave *slave, long period);
-
-int lcec_em37xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_em37xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_em37xx_data_t *hal_data;
   lcec_em37xx_chan_t *chan;
@@ -134,7 +143,7 @@ int lcec_em37xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_em37xx_read(struct lcec_slave *slave, long period) {
+static void lcec_em37xx_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_em37xx_data_t *hal_data = (lcec_em37xx_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

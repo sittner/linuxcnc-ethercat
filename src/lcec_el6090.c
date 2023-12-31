@@ -22,6 +22,16 @@
 #include "lcec.h"
 #include "lcec_el6090.h"
 
+static void lcec_el6090_read(struct lcec_slave *slave, long period);
+static void lcec_el6090_write(struct lcec_slave *slave, long period);
+static int lcec_el6090_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL6090", LCEC_EL6090_VID, LCEC_EL6090_PID, LCEC_EL6090_PDOS, 0, NULL, lcec_el6090_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 #define EL6090_HOUR_SCALE (3600)
 
 
@@ -240,10 +250,7 @@ static ec_sync_info_t lcec_el6090_syncs[] = {
     {0xff}
 };
 
-void lcec_el6090_read(struct lcec_slave *slave, long period);
-void lcec_el6090_write(struct lcec_slave *slave, long period);
-
-int lcec_el6090_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el6090_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el6090_data_t *hal_data;
   lcec_el6090_chan_t *chan;
@@ -339,7 +346,7 @@ int lcec_el6090_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
 
 }
 
-void lcec_el6090_read(struct lcec_slave *slave, long period) {
+static void lcec_el6090_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el6090_data_t *hal_data = (lcec_el6090_data_t *) slave->hal_data;
   lcec_el6090_chan_t *chan;
@@ -379,7 +386,7 @@ void lcec_el6090_read(struct lcec_slave *slave, long period) {
   hal_data->last_operational = 1;
 }
 
-void lcec_el6090_write(struct lcec_slave *slave, long period) {
+static void lcec_el6090_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el6090_data_t *hal_data = (lcec_el6090_data_t *) slave->hal_data;
   lcec_el6090_chan_t *chan;

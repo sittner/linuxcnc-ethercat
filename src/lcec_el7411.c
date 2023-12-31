@@ -21,7 +21,15 @@
 #include "lcec.h"
 #include "lcec_el7411.h"
 
-int lcec_el7411_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el7411_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL7411", LCEC_EL7411_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, 0, NULL, lcec_el7411_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
+static int lcec_el7411_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_slave_modparam_t *p;
 

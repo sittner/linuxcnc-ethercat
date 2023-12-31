@@ -19,6 +19,19 @@
 #include "lcec.h"
 #include "lcec_el31x2.h"
 
+static int lcec_el31x2_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL3102", LCEC_EL31x2_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3112", LCEC_EL31x2_VID, LCEC_EL3112_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3122", LCEC_EL31x2_VID, LCEC_EL3122_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3142", LCEC_EL31x2_VID, LCEC_EL3142_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3152", LCEC_EL31x2_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3162", LCEC_EL31x2_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *error;
   hal_bit_t *overrange;
@@ -69,9 +82,9 @@ static ec_sync_info_t lcec_el31x2_syncs[] = {
     {0xff}
 };
 
-void lcec_el31x2_read(struct lcec_slave *slave, long period);
+static void lcec_el31x2_read(struct lcec_slave *slave, long period);
 
-int lcec_el31x2_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el31x2_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el31x2_data_t *hal_data;
   lcec_el31x2_chan_t *chan;
@@ -112,7 +125,7 @@ int lcec_el31x2_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el31x2_read(struct lcec_slave *slave, long period) {
+static void lcec_el31x2_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el31x2_data_t *hal_data = (lcec_el31x2_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

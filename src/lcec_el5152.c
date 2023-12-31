@@ -19,6 +19,14 @@
 #include "lcec.h"
 #include "lcec_el5152.h"
 
+static int lcec_el5152_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL5152", LCEC_EL5152_VID, LCEC_EL5152_PID, LCEC_EL5152_PDOS, 0, NULL, lcec_el5152_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *index;
   hal_bit_t *index_ena;
@@ -160,10 +168,10 @@ static ec_sync_info_t lcec_el5152_syncs[] = {
 };
 
 
-void lcec_el5152_read(struct lcec_slave *slave, long period);
-void lcec_el5152_write(struct lcec_slave *slave, long period);
+static void lcec_el5152_read(struct lcec_slave *slave, long period);
+static void lcec_el5152_write(struct lcec_slave *slave, long period);
 
-int lcec_el5152_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el5152_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el5152_data_t *hal_data;
   int i;
@@ -222,7 +230,7 @@ int lcec_el5152_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el5152_read(struct lcec_slave *slave, long period) {
+static void lcec_el5152_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el5152_data_t *hal_data = (lcec_el5152_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -320,7 +328,7 @@ void lcec_el5152_read(struct lcec_slave *slave, long period) {
   hal_data->last_operational = 1;
 }
 
-void lcec_el5152_write(struct lcec_slave *slave, long period) {
+static void lcec_el5152_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el5152_data_t *hal_data = (lcec_el5152_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

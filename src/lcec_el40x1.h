@@ -28,8 +28,5 @@
 #define LCEC_EL4031_PID 0x0fbf3052
 
 #define LCEC_EL40x1_PDOS  1
-
-int lcec_el40x1_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

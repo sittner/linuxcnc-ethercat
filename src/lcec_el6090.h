@@ -30,8 +30,4 @@
 #define LCEC_EL6090_CHANS 4
 
 #define LCEC_EL6090_PDOS 33
-
-
-int lcec_el6090_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif

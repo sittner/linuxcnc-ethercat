@@ -24,6 +24,18 @@
 // EP2349 devices.  It *may* work with the EP23[012][89] and EP1859
 // devices, depending on how their PDOs are configured.
 
+static int lcec_ep23xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EP2308", LCEC_EP23xx_VID, LCEC_EP2308_PID, LCEC_EP2308_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2318", LCEC_EP23xx_VID, LCEC_EP2318_PID, LCEC_EP2318_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2328", LCEC_EP23xx_VID, LCEC_EP2328_PID, LCEC_EP2328_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2338", LCEC_EP23xx_VID, LCEC_EP2338_PID, LCEC_EP2338_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2349", LCEC_EP23xx_VID, LCEC_EP2349_PID, LCEC_EP2349_PDOS, 0, NULL, lcec_ep23xx_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *in;
   hal_bit_t *in_not;
@@ -42,7 +54,7 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-void lcec_ep23xx_read(struct lcec_slave *slave, long period) {
+static void lcec_ep23xx_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_ep23xx_pin_t *hal_data = (lcec_ep23xx_pin_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -64,7 +76,7 @@ void lcec_ep23xx_read(struct lcec_slave *slave, long period) {
 }
 
 
-void lcec_ep23xx_write(struct lcec_slave *slave, long period) {
+static void lcec_ep23xx_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_ep23xx_pin_t *hal_data = (lcec_ep23xx_pin_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -84,7 +96,7 @@ void lcec_ep23xx_write(struct lcec_slave *slave, long period) {
 }
 
 
-int lcec_ep23xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_ep23xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_ep23xx_pin_t *hal_data;
   lcec_ep23xx_pin_t *pin;

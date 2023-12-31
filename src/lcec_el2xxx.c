@@ -19,6 +19,34 @@
 #include "lcec.h"
 #include "lcec_el2xxx.h"
 
+static int lcec_el2xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL2002", LCEC_EL2xxx_VID, LCEC_EL2002_PID, LCEC_EL2002_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2004", LCEC_EL2xxx_VID, LCEC_EL2004_PID, LCEC_EL2004_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2008", LCEC_EL2xxx_VID, LCEC_EL2008_PID, LCEC_EL2008_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2022", LCEC_EL2xxx_VID, LCEC_EL2022_PID, LCEC_EL2022_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2024", LCEC_EL2xxx_VID, LCEC_EL2024_PID, LCEC_EL2024_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2032", LCEC_EL2xxx_VID, LCEC_EL2032_PID, LCEC_EL2032_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2034", LCEC_EL2xxx_VID, LCEC_EL2034_PID, LCEC_EL2034_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2042", LCEC_EL2xxx_VID, LCEC_EL2042_PID, LCEC_EL2042_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2084", LCEC_EL2xxx_VID, LCEC_EL2084_PID, LCEC_EL2084_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2088", LCEC_EL2xxx_VID, LCEC_EL2088_PID, LCEC_EL2088_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2124", LCEC_EL2xxx_VID, LCEC_EL2124_PID, LCEC_EL2124_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2612", LCEC_EL2xxx_VID, LCEC_EL2612_PID, LCEC_EL2612_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2622", LCEC_EL2xxx_VID, LCEC_EL2622_PID, LCEC_EL2622_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2634", LCEC_EL2xxx_VID, LCEC_EL2634_PID, LCEC_EL2634_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2652", LCEC_EL2xxx_VID, LCEC_EL2652_PID, LCEC_EL2652_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2808", LCEC_EL2xxx_VID, LCEC_EL2808_PID, LCEC_EL2808_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2798", LCEC_EL2xxx_VID, LCEC_EL2798_PID, LCEC_EL2798_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EL2809", LCEC_EL2xxx_VID, LCEC_EL2809_PID, LCEC_EL2809_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EP2008", LCEC_EL2xxx_VID, LCEC_EP2008_PID, LCEC_EP2008_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EP2028", LCEC_EL2xxx_VID, LCEC_EP2028_PID, LCEC_EP2028_PDOS, 0, NULL, lcec_el2xxx_init},
+  { "EP2809", LCEC_EL2xxx_VID, LCEC_EP2809_PID, LCEC_EP2809_PDOS, 0, NULL, lcec_el2xxx_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *out;
   hal_bit_t invert;
@@ -26,9 +54,9 @@ typedef struct {
   unsigned int pdo_bp;
 } lcec_el2xxx_pin_t;
 
-void lcec_el2xxx_write(struct lcec_slave *slave, long period);
+static void lcec_el2xxx_write(struct lcec_slave *slave, long period);
 
-int lcec_el2xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el2xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el2xxx_pin_t *hal_data;
   lcec_el2xxx_pin_t *pin;
@@ -67,7 +95,7 @@ int lcec_el2xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el2xxx_write(struct lcec_slave *slave, long period) {
+static void lcec_el2xxx_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el2xxx_pin_t *hal_data = (lcec_el2xxx_pin_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

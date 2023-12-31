@@ -29,7 +29,4 @@
 #define LCEC_EL3403_CHANS 3
                          
 #define LCEC_EL3403_PDOS 29
-
-int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif

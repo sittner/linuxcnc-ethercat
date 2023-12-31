@@ -19,6 +19,19 @@
 #include "lcec.h"
 #include "lcec_ax5100.h"
 
+static int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  // AX5000 servo drives
+  { "AX5101", LCEC_AX5100_VID, LCEC_AX5101_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { "AX5103", LCEC_AX5100_VID, LCEC_AX5103_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { "AX5106", LCEC_AX5100_VID, LCEC_AX5106_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { "AX5112", LCEC_AX5100_VID, LCEC_AX5112_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { "AX5118", LCEC_AX5100_VID, LCEC_AX5118_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   lcec_syncs_t syncs;
   lcec_class_ax5_chan_t chan;
@@ -30,10 +43,10 @@ static const LCEC_CONF_FSOE_T fsoe_conf = {
   .data_channels = 1
 };
 
-void lcec_ax5100_read(struct lcec_slave *slave, long period);
-void lcec_ax5100_write(struct lcec_slave *slave, long period);
+static void lcec_ax5100_read(struct lcec_slave *slave, long period);
+static void lcec_ax5100_write(struct lcec_slave *slave, long period);
 
-int lcec_ax5100_preinit(struct lcec_slave *slave) {
+/*static*/ int lcec_ax5100_preinit(struct lcec_slave *slave) {
   // check if already initialized
   if (slave->fsoeConf != NULL) {
     return 0;
@@ -48,7 +61,7 @@ int lcec_ax5100_preinit(struct lcec_slave *slave) {
   return 0;
 }
 
-int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_ax5100_data_t *hal_data;
   int err;
@@ -94,14 +107,14 @@ int lcec_ax5100_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_ax5100_read(struct lcec_slave *slave, long period) {
+static void lcec_ax5100_read(struct lcec_slave *slave, long period) {
   lcec_ax5100_data_t *hal_data = (lcec_ax5100_data_t *) slave->hal_data;
 
   // check inputs
   lcec_class_ax5_read(slave, &hal_data->chan);
 }
 
-void lcec_ax5100_write(struct lcec_slave *slave, long period) {
+static void lcec_ax5100_write(struct lcec_slave *slave, long period) {
   lcec_ax5100_data_t *hal_data = (lcec_ax5100_data_t *) slave->hal_data;
 
   // write outputs

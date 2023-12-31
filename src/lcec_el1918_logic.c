@@ -19,6 +19,17 @@
 #include "lcec.h"
 #include "lcec_el1918_logic.h"
 
+static void lcec_el1918_logic_read(struct lcec_slave *slave, long period);
+static void lcec_el1918_logic_write(struct lcec_slave *slave, long period);
+static int lcec_el1918_logic_preinit(struct lcec_slave *slave);
+static int lcec_el1918_logic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL1918_LOGIC", LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_u32_t *fsoe_master_crc;
   hal_u32_t *fsoe_slave_crc;
@@ -85,9 +96,6 @@ static const lcec_pindesc_t fsoe_crc_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-void lcec_el1918_logic_read(struct lcec_slave *slave, long period);
-void lcec_el1918_logic_write(struct lcec_slave *slave, long period);
-
 static int export_std_pins(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int pid, hal_bit_t **pin, hal_pin_dir_t dir) {
   lcec_master_t *master = slave->master;
   lcec_slave_modparam_t *p;
@@ -112,7 +120,7 @@ static int export_std_pins(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_ent
   return count;
 }
 
-int lcec_el1918_logic_preinit(struct lcec_slave *slave) {
+static int lcec_el1918_logic_preinit(struct lcec_slave *slave) {
   lcec_master_t *master = slave->master;
   lcec_slave_modparam_t *p;
   int index, stdin_count, stdout_count;

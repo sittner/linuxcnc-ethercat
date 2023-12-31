@@ -19,6 +19,17 @@
 #include "lcec.h"
 #include "lcec_el6900.h"
 
+static void lcec_el6900_read(struct lcec_slave *slave, long period);
+static void lcec_el6900_write(struct lcec_slave *slave, long period);
+static int lcec_el6900_preinit(struct lcec_slave *slave);
+static int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL6900", LCEC_EL6900_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *pin;
 
@@ -103,9 +114,6 @@ static const lcec_pindesc_t fsoe_crc_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-void lcec_el6900_read(struct lcec_slave *slave, long period);
-void lcec_el6900_write(struct lcec_slave *slave, long period);
-
 static int init_std_pdos(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, int pid, lcec_el6900_fsoe_io_t *io, int index, hal_pin_dir_t dir) {
   lcec_master_t *master = slave->master;
   lcec_slave_modparam_t *p;
@@ -133,7 +141,7 @@ static int init_std_pdos(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry
   return count;
 }
 
-int lcec_el6900_preinit(struct lcec_slave *slave) {
+static int lcec_el6900_preinit(struct lcec_slave *slave) {
   lcec_master_t *master = slave->master;
   lcec_slave_modparam_t *p;
   int index, stdin_count, stdout_count;
@@ -189,7 +197,7 @@ int lcec_el6900_preinit(struct lcec_slave *slave) {
   return 0;
 }
 
-int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el6900_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el6900_data_t *hal_data;
   lcec_el6900_fsoe_t *fsoe_data;

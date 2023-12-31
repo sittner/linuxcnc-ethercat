@@ -19,6 +19,14 @@
 #include "lcec.h"
 #include "lcec_el5101.h"
 
+static int lcec_el5101_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL5101", LCEC_EL5101_VID, LCEC_EL5101_PID, LCEC_EL5101_PDOS, 0, NULL, lcec_el5101_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 #define LCEC_EL5101_STATUS_INPUT        (1 << 5)
 #define LCEC_EL5101_STATUS_OVERFLOW     (1 << 4)
 #define LCEC_EL5101_STATUS_UNDERFLOW    (1 << 3)
@@ -131,10 +139,10 @@ static ec_sync_info_t lcec_el5101_syncs[] = {
 };
 
 
-void lcec_el5101_read(struct lcec_slave *slave, long period);
-void lcec_el5101_write(struct lcec_slave *slave, long period);
+static void lcec_el5101_read(struct lcec_slave *slave, long period);
+static void lcec_el5101_write(struct lcec_slave *slave, long period);
 
-int lcec_el5101_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el5101_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el5101_data_t *hal_data;
   int err;
@@ -184,7 +192,7 @@ int lcec_el5101_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el5101_read(struct lcec_slave *slave, long period) {
+static void lcec_el5101_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el5101_data_t *hal_data = (lcec_el5101_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -283,7 +291,7 @@ void lcec_el5101_read(struct lcec_slave *slave, long period) {
   hal_data->last_operational = 1;
 }
 
-void lcec_el5101_write(struct lcec_slave *slave, long period) {
+static void lcec_el5101_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el5101_data_t *hal_data = (lcec_el5101_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

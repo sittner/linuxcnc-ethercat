@@ -33,6 +33,16 @@
 #define INFO_SEL_DCM_SWORD     150
 #define INFO_SEL_DCM_STATE     151
 
+static void lcec_el7342_read(struct lcec_slave *slave, long period);
+static void lcec_el7342_write(struct lcec_slave *slave, long period);
+static int lcec_el7342_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL7342", LCEC_EL7342_VID, LCEC_EL7342_PID, LCEC_EL7342_PDOS, 0, NULL, lcec_el7342_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *reset;
   hal_bit_t *ina;
@@ -366,12 +376,9 @@ static ec_sync_info_t lcec_el7342_syncs[] = {
     {0xff}
 };
 
-void lcec_el7342_read(struct lcec_slave *slave, long period);
-void lcec_el7342_write(struct lcec_slave *slave, long period);
+static void lcec_el7342_set_info(lcec_el7342_chan_t *chan, hal_s32_t *raw_info, hal_u32_t *sel_info);
 
-void lcec_el7342_set_info(lcec_el7342_chan_t *chan, hal_s32_t *raw_info, hal_u32_t *sel_info);
-
-int lcec_el7342_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el7342_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el7342_data_t *hal_data;
   int i;
@@ -484,7 +491,7 @@ int lcec_el7342_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el7342_read(struct lcec_slave *slave, long period) {
+static void lcec_el7342_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el7342_data_t *hal_data = (lcec_el7342_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -594,7 +601,7 @@ void lcec_el7342_read(struct lcec_slave *slave, long period) {
   hal_data->last_operational = 1;
 }
 
-void lcec_el7342_write(struct lcec_slave *slave, long period) {
+static void lcec_el7342_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el7342_data_t *hal_data = (lcec_el7342_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -680,7 +687,7 @@ void lcec_el7342_write(struct lcec_slave *slave, long period) {
   }
 }
 
-void lcec_el7342_set_info(lcec_el7342_chan_t *chan, hal_s32_t *raw_info, hal_u32_t *sel_info) {
+static void lcec_el7342_set_info(lcec_el7342_chan_t *chan, hal_s32_t *raw_info, hal_u32_t *sel_info) {
   switch(*sel_info) {
     case INFO_SEL_MOTOR_VELO:
       *(chan->dcm_velo_fb) = (double) *raw_info * 0.0001 * chan->dcm_old_scale;

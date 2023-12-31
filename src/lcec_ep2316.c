@@ -19,6 +19,14 @@
 #include "lcec.h"
 #include "lcec_ep2316.h"
 
+static int lcec_ep2316_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EP2316", LCEC_EP23xx_VID, LCEC_EP2316_PID, LCEC_EP2316_PDOS, 0, NULL, lcec_ep2316_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *in;
   hal_bit_t *in_not;
@@ -77,7 +85,7 @@ static const lcec_pindesc_t ep2316_single_slave_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-void lcec_ep2316_read(struct lcec_slave *slave, long period) {
+static void lcec_ep2316_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_ep2316_data_t *hal_data = (lcec_ep2316_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -108,7 +116,7 @@ void lcec_ep2316_read(struct lcec_slave *slave, long period) {
   }
 }
 
-void lcec_ep2316_write(struct lcec_slave *slave, long period) {
+static void lcec_ep2316_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_ep2316_data_t *hal_data = (lcec_ep2316_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -131,7 +139,7 @@ void lcec_ep2316_write(struct lcec_slave *slave, long period) {
   }
 }
 
-int lcec_ep2316_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_ep2316_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_ep2316_data_t *hal_data;
   lcec_ep2316_pin_t *pin;

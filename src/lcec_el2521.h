@@ -32,8 +32,5 @@
 #define LCEC_EL2521_PID 0x09d93052
 
 #define LCEC_EL2521_PDOS  4
-
-int lcec_el2521_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

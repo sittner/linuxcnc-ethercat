@@ -19,6 +19,19 @@
 #include "lcec.h"
 #include "lcec_el70x1.h"
 
+static int lcec_el70x1_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+static int lcec_el7031_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+static int lcec_el7041_0052_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+static void lcec_el70x1_read(struct lcec_slave *slave, long period);
+static void lcec_el70x1_write(struct lcec_slave *slave, long period);
+
+static lcec_typelist_t types[]={
+  { "EL7031", LCEC_EL70x1_VID, LCEC_EL7031_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7031_init},
+  { "EL7041-0052", LCEC_EL70x1_VID, LCEC_EL7041_0052_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7041_0052_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t auto_fault_reset;
 
@@ -228,25 +241,21 @@ static const lcec_pindesc_t slave_params[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-int lcec_el70x1_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-void lcec_el70x1_read(struct lcec_slave *slave, long period);
-void lcec_el70x1_write(struct lcec_slave *slave, long period);
-
-int lcec_el7031_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el7031_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   // initialize sync info
   slave->sync_info = lcec_el70x1_syncs;
 
   return lcec_el70x1_init(comp_id, slave, pdo_entry_regs);
 }
 
-int lcec_el7041_0052_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el7041_0052_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   // initialize sync info
   slave->sync_info = lcec_el7041_0052_syncs;
 
   return lcec_el70x1_init(comp_id, slave, pdo_entry_regs);
 }
 
-int lcec_el70x1_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el70x1_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_slave_modparam_t *p;
   lcec_el70x1_data_t *hal_data;
@@ -345,7 +354,7 @@ int lcec_el70x1_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el70x1_read(struct lcec_slave *slave, long period) {
+static void lcec_el70x1_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el70x1_data_t *hal_data = (lcec_el70x1_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -363,7 +372,7 @@ void lcec_el70x1_read(struct lcec_slave *slave, long period) {
   *(hal_data->stm_tx_toggle) = EC_READ_BIT(&pd[hal_data->stm_tx_toggle_pdo_os], hal_data->stm_tx_toggle_pdo_bp);
 }
 
-void lcec_el70x1_write(struct lcec_slave *slave, long period) {
+static void lcec_el70x1_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el70x1_data_t *hal_data = (lcec_el70x1_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

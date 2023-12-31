@@ -25,8 +25,5 @@
 
 #define LCEC_EL3202_CHANS 2
 #define LCEC_EL3202_PDOS  (LCEC_EL3202_CHANS * 5)
-
-int lcec_el3202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

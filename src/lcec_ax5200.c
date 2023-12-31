@@ -19,6 +19,15 @@
 #include "lcec.h"
 #include "lcec_ax5200.h"
 
+static int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "AX5203", LCEC_AX5200_VID, LCEC_AX5203_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
+  { "AX5206", LCEC_AX5200_VID, LCEC_AX5206_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   lcec_syncs_t syncs;
   lcec_class_ax5_chan_t chans[LCEC_AX5200_CHANS];
@@ -30,10 +39,10 @@ static const LCEC_CONF_FSOE_T fsoe_conf = {
   .data_channels = 2
 };
 
-void lcec_ax5200_read(struct lcec_slave *slave, long period);
-void lcec_ax5200_write(struct lcec_slave *slave, long period);
+static void lcec_ax5200_read(struct lcec_slave *slave, long period);
+static void lcec_ax5200_write(struct lcec_slave *slave, long period);
 
-int lcec_ax5200_preinit(struct lcec_slave *slave) {
+/*static*/ int lcec_ax5200_preinit(struct lcec_slave *slave) {
   // check if already initialized
   if (slave->fsoeConf != NULL) {
     return 0;
@@ -48,7 +57,7 @@ int lcec_ax5200_preinit(struct lcec_slave *slave) {
   return 0;
 }
 
-int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_ax5200_data_t *hal_data;
   int i;
@@ -116,7 +125,7 @@ int lcec_ax5200_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_ax5200_read(struct lcec_slave *slave, long period) {
+static void lcec_ax5200_read(struct lcec_slave *slave, long period) {
   lcec_ax5200_data_t *hal_data = (lcec_ax5200_data_t *) slave->hal_data;
   int i;
   lcec_class_ax5_chan_t *chan;
@@ -128,7 +137,7 @@ void lcec_ax5200_read(struct lcec_slave *slave, long period) {
   }
 }
 
-void lcec_ax5200_write(struct lcec_slave *slave, long period) {
+static void lcec_ax5200_write(struct lcec_slave *slave, long period) {
   lcec_ax5200_data_t *hal_data = (lcec_ax5200_data_t *) slave->hal_data;
   int i;
   lcec_class_ax5_chan_t *chan;

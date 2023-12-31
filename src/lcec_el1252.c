@@ -34,6 +34,14 @@
 #include "lcec.h"
 #include "lcec_el1252.h"
 
+static int lcec_el1252_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL1252", LCEC_EL1252_VID, LCEC_EL1252_PID, LCEC_EL1252_PDOS, 0, NULL, lcec_el1252_init},  // 2 fast channels with timestamp
+  { NULL },
+};
+ADD_TYPES(types);
+
 /* Master 0, Slave 1, "EL1252"
  * Vendor ID:       0x00000002
  * Product code:    0x04e43052
@@ -118,9 +126,9 @@ typedef struct {
 } lcec_el1252_data_t;
 
 /** \brief callback for periodic IO data access*/ 
-void lcec_el1252_read(struct lcec_slave *slave, long period);
+static void lcec_el1252_read(struct lcec_slave *slave, long period);
 
-int lcec_el1252_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el1252_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el1252_data_t *hal_data;
   int i;
@@ -159,7 +167,7 @@ int lcec_el1252_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el1252_read(struct lcec_slave *slave, long period) {
+static void lcec_el1252_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   uint8_t *pd = master->process_data;
   lcec_el1252_data_t *hal_data = (lcec_el1252_data_t *) slave->hal_data;

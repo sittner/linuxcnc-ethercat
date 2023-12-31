@@ -21,6 +21,17 @@
 #include "lcec_ax5100.h"
 #include "lcec_ax5200.h"
 
+
+static void lcec_ax5805_read(struct lcec_slave *slave, long period);
+static int lcec_ax5805_preinit(struct lcec_slave *slave);
+static int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "AX5805", LCEC_AX5805_VID, LCEC_AX5805_PID, 0, 0, lcec_ax5805_preinit, lcec_ax5805_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_u32_t *fsoe_master_cmd;
   hal_u32_t *fsoe_master_crc0;
@@ -77,10 +88,7 @@ static const lcec_pindesc_t slave_pins_2ch[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-void lcec_ax5805_chancount(struct lcec_slave *slave);
-void lcec_ax5805_read(struct lcec_slave *slave, long period);
-
-int lcec_ax5805_preinit(struct lcec_slave *slave) {
+static int lcec_ax5805_preinit(struct lcec_slave *slave) {
   lcec_master_t *master = slave->master;
   struct lcec_slave *ax5n_slave;
 
@@ -113,7 +121,7 @@ int lcec_ax5805_preinit(struct lcec_slave *slave) {
   return 0;
 }
 
-int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_ax5805_data_t *hal_data;
   int err;
@@ -158,7 +166,7 @@ int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_ax5805_read(struct lcec_slave *slave, long period) {
+static void lcec_ax5805_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_ax5805_data_t *hal_data = (lcec_ax5805_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

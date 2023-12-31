@@ -19,6 +19,16 @@
 #include "lcec.h"
 #include "lcec_em7004.h"
 
+static void lcec_em7004_read(struct lcec_slave *slave, long period);
+static void lcec_em7004_write(struct lcec_slave *slave, long period);
+static int lcec_em7004_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EM7004", LCEC_EM7004_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, 0, NULL, lcec_em7004_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *in;
   hal_bit_t *in_not;
@@ -153,10 +163,7 @@ static const lcec_pindesc_t slave_enc_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-void lcec_em7004_read(struct lcec_slave *slave, long period);
-void lcec_em7004_write(struct lcec_slave *slave, long period);
-
-int lcec_em7004_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_em7004_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_em7004_data_t *hal_data;
   lcec_em7004_din_t *din;
@@ -260,7 +267,7 @@ int lcec_em7004_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_em7004_read(struct lcec_slave *slave, long period) {
+static void lcec_em7004_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_em7004_data_t *hal_data = (lcec_em7004_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -352,7 +359,7 @@ void lcec_em7004_read(struct lcec_slave *slave, long period) {
   hal_data->last_operational = 1;
 }
 
-void lcec_em7004_write(struct lcec_slave *slave, long period) {
+static void lcec_em7004_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_em7004_data_t *hal_data = (lcec_em7004_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

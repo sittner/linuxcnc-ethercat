@@ -19,6 +19,8 @@
 #include "lcec.h"
 #include "lcec_el1xxx.h"
 
+static int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
 typedef struct {
   hal_bit_t *in;
   hal_bit_t *in_not;
@@ -61,9 +63,9 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-void lcec_el1xxx_read(struct lcec_slave *slave, long period);
+static void lcec_el1xxx_read(struct lcec_slave *slave, long period);
 
-int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el1xxx_pin_t *hal_data;
   lcec_el1xxx_pin_t *pin;
@@ -95,7 +97,7 @@ int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el1xxx_read(struct lcec_slave *slave, long period) {
+static void lcec_el1xxx_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el1xxx_pin_t *hal_data = (lcec_el1xxx_pin_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

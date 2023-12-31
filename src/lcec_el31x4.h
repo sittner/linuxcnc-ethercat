@@ -27,8 +27,5 @@
 #define LCEC_EL31x4_CHANS 4
 
 #define LCEC_EL31x4_PDOS  (5 * LCEC_EL31x4_CHANS)
-
-int lcec_el31x4_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

@@ -19,6 +19,16 @@
 #include "lcec.h"
 #include "lcec_el1904.h"
 
+static void lcec_el1904_read(struct lcec_slave *slave, long period);
+static int lcec_el1904_preinit(struct lcec_slave *slave);
+static int lcec_el1904_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL1904", LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, 0, lcec_el1904_preinit, lcec_el1904_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *fsoe_in;
   hal_bit_t *fsoe_in_not;
@@ -70,16 +80,14 @@ static const LCEC_CONF_FSOE_T fsoe_conf = {
   .data_channels = 1
 };
 
-void lcec_el1904_read(struct lcec_slave *slave, long period);
-
-int lcec_el1904_preinit(struct lcec_slave *slave) {
+static int lcec_el1904_preinit(struct lcec_slave *slave) {
   // set fsoe config
   slave->fsoeConf = &fsoe_conf;
 
   return 0;
 }
 
-int lcec_el1904_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el1904_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el1904_data_t *hal_data;
   int i, err;
@@ -120,7 +128,7 @@ int lcec_el1904_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el1904_read(struct lcec_slave *slave, long period) {
+static void lcec_el1904_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el1904_data_t *hal_data = (lcec_el1904_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

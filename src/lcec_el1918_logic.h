@@ -35,9 +35,5 @@
 #define LCEC_EL1918_LOGIC_PARAM_SLAVE_CH_PDOS 2
 
 #define LCEC_EL1918_LOGIC_DIO_MAX_COUNT 8
-
-int lcec_el1918_logic_preinit(struct lcec_slave *slave);
-int lcec_el1918_logic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

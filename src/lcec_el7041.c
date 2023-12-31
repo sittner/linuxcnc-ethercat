@@ -20,6 +20,18 @@
 #include "lcec.h"
 #include "lcec_el7041.h"
 
+static int lcec_el7041_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t *r);
+static void lcec_el7041_read(struct lcec_slave *s, long period);
+static void lcec_el7041_write(struct lcec_slave *s, long period);
+
+static lcec_typelist_t types[]={
+  { "EL7041", LCEC_EL7041_VID, LCEC_EL7041_PID, LCEC_EL7041_PDOS, 0, NULL, lcec_el7041_init},
+  { "EL7041_1000", LCEC_EL7041_VID, LCEC_EL7041_1000_PID, LCEC_EL7041_1000_PDOS, 0, NULL, lcec_el7041_init},
+  { "EP7041", LCEC_EL7041_VID, LCEC_EP7041_PID, LCEC_EP7041_PDOS, 0, NULL, lcec_el7041_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *reset;
   hal_bit_t *ina;
@@ -288,10 +300,7 @@ static ec_sync_info_t lcec_el7041_syncs[] = {
     {0xff}
 };
 
-void lcec_el7041_read(struct lcec_slave *s, long period);
-void lcec_el7041_write(struct lcec_slave *s, long period);
-
-int lcec_el7041_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t *r) {
+static int lcec_el7041_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t *r) {
   lcec_master_t *m = s->master;
   lcec_el7041_data_t *hd;
   int err;
@@ -386,7 +395,7 @@ int lcec_el7041_init(int comp_id, struct lcec_slave *s, ec_pdo_entry_reg_t *r) {
   return 0;
 }
 
-void lcec_el7041_read(struct lcec_slave *s, long period) {
+static void lcec_el7041_read(struct lcec_slave *s, long period) {
   lcec_master_t *m = s->master;
   lcec_el7041_data_t *hd = (lcec_el7041_data_t *) s->hal_data;
   uint8_t *pd = m->process_data;
@@ -508,7 +517,7 @@ void lcec_el7041_read(struct lcec_slave *s, long period) {
   hd->last_operational = 1;
 }
 
-void lcec_el7041_write(struct lcec_slave *s, long period) {
+static void lcec_el7041_write(struct lcec_slave *s, long period) {
   lcec_master_t *m = s->master;
   lcec_el7041_data_t *hd = (lcec_el7041_data_t *) s->hal_data;
   uint8_t *pd = m->process_data;

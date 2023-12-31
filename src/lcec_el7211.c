@@ -25,6 +25,17 @@
 
 #define FAULT_RESET_PERIOD_NS  100000000
 
+/*static*/ int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+static int lcec_el7201_9014_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL7201_9014", LCEC_EL7211_VID, LCEC_EL7201_9014_PID, LCEC_EL7201_9014_PDOS, 0, NULL, lcec_el7201_9014_init},
+  { "EL7211", LCEC_EL7211_VID, LCEC_EL7211_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
+  { "EL7221", LCEC_EL7211_VID, LCEC_EL7221_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *enable;
   hal_bit_t *enabled;
@@ -186,14 +197,14 @@ static ec_sync_info_t lcec_el7201_9014_syncs[] = {
     {0xff}
 };
 
-lcec_el7211_data_t *lcec_el7211_alloc_hal(lcec_master_t *master, struct lcec_slave *slave);
-int lcec_el7211_export_pins(lcec_master_t *master, struct lcec_slave *slave, lcec_el7211_data_t *hal_data);
-void lcec_el7211_check_scales(lcec_el7211_data_t *hal_data);
-void lcec_el7211_read(struct lcec_slave *slave, long period);
-void lcec_el7201_9014_read(struct lcec_slave *slave, long period);
-void lcec_el7211_write(struct lcec_slave *slave, long period);
+static lcec_el7211_data_t *lcec_el7211_alloc_hal(lcec_master_t *master, struct lcec_slave *slave);
+static int lcec_el7211_export_pins(lcec_master_t *master, struct lcec_slave *slave, lcec_el7211_data_t *hal_data);
+static void lcec_el7211_check_scales(lcec_el7211_data_t *hal_data);
+static void lcec_el7211_read(struct lcec_slave *slave, long period);
+static void lcec_el7201_9014_read(struct lcec_slave *slave, long period);
+static void lcec_el7211_write(struct lcec_slave *slave, long period);
 
-lcec_el7211_data_t *lcec_el7211_alloc_hal(lcec_master_t *master, struct lcec_slave *slave) {
+static lcec_el7211_data_t *lcec_el7211_alloc_hal(lcec_master_t *master, struct lcec_slave *slave) {
   lcec_el7211_data_t *hal_data;
 
   // alloc hal memory
@@ -206,7 +217,7 @@ lcec_el7211_data_t *lcec_el7211_alloc_hal(lcec_master_t *master, struct lcec_sla
   return hal_data;
 }
 
-int lcec_el7211_export_pins(lcec_master_t *master, struct lcec_slave *slave, lcec_el7211_data_t *hal_data) {
+static int lcec_el7211_export_pins(lcec_master_t *master, struct lcec_slave *slave, lcec_el7211_data_t *hal_data) {
   int err;
   uint8_t sdo_buf[4];
   uint32_t sdo_vel_resolution;
@@ -261,7 +272,8 @@ int lcec_el7211_export_pins(lcec_master_t *master, struct lcec_slave *slave, lce
   return 0;
 }
 
-int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+// TODO: lcec_el7411_init calls this.  Fix?
+/*static*/ int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el7211_data_t *hal_data;
   int err;
@@ -293,7 +305,7 @@ int lcec_el7211_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-int lcec_el7201_9014_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el7201_9014_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el7211_data_t *hal_data;
   int err;
@@ -342,7 +354,7 @@ int lcec_el7201_9014_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_re
   return 0;
 }
 
-void lcec_el7211_check_scales(lcec_el7211_data_t *hal_data) {
+static void lcec_el7211_check_scales(lcec_el7211_data_t *hal_data) {
   // check for change in scale value
   if (hal_data->scale != hal_data->scale_old) {
     // scale value has changed, test and update it
@@ -359,7 +371,7 @@ void lcec_el7211_check_scales(lcec_el7211_data_t *hal_data) {
   }
 }
 
-void lcec_el7211_read(struct lcec_slave *slave, long period) {
+static void lcec_el7211_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el7211_data_t *hal_data = (lcec_el7211_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -425,7 +437,7 @@ void lcec_el7211_read(struct lcec_slave *slave, long period) {
   class_enc_update(&hal_data->enc, hal_data->pos_resolution, hal_data->scale_rcpt, pos_cnt, 0, 0);
 }
 
-void lcec_el7201_9014_read(struct lcec_slave *slave, long period) {
+static void lcec_el7201_9014_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el7211_data_t *hal_data = (lcec_el7211_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -448,7 +460,7 @@ static inline double clamp(double v, double sub, double sup) {
   return v;
 }
 
-void lcec_el7211_write(struct lcec_slave *slave, long period) {
+static void lcec_el7211_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el7211_data_t *hal_data = (lcec_el7211_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

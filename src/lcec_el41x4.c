@@ -20,6 +20,15 @@
 #include "lcec.h"
 #include "lcec_el41x4.h"
 
+static int lcec_el41x4_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL4104", LCEC_EL41x4_VID, LCEC_EL4104_PID, LCEC_EL41x4_PDOS, 0, NULL, lcec_el41x4_init},
+  { "EL4134", LCEC_EL41x4_VID, LCEC_EL4134_PID, LCEC_EL41x4_PDOS, 0, NULL, lcec_el41x4_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 typedef struct {
   hal_bit_t *pos;
   hal_bit_t *neg;
@@ -86,9 +95,9 @@ static ec_sync_info_t lcec_el41x4_syncs[] = {
     {0xff}
 };
 
-void lcec_el41x4_write(struct lcec_slave *slave, long period);
+static void lcec_el41x4_write(struct lcec_slave *slave, long period);
 
-int lcec_el41x4_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el41x4_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el41x4_data_t *hal_data;
   lcec_el41x4_chan_t *chan;
@@ -134,7 +143,7 @@ int lcec_el41x4_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el41x4_write(struct lcec_slave *slave, long period) {
+static void lcec_el41x4_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el41x4_data_t *hal_data = (lcec_el41x4_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

@@ -21,6 +21,15 @@
 #include "lcec.h"
 #include "lcec_el3403.h"
 
+static int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  // analog in, 3ch, 16 bits
+  { "EL3403", LCEC_EL3403_VID, LCEC_EL3403_PID, LCEC_EL3403_PDOS, 0, NULL, lcec_el3403_init},
+  { NULL },
+};
+ADD_TYPES(types);
+
 //Scaling Factors EL3403-0010
 #define EL3403_FACTOR_CURRENT (0.000005)
 #define EL3403_FACTOR_VOLTAGE (0.0001)
@@ -183,9 +192,9 @@ ec_sync_info_t lcec_el3403_syncs[] = {
     {0xff}
 };
 
-void lcec_el3403_read(struct lcec_slave *slave, long period);
+static void lcec_el3403_read(struct lcec_slave *slave, long period);
 
-int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_el3403_data_t *hal_data;
   lcec_el3403_chan_t *chan;
@@ -258,7 +267,7 @@ int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el3403_read(struct lcec_slave *slave, long period) {
+static void lcec_el3403_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el3403_data_t *hal_data = (lcec_el3403_data_t *) slave->hal_data;
   lcec_el3403_chan_t * chan;

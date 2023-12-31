@@ -27,6 +27,14 @@
 #include "lcec.h"
 #include "lcec_el2202.h"
 
+static int lcec_el2202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EL2202", LCEC_EL2202_VID, LCEC_EL2202_PID, LCEC_EL2202_PDOS, 0, NULL, lcec_el2202_init}, // 2 fast channels with tristate
+  { NULL },
+};
+ADD_TYPES(types);
+
 /* Master 0, Slave 2, "EL2202"
  * Vendor ID:       0x00000002
  * Product code:    0x089a3052
@@ -78,9 +86,9 @@ static const lcec_pindesc_t slave_pins[] = {
 };
 
 /** \brief callback for periodic IO data access*/ 
-void lcec_el2202_write(struct lcec_slave *slave, long period);
+static void lcec_el2202_write(struct lcec_slave *slave, long period);
 
-int lcec_el2202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_el2202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
 
   lcec_el2202_data_t *hal_data;
@@ -120,7 +128,7 @@ int lcec_el2202_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_el2202_write(struct lcec_slave *slave, long period) {
+static void lcec_el2202_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   uint8_t *pd = master->process_data;
 
