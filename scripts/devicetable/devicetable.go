@@ -104,7 +104,7 @@ func main() {
 
 	fmt.Printf("\n")
 	if otherfiles > 0 {
-		fmt.Printf("There are an additional %d devices supported that do not have enough\n", otherfiles)
+		fmt.Printf("There are an additional %d device(s) supported that do not have enough\n", otherfiles)
 		fmt.Printf("documentation to display here.  Please look at the `documentation/devices/` files\n")
 		fmt.Printf("and update them if you're able.\n")
 	}

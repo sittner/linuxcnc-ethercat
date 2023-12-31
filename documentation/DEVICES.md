@@ -160,6 +160,6 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Omron R88D-KNA5L-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [OMRG5_R88D_KNA5L_ECT](../src/lcec_omrg5.c) | 0x00000083:0x00000001 | Servo Drive |  | 
 [Stoeber Posidrive MDS 5000](https://www.ethercat.org/en/products/CE4C65D2ED8B4F39A8166D6CEDB2C872.htm) | [STMDS5K](../src/lcec_stmds5k.c) | 0x000000b9:0x00001388 | Servo Drive |  | 
 
-There are an additional 1 devices supported that do not have enough
+There are an additional 1 device(s) supported that do not have enough
 documentation to display here.  Please look at the `documentation/devices/` files
 and update them if you're able.
