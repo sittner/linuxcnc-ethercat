@@ -1,0 +1,11 @@
+---
+Device: EX260_SEC1
+VendorID: "0x00000114"
+VendorName: "SMC Pneumatics"
+PID: "0x01000001"
+Description: "SMC EX260-SEC1"
+DocumentationURL: "https://www.smcpneumatics.com/EX260-SEC1.html"
+DeviceType: "Valve Controller"
+Notes: "by @satiowadahc"
+SrcFile: src/devices/lcec_ex260.c
+TestingStatus: "Merged 2023-12-31, untested"

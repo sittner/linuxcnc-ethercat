@@ -4,6 +4,18 @@
 
 #include "lcec_ex260.h"
 
+static int lcec_ex260_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EX260-SEC1", LCEC_EX260_VID, LCEC_EX260_SEC1_PID, LCEC_EX260_SEC1_PDOS, lcec_ex260_init},
+  { "EX260-SEC2", LCEC_EX260_VID, LCEC_EX260_SEC2_PID, LCEC_EX260_SEC2_PDOS, lcec_ex260_init},
+  { "EX260-SEC3", LCEC_EX260_VID, LCEC_EX260_SEC3_PID, LCEC_EX260_SEC3_PDOS, lcec_ex260_init},
+  { "EX260-SEC4", LCEC_EX260_VID, LCEC_EX260_SEC4_PID, LCEC_EX260_SEC4_PDOS, lcec_ex260_init},
+  { NULL },
+};
+
+ADD_TYPES(types);
+
 typedef struct {
     hal_bit_t *sol_1a;
     hal_bit_t *sol_1b;
@@ -29,9 +41,9 @@ static const lcec_pindesc_t slave_pins[] = {
         { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
-void lcec_ex260_write(struct lcec_slave *slave, long period);
+static void lcec_ex260_write(struct lcec_slave *slave, long period);
 
-int lcec_ex260_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_ex260_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_ex260_pin_t *hal_data;
   lcec_ex260_pin_t *pin;
@@ -63,7 +75,7 @@ int lcec_ex260_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *p
   return 0;
 }
 
-void lcec_ex260_write(struct lcec_slave *slave, long period) {
+static void lcec_ex260_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_ex260_pin_t *hal_data = (lcec_ex260_pin_t *) slave->hal_data;
   uint8_t *pd = master->process_data;

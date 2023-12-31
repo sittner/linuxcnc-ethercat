@@ -24,8 +24,4 @@
 #define LCEC_EX260_SEC2_PDOS 4
 #define LCEC_EX260_SEC3_PDOS 2
 #define LCEC_EX260_SEC4_PDOS 2
-
-
-int lcec_ex260_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif //_LCEC_EX260_H
