@@ -3,6 +3,7 @@
 .PHONY: all install clean
 
 all:
+	@$(MAKE) -C devices all
 	@$(MAKE) -f user.mk all
 	@$(MAKE) -f realtime.mk all
 
@@ -12,6 +13,7 @@ install: ../config.mk
 	@$(MAKE) -f realtime.mk install
 
 clean:
+	@$(MAKE) -C devices clean
 	rm -f *.so *.ko *.o
 	rm -f *.sym *.tmp *.ver
 	rm -f *.mod.c .*.cmd

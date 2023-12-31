@@ -17,7 +17,7 @@ all:
 else
 
 LDFLAGS += -Wl,-rpath,$(LIBDIR)
-EXTRA_LDFLAGS += -L$(LIBDIR) -llinuxcnchal -lethercat -lrt
+EXTRA_LDFLAGS += -Wl,--whole-archive ./devices/liblcecdevices.a -Wl,--no-whole-archive -L$(LIBDIR) -llinuxcnchal -lethercat -lrt
 
 
 all: modules

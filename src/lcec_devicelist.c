@@ -17,13 +17,7 @@
 //
 
 #include "lcec.h"
-#include "lcec_ek1100.h"
-#include "lcec_generic.h"
-#include "lcec_deasda.h"
-#include "lcec_dems300.h"
-#include "lcec_omrg5.h"
-#include "lcec_ph3lm2rm.h"
-#include "lcec_stmds5k.h"
+#include "devices/lcec_ek1100.h"
 
 static lcec_typelinkedlist_t *typeslist = NULL;
 

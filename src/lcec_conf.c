@@ -27,11 +27,10 @@
 #include "rtapi.h"
 #include "hal.h"
 
+#include "lcec.h"
 #include "lcec_rtapi.h"
 #include "lcec_conf.h"
 #include "lcec_conf_priv.h"
-
-#include "lcec_class_ax5.h"
 
 typedef struct {
   hal_u32_t *master_count;

@@ -7,7 +7,7 @@ LCEC_CONF_OBJS = \
 	lcec_conf.o \
 	lcec_conf_util.o \
 	lcec_conf_icmds.o \
-	$(lcec-driver-objs)
+	$(lcec-common-objs)
 
 .PHONY: all clean install
 
@@ -18,7 +18,7 @@ install: lcec_conf
 	cp lcec_conf $(DESTDIR)$(EMC2_HOME)/bin/
 
 lcec_conf: $(LCEC_CONF_OBJS)
-	$(CC) -o $@ $(LCEC_CONF_OBJS) -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lexpat -lethercat -lm
+	$(CC) -o $@ $(LCEC_CONF_OBJS) -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lexpat -Wl,--whole-archive ./devices/liblcecdevices.a -Wl,--no-whole-archive -lethercat -lm
 
 %.o: %.c
 	$(CC) -o $@ $(EXTRA_CFLAGS) -URTAPI -U__MODULE__ -DULAPI -Os -c $<

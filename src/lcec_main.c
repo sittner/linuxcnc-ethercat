@@ -17,7 +17,7 @@
 //
 
 #include "lcec.h"
-#include "lcec_generic.h"
+#include "devices/lcec_generic.h"
 #include "rtapi_app.h"
 //#include <linuxcnc/rtapi_mutex.h>
 

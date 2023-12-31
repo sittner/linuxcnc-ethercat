@@ -9,6 +9,7 @@
 **.sym
 **.ver
 **.tmp
+**.a
 
 # generic files
 **/.tmp_versions/
