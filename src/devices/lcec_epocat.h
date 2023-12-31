@@ -18,13 +18,10 @@
 #ifndef _LCEC_EPOCAT_H_
 #define _LCEC_EPOCAT_H_
 
-#include "lcec.h"
+#include "../lcec.h"
 
 #define LCEC_EPOCAT_PID 0x00decade
 
 #define LCEC_EPOCAT_PDOS 15
-
-int lcec_epocat_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
 #endif
 

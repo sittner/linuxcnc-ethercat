@@ -16,9 +16,18 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
-#include "lcec.h"
+#include "../lcec.h"
 #include "lcec_epocat.h"
 
+
+static int lcec_epocat_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+
+static lcec_typelist_t types[]={
+  { "EpoCAT", LCEC_ABET_VID, LCEC_EPOCAT_PID, LCEC_EPOCAT_PDOS, 0, NULL, lcec_epocat_init },
+  { NULL },
+};
+
+ADD_TYPES(types);
 
 
 typedef struct {
@@ -335,10 +344,10 @@ static uint16_t raw_counts_old[5];
 static int32_t counts[5];
 static int32_t counts_latch[5];
 
-void lcec_epocat_read(struct lcec_slave *slave, long period);
-void lcec_epocat_write(struct lcec_slave *slave, long period);
+static void lcec_epocat_read(struct lcec_slave *slave, long period);
+static void lcec_epocat_write(struct lcec_slave *slave, long period);
 
-int lcec_epocat_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
+static int lcec_epocat_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
   lcec_epocat_data_t *hal_data;
   int err;
@@ -420,7 +429,7 @@ int lcec_epocat_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
   return 0;
 }
 
-void lcec_epocat_read(struct lcec_slave *slave, long period) {
+static void lcec_epocat_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_epocat_data_t *hal_data = (lcec_epocat_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
@@ -536,7 +545,7 @@ void lcec_epocat_read(struct lcec_slave *slave, long period) {
   *(hal_data->enc_04_count) = counts[4];
 }
 
-void lcec_epocat_write(struct lcec_slave *slave, long period) {
+static void lcec_epocat_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_epocat_data_t *hal_data = (lcec_epocat_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
