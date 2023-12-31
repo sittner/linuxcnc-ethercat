@@ -5,6 +5,7 @@ has code to support today.  Not all of these are well-tested.*
 
 Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 ----------- | ------ | ---------------- | ----------- | -------------- | ------
+[Beckhoff EL1018 8Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1018) | [EL1018](../src/lcec_el1xxx.c) | 0x00000002:0x03fa3052 | Digital Input | Part of @scottlaird's test suite. | 
 [Beckhoff EL3064 4Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3064) | [EL3064](../src/lcec_el30x4.c) | 0x00000002:0x0bf83052 | Analog Input Terminals | Uncertain; @scottlaird has one | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EP7041](../src/lcec_el7041.c) | 0x00000002:0x1b813052 | Stepper Drive | Uncertain; @scottlaird has several EP7041-0002 | 
 [Beckhoff AX5101-0000-0214 EtherCAT Drive (SoE, 1 Ch.)](http://www.beckhoff.com/ax51xx/) | [AX5101](../src/lcec_ax5100.c) | 0x00000002:0x13ed6012 | Servo Drive |  | 
@@ -17,16 +18,16 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff AX5805 (Safety Drive Option)](http://beckhoff.com/AX5805) | [AX5805](../src/lcec_ax5805.c) | 0x00000002:0x16ad6012 | Safety Terminals |  | 
 [Delta ASDA-A2-E](https://www.deltaww.com/en-us/products/Servo-Systems-AC-Servo-Motors-and-Drives/23) | [DEASDA](../src/lcec_deasda.c) | 0x000001dd:0x10305070 | Servo Drive |  | 
 [Delta MS-300 AC Motor Drive](https://www.deltaww.com/en-us/products/AC-Motor-Drives/3449) | [DEMS300](../src/lcec_dems300.c) | 0x000001dd:0x10400200 | AC Motor Drive |  | 
-[Beckhoff EK1100 EtherCAT Coupler (0.5A E-Bus)](http://www.beckhoff.com/EK1100) | [EK1100](../src/lcec_ek1100.c) | 0x00000002:0x044c2c52 | System Couplers |  | 
+[Beckhoff EK1100 EtherCAT Coupler (0.5A E-Bus)](http://www.beckhoff.com/EK1100) | [EK1100](../src/lcec_ek1100.c) | 0x00000002:0x044c2c52 | System Couplers | Part of @scottlaird's test suite. | 
 [Beckhoff EK1101 EtherCAT Coupler (2A E-Bus, ID switch)](http://www.beckhoff.com/EK1101) | [EK1101](../src/lcec_ek1100.c) | 0x00000002:0x044d2c52 | System Couplers |  | 
-[Beckhoff EK1110 EtherCAT extension](http://www.beckhoff.com/EK1110) | [EK1110](../src/lcec_ek1100.c) | 0x00000002:0x04562c52 | System Terminals |  | 
+[Beckhoff EK1110 EtherCAT extension](http://www.beckhoff.com/EK1110) | [EK1110](../src/lcec_ek1100.c) | 0x00000002:0x04562c52 | System Terminals | Part of @scottlaird's test suite | 
 [Beckhoff EK1122 2 port EtherCAT junction](http://www.beckhoff.com/EK1122) | [EK1122](../src/lcec_ek1100.c) | 0x00000002:0x04622c52 | System Terminals |  | 
 [Beckhoff EL1002 2Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1002) | [EL1002](../src/lcec_el1xxx.c) | 0x00000002:0x03ea3052 | Digital Input Terminals |  | 
 [Beckhoff EL1004 4Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1004) | [EL1004](../src/lcec_el1xxx.c) | 0x00000002:0x03ec3052 | Digital Input Terminals |  | 
 [Beckhoff EL1008 8Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1008) | [EL1008](../src/lcec_el1xxx.c) | 0x00000002:0x03f03052 | Digital Input Terminals |  | 
 [Beckhoff EL1012 2Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1012) | [EL1012](../src/lcec_el1xxx.c) | 0x00000002:0x03f43052 | Digital Input |  | 
 [Beckhoff EL1014 4Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1014) | [EL1014](../src/lcec_el1xxx.c) | 0x00000002:0x03f63052 | Digital Input |  | 
-[Beckhoff EL1018 8Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1018) | [EL1018](../src/lcec_el1xxx.c) | 0x00000002:0x03fa3052 | Digital Input | Uncertain; @scottlaird has several | 
+[Beckhoff EL1018 8Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1018) | [EL1018](../src/lcec_el1xxx.c) | 0x00000002:0x03fa3052 | Digital Input | Part of @scottlaird's test suite. | 
 [Beckhoff EL1024 4Ch. Dig. Input 24V, Type 2, 3ms](http://www.beckhoff.com/EL1024) | [EL1024](../src/lcec_el1xxx.c) | 0x00000002:0x04003052 | Digital Input |  | 
 [Beckhoff EL1034 4Ch. Dig. Input 24V, potential-free, 10µs](http://www.beckhoff.com/EL1034) | [EL1034](../src/lcec_el1xxx.c) | 0x00000002:0x040a3052 | Digital Input |  | 
 [Beckhoff EL1084 4Ch. Dig. Input 24V, 3ms, negative](http://www.beckhoff.com/EL1084) | [EL1084](../src/lcec_el1xxx.c) | 0x00000002:0x043c3052 | Digital Input |  | 
@@ -44,17 +45,17 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EL1809 16Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1809) | [EL1809](../src/lcec_el1xxx.c) | 0x00000002:0x07113052 | Digital Input |  | 
 [Beckhoff EL1819 16Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1819) | [EL1819](../src/lcec_el1xxx.c) | 0x00000002:0x071b3052 | Digital Input |  | 
 [Beckhoff EL1859 8Ch. Dig. Input 24V, 3ms, 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL1859) | [EL1859](../src/lcec_el1859.c) | 0x00000002:0x07433052 | Digital Input |  | 
-[Beckhoff EL1904, 4 Ch. Safety Input 24V, TwinSAFE](http://www.beckhoff.com/EL1904) | [EL1904](../src/lcec_el1904.c) | 0x00000002:0x07703052 | Safety Terminals |  | 
+[Beckhoff EL1904, 4 Ch. Safety Input 24V, TwinSAFE](http://www.beckhoff.com/EL1904) | [EL1904](../src/lcec_el1904.c) | 0x00000002:0x07703052 | Safety Terminals | Part of @scottlaird's test suite, but not currently being evaluated. | 
 [Beckhoff EL1918, 8Ch. Safety Input 24V, TwinSAFE](http://www.beckhoff.com/EL1918) | [EL1918_LOGIC](../src/lcec_el1918_logic.c) | 0x00000002:0x077e3052 | Safety Terminals |  | 
 [Beckhoff EL2002 2Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2002) | [EL2002](../src/lcec_el2xxx.c) | 0x00000002:0x07d23052 | Digital Output |  | 
 [Beckhoff EL2004 4Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2004) | [EL2004](../src/lcec_el2xxx.c) | 0x00000002:0x07d43052 | Digital Output |  | 
-[Beckhoff EL2008 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2008) | [EL2008](../src/lcec_el2xxx.c) | 0x00000002:0x07d83052 | Digital Output | Uncertain; @scottlaird has several | 
-[Beckhoff EL2022 2Ch. Dig. Output 24V, 2A](http://www.beckhoff.com/EL2022) | [EL2022](../src/lcec_el2xxx.c) | 0x00000002:0x07e63052 | Digital Output |  | 
+[Beckhoff EL2008 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2008) | [EL2008](../src/lcec_el2xxx.c) | 0x00000002:0x07d83052 | Digital Output | Part of @scottlaird's test suite, hardware is actively exercised for most releases. | 
+[Beckhoff EL2022 2Ch. Dig. Output 24V, 2A](http://www.beckhoff.com/EL2022) | [EL2022](../src/lcec_el2xxx.c) | 0x00000002:0x07e63052 | Digital Output | Part of @scottlaird's test suite. | 
 [Beckhoff EL2024 4Ch. Dig. Output 24V, 2A](http://www.beckhoff.com/EL2024) | [EL2024](../src/lcec_el2xxx.c) | 0x00000002:0x07e83052 | Digital Output |  | 
 [Beckhoff EL2032 2Ch. Dig. Output 24V, 2A Diag](http://www.beckhoff.com/EL2032) | [EL2032](../src/lcec_el2xxx.c) | 0x00000002:0x07f03052 | Digital Output |  | 
-[Beckhoff EL2034 4Ch. Dig. Output 24V, 2A, Diagnostic](http://www.beckhoff.com/EL2034) | [EL2034](../src/lcec_el2xxx.c) | 0x00000002:0x07f23052 | Digital Output |  | 
+[Beckhoff EL2034 4Ch. Dig. Output 24V, 2A, Diagnostic](http://www.beckhoff.com/EL2034) | [EL2034](../src/lcec_el2xxx.c) | 0x00000002:0x07f23052 | Digital Output | Part of @scottlaird's test suite. | 
 [Beckhoff EL2042 2Ch. Dig. Output 24V, 4A](http://www.beckhoff.com/EL2042) | [EL2042](../src/lcec_el2xxx.c) | 0x00000002:0x07fa3052 | Digital Output |  | 
-[Beckhoff EL2084 4Ch. Dig. Output 24V, 0.5A, switching to negative](http://www.beckhoff.com/EL2084) | [EL2084](../src/lcec_el2xxx.c) | 0x00000002:0x08243052 | Digital Output |  | 
+[Beckhoff EL2084 4Ch. Dig. Output 24V, 0.5A, switching to negative](http://www.beckhoff.com/EL2084) | [EL2084](../src/lcec_el2xxx.c) | 0x00000002:0x08243052 | Digital Output | Part of @scottlaird's test suite. | 
 [Beckhoff EL2088 8Ch. Dig. Output 24V, 0.5A, switching to negative](http://www.beckhoff.com/EL2088) | [EL2088](../src/lcec_el2xxx.c) | 0x00000002:0x08283052 | Digital Output |  | 
 [Beckhoff EL2124 4Ch. Dig. Output 5V, 20mA](http://www.beckhoff.com/EL2124) | [EL2124](../src/lcec_el2xxx.c) | 0x00000002:0x084c3052 | Digital Output |  | 
 [Beckhoff EL2202 2Ch. Dig. Output 24V, 0.5A, DC Sync](http://www.beckhoff.com/EL2202) | [EL2202](../src/lcec_el2202.c) | 0x00000002:0x089a3052 | Digital Output |  | 
@@ -63,10 +64,10 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EL2622 2Ch. Relay Output, NO (230V AC / 30V DC)](http://www.beckhoff.com/EL2622) | [EL2622](../src/lcec_el2xxx.c) | 0x00000002:0x0a3e3052 | Digital Output |  | 
 [Beckhoff EL2634 4Ch. Relay Output, NO (250V AC / 30V DC)](http://www.beckhoff.com/EL2634) | [EL2634](../src/lcec_el2xxx.c) | 0x00000002:0x0a4a3052 | Digital Output |  | 
 [Beckhoff EL2652 2Ch. Relay Output, CO (230V AC / 30V DC)](http://www.beckhoff.com/EL2652) | [EL2652](../src/lcec_el2xxx.c) | 0x00000002:0x0a5c3052 | Digital Output |  | 
-[Beckhoff EL2798 8Ch. Dig. Output 24V AC/DC, 2A, potential-free](http://www.beckhoff.com/EL2798) | [EL2798](../src/lcec_el2xxx.c) | 0x00000002:0x0aee3052 | Digital Output |  | 
+[Beckhoff EL2798 8Ch. Dig. Output 24V AC/DC, 2A, potential-free](http://www.beckhoff.com/EL2798) | [EL2798](../src/lcec_el2xxx.c) | 0x00000002:0x0aee3052 | Digital Output | Part of @scottlaird's test suite. | 
 [Beckhoff EL2808 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2808) | [EL2808](../src/lcec_el2xxx.c) | 0x00000002:0x0af83052 | Digital Output | Uncertain; @scottlaird has several | 
 [Beckhoff EL2809 16Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2809) | [EL2809](../src/lcec_el2xxx.c) | 0x00000002:0x0af93052 | Digital Output |  | 
-[Beckhoff EL2904, 4 Ch. Safety Output 24V, 0.5A, TwinSAFE](http://www.beckhoff.com/EL2904) | [EL2904](../src/lcec_el2904.c) | 0x00000002:0x0b583052 | Safety Terminals |  | 
+[Beckhoff EL2904, 4 Ch. Safety Output 24V, 0.5A, TwinSAFE](http://www.beckhoff.com/EL2904) | [EL2904](../src/lcec_el2904.c) | 0x00000002:0x0b583052 | Safety Terminals | Part of @scottlaird's test suite, but not currently being evaluated. | 
 [Beckhoff EL3004 4Ch. Ana. Input +/-10V](http://www.beckhoff.com/EL3004) | [EL3004](../src/lcec_el30x4.c) | 0x00000002:0x0bbc3052 | Analog Input |  | 
 [Beckhoff EL3044 4Ch. Ana. Input 0-20mA](http://www.beckhoff.com/EL3044) | [EL3044](../src/lcec_el30x4.c) | 0x00000002:0x0be43052 | Analog Input |  | 
 [Beckhoff EL3054 4Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3054) | [EL3054](../src/lcec_el30x4.c) | 0x00000002:0x0bee3052 | Analog Input |  | 
@@ -105,7 +106,7 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EL5151 1Ch. Inc. Encoder](http://www.beckhoff.com/EL5151) | [EL5151](../src/lcec_el5151.c) | 0x00000002:0x141f3052 | Measuring Input |  | 
 [Beckhoff EL5152 2Ch. Inc. Encoder](http://www.beckhoff.com/EL5152) | [EL5152](../src/lcec_el5152.c) | 0x00000002:0x14203052 | Measuring Input |  | 
 [Beckhoff EL6090 Display terminal](http://www.beckhoff.com/EL6090) | [EL6090](../src/lcec_el6090.c) | 0x00000002:0x17ca3052 | LCD Display | Uncertain; @scottlaird has one, but the driver was just merged. | 
-[Beckhoff EL6900, TwinSAFE PLC](http://www.beckhoff.com/EL6900) | [EL6900](../src/lcec_el6900.c) | 0x00000002:0x1af43052 | Safety Terminals |  | 
+[Beckhoff EL6900, TwinSAFE PLC](http://www.beckhoff.com/EL6900) | [EL6900](../src/lcec_el6900.c) | 0x00000002:0x1af43052 | Safety Terminals | Part of @scottlaird's test suite, but not currently being evaluated. | 
 [Beckhoff EL7031 1Ch. Stepper motor output stage (24V, 1.5A)](http://www.beckhoff.com/EL7031) | [EL7031](../src/lcec_el70x1.c) | 0x00000002:0x1b773052 | Stepper Drive |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EL7041](../src/lcec_el7041.c) | 0x00000002:0x1b813052 | Stepper Drive |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EL7041_0052](../src/lcec_el70x1.c) | 0x00000002:0x1b813052 | Stepper Drive |  | 
