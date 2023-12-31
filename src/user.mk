@@ -1,4 +1,5 @@
 include ../config.mk
+include Kbuild
 
 EXTRA_CFLAGS := $(filter-out -Wframe-larger-than=%,$(EXTRA_CFLAGS))
 
@@ -6,6 +7,7 @@ LCEC_CONF_OBJS = \
 	lcec_conf.o \
 	lcec_conf_util.o \
 	lcec_conf_icmds.o \
+	$(lcec-driver-objs)
 
 .PHONY: all clean install
 
@@ -16,7 +18,7 @@ install: lcec_conf
 	cp lcec_conf $(DESTDIR)$(EMC2_HOME)/bin/
 
 lcec_conf: $(LCEC_CONF_OBJS)
-	$(CC) -o $@ $(LCEC_CONF_OBJS) -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lexpat
+	$(CC) -o $@ $(LCEC_CONF_OBJS) -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lexpat -lethercat -lm
 
 %.o: %.c
 	$(CC) -o $@ $(EXTRA_CFLAGS) -URTAPI -U__MODULE__ -DULAPI -Os -c $<

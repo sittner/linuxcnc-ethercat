@@ -72,234 +72,6 @@ MODULE_AUTHOR("Sascha Ittner <sascha.ittner@modusoft.de>");
 MODULE_DESCRIPTION("Driver for EtherCAT devices");
 
 
-typedef struct lcec_typelinkedlist {
-  lcec_typelist_t *type;
-  struct lcec_typelinkedlist *next;
-} lcec_typelinkedlist_t;
-
-static lcec_typelinkedlist_t *typeslist = NULL;
-
-void lcec_addtype(lcec_typelist_t *type) {
-  lcec_typelinkedlist_t *t, *l;
-
-  t = hal_malloc(sizeof(lcec_typelinkedlist_t));
-  t->type = type;
-  t->next = NULL;
-
-  if (typeslist == NULL) {
-    typeslist=t;
-  } else {
-    for (l=typeslist; l->next != NULL; l=l->next);
-    l->next = t;
-  }
-}
-
-void lcec_addtypes(lcec_typelist_t types[]) {
-  lcec_typelist_t *type;
-
-  for (type = types; type->name != NULL; type++) {
-    lcec_addtype(type);
-  }
-}
-
-static const lcec_typelist_t types[] = {
-  // bus coupler
-  { "EK1100", LCEC_EK1100_VID, LCEC_EK1100_PID, LCEC_EK1100_PDOS, 0, NULL, NULL},
-  { "EK1101", LCEC_EK1100_VID, LCEC_EK1101_PID, LCEC_EK1101_PDOS, 0, NULL, NULL},
-  { "EK1110", LCEC_EK1100_VID, LCEC_EK1110_PID, LCEC_EK1110_PDOS, 0, NULL, NULL},
-  { "EK1122", LCEC_EK1100_VID, LCEC_EK1122_PID, LCEC_EK1122_PDOS, 0, NULL, NULL},
-
-  // AX5000 servo drives
-  { "AX5101", LCEC_AX5100_VID, LCEC_AX5101_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { "AX5103", LCEC_AX5100_VID, LCEC_AX5103_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { "AX5106", LCEC_AX5100_VID, LCEC_AX5106_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { "AX5112", LCEC_AX5100_VID, LCEC_AX5112_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { "AX5118", LCEC_AX5100_VID, LCEC_AX5118_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init},
-  { "AX5203", LCEC_AX5200_VID, LCEC_AX5203_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
-  { "AX5206", LCEC_AX5200_VID, LCEC_AX5206_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init},
-
-  // digital in; see also lcec_el1xxx.c
-  { "EL1252", LCEC_EL1252_VID, LCEC_EL1252_PID, LCEC_EL1252_PDOS, 0, NULL, lcec_el1252_init},  // 2 fast channels with timestamp
-
-  // digital out
-  { "EL2002", LCEC_EL2xxx_VID, LCEC_EL2002_PID, LCEC_EL2002_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2004", LCEC_EL2xxx_VID, LCEC_EL2004_PID, LCEC_EL2004_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2008", LCEC_EL2xxx_VID, LCEC_EL2008_PID, LCEC_EL2008_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2022", LCEC_EL2xxx_VID, LCEC_EL2022_PID, LCEC_EL2022_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2024", LCEC_EL2xxx_VID, LCEC_EL2024_PID, LCEC_EL2024_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2032", LCEC_EL2xxx_VID, LCEC_EL2032_PID, LCEC_EL2032_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2034", LCEC_EL2xxx_VID, LCEC_EL2034_PID, LCEC_EL2034_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2042", LCEC_EL2xxx_VID, LCEC_EL2042_PID, LCEC_EL2042_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2084", LCEC_EL2xxx_VID, LCEC_EL2084_PID, LCEC_EL2084_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2088", LCEC_EL2xxx_VID, LCEC_EL2088_PID, LCEC_EL2088_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2124", LCEC_EL2xxx_VID, LCEC_EL2124_PID, LCEC_EL2124_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2202", LCEC_EL2202_VID, LCEC_EL2202_PID, LCEC_EL2202_PDOS, 0, NULL, lcec_el2202_init}, // 2 fast channels with tristate
-  { "EL2612", LCEC_EL2xxx_VID, LCEC_EL2612_PID, LCEC_EL2612_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2622", LCEC_EL2xxx_VID, LCEC_EL2622_PID, LCEC_EL2622_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2634", LCEC_EL2xxx_VID, LCEC_EL2634_PID, LCEC_EL2634_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2652", LCEC_EL2xxx_VID, LCEC_EL2652_PID, LCEC_EL2652_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2808", LCEC_EL2xxx_VID, LCEC_EL2808_PID, LCEC_EL2808_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2798", LCEC_EL2xxx_VID, LCEC_EL2798_PID, LCEC_EL2798_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EL2809", LCEC_EL2xxx_VID, LCEC_EL2809_PID, LCEC_EL2809_PDOS, 0, NULL, lcec_el2xxx_init},
-
-  { "EP2008", LCEC_EL2xxx_VID, LCEC_EP2008_PID, LCEC_EP2008_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EP2028", LCEC_EL2xxx_VID, LCEC_EP2028_PID, LCEC_EP2028_PDOS, 0, NULL, lcec_el2xxx_init},
-  { "EP2809", LCEC_EL2xxx_VID, LCEC_EP2809_PID, LCEC_EP2809_PDOS, 0, NULL, lcec_el2xxx_init},
-
-  // digital in/out
-  { "EL1859", LCEC_EL1859_VID, LCEC_EL1859_PID, LCEC_EL1859_PDOS, 0, NULL, lcec_el1859_init},
-  { "EP2308", LCEC_EP23xx_VID, LCEC_EP2308_PID, LCEC_EP2308_PDOS, 0, NULL, lcec_ep23xx_init},
-  { "EP2318", LCEC_EP23xx_VID, LCEC_EP2318_PID, LCEC_EP2318_PDOS, 0, NULL, lcec_ep23xx_init},
-  { "EP2328", LCEC_EP23xx_VID, LCEC_EP2328_PID, LCEC_EP2328_PDOS, 0, NULL, lcec_ep23xx_init},
-  { "EP2338", LCEC_EP23xx_VID, LCEC_EP2338_PID, LCEC_EP2338_PDOS, 0, NULL, lcec_ep23xx_init},
-  { "EP2349", LCEC_EP23xx_VID, LCEC_EP2349_PID, LCEC_EP2349_PDOS, 0, NULL, lcec_ep23xx_init},
-  { "EP2316", LCEC_EP23xx_VID, LCEC_EP2316_PID, LCEC_EP2316_PDOS, 0, NULL, lcec_ep2316_init},
-
-  // analog in, 4ch, 12 bits
-  { "EL3004", LCEC_EL30x4_VID, LCEC_EL3004_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
-  { "EL3044", LCEC_EL30x4_VID, LCEC_EL3044_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
-  { "EL3054", LCEC_EL30x4_VID, LCEC_EL3054_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
-  { "EL3064", LCEC_EL30x4_VID, LCEC_EL3064_PID, LCEC_EL30x4_PDOS, 0, NULL, lcec_el30x4_init},
-
-  // analog in, 2ch, 16 bits
-  { "EL3102", LCEC_EL31x2_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3112", LCEC_EL31x2_VID, LCEC_EL3112_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3122", LCEC_EL31x2_VID, LCEC_EL3122_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3142", LCEC_EL31x2_VID, LCEC_EL3142_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3152", LCEC_EL31x2_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3162", LCEC_EL31x2_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3202", LCEC_EL3202_VID, LCEC_EL3202_PID, LCEC_EL3202_PDOS, 0, NULL, lcec_el3202_init},
-
-  // analog in, 2ch, 16 bits
-  { "EL3164", LCEC_EL31x4_VID, LCEC_EL3164_PID, LCEC_EL31x4_PDOS, 0, NULL, lcec_el31x4_init},
-
-  // analog in, 5ch, 16 bits
-  { "EL3255", LCEC_EL3255_VID, LCEC_EL3255_PID, LCEC_EL3255_PDOS, 0, NULL, lcec_el3255_init},
-
-  // analog in, 3ch, 16 bits
-  { "EL3403", LCEC_EL3403_VID, LCEC_EL3403_PID, LCEC_EL3403_PDOS, 0, NULL, lcec_el3403_init},
-
-  // analog out, 1ch, 12 bits
-  { "EL4001", LCEC_EL40x1_VID, LCEC_EL4001_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
-  { "EL4011", LCEC_EL40x1_VID, LCEC_EL4011_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
-  { "EL4021", LCEC_EL40x1_VID, LCEC_EL4021_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
-  { "EL4031", LCEC_EL40x1_VID, LCEC_EL4031_PID, LCEC_EL40x1_PDOS, 0, NULL, lcec_el40x1_init},
-
-  // analog out, 2ch, 12 bits
-  { "EL4002", LCEC_EL40x2_VID, LCEC_EL4002_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
-  { "EL4012", LCEC_EL40x2_VID, LCEC_EL4012_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
-  { "EL4022", LCEC_EL40x2_VID, LCEC_EL4022_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
-  { "EL4032", LCEC_EL40x2_VID, LCEC_EL4032_PID, LCEC_EL40x2_PDOS, 0, NULL, lcec_el40x2_init},
-
-  // analog out, 2ch, 16 bits
-  { "EL4102", LCEC_EL41x2_VID, LCEC_EL4102_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-  { "EL4112", LCEC_EL41x2_VID, LCEC_EL4112_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-  { "EL4122", LCEC_EL41x2_VID, LCEC_EL4122_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-  { "EL4132", LCEC_EL41x2_VID, LCEC_EL4132_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-
-  // analog out, 4ch, 16 bits
-  { "EL4104", LCEC_EL41x4_VID, LCEC_EL4104_PID, LCEC_EL41x4_PDOS, 0, NULL, lcec_el41x4_init},
-  { "EL4134", LCEC_EL41x4_VID, LCEC_EL4134_PID, LCEC_EL41x4_PDOS, 0, NULL, lcec_el41x4_init},
-
-  // analog out, 8ch, 12 bits
-  { "EL4008", LCEC_EL40x8_VID, LCEC_EL4008_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-  { "EL4018", LCEC_EL40x8_VID, LCEC_EL4018_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-  { "EL4028", LCEC_EL40x8_VID, LCEC_EL4028_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-  { "EL4038", LCEC_EL40x8_VID, LCEC_EL4038_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-
-  // encoder inputs
-  { "EL5002", LCEC_EL5002_VID, LCEC_EL5002_PID, LCEC_EL5002_PDOS, 0, NULL, lcec_el5002_init},
-  { "EL5032", LCEC_EL5032_VID, LCEC_EL5032_PID, LCEC_EL5032_PDOS, 0, NULL, lcec_el5032_init},
-  { "EL5101", LCEC_EL5101_VID, LCEC_EL5101_PID, LCEC_EL5101_PDOS, 0, NULL, lcec_el5101_init},
-  { "EL5151", LCEC_EL5151_VID, LCEC_EL5151_PID, LCEC_EL5151_PDOS, 0, NULL, lcec_el5151_init},
-  { "EL5152", LCEC_EL5152_VID, LCEC_EL5152_PID, LCEC_EL5152_PDOS, 0, NULL, lcec_el5152_init},
-
-  // pulse train (stepper) output
-  { "EL2521", LCEC_EL2521_VID, LCEC_EL2521_PID, LCEC_EL2521_PDOS, 0, NULL, lcec_el2521_init},
-
-  // stepper
-  { "EL7031", LCEC_EL70x1_VID, LCEC_EL7031_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7031_init},
-  { "EL7041", LCEC_EL7041_VID, LCEC_EL7041_PID, LCEC_EL7041_PDOS, 0, NULL, lcec_el7041_init},
-  { "EL7041_1000", LCEC_EL7041_VID, LCEC_EL7041_1000_PID, LCEC_EL7041_1000_PDOS, 0, NULL, lcec_el7041_init},
-  { "EP7041", LCEC_EL7041_VID, LCEC_EP7041_PID, LCEC_EP7041_PDOS, 0, NULL, lcec_el7041_init},
-
-  // ac servo
-  { "EL7201_9014", LCEC_EL7211_VID, LCEC_EL7201_9014_PID, LCEC_EL7201_9014_PDOS, 0, NULL, lcec_el7201_9014_init},
-  { "EL7211", LCEC_EL7211_VID, LCEC_EL7211_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
-  { "EL7221", LCEC_EL7211_VID, LCEC_EL7221_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
-
-  // dc servo
-  { "EL7342", LCEC_EL7342_VID, LCEC_EL7342_PID, LCEC_EL7342_PDOS, 0, NULL, lcec_el7342_init},
-
-  // BLDC
-  { "EL7411", LCEC_EL7411_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, 0, NULL, lcec_el7411_init},
-
-  // power supply
-  { "EL9505", LCEC_EL95xx_VID, LCEC_EL9505_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9508", LCEC_EL95xx_VID, LCEC_EL9508_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9510", LCEC_EL95xx_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9512", LCEC_EL95xx_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9515", LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9576", LCEC_EL95xx_VID, LCEC_EL9576_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-
-  // Display Terminal
-  { "EL6090", LCEC_EL6090_VID, LCEC_EL6090_PID, LCEC_EL6090_PDOS, 0, NULL, lcec_el6090_init},
-
-  // FSoE devices
-  { "EL6900", LCEC_EL6900_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init},
-  { "EL1918_LOGIC", LCEC_EL1918_LOGIC_VID, LCEC_EL1918_LOGIC_PID, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init},
-  { "EL1904", LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, 0, lcec_el1904_preinit, lcec_el1904_init},
-  { "EL2904", LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, 0, lcec_el2904_preinit, lcec_el2904_init},
-  { "AX5805", LCEC_AX5805_VID, LCEC_AX5805_PID, 0, 0, lcec_ax5805_preinit, lcec_ax5805_init},
-
-  // pressure sensor
-  { "EM3701", LCEC_EM37XX_VID, LCEC_EM3701_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
-  { "EM3702", LCEC_EM37XX_VID, LCEC_EM3702_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
-  { "EM3712", LCEC_EM37XX_VID, LCEC_EM3712_PID, LCEC_EM37XX_PDOS, 0, NULL, lcec_em37xx_init},
-
-  // multi axis interface
-  { "EM7004", LCEC_EM7004_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, 0, NULL, lcec_em7004_init},
-
-  // stoeber MDS5000 series
-  { "StMDS5k", LCEC_STMDS5K_VID, LCEC_STMDS5K_PID, 0, 0, lcec_stmds5k_preinit, lcec_stmds5k_init},
-
-  // Delta ASDA series
-  { "DeASDA", LCEC_DEASDA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, 0, NULL, lcec_deasda_init},
-
-  // Delta MS/MH300 series
-  { "DeMS300", LCEC_DEMS300_VID, LCEC_DEMS300_PID, LCEC_DEMS300_PDOS, 0, NULL, lcec_dems300_init},
-
-  // Omron G5 series
-  { "OmrG5_KNA5L",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KNA5L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN01L",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN01L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN02L",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN02L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN04L",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN04L_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN01H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN01H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN02H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN02H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN04H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN04H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN08H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN08H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN10H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN10H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN15H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN15H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN20H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN20H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN30H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN30H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN50H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN50H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN75H",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN75H_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN150H", LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN150H_ECT_PID, LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN06F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN06F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN10F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN10F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN15F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN15F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN20F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN20F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN30F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN30F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN50F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN50F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN75F",  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN75F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-  { "OmrG5_KN150F", LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN150F_ECT_PID, LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
-
-  // modusoft PH3LM2RM converter
-  { "Ph3LM2RM", LCEC_PH3LM2RM_VID, LCEC_PH3LM2RM_PID, LCEC_PH3LM2RM_PDOS, 0, NULL, lcec_ph3lm2rm_init},
-
-  { NULL }
-};
-
 static const lcec_pindesc_t master_global_pins[] = {
   { HAL_U32, HAL_OUT, offsetof(lcec_master_data_t, slaves_responding), "%s.slaves-responding" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_master_data_t, state_init), "%s.state-init" },
@@ -340,7 +112,7 @@ static const lcec_pindesc_t slave_pins[] = {
 
 static lcec_master_t *first_master = NULL;
 static lcec_master_t *last_master = NULL;
-static int comp_id = -1;
+extern int lcec_comp_id;
 
 static lcec_master_data_t *global_hal_data;
 static ec_master_state_t global_ms;
@@ -361,8 +133,6 @@ void lcec_write_all(void *arg, long period);
 void lcec_read_master(void *arg, long period);
 void lcec_write_master(void *arg, long period);
 
-static int lcec_pin_newfv(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, const char *fmt, va_list ap);
-static int lcec_pin_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap);
 static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, va_list ap);
 static int lcec_param_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap);
 
@@ -377,7 +147,7 @@ int rtapi_app_main(void) {
   struct timeval tv;
 
   // connect to the HAL
-  if ((comp_id = hal_init (LCEC_MODULE_NAME)) < 0) {
+  if ((lcec_comp_id = hal_init (LCEC_MODULE_NAME)) < 0) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_init() failed\n");
     goto fail0;
   }
@@ -447,7 +217,7 @@ int rtapi_app_main(void) {
 
       // setup pdos
       if (slave->proc_init != NULL) {
-	if ((slave->proc_init(comp_id, slave, pdo_entry_regs)) != 0) {
+	if ((slave->proc_init(lcec_comp_id, slave, pdo_entry_regs)) != 0) {
 	  goto fail2;
 	}
       }
@@ -533,13 +303,13 @@ int rtapi_app_main(void) {
 
     // export read function
     rtapi_snprintf(name, HAL_NAME_LEN, "%s.%s.read", LCEC_MODULE_NAME, master->name);
-    if (hal_export_funct(name, lcec_read_master, master, 0, 0, comp_id) != 0) {
+    if (hal_export_funct(name, lcec_read_master, master, 0, 0, lcec_comp_id) != 0) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s read funct export failed\n", master->name);
       goto fail2;
     }
     // export write function
     rtapi_snprintf(name, HAL_NAME_LEN, "%s.%s.write", LCEC_MODULE_NAME, master->name);
-    if (hal_export_funct(name, lcec_write_master, master, 0, 0, comp_id) != 0) {
+    if (hal_export_funct(name, lcec_write_master, master, 0, 0, lcec_comp_id) != 0) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s write funct export failed\n", master->name);
       goto fail2;
     }
@@ -547,25 +317,25 @@ int rtapi_app_main(void) {
 
   // export read-all function
   rtapi_snprintf(name, HAL_NAME_LEN, "%s.read-all", LCEC_MODULE_NAME);
-  if (hal_export_funct(name, lcec_read_all, NULL, 0, 0, comp_id) != 0) {
+  if (hal_export_funct(name, lcec_read_all, NULL, 0, 0, lcec_comp_id) != 0) {
     rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "read-all funct export failed\n");
     goto fail2;
   }
   // export write-all function
   rtapi_snprintf(name, HAL_NAME_LEN, "%s.write-all", LCEC_MODULE_NAME);
-  if (hal_export_funct(name, lcec_write_all, NULL, 0, 0, comp_id) != 0) {
+  if (hal_export_funct(name, lcec_write_all, NULL, 0, 0, lcec_comp_id) != 0) {
     rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "write-all funct export failed\n");
     goto fail2;
   }
 
   rtapi_print_msg(RTAPI_MSG_INFO, LCEC_MSG_PFX "installed driver for %d slaves\n", slave_count);
-  hal_ready (comp_id);
+  hal_ready (lcec_comp_id);
   return 0;
 
 fail2:
   lcec_clear_config();
 fail1:
-  hal_exit(comp_id);
+  hal_exit(lcec_comp_id);
 fail0:
   return -EINVAL;
 }
@@ -579,7 +349,7 @@ void rtapi_app_exit(void) {
   }
 
   lcec_clear_config();
-  hal_exit(comp_id);
+  hal_exit(lcec_comp_id);
 }
 
 int lcec_parse_config(void) {
@@ -621,7 +391,7 @@ int lcec_parse_config(void) {
   last_master = NULL;
 
   // try to get config header
-  shmem_id = rtapi_shmem_new(LCEC_CONF_SHMEM_KEY, comp_id, sizeof(LCEC_CONF_HEADER_T));
+  shmem_id = rtapi_shmem_new(LCEC_CONF_SHMEM_KEY, lcec_comp_id, sizeof(LCEC_CONF_HEADER_T));
   if (shmem_id < 0) {
     rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "couldn't allocate user/RT shared memory\n");
     goto fail0;
@@ -638,10 +408,10 @@ int lcec_parse_config(void) {
     goto fail1;
   }
   length = header->length;
-  rtapi_shmem_delete(shmem_id, comp_id);
+  rtapi_shmem_delete(shmem_id, lcec_comp_id);
 
   // reopen shmem with proper size
-  shmem_id = rtapi_shmem_new(LCEC_CONF_SHMEM_KEY, comp_id, sizeof(LCEC_CONF_HEADER_T) + length);
+  shmem_id = rtapi_shmem_new(LCEC_CONF_SHMEM_KEY, lcec_comp_id, sizeof(LCEC_CONF_HEADER_T) + length);
   if (shmem_id < 0) {
     rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "couldn't allocate user/RT shared memory\n");
     goto fail0;
@@ -708,18 +478,11 @@ int lcec_parse_config(void) {
 	if (!strcmp(slave_conf->typename, "generic")) {
 	  type = NULL;
 	} else {
-	  for (type = types; type->name != NULL && strcmp(type->name, slave_conf->typename); type++);
+	  type = lcec_findslavetype(slave_conf->typename);
 
-	  lcec_typelinkedlist_t *tl;
-	  if (type->name == NULL) {
-	    for (tl = typeslist; tl != NULL && tl->type != NULL && strcmp(tl->type->name, slave_conf->typename) ; tl=tl->next);
-
-	    if (tl==NULL) {
-	      rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "Invalid slave name \"%s\"\n", slave_conf->typename);
-	      continue;
-	    }
-
-	    type = tl->type;
+	  if (type==NULL) {
+	    rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "Invalid slave name \"%s\"\n", slave_conf->typename);
+	    continue;
 	  }
 	}
 
@@ -1113,7 +876,7 @@ int lcec_parse_config(void) {
   }
 
   // close shmem
-  rtapi_shmem_delete(shmem_id, comp_id);
+  rtapi_shmem_delete(shmem_id, lcec_comp_id);
 
   // allocate PDO entity memory
   for (master = first_master; master != NULL; master = master->next) {
@@ -1154,7 +917,7 @@ int lcec_parse_config(void) {
 fail2:
   lcec_clear_config();
 fail1:
-  rtapi_shmem_delete(shmem_id, comp_id);
+  rtapi_shmem_delete(shmem_id, lcec_comp_id);
 fail0:
   return -1;
 }
@@ -1477,287 +1240,4 @@ void lcec_write_master(void *arg, long period) {
   master->app_time_last = (uint32_t) app_time;
   master->dc_time_valid_last = dc_time_valid;
 #endif
-}
-
-int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, uint8_t *target, size_t size) {
-  lcec_master_t *master = slave->master;
-  int err;
-  size_t result_size;
-  uint32_t abort_code;
-
-  if ((err = ecrt_master_sdo_upload(master->master, slave->index, index, subindex, target, size, &result_size, &abort_code))) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to execute SDO upload (0x%04x:0x%02x, error %d, abort_code %08x)\n",
-      master->name, slave->name, index, subindex, err, abort_code);
-    return -1;
-  }
-
-  if (result_size != size) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Invalid result size on SDO upload (0x%04x:0x%02x, req: %u, res: %u)\n",
-      master->name, slave->name, index, subindex, (unsigned int) size, (unsigned int) result_size);
-    return -1;
-  }
-
-  return 0;
-}
-
-int lcec_read_idn(struct lcec_slave *slave, uint8_t drive_no, uint16_t idn, uint8_t *target, size_t size) {
-  lcec_master_t *master = slave->master;
-  int err;
-  size_t result_size;
-  uint16_t error_code;
-
-  if ((err = ecrt_master_read_idn(master->master, slave->index, drive_no, idn, target, size, &result_size, &error_code))) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to execute IDN read (drive %u idn %c-%u-%u, error %d, error_code %08x)\n",
-      master->name, slave->name, drive_no, (idn & 0x8000) ? 'P' : 'S', (idn >> 12) & 0x0007, idn & 0x0fff, err, error_code);
-    return -1;
-  }
-
-  if (result_size != size) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Invalid result size on IDN read (drive %u idn %c-%d-%d, req: %u, res: %u)\n",
-      master->name, slave->name, drive_no, (idn & 0x8000) ? 'P' : 'S', (idn >> 12) & 0x0007, idn & 0x0fff, (unsigned int) size, (unsigned int) result_size);
-    return -1;
-  }
-
-  return 0;
-}
-
-static int lcec_pin_newfv(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, const char *fmt, va_list ap) {
-  char name[HAL_NAME_LEN + 1];
-  int sz;
-  int err;
-
-  sz = rtapi_vsnprintf(name, sizeof(name), fmt, ap);
-  if(sz == -1 || sz > HAL_NAME_LEN) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "length %d too long for name starting '%s'\n", sz, name);
-    return -ENOMEM;
-  }
-
-  err = hal_pin_new(name, type, dir, data_ptr_addr, comp_id);
-  if (err) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting pin %s failed\n", name);
-    return err;
-  }
-
-  switch (type) {
-    case HAL_BIT:
-      **((hal_bit_t **) data_ptr_addr) = 0;
-      break;
-    case HAL_FLOAT:
-      **((hal_float_t **) data_ptr_addr) = 0.0;
-      break;
-    case HAL_S32:
-      **((hal_s32_t **) data_ptr_addr) = 0;
-      break;
-    case HAL_U32:
-      **((hal_u32_t **) data_ptr_addr) = 0;
-      break;
-    default:
-      break;
-  }
-
-  return 0;
-}
-
-int lcec_pin_newf(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_addr, const char *fmt, ...) {
-  va_list ap;
-  int err;
-
-  va_start(ap, fmt);
-  err = lcec_pin_newfv(type, dir, data_ptr_addr, fmt, ap);
-  va_end(ap);
-
-  return err;
-}
-
-static int lcec_pin_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap) {
-  va_list ac;
-  int err;
-  const lcec_pindesc_t *p;
-
-  for (p = list; p->type != HAL_TYPE_UNSPECIFIED; p++) {
-    va_copy(ac, ap);
-    err = lcec_pin_newfv(p->type, p->dir, (void **) (base + p->offset), p->fmt, ac);
-    va_end(ac);
-    if (err) {
-      return err;
-    }
-  }
-
-  return 0;
-}
-
-int lcec_pin_newf_list(void *base, const lcec_pindesc_t *list, ...) {
-  va_list ap;
-  int err;
-
-  va_start(ap, list);
-  err = lcec_pin_newfv_list(base, list, ap);
-  va_end(ap);
-
-  return err;
-}
-
-static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, va_list ap) {
-  char name[HAL_NAME_LEN + 1];
-  int sz;
-  int err;
-
-  sz = rtapi_vsnprintf(name, sizeof(name), fmt, ap);
-  if(sz == -1 || sz > HAL_NAME_LEN) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "length %d too long for name starting '%s'\n", sz, name);
-    return -ENOMEM;
-  }
-
-  err = hal_param_new(name, type, dir, data_addr, comp_id);
-  if (err) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "exporting param %s failed\n", name);
-    return err;
-  }
-
-  switch (type) {
-    case HAL_BIT:
-      *((hal_bit_t *) data_addr) = 0;
-      break;
-    case HAL_FLOAT:
-      *((hal_float_t *) data_addr) = 0.0;
-      break;
-    case HAL_S32:
-      *((hal_s32_t *) data_addr) = 0;
-      break;
-    case HAL_U32:
-      *((hal_u32_t *) data_addr) = 0;
-      break;
-    default:
-      break;
-  }
-
-  return 0;
-}
-
-int lcec_param_newf(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, ...) {
-  va_list ap;
-  int err;
-
-  va_start(ap, fmt);
-  err = lcec_param_newfv(type, dir, data_addr, fmt, ap);
-  va_end(ap);
-
-  return err;
-}
-
-static int lcec_param_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap) {
-  va_list ac;
-  int err;
-  const lcec_pindesc_t *p;
-
-  for (p = list; p->type != HAL_TYPE_UNSPECIFIED; p++) {
-    va_copy(ac, ap);
-    err = lcec_param_newfv(p->type, p->dir, (void *) (base + p->offset), p->fmt, ac);
-    va_end(ac);
-    if (err) {
-      return err;
-    }
-  }
-
-  return 0;
-}
-
-int lcec_param_newf_list(void *base, const lcec_pindesc_t *list, ...) {
-  va_list ap;
-  int err;
-
-  va_start(ap, list);
-  err = lcec_param_newfv_list(base, list, ap);
-  va_end(ap);
-
-  return err;
-}
-
-LCEC_CONF_MODPARAM_VAL_T *lcec_modparam_get(struct lcec_slave *slave, int id) {
-  lcec_slave_modparam_t *p;
-
-  if (slave->modparams == NULL) {
-    return NULL;
-  }
-
-  for (p = slave->modparams; p->id >= 0; p++) {
-    if (p->id == id) {
-      return &p->value;
-    }
-  }
-
-  return NULL;
-}
-
-lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index) {
-  lcec_slave_t *slave;
-
-  for (slave = master->first_slave; slave != NULL; slave = slave->next) {
-    if (slave->index == index) {
-      return slave;
-    }
-  }
-
-  return NULL;
-}
-
-void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigned int master_offset) {
-  lcec_master_t *master = slave->master;
-  uint8_t *pd = master->process_data;
-  const LCEC_CONF_FSOE_T *fsoeConf = slave->fsoeConf;
-
-  if (fsoeConf == NULL) {
-    return;
-  }
-
-  if (slave->fsoe_slave_offset != NULL) {
-    memcpy(&pd[*(slave->fsoe_slave_offset)], &pd[slave_offset], LCEC_FSOE_SIZE(fsoeConf->data_channels, fsoeConf->slave_data_len));
-  }
-
-  if (slave->fsoe_master_offset != NULL) {
-    memcpy(&pd[master_offset], &pd[*(slave->fsoe_master_offset)], LCEC_FSOE_SIZE(fsoeConf->data_channels, fsoeConf->master_data_len));
-  }
-}
-
-void lcec_syncs_init(lcec_syncs_t *syncs) {
-  memset(syncs, 0, sizeof(lcec_syncs_t));
-}
-
-void lcec_syncs_add_sync(lcec_syncs_t *syncs, ec_direction_t dir, ec_watchdog_mode_t watchdog_mode) {
-  syncs->curr_sync = &syncs->syncs[syncs->sync_count];
-
-  syncs->curr_sync->index = syncs->sync_count;
-  syncs->curr_sync->dir = dir;
-  syncs->curr_sync->watchdog_mode = watchdog_mode;
-
-  (syncs->sync_count)++;
-  syncs->syncs[syncs->sync_count].index = 0xff;
-}
-
-void lcec_syncs_add_pdo_info(lcec_syncs_t *syncs, uint16_t index) {
-  syncs->curr_pdo_info = &syncs->pdo_infos[syncs->pdo_info_count];
-
-  if (syncs->curr_sync->pdos == NULL) {
-    syncs->curr_sync->pdos = syncs->curr_pdo_info;
-  }
-  (syncs->curr_sync->n_pdos)++;
-
-  syncs->curr_pdo_info->index = index;
-
-  (syncs->pdo_info_count)++;
-}
-
-void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subindex, uint8_t bit_length) {
-  syncs->curr_pdo_entry = &syncs->pdo_entries[syncs->pdo_entry_count];
-
-  if (syncs->curr_pdo_info->entries == NULL) {
-    syncs->curr_pdo_info->entries = syncs->curr_pdo_entry;
-  }
-  (syncs->curr_pdo_info->n_entries)++;
-
-  syncs->curr_pdo_entry->index = index;
-  syncs->curr_pdo_entry->subindex = subindex;
-  syncs->curr_pdo_entry->bit_length = bit_length;
-
-  (syncs->pdo_entry_count)++;
 }

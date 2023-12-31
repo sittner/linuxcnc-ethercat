@@ -56,7 +56,9 @@ do {                        \
 
 #define LCEC_MSG_PFX "LCEC: "
 
-// init macro
+// init macro; this will make GCC run calls to AddTypes() before
+// main() is called.  This is used to register new slave types
+// dynamically without needing a giant list in lcec_main.c.
 #define ADD_TYPES(types) \
 static void AddTypes(void) __attribute__((constructor)); \
 static void AddTypes(void) { lcec_addtypes(types); }
@@ -104,6 +106,11 @@ typedef struct lcec_typelist {
   lcec_slave_preinit_t proc_preinit;
   lcec_slave_init_t proc_init;
 } lcec_typelist_t;
+
+typedef struct lcec_typelinkedlist {
+  lcec_typelist_t *type;
+  struct lcec_typelinkedlist *next;
+} lcec_typelinkedlist_t;
 
 typedef struct {
   int slave_data_len;
@@ -271,8 +278,8 @@ void lcec_syncs_init(lcec_syncs_t *syncs);
 void lcec_syncs_add_sync(lcec_syncs_t *syncs, ec_direction_t dir, ec_watchdog_mode_t watchdog_mode);
 void lcec_syncs_add_pdo_info(lcec_syncs_t *syncs, uint16_t index);
 void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subindex, uint8_t bit_length);
+lcec_typelist_t *lcec_findslavetype(char *name);
 void lcec_addtype(lcec_typelist_t *type);
 void lcec_addtypes(lcec_typelist_t types[]);
 
 #endif
-

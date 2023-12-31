@@ -1,6 +1,9 @@
 obj-m += lcec.o
-lcec-objs := \
-    lcec_main.o \
+
+lcec-driver-objs := \
+    lcec_devicelist.o \
+    lcec_ethercat.o \
+    lcec_pins.o \
     lcec_class_enc.o \
     lcec_class_ax5.o \
     lcec_generic.o \
@@ -49,4 +52,8 @@ lcec-objs := \
     lcec_dems300.o \
     lcec_omrg5.o \
     lcec_ph3lm2rm.o
+
+lcec-objs := \
+    lcec_main.o \
+    $(lcec-driver-objs)
 
