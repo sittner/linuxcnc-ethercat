@@ -185,6 +185,8 @@ void lcec_generic_write(struct lcec_slave *slave, long period) {
 
         if (hal_data->subType == lcecPdoEntTypeFloatUnsigned) {
           lcec_generic_write_u32(pd, hal_data, (hal_u32_t) fval);
+	} else if(hal_data->subType == lcecPdoEntTypeFloatIeee){
+          EC_WRITE_REAL(&pd[hal_data->pdo_os], fval);
         } else {
           lcec_generic_write_s32(pd, hal_data, (hal_s32_t) fval);
         }
