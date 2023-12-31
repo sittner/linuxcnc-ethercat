@@ -6,6 +6,7 @@ import (
 	"gopkg.in/yaml.v3"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -52,8 +53,15 @@ func main() {
 		panic(err)
 	}
 
+	filenames := []string{}
 	for _, file := range files {
-		name := file.Name()
+		if strings.HasSuffix(file.Name(), ".yml") {
+			filenames = append(filenames, file.Name())
+		}
+	}
+
+	sort.Strings(filenames)
+	for _, name := range filenames {
 		if name[0] != '.' && strings.Contains(name, ".yml") {
 			entry, err := parsefile(filepath.Join(*pathFlag, name))
 			if err != nil {

@@ -5,9 +5,6 @@ has code to support today.  Not all of these are well-tested.*
 
 Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 ----------- | ------ | ---------------- | ----------- | -------------- | ------
-[Beckhoff EL1018 8Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1018) | [EL1018](../src/lcec_el1xxx.c) | 0x00000002:0x03fa3052 | Digital Input | Part of @scottlaird's test suite. | 
-[Beckhoff EL3064 4Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3064) | [EL3064](../src/lcec_el30x4.c) | 0x00000002:0x0bf83052 | Analog Input Terminals | Uncertain; @scottlaird has one | 
-[Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EP7041](../src/lcec_el7041.c) | 0x00000002:0x1b813052 | Stepper Drive | Uncertain; @scottlaird has several EP7041-0002 | 
 [Beckhoff AX5101-0000-0214 EtherCAT Drive (SoE, 1 Ch.)](http://www.beckhoff.com/ax51xx/) | [AX5101](../src/lcec_ax5100.c) | 0x00000002:0x13ed6012 | Servo Drive |  | 
 [Beckhoff AX5103-0000-0214 EtherCAT Drive (SoE, 1 Ch.)](http://www.beckhoff.com/ax51xx/) | [AX5103](../src/lcec_ax5100.c) | 0x00000002:0x13ef6012 | Servo Drive |  | 
 [Beckhoff AX5106-0000-0214 EtherCAT Drive (SoE, 1 Ch.)](http://www.beckhoff.com/ax51xx/) | [AX5106](../src/lcec_ax5100.c) | 0x00000002:0x13f26012 | Servo Drive |  | 
@@ -27,7 +24,7 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EL1008 8Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1008) | [EL1008](../src/lcec_el1xxx.c) | 0x00000002:0x03f03052 | Digital Input Terminals |  | 
 [Beckhoff EL1012 2Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1012) | [EL1012](../src/lcec_el1xxx.c) | 0x00000002:0x03f43052 | Digital Input |  | 
 [Beckhoff EL1014 4Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1014) | [EL1014](../src/lcec_el1xxx.c) | 0x00000002:0x03f63052 | Digital Input |  | 
-[Beckhoff EL1018 8Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1018) | [EL1018](../src/lcec_el1xxx.c) | 0x00000002:0x03fa3052 | Digital Input | Part of @scottlaird's test suite. | 
+[Beckhoff EL1018 8Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1018) | [EL1018](../src/lcec_el1xxx.c) | 0x00000002:0x03fa3052 | Digital Input | Part of @scottlaird's test suite, hardware is actively exercised for most releases. | 
 [Beckhoff EL1024 4Ch. Dig. Input 24V, Type 2, 3ms](http://www.beckhoff.com/EL1024) | [EL1024](../src/lcec_el1xxx.c) | 0x00000002:0x04003052 | Digital Input |  | 
 [Beckhoff EL1034 4Ch. Dig. Input 24V, potential-free, 10µs](http://www.beckhoff.com/EL1034) | [EL1034](../src/lcec_el1xxx.c) | 0x00000002:0x040a3052 | Digital Input |  | 
 [Beckhoff EL1084 4Ch. Dig. Input 24V, 3ms, negative](http://www.beckhoff.com/EL1084) | [EL1084](../src/lcec_el1xxx.c) | 0x00000002:0x043c3052 | Digital Input |  | 
