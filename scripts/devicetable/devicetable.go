@@ -89,16 +89,20 @@ func main() {
 	fmt.Printf("has code to support today.  Not all of these are well-tested.*\n")
 	fmt.Printf("\n")
 
-	fmt.Printf("Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes\n")
+	fmt.Printf("Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes\n")
 	fmt.Printf("----------- | ------ | ---------------- | ----------- | -------------- | ------\n")
 	for _, e := range entries {
 		name := e.Description
 		if len(e.DocumentationURL) > 4 && e.DocumentationURL[0:4] == "http" {
 			name = fmt.Sprintf("[%s](%s)", e.Description, e.DocumentationURL)
 		}
-		srcName := e.Device
+		srcName := "???"
 		if e.SrcFile != "" {
-			srcName = fmt.Sprintf("[%s](../%s)", e.Device, e.SrcFile)
+			split := strings.Split(e.SrcFile,"/")
+			shortname := split[len(split)-1]
+			shortname = strings.ReplaceAll(shortname, ".c", "")
+			shortname = strings.ReplaceAll(shortname, "lcec_", "")
+			srcName = fmt.Sprintf("[%s](../%s)", shortname, e.SrcFile)
 		}
 		fmt.Printf("%s | %s | %s:%s | %s | %s | %s\n", name, srcName, e.VendorID, e.PID, e.DeviceType, e.TestingStatus, e.Notes)
 	}
