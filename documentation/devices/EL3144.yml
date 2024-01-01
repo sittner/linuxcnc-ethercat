@@ -1,0 +1,11 @@
+---
+Device: EL3144
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0c483052"
+Description: Beckhoff EL3144 4Ch. Ana. Input 0-20mA
+DocumentationURL: http://www.beckhoff.com/EL3144
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "New, untested."

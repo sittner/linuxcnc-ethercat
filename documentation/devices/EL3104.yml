@@ -1,0 +1,11 @@
+---
+Device: EL3104
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0c203052"
+Description: Beckhoff EL3104 4Ch. Ana. Input +/-10V Diff.
+DocumentationURL: http://www.beckhoff.com/EL3104
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "New, untested."

@@ -1,0 +1,11 @@
+---
+Device: EL3114
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0c2a3052"
+Description: Beckhoff EL3114 4Ch. Ana. Input 0-20mA, Diff.
+DocumentationURL: http://www.beckhoff.com/EL3114
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "New, untested."

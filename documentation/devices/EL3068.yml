@@ -1,0 +1,12 @@
+---
+Device: EL3068
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0bfc3052"
+Description: Beckhoff EL3068 8Ch. Ana. Input 0-10V
+DocumentationURL: http://www.beckhoff.com/EL3068
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "Part of @scottlaird's test suite, hardware is actively exercised for most releases."
+

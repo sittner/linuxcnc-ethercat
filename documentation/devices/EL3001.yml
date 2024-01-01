@@ -1,0 +1,11 @@
+---
+Device: EL3001
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0bb93052"
+Description: Beckhoff EL3001 1Ch. Ana. Input +/-10V
+DocumentationURL: http://www.beckhoff.com/EL3001
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "New, untested."

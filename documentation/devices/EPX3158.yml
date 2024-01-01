@@ -1,0 +1,11 @@
+---
+Device: EPX3158
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x9809ab69"
+Description: Beckhoff EPX3158 8Ch. Ana. Input 4-20mA, Ex i
+DocumentationURL: http://www.beckhoff.com/EPX3158
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "New, untested."

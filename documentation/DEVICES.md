@@ -65,17 +65,46 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EL2808 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2808) | [EL2808](../src/lcec_el2xxx.c) | 0x00000002:0x0af83052 | Digital Output | Uncertain; @scottlaird has several | 
 [Beckhoff EL2809 16Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL2809) | [EL2809](../src/lcec_el2xxx.c) | 0x00000002:0x0af93052 | Digital Output |  | 
 [Beckhoff EL2904, 4 Ch. Safety Output 24V, 0.5A, TwinSAFE](http://www.beckhoff.com/EL2904) | [EL2904](../src/lcec_el2904.c) | 0x00000002:0x0b583052 | Safety Terminals | Part of @scottlaird's test suite, but not currently being evaluated. | 
+[Beckhoff EL3001 1Ch. Ana. Input +/-10V](http://www.beckhoff.com/EL3001) | [EL3001](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bb93052 | Analog Input | New, untested. | 
+[Beckhoff EL3002 2Ch. Ana. Input +/-10V](http://www.beckhoff.com/EL3002) | [EL3002](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bba3052 | Analog Input | New, untested. | 
 [Beckhoff EL3004 4Ch. Ana. Input +/-10V](http://www.beckhoff.com/EL3004) | [EL3004](../src/lcec_el30x4.c) | 0x00000002:0x0bbc3052 | Analog Input |  | 
+[Beckhoff EL3008 8Ch. Ana. Input +/-10V](http://www.beckhoff.com/EL3008) | [EL3008](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bc03052 | Analog Input | New, untested. | 
+[Beckhoff EL3011 4Ch. Ana. Input 0-20mA DIFF](http://www.beckhoff.com/EL3011) | [EL3011](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bc33052 | Analog Input | New, untested. | 
+[Beckhoff EL3012 4Ch. Ana. Input 0-20mA DIFF](http://www.beckhoff.com/EL3012) | [EL3012](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bc43052 | Analog Input | New, untested. | 
+[Beckhoff EL3014 4Ch. Ana. Input 0-20mA DIFF](http://www.beckhoff.com/EL3014) | [EL3014](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bc63052 | Analog Input | New, untested. | 
+[Beckhoff EL3021 4Ch. Ana. Input 4-20mA DIFF](http://www.beckhoff.com/EL3021) | [EL3021](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bcd3052 | Analog Input | New, untested. | 
+[Beckhoff EL3022 4Ch. Ana. Input 4-20mA DIFF](http://www.beckhoff.com/EL3022) | [EL3022](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bce3052 | Analog Input | New, untested. | 
+[Beckhoff EL3024 4Ch. Ana. Input 4-20mA DIFF](http://www.beckhoff.com/EL3024) | [EL3024](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bd03052 | Analog Input | New, untested. | 
+[Beckhoff EL3041 1Ch. Ana. Input 0-20mA](http://www.beckhoff.com/EL3041) | [EL3041](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0be13052 | Analog Input | New, untested. | 
+[Beckhoff EL3042 2Ch. Ana. Input 0-20mA](http://www.beckhoff.com/EL3042) | [EL3042](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0be23052 | Analog Input | New, untested. | 
 [Beckhoff EL3044 4Ch. Ana. Input 0-20mA](http://www.beckhoff.com/EL3044) | [EL3044](../src/lcec_el30x4.c) | 0x00000002:0x0be43052 | Analog Input |  | 
+[Beckhoff EL3048 8Ch. Ana. Input 0-20mA](http://www.beckhoff.com/EL3048) | [EL3048](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0be83052 | Analog Input | New, untested. | 
+[Beckhoff EL3051 1Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3051) | [EL3051](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0beb3052 | Analog Input | New, untested. | 
+[Beckhoff EL3052 2Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3052) | [EL3052](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bec3052 | Analog Input | New, untested. | 
 [Beckhoff EL3054 4Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3054) | [EL3054](../src/lcec_el30x4.c) | 0x00000002:0x0bee3052 | Analog Input |  | 
+[Beckhoff EL3058 8Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3058) | [EL3058](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bf23052 | Analog Input | New, untested. | 
+[Beckhoff EL3061 1Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3061) | [EL3061](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bf53052 | Analog Input | New, untested. | 
+[Beckhoff EL3062 2Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3062) | [EL3062](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bf63052 | Analog Input | New, untested. | 
 [Beckhoff EL3064 4Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3064) | [EL3064](../src/lcec_el30x4.c) | 0x00000002:0x0bf83052 | Analog Input |  | 
+[Beckhoff EL3068 8Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3068) | [EL3068](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0bfc3052 | Analog Input | Part of @scottlaird's test suite, hardware is actively exercised for most releases. | 
+[Beckhoff EL3101 1Ch. Ana. Input +/-10V Diff.](http://www.beckhoff.com/EL3101) | [EL3101](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c1d3052 | Analog Input | New, untested. | 
 [Beckhoff EL3102 2Ch. Ana. Input +/-10V, Diff.](http://www.beckhoff.com/EL3102) | [EL3102](../src/lcec_el31x2.c) | 0x00000002:0x0c1e3052 | Analog Input |  | 
+[Beckhoff EL3104 4Ch. Ana. Input +/-10V Diff.](http://www.beckhoff.com/EL3104) | [EL3104](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c203052 | Analog Input | New, untested. | 
+[Beckhoff EL3111 1Ch. Ana. Input 0-20mA, Diff.](http://www.beckhoff.com/EL3111) | [EL3111](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c273052 | Analog Input | New, untested. | 
 [Beckhoff EL3112 2Ch. Ana. Input 0-20mA, Diff.](http://www.beckhoff.com/EL3112) | [EL3112](../src/lcec_el31x2.c) | 0x00000002:0x0c283052 | Analog Input |  | 
+[Beckhoff EL3114 4Ch. Ana. Input 0-20mA, Diff.](http://www.beckhoff.com/EL3114) | [EL3114](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c2a3052 | Analog Input | New, untested. | 
+[Beckhoff EL3121 1Ch. Ana. Input 4-20mA Diff.](http://www.beckhoff.com/EL3121) | [EL3121](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c313052 | Analog Input | New, untested. | 
 [Beckhoff EL3122 2Ch. Ana. Input 4-20mA, Diff.](http://www.beckhoff.com/EL3122) | [EL3122](../src/lcec_el31x2.c) | 0x00000002:0x0c323052 | Analog Input |  | 
+[Beckhoff EL3141 1Ch. Ana. Input 0-20mA](http://www.beckhoff.com/EL3141) | [EL3141](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c453052 | Analog Input | New, untested. | 
 [Beckhoff EL3142 2Ch. Ana. Input 0-20mA](http://www.beckhoff.com/EL3142) | [EL3142](../src/lcec_el31x2.c) | 0x00000002:0x0c463052 | Analog Input |  | 
+[Beckhoff EL3144 4Ch. Ana. Input 0-20mA](http://www.beckhoff.com/EL3144) | [EL3144](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c483052 | Analog Input | New, untested. | 
+[Beckhoff EL3151 1Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3151) | [EL3151](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c4f3052 | Analog Input | New, untested. | 
 [Beckhoff EL3152 2Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3152) | [EL3152](../src/lcec_el31x2.c) | 0x00000002:0x0c503052 | Analog Input |  | 
+[Beckhoff EL3154 4Ch. Ana. Input 4-20mA](http://www.beckhoff.com/EL3154) | [EL3154](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c523052 | Analog Input | New, untested. | 
+[Beckhoff EL3161 1Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3161) | [EL3161](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c593052 | Analog Input | New, untested. | 
 [Beckhoff EL3162 2Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3162) | [EL3162](../src/lcec_el31x2.c) | 0x00000002:0x0c5a3052 | Analog Input | Uncertain; @scottlaird has one | 
 [Beckhoff EL3164 4Ch. Ana. Input 0-10V](http://www.beckhoff.com/EL3164) | [EL3164](../src/lcec_el31x4.c) | 0x00000002:0x0c5c3052 | Analog Input |  | 
+[Beckhoff EL3182 2Ch. Ana. Input 4-20mA, HART](http://www.beckhoff.com/EL3182) | [EL3182](../src/devices/lcec_el3xxx.c) | 0x00000002:0x0c6e3052 | Analog Input | New, untested. | 
 [Beckhoff EL3202 2Ch. Ana. Input PT100 (RTD)](http://www.beckhoff.com/EL3202) | [EL3202](../src/lcec_el3202.c) | 0x00000002:0x0c823052 | Analog Input |  | 
 [Beckhoff EL3255 5Ch. potentiometer measurement with sensor supply](http://www.beckhoff.com/EL3255) | [EL3255](../src/lcec_el3255.c) | 0x00000002:0x0cb73052 | Analog Input |  | 
 [Beckhoff EL3403 3Ch. Power Measuring](http://www.beckhoff.com/EL3403) | [EL3403](../src/lcec_el3403.c) | 0x00000002:0x0d4b3052 | Analog Input | Uncertain; @scottlaird has several | 3-phase AC power measurement
@@ -136,6 +165,7 @@ Description | Source | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EP2809-0021 16 Ch. Dig. Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2809-0021) | [EP2809](../src/lcec_el2xxx.c) | 0x00000002:0x0af94052 | Digital Output |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [EP7041](../src/lcec_el7041.c) | 0x00000002:0x1b813052 | Stepper Drive | Uncertain; @scottlaird has several EP7041-0002 | 
 [AB&T EpoCAT FR4000](https://www.bausano.net/en/hardware/epocat-fr-1000.html) | [EPOCAT](../src/devices/lcec_epocat.c) | 0x0000079A:0x00decade | Stepper Drive | Merged 2023-12-31, untested | by @abausano
+[Beckhoff EPX3158 8Ch. Ana. Input 4-20mA, Ex i](http://www.beckhoff.com/EPX3158) | [EPX3158](../src/devices/lcec_el3xxx.c) | 0x00000002:0x9809ab69 | Analog Input | New, untested. | 
 [SMC EX260-SEC1](https://www.smcpneumatics.com/EX260-SEC1.html) | [EX260_SEC1](../src/devices/lcec_ex260.c) | 0x00000114:0x01000001 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc
 [SMC EX260-SEC1](https://www.smcpneumatics.com/EX260-SEC2.html) | [EX260_SEC2](../src/devices/lcec_ex260.c) | 0x00000114:0x01000002 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc
 [SMC EX260-SEC3](https://www.smcpneumatics.com/EX260-SEC3.html) | [EX260_SEC3](../src/devices/lcec_ex260.c) | 0x00000114:0x01000003 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc

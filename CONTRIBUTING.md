@@ -65,3 +65,16 @@ or heavily modified code, using the style included in `.clang-format`
 in the root of the LinuxCNC-Ethercat directory.  This is a lightly
 modified version of Google's standard format, and comes fairly close
 to matching most of the existing code.
+
+## Using `scripts/esi.yml`
+
+To generate a list of all PIDs for devices that match a specific regex, you can try something like this:
+
+```
+$ yq '.[] | select(.Name | test("E[LPM][A-Z]*3[01][-0-9]+")) | [.ProductCode + "," + .Name]' scripts/esi.yml  | cut -d' ' -f2 | cut -c2- | cut -d- -f1| sort -u | awk -F,  '{print "#define LCEC_" $2 "_PID" ,  $1; }'
+#define LCEC_EL3001_PID 0x0bb93052
+#define LCEC_EL3002_PID 0x0bba3052
+#define LCEC_EL3004_PID 0x0bbc3052
+#define LCEC_EL3008_PID 0x0bc03052
+...
+```

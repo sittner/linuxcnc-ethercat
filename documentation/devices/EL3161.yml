@@ -1,0 +1,11 @@
+---
+Device: EL3161
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0c593052"
+Description: Beckhoff EL3161 1Ch. Ana. Input 0-10V
+DocumentationURL: http://www.beckhoff.com/EL3161
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "New, untested."
