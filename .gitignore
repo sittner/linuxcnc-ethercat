@@ -11,6 +11,9 @@
 **.tmp
 **.a
 
+# Dependency files
+**.d
+
 # generic files
 **/.tmp_versions/
 **/modules.order
