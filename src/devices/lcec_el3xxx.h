@@ -62,8 +62,8 @@
 #define LCEC_EL3154_PID 0x0c523052  // https://beckhoff.com/EL3154, 4-port 4...20mA single-ended
 #define LCEC_EL3161_PID 0x0c593052  // https://beckhoff.com/EL3161, 1-port 0...10V single-ended
 //#define LCEC_EL3162_PID 0x0c5a3052  // https://beckhoff.com/EL3162, 2-port 0...10V single-ended  // covered by lcec_el31x2 for now
-//#define LCEC_EL3164_PID 0x0c5c3052  // https://beckhoff.com/EL3164, 4-port 0...10V single-ended  // covered by lcec_el31x4 for now
-#define LCEC_EL3182_PID 0x0c6e3052  // https://beckhoff.com/EL3182, 2-port 0/4...20mA single-ended HART
+//#define LCEC_EL3164_PID 0x0c5c3052  // https://beckhoff.com/EL3164, 4-port 0...10V single-ended // covered by lcec_el31x4 for now
+#define LCEC_EL3182_PID 0x0c6e3052   // https://beckhoff.com/EL3182, 2-port 0/4...20mA single-ended HART
 #define LCEC_EPX3158_PID 0x9809ab69  // https://beckhoff.com/EPX5185, 8-port 4..20mA single-ended, hazardous area
 
 // Related-but-not-quite-the-same devices, kept here for the moment.
@@ -94,9 +94,8 @@
 #define LCEC_EL3XXX_MAXCHANS 8  // for sizing arrays
 
 #define LCEC_EL3XXX_PDOS_PER_CHANNEL 5
-#define LCEC_EL3XX1_PDOS  (LCEC_EL3XXX_PDOS_PER_CHANNEL * 1)
-#define LCEC_EL3XX2_PDOS  (LCEC_EL3XXX_PDOS_PER_CHANNEL * 2)
-#define LCEC_EL3XX4_PDOS  (LCEC_EL3XXX_PDOS_PER_CHANNEL * 4)
-#define LCEC_EL3XX8_PDOS  (LCEC_EL3XXX_PDOS_PER_CHANNEL * 8)
+#define LCEC_EL3XX1_PDOS (LCEC_EL3XXX_PDOS_PER_CHANNEL * 1)
+#define LCEC_EL3XX2_PDOS (LCEC_EL3XXX_PDOS_PER_CHANNEL * 2)
+#define LCEC_EL3XX4_PDOS (LCEC_EL3XXX_PDOS_PER_CHANNEL * 4)
+#define LCEC_EL3XX8_PDOS (LCEC_EL3XXX_PDOS_PER_CHANNEL * 8)
 #endif
-
