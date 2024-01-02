@@ -4,11 +4,15 @@ This is a LinuxCNC EtherCAT HAL driver.
 
 It was forked from
 [sittner/linuxcnc-ethercat](https://github.com/sittner/linuxcnc-ethercat),
-and it intended to become the new default version LinuxCNC EtherCAT.
-Please bear with us while we do a bit of cleanup here, and then we'll
-start looking at adding additional maintainers and merging the backlog
-of drivers that has built up over the past few years.
+and it intended to become the new default version of LinuxCNC
+EtherCAT.  Please bear with us while we do a bit of cleanup here, and
+then we'll start looking at adding additional maintainers and merging
+the backlog of drivers that has built up over the past few years.
 
+## Installing
+
+TBD.  Include instructions for installing LinuxCNC and Ethercat from
+their Debian repositories.
 
 ## Contributing
 
@@ -56,7 +60,10 @@ static lcec_typelist_t types[]={
 ADD_TYPES(types);
 ```
 
-This is from `lcec_el1xxx.c`, your names will vary, of course.
+This is from `lcec_el1xxx.c`, your names will vary, of course.  The
+first field is the string that identifies the device in
+`ethercat.xml`, and the other fields match up with the fields that
+used to be in `lcec_main.c`.
 
 If your driver needs `<modParam>`s in `ethercat.xml` (like the AX* and
 assorted TwinSAFE devices), then you'll need to define the module
