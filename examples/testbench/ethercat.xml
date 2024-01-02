@@ -10,7 +10,7 @@
     <slave idx="7" type="EL2022" name="D7"/>
     <slave idx="8" type="EL2034" name="D8"/>
     <slave idx="9" type="EL2798" name="D9"/>
-<!--    <slave idx="10" type="EL3068" name="D10"/> -->
+    <slave idx="10" type="EL3068" name="D10"/>
 <!--    <slave idx="11" type="EL6001" name="D11"/> -->
     <slave idx="12" type="EL6900" name="D12">
         <modParam name="stdInName" value="run"/>
