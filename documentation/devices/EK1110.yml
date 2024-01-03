@@ -6,6 +6,6 @@ PID: "0x04562c52"
 Description: Beckhoff EK1110 EtherCAT extension
 DocumentationURL: http://www.beckhoff.com/EK1110
 DeviceType: System Terminals
-Notes: ""
+Notes: "Passive device"
 SrcFile: src/devices/lcec_ek1100.c
 TestingStatus: "Part of @scottlaird's test suite"
