@@ -56,7 +56,8 @@ typedef enum {
   lcecPdoEntTypeFloatSigned,
   lcecPdoEntTypeFloatUnsigned,
   lcecPdoEntTypeComplex,
-  lcecPdoEntTypeFloatIeee
+  lcecPdoEntTypeFloatIeee,
+  lcecPdoEntTypeFloatDoubleIeee,
 } LCEC_PDOENT_TYPE_T;
 
 typedef struct {

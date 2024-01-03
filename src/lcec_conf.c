@@ -940,7 +940,7 @@ static void parsePdoEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
         p->subType = lcecPdoEntTypeSimple;
         p->halType = HAL_U32;
         continue;
-      }
+      }      
       if (strcasecmp(val, "float") == 0) {
         p->subType = lcecPdoEntTypeFloatSigned;
         p->halType = HAL_FLOAT;
@@ -957,6 +957,11 @@ static void parsePdoEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
       }
       if (strcasecmp(val, "float-ieee") == 0) {
         p->subType = lcecPdoEntTypeFloatIeee;
+        p->halType = HAL_FLOAT;
+        continue;
+      }
+      if (strcasecmp(val, "float-double-ieee") == 0) {
+        p->subType = lcecPdoEntTypeFloatDoubleIeee;
         p->halType = HAL_FLOAT;
         continue;
       }
@@ -1100,6 +1105,11 @@ static void parseComplexEntryAttrs(LCEC_CONF_XML_INST_T *inst, int next, const c
       }
       if (strcasecmp(val, "float-ieee") == 0) {
         p->subType = lcecPdoEntTypeFloatIeee;
+        p->halType = HAL_FLOAT;
+        continue;
+      }
+      if (strcasecmp(val, "float-double-ieee") == 0) {
+        p->subType = lcecPdoEntTypeFloatDoubleIeee;
         p->halType = HAL_FLOAT;
         continue;
       }

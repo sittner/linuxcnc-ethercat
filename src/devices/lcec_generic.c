@@ -78,7 +78,7 @@ int lcec_generic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t 
 
       case HAL_FLOAT:
         // check data size
-        if (hal_data->bitLength > 32) {
+        if ((hal_data->bitLength > 32) && (hal_data->subType != lcecPdoEntTypeFloatDoubleIeee)) {
           rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "unable to export pin %s.%s.%s.%s: invalid process data bitlen!\n", LCEC_MODULE_NAME, master->name, slave->name, hal_data->name);
           continue;
         }
@@ -133,6 +133,8 @@ void lcec_generic_read(struct lcec_slave *slave, long period) {
           fval = lcec_generic_read_u32(pd, hal_data);
         } else if(hal_data->subType == lcecPdoEntTypeFloatIeee){
           fval = EC_READ_REAL(&pd[hal_data->pdo_os]);
+        } else if(hal_data->subType == lcecPdoEntTypeFloatDoubleIeee){
+          fval = EC_READ_LREAL(&pd[hal_data->pdo_os]);
         } else {
           fval = lcec_generic_read_s32(pd, hal_data);
         }
@@ -187,6 +189,8 @@ void lcec_generic_write(struct lcec_slave *slave, long period) {
           lcec_generic_write_u32(pd, hal_data, (hal_u32_t) fval);
 	} else if(hal_data->subType == lcecPdoEntTypeFloatIeee){
           EC_WRITE_REAL(&pd[hal_data->pdo_os], fval);
+	} else if(hal_data->subType == lcecPdoEntTypeFloatDoubleIeee){
+          EC_WRITE_LREAL(&pd[hal_data->pdo_os], fval);
         } else {
           lcec_generic_write_s32(pd, hal_data, (hal_s32_t) fval);
         }
