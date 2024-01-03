@@ -3,7 +3,7 @@
 all: configure
 	@$(MAKE) -C src all
 
-clean:
+clean: config.mk
 	@$(MAKE) -C src clean
 	rm -f config.mk config.mk.tmp
 
