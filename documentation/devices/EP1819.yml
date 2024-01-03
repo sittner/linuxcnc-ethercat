@@ -1,0 +1,11 @@
+---
+Device: EP1819
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x071b4052"
+Description: Beckhoff EP1819-0005 16 Ch. Dig. Input 24V, 10µs, M8 4pol
+DocumentationURL: https://www.beckhoff.com/EP1819
+DeviceType: Digital Input
+Notes: ""
+SrcFile: src/devices/lcec_el1xxx.c
+TestingStatus: ""

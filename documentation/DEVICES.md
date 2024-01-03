@@ -154,6 +154,7 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EM7004 4-Axis Interface Unit](http://www.beckhoff.com/EM7004) | [em7004](../src/devices/lcec_em7004.c) | 0x00000002:0x1b5c3452 | Servo Drive |  | 
 [Beckhoff EP1008-0001 8 Ch. Dig. Input 24V, 3ms, M8](https://www.beckhoff.com/EP1008-0001) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x00000002:0x03f04052 | Digital Input | Uncertain; @scottlaird has several | 
 [Beckhoff EP1018-0001 8 Ch. Dig. Input 24V, 10µs, M8](https://www.beckhoff.com/EP1018-0001) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x00000002:0x03fa4052 | Digital Input | Uncertain; @scottlaird has several | 
+[Beckhoff EP1819-0005 16 Ch. Dig. Input 24V, 10µs, M8 4pol](https://www.beckhoff.com/EP1819) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x00000002:0x071b4052 | Digital Input |  | 
 [Beckhoff EP2008-0001 8 Ch. Dig. Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2008-0001) | [el2xxx](../src/devices/lcec_el2xxx.c) | 0x00000002:0x07d84052 | Digital Output |  | 
 [Beckhoff EP2028-0001 8 Ch. Dig. Output 24V, 2A, M8](https://www.beckhoff.com/EP2028-0001) | [el2xxx](../src/devices/lcec_el2xxx.c) | 0x00000002:0x07ec4052 | Digital Output |  | 
 [Beckhoff EP2308-0000 4 Ch. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 0,5A, S8](https://www.beckhoff.com/EP2308-0000) | [ep23xx](../src/devices/lcec_ep23xx.c) | 0x00000002:0x09044052 | Digital Input/Output |  | 

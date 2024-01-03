@@ -1,5 +1,5 @@
 ---
-Device: OMRG5_R88D_KN15F_ECT
+Device: OmrG5_KN15F
 VendorID: "0x00000083"
 VendorName: Omron
 PID: "0x0000000d"

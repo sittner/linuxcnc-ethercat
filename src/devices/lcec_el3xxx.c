@@ -59,6 +59,7 @@ static lcec_typelist_t types[] = {
     {"EL3001", LCEC_EL3XXX_VID, LCEC_EL3001_PID, LCEC_EL3XX1_PDOS, 0, NULL, lcec_el3xxx_init_12_nosync},
     {"EL3002", LCEC_EL3XXX_VID, LCEC_EL3002_PID, LCEC_EL3XX2_PDOS, 0, NULL, lcec_el3xxx_init_12_nosync},
     //  { "EL3004", LCEC_EL3XXX_VID, LCEC_EL3004_PID, LCEC_EL3XX4_PDOS, 0, NULL, lcec_el3xxx_init_12_nosync},
+    {"EL3008", LCEC_EL3XXX_VID, LCEC_EL3008_PID, LCEC_EL3XX8_PDOS, 0, NULL, lcec_el3xxx_init_12_nosync},
     {"EL3011", LCEC_EL3XXX_VID, LCEC_EL3011_PID, LCEC_EL3XX1_PDOS, 0, NULL, lcec_el3xxx_init_12_nosync},
     {"EL3012", LCEC_EL3XXX_VID, LCEC_EL3012_PID, LCEC_EL3XX2_PDOS, 0, NULL, lcec_el3xxx_init_12_nosync},
     {"EL3014", LCEC_EL3XXX_VID, LCEC_EL3014_PID, LCEC_EL3XX4_PDOS, 0, NULL, lcec_el3xxx_init_12_nosync},

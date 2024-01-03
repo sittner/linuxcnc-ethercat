@@ -27,6 +27,7 @@ static void lcec_el7041_write(struct lcec_slave *s, long period);
 static lcec_typelist_t types[]={
   { "EL7041", LCEC_EL7041_VID, LCEC_EL7041_PID, LCEC_EL7041_PDOS, 0, NULL, lcec_el7041_init},
   { "EL7041_1000", LCEC_EL7041_VID, LCEC_EL7041_1000_PID, LCEC_EL7041_1000_PDOS, 0, NULL, lcec_el7041_init},
+  { "EL7041-1000", LCEC_EL7041_VID, LCEC_EL7041_1000_PID, LCEC_EL7041_1000_PDOS, 0, NULL, lcec_el7041_init},
   { "EP7041", LCEC_EL7041_VID, LCEC_EP7041_PID, LCEC_EP7041_PDOS, 0, NULL, lcec_el7041_init},
   { NULL },
 };

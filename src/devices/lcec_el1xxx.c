@@ -49,9 +49,10 @@ static lcec_typelist_t types[]={
   { "EL1804", LCEC_EL1xxx_VID, LCEC_EL1804_PID, LCEC_EL1804_PDOS, 0, NULL, lcec_el1xxx_init},
   { "EL1808", LCEC_EL1xxx_VID, LCEC_EL1808_PID, LCEC_EL1808_PDOS, 0, NULL, lcec_el1xxx_init},
   { "EL1809", LCEC_EL1xxx_VID, LCEC_EL1809_PID, LCEC_EL1809_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EL1819", LCEC_EL1xxx_VID, LCEC_EL1819_PID, LCEC_EL1819_PDOS, 0, NULL, lcec_el1xxx_init},
   { "EP1008", LCEC_EL1xxx_VID, LCEC_EP1008_PID, LCEC_EP1008_PDOS, 0, NULL, lcec_el1xxx_init},
   { "EP1018", LCEC_EL1xxx_VID, LCEC_EP1018_PID, LCEC_EL1018_PDOS, 0, NULL, lcec_el1xxx_init},
-  { "EP1819", LCEC_EL1xxx_VID, LCEC_EL1819_PID, LCEC_EL1819_PDOS, 0, NULL, lcec_el1xxx_init},
+  { "EP1819", LCEC_EL1xxx_VID, LCEC_EP1819_PID, LCEC_EP1819_PDOS, 0, NULL, lcec_el1xxx_init},
   { NULL },
 };
 

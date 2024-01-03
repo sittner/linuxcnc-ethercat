@@ -1,5 +1,5 @@
 ---
-Device: EX260_SEC4
+Device: EX260-SEC4
 VendorID: "0x00000114"
 VendorName: "SMC Pneumatics"
 PID: "0x01000004"
