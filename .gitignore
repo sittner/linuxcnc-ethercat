@@ -13,6 +13,7 @@
 
 # Dependency files
 **.d
+**.d.*
 
 # generic files
 **/.tmp_versions/
