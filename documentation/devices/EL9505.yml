@@ -7,5 +7,5 @@ Description: Beckhoff EL9505 Power supply terminal 5V
 DocumentationURL: http://www.beckhoff.com/EL9505
 DeviceType: System Terminals
 Notes: ""
-SrcFile: src/lcec_el95xx.c
+SrcFile: src/devices/lcec_el95xx.c
 TestingStatus: ""

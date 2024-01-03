@@ -7,5 +7,5 @@ Description: UNKNOWN
 DocumentationURL: ""
 DeviceType: ""
 Notes: ""
-SrcFile: src/lcec_ph3lm2rm.c
+SrcFile: src/devices/lcec_ph3lm2rm.c
 TestingStatus: ""

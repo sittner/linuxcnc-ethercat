@@ -7,5 +7,5 @@ Description: Beckhoff EP2809-0021 16 Ch. Dig. Output 24V, 0,5A, M8
 DocumentationURL: https://www.beckhoff.com/EP2809-0021
 DeviceType: Digital Output
 Notes: ""
-SrcFile: src/lcec_el2xxx.c
+SrcFile: src/devices/lcec_el2xxx.c
 TestingStatus: ""

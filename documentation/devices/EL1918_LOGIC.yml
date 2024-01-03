@@ -7,5 +7,5 @@ Notes: ""
 VendorID: "0x00000002"
 PID: "0x077e3052"
 Description: Beckhoff EL1918, 8Ch. Safety Input 24V, TwinSAFE
-SrcFile: src/lcec_el1918_logic.c
+SrcFile: src/devices/lcec_el1918_logic.c
 TestingStatus: ""

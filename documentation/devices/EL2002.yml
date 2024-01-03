@@ -7,5 +7,5 @@ Description: Beckhoff EL2002 2Ch. Dig. Output 24V, 0.5A
 DocumentationURL: http://www.beckhoff.com/EL2002
 DeviceType: Digital Output
 Notes: ""
-SrcFile: src/lcec_el2xxx.c
+SrcFile: src/devices/lcec_el2xxx.c
 TestingStatus: ""

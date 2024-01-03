@@ -7,5 +7,5 @@ Description: Beckhoff EL7411 BLDC Terminal with incremental encoder/Hall, 50 V D
 DocumentationURL: http://www.beckhoff.com/EL7411
 DeviceType: BLDC Drive
 Notes: ""
-SrcFile: src/lcec_el7411.c
+SrcFile: src/devices/lcec_el7411.c
 TestingStatus: ""

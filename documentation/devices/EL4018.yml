@@ -7,5 +7,5 @@ Description: Beckhoff EL4018 8Ch. Ana. Output 0-20mA, 12bit
 DocumentationURL: http://www.beckhoff.com/EL4018
 DeviceType: Analog Output
 Notes: ""
-SrcFile: src/lcec_el40x8.c
+SrcFile: src/devices/lcec_el40x8.c
 TestingStatus: ""

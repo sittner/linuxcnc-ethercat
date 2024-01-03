@@ -7,5 +7,5 @@ Description: Beckhoff EL3255 5Ch. potentiometer measurement with sensor supply
 DocumentationURL: http://www.beckhoff.com/EL3255
 DeviceType: Analog Input
 Notes: ""
-SrcFile: src/lcec_el3255.c
+SrcFile: src/devices/lcec_el3255.c
 TestingStatus: ""

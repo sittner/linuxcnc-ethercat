@@ -7,5 +7,5 @@ Description: Beckhoff AX5203-0000-0214 EtherCAT Drive (SoE, 2 Ch.)
 DocumentationURL: http://www.beckhoff.com/ax52xx/
 DeviceType: Servo Drive
 Notes: ""
-SrcFile: src/lcec_ax5200.c
+SrcFile: src/devices/lcec_ax5200.c
 TestingStatus: ""

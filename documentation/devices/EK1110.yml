@@ -7,5 +7,5 @@ Description: Beckhoff EK1110 EtherCAT extension
 DocumentationURL: http://www.beckhoff.com/EK1110
 DeviceType: System Terminals
 Notes: ""
-SrcFile: src/lcec_ek1100.c
+SrcFile: src/devices/lcec_ek1100.c
 TestingStatus: "Part of @scottlaird's test suite"

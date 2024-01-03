@@ -7,5 +7,5 @@ Description: Omron R88D-KN04H-ECT G5 Series ServoDrive/Motor
 DocumentationURL: http://www.ia.omron.com/
 DeviceType: Servo Drive
 Notes: ""
-SrcFile: src/lcec_omrg5.c
+SrcFile: src/devices/lcec_omrg5.c
 TestingStatus: ""

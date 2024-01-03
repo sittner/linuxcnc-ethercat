@@ -7,5 +7,5 @@ Description: "Delta ASDA-A2-E"
 DocumentationURL: "https://www.deltaww.com/en-us/products/Servo-Systems-AC-Servo-Motors-and-Drives/23"
 DeviceType: "Servo Drive"
 Notes: ""
-SrcFile: src/lcec_deasda.c
+SrcFile: src/devices/lcec_deasda.c
 TestingStatus: ""

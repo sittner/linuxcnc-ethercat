@@ -46,6 +46,13 @@ void lcec_addtype(lcec_typelist_t *type) {
   if (typeslist == NULL) {
     typeslist=t;
   } else {
+    // This should really validate that we don't have duplicate names,
+    // but there's no good way to print error messages here.  If we're
+    // running in lcec_main, then we would need to use different code
+    // from lcec_conf.
+    //
+    // Note that if there are duplicate names, then the first match
+    // found will win in lcec_findslavetype, below.
     for (l=typeslist; l->next != NULL; l=l->next);
     l->next = t;
   }

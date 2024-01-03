@@ -7,5 +7,5 @@ Description: Beckhoff AX5805 (Safety Drive Option)
 DocumentationURL: "http://beckhoff.com/AX5805"
 DeviceType: Safety Terminals
 Notes: ""
-SrcFile: src/lcec_ax5805.c
+SrcFile: src/devices/lcec_ax5805.c
 TestingStatus: ""

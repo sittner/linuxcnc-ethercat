@@ -7,5 +7,5 @@ Description: Beckhoff EL7221 1Ch. MDP742 Servo motor output stage (50V, 8A RMS)
 DocumentationURL: http://www.beckhoff.com/EL7211
 DeviceType: Servo Drive
 Notes: ""
-SrcFile: src/lcec_el7211.c
+SrcFile: src/devices/lcec_el7211.c
 TestingStatus: ""

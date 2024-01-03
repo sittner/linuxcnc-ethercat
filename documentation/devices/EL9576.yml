@@ -7,5 +7,5 @@ Description: Beckhoff EL9576 Brake chopper terminal
 DocumentationURL: http://www.beckhoff.com/EL9576
 DeviceType: System Terminals
 Notes: ""
-SrcFile: src/lcec_el95xx.c
+SrcFile: src/devices/lcec_el95xx.c
 TestingStatus: ""

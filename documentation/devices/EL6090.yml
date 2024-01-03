@@ -7,5 +7,5 @@ Description: Beckhoff EL6090 Display terminal
 DocumentationURL: http://www.beckhoff.com/EL6090
 DeviceType: LCD Display
 Notes: ""
-SrcFile: src/lcec_el6090.c
+SrcFile: src/devices/lcec_el6090.c
 TestingStatus: "Uncertain; @scottlaird has one, but the driver was just merged."

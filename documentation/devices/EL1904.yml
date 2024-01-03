@@ -7,5 +7,5 @@ Description: Beckhoff EL1904, 4 Ch. Safety Input 24V, TwinSAFE
 DocumentationURL: http://www.beckhoff.com/EL1904
 DeviceType: Safety Terminals
 Notes: ""
-SrcFile: src/lcec_el1904.c
+SrcFile: src/devices/lcec_el1904.c
 TestingStatus: "Part of @scottlaird's test suite, but not currently being evaluated."

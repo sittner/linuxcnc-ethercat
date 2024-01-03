@@ -7,5 +7,5 @@ Description: Beckhoff EP2338-0001 8 Ch. Dig. Input/Output 24V, 0,5A, M8
 DocumentationURL: https://www.beckhoff.com/EP2338-0001
 DeviceType: Digital Input/Output
 Notes: ""
-SrcFile: src/lcec_ep23xx.c
+SrcFile: src/devices/lcec_ep23xx.c
 TestingStatus: "Uncertain; @scottlaird has several"

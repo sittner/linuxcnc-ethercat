@@ -7,5 +7,5 @@ Description: Beckhoff EK1122 2 port EtherCAT junction
 DocumentationURL: http://www.beckhoff.com/EK1122
 DeviceType: System Terminals
 Notes: ""
-SrcFile: src/lcec_ek1100.c
+SrcFile: src/devices/lcec_ek1100.c
 TestingStatus: ""

@@ -7,5 +7,5 @@ Description: "Delta MS-300 AC Motor Drive"
 DocumentationURL: "https://www.deltaww.com/en-us/products/AC-Motor-Drives/3449"
 DeviceType: "AC Motor Drive"
 Notes: ""
-SrcFile: src/lcec_dems300.c
+SrcFile: src/devices/lcec_dems300.c
 TestingStatus: ""

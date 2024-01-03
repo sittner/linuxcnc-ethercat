@@ -7,5 +7,5 @@ Description: Beckhoff EL6900, TwinSAFE PLC
 DocumentationURL: http://www.beckhoff.com/EL6900
 DeviceType: Safety Terminals
 Notes: ""
-SrcFile: src/lcec_el6900.c
+SrcFile: src/devices/lcec_el6900.c
 TestingStatus: "Part of @scottlaird's test suite, but not currently being evaluated."

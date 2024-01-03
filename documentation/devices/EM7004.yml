@@ -7,5 +7,5 @@ Description: Beckhoff EM7004 4-Axis Interface Unit
 DocumentationURL: http://www.beckhoff.com/EM7004
 DeviceType: Servo Drive
 Notes: ""
-SrcFile: src/lcec_em7004.c
+SrcFile: src/devices/lcec_em7004.c
 TestingStatus: ""

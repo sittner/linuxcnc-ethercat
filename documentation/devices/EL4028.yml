@@ -7,5 +7,5 @@ Description: Beckhoff EL4028 8Ch. Ana. Output 4-20mA, 12bit
 DocumentationURL: http://www.beckhoff.com/EL4028
 DeviceType: Analog Output
 Notes: ""
-SrcFile: src/lcec_el40x8.c
+SrcFile: src/devices/lcec_el40x8.c
 TestingStatus: ""

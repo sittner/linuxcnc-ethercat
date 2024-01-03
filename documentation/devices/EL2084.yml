@@ -7,6 +7,6 @@ Description: Beckhoff EL2084 4Ch. Dig. Output 24V, 0.5A, switching to negative
 DocumentationURL: http://www.beckhoff.com/EL2084
 DeviceType: Digital Output
 Notes: ""
-SrcFile: src/lcec_el2xxx.c
+SrcFile: src/devices/lcec_el2xxx.c
 TestingStatus: "Part of @scottlaird's test suite."
 

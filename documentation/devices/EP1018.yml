@@ -7,5 +7,5 @@ Description: Beckhoff EP1018-0001 8 Ch. Dig. Input 24V, 10µs, M8
 DocumentationURL: https://www.beckhoff.com/EP1018-0001
 DeviceType: Digital Input
 Notes: ""
-SrcFile: src/lcec_el1xxx.c
+SrcFile: src/devices/lcec_el1xxx.c
 TestingStatus: "Uncertain; @scottlaird has several"
