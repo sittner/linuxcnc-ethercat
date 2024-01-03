@@ -7,5 +7,5 @@ Description: Beckhoff EK1101 EtherCAT Coupler (2A E-Bus, ID switch)
 DocumentationURL: http://www.beckhoff.com/EK1101
 DeviceType: System Terminals
 Notes: "Passive device"
-SrcFile: src/devices/lcec_ek1100.c
 TestingStatus: ""
+SrcFile: src/devices/lcec_passive.c

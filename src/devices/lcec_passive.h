@@ -15,8 +15,8 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
-#ifndef _LCEC_EK1100_H_
-#define _LCEC_EK1100_H_
+#ifndef _LCEC_PASSIVE_H_
+#define _LCEC_PASSIVE_H__
 
 #define LCEC_EK1100_VID  LCEC_BECKHOFF_VID
 #define LCEC_EK1100_PID  0x044C2C52

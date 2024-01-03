@@ -7,5 +7,5 @@ Description: Beckhoff EK1100 EtherCAT Coupler (0.5A E-Bus)
 DocumentationURL: http://www.beckhoff.com/EK1100
 DeviceType: System Terminals
 Notes: "Passive device"
-SrcFile: src/devices/lcec_ek1100.c
 TestingStatus: "Part of @scottlaird's test suite."
+SrcFile: src/devices/lcec_passive.c

@@ -7,5 +7,5 @@ Description: Beckhoff EP1122-0001 2 port EtherCAT junction
 DocumentationURL: https://www.beckhoff.com/EP1122-0001
 DeviceType: System Terminals
 Notes: "Passive device"
-SrcFile: src/devices/lcec_ek1100.c
 TestingStatus: ""
+SrcFile: src/devices/lcec_passive.c

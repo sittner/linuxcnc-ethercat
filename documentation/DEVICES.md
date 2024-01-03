@@ -15,10 +15,10 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff AX5805 (Safety Drive Option)](http://beckhoff.com/AX5805) | [ax5805](../src/devices/lcec_ax5805.c) | 0x00000002:0x16ad6012 | Safety Terminals |  | 
 [Delta ASDA-A2-E](https://www.deltaww.com/en-us/products/Servo-Systems-AC-Servo-Motors-and-Drives/23) | [deasda](../src/devices/lcec_deasda.c) | 0x000001dd:0x10305070 | Servo Drive |  | 
 [Delta MS-300 AC Motor Drive](https://www.deltaww.com/en-us/products/AC-Motor-Drives/3449) | [dems300](../src/devices/lcec_dems300.c) | 0x000001dd:0x10400200 | AC Motor Drive |  | 
-[Beckhoff EK1100 EtherCAT Coupler (0.5A E-Bus)](http://www.beckhoff.com/EK1100) | [ek1100](../src/devices/lcec_ek1100.c) | 0x00000002:0x044c2c52 | System Terminals | Part of @scottlaird's test suite. | Passive device
-[Beckhoff EK1101 EtherCAT Coupler (2A E-Bus, ID switch)](http://www.beckhoff.com/EK1101) | [ek1100](../src/devices/lcec_ek1100.c) | 0x00000002:0x044d2c52 | System Terminals |  | Passive device
-[Beckhoff EK1110 EtherCAT extension](http://www.beckhoff.com/EK1110) | [ek1100](../src/devices/lcec_ek1100.c) | 0x00000002:0x04562c52 | System Terminals | Part of @scottlaird's test suite | Passive device
-[Beckhoff EK1122 2 port EtherCAT junction](http://www.beckhoff.com/EK1122) | [ek1100](../src/devices/lcec_ek1100.c) | 0x00000002:0x04622c52 | System Terminals |  | Passive device
+[Beckhoff EK1100 EtherCAT Coupler (0.5A E-Bus)](http://www.beckhoff.com/EK1100) | [passive](../src/devices/lcec_passive.c) | 0x00000002:0x044c2c52 | System Terminals | Part of @scottlaird's test suite. | Passive device
+[Beckhoff EK1101 EtherCAT Coupler (2A E-Bus, ID switch)](http://www.beckhoff.com/EK1101) | [passive](../src/devices/lcec_passive.c) | 0x00000002:0x044d2c52 | System Terminals |  | Passive device
+[Beckhoff EK1110 EtherCAT extension](http://www.beckhoff.com/EK1110) | [passive](../src/devices/lcec_passive.c) | 0x00000002:0x04562c52 | System Terminals | Part of @scottlaird's test suite | Passive device
+[Beckhoff EK1122 2 port EtherCAT junction](http://www.beckhoff.com/EK1122) | [passive](../src/devices/lcec_passive.c) | 0x00000002:0x04622c52 | System Terminals |  | Passive device
 [Beckhoff EL1002 2Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1002) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x00000002:0x03ea3052 | Digital Input Terminals |  | 
 [Beckhoff EL1004 4Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1004) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x00000002:0x03ec3052 | Digital Input Terminals |  | 
 [Beckhoff EL1008 8Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1008) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x00000002:0x03f03052 | Digital Input Terminals |  | 
@@ -154,7 +154,7 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EM7004 4-Axis Interface Unit](http://www.beckhoff.com/EM7004) | [em7004](../src/devices/lcec_em7004.c) | 0x00000002:0x1b5c3452 | Servo Drive |  | 
 [Beckhoff EP1008-0001 8 Ch. Dig. Input 24V, 3ms, M8](https://www.beckhoff.com/EP1008-0001) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x00000002:0x03f04052 | Digital Input | Uncertain; @scottlaird has several | 
 [Beckhoff EP1018-0001 8 Ch. Dig. Input 24V, 10µs, M8](https://www.beckhoff.com/EP1018-0001) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x00000002:0x03fa4052 | Digital Input | Uncertain; @scottlaird has several | 
-[Beckhoff EP1122-0001 2 port EtherCAT junction](https://www.beckhoff.com/EP1122-0001) | [ek1100](../src/devices/lcec_ek1100.c) | 0x00000002:0x04624052 | System Terminals |  | Passive device
+[Beckhoff EP1122-0001 2 port EtherCAT junction](https://www.beckhoff.com/EP1122-0001) | [passive](../src/devices/lcec_passive.c) | 0x00000002:0x04624052 | System Terminals |  | Passive device
 [Beckhoff EP1819-0005 16 Ch. Dig. Input 24V, 10µs, M8 4pol](https://www.beckhoff.com/EP1819) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x00000002:0x071b4052 | Digital Input |  | 
 [Beckhoff EP2008-0001 8 Ch. Dig. Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2008-0001) | [el2xxx](../src/devices/lcec_el2xxx.c) | 0x00000002:0x07d84052 | Digital Output |  | 
 [Beckhoff EP2028-0001 8 Ch. Dig. Output 24V, 2A, M8](https://www.beckhoff.com/EP2028-0001) | [el2xxx](../src/devices/lcec_el2xxx.c) | 0x00000002:0x07ec4052 | Digital Output |  | 

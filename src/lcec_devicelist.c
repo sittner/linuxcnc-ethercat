@@ -17,20 +17,8 @@
 //
 
 #include "lcec.h"
-#include "devices/lcec_ek1100.h"
 
 static lcec_typelinkedlist_t *typeslist = NULL;
-
-static const lcec_typelist_t types[] = {
-  // bus coupler, no actual driver.
-  { "EK1100", LCEC_EK1100_VID, LCEC_EK1100_PID, LCEC_EK1100_PDOS, 0, NULL, NULL},
-  { "EK1101", LCEC_EK1100_VID, LCEC_EK1101_PID, LCEC_EK1101_PDOS, 0, NULL, NULL},
-  { "EK1110", LCEC_EK1100_VID, LCEC_EK1110_PID, LCEC_EK1110_PDOS, 0, NULL, NULL},
-  { "EK1122", LCEC_EK1100_VID, LCEC_EK1122_PID, LCEC_EK1122_PDOS, 0, NULL, NULL},
-  { "EP1122", LCEC_EK1100_VID, LCEC_EP1122_PID, LCEC_EP1122_PDOS, 0, NULL, NULL},
-
-  { NULL }
-};
 
 // Add a single slave type to the `typeslist` linked-list, so it can
 // be looked up by name.
@@ -70,16 +58,8 @@ void lcec_addtypes(lcec_typelist_t types[]) {
 
 // Find a slave type by name.
 const lcec_typelist_t *lcec_findslavetype(const char *name) {
-  const lcec_typelist_t *type;
   lcec_typelinkedlist_t *tl;
-  
-  // Look in the old-stype types[] array
-  for (type = types; type->name != NULL && strcmp(type->name, name); type++);
-  if (type->name != NULL) {
-    return type;
-  }
-  
-  // Look in the newer typeslist linked-list
+
   for (tl = typeslist; tl != NULL && tl->type != NULL && strcmp(tl->type->name, name) ; tl=tl->next);
   
   if (tl != NULL) {
