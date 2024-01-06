@@ -89,6 +89,7 @@ install-user: user
 	cp lcec_conf $(DESTDIR)$(EMC2_HOME)/bin/
 
 install-realtime: realtime
+	mkdir -p $(DESTDIR)$(RTLIBDIR)/
 	cp lcec.so $(DESTDIR)$(RTLIBDIR)/
 
 lcec.so: lcec_main.o $(lcec-common-objs) liblcecdevices.a
