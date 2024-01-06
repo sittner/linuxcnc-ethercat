@@ -1,8 +1,9 @@
 all: all-deps realtime user
-.PHONY: all all-deps install clean install-user install-realtime user realtime
+.PHONY: all all-deps install install-user install-realtime user realtime
 
 -include ../config.mk
 -include $(MODINC)
+include Makefile.clean
 
 RTLDFLAGS += -Wl,-rpath,$(LIBDIR)
 RTEXTRA_LDFLAGS += -Wl,--whole-archive liblcecdevices.a -Wl,--no-whole-archive -L$(LIBDIR) -llinuxcnchal -lethercat -lrt
@@ -71,15 +72,6 @@ liblcecdevices.a: $(device-objs)
 # This throws a warning about ignoring the old recipe for the target.
 install: install-user install-realtime
 	true  # override 'install' from $(MODINC)
-
-clean:
-	rm -f *.so *.ko *.o *.a devices/*.o devices/*.a
-	rm -f *.d devices/*.d
-	rm -f *.sym *.tmp *.ver
-	rm -f *.mod.c .*.cmd
-	rm -f modules.order Module.symvers
-	rm -rf .tmp_versions
-	rm -f lcec_conf
 
 realtime: lcec.so
 user: lcec_conf
