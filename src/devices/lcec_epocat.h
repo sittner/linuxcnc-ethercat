@@ -20,7 +20,7 @@
 
 #include "../lcec.h"
 
-#define LCEC_EPOCAT_PID 0x00decade
+#define LCEC_EPOCAT_PID 0x04decade
 
 #define LCEC_EPOCAT_PDOS 15
 #endif
