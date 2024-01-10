@@ -494,9 +494,6 @@ void lcec_fr4000_read(struct lcec_slave *slave, long period) {
     *(hal_data->enc_00_index_enable) = 0;
 
     raw_latch_counts[0] = EC_READ_U16(&pd[hal_data->off_LATCH]);
-    // counts_latch[0] = counts[0];
-    // counts_latch[0] += (int16_t)(raw_latch_counts[0] - raw_counts_old[0]);
-
     counts[0] = 0;
   }
   if (EC_READ_BIT(&pd[hal_data->off_FLAG], 1) == 1) {
@@ -504,9 +501,6 @@ void lcec_fr4000_read(struct lcec_slave *slave, long period) {
     *(hal_data->enc_01_index_enable) = 0;
 
     raw_latch_counts[1] = EC_READ_U16(&pd[hal_data->off_LATCH + 2]);
-    // counts_latch[1] = counts[1];
-    // counts_latch[1] += (int16_t)(raw_latch_counts[1] - raw_counts_old[1]);
-
     counts[1] = 0;
   }
   if (EC_READ_BIT(&pd[hal_data->off_FLAG], 2) == 1) {
@@ -514,9 +508,6 @@ void lcec_fr4000_read(struct lcec_slave *slave, long period) {
     *(hal_data->enc_02_index_enable) = 0;
 
     raw_latch_counts[2] = EC_READ_U16(&pd[hal_data->off_LATCH + 4]);
-    // counts_latch[2] = counts[2];
-    // counts_latch[2] += (int16_t)(raw_latch_counts[2] - raw_counts_old[2]);
-
     counts[2] = 0;
   }
   if (EC_READ_BIT(&pd[hal_data->off_FLAG], 3) == 1) {
@@ -524,9 +515,6 @@ void lcec_fr4000_read(struct lcec_slave *slave, long period) {
     *(hal_data->enc_03_index_enable) = 0;
 
     raw_latch_counts[3] = EC_READ_U16(&pd[hal_data->off_LATCH + 6]);
-    // counts_latch[3] = counts[3];
-    // counts_latch[3] += (int16_t)(raw_latch_counts[3] - raw_counts_old[3]);
-
     counts[3] = 0;
   }
   if (EC_READ_BIT(&pd[hal_data->off_FLAG], 4) == 1) {
@@ -534,9 +522,6 @@ void lcec_fr4000_read(struct lcec_slave *slave, long period) {
     *(hal_data->enc_04_index_enable) = 0;
 
     raw_latch_counts[4] = EC_READ_U16(&pd[hal_data->off_LATCH + 8]);
-    // counts_latch[4] = counts[4];
-    // counts_latch[4] += (int16_t)(raw_latch_counts[4] - raw_counts_old[4]);
-
     counts[4] = 0;
   }
 
@@ -604,6 +589,17 @@ void lcec_fr4000_read(struct lcec_slave *slave, long period) {
   *(hal_data->enc_04_count) = counts[4];
 }
 
+double calculateFvalue(double dac_value, double enc_scale, double dac_scale) {
+  double value = (dac_value * 1000) / enc_scale * dac_scale;
+  if (value > INT32_MAX) {
+    value = INT32_MAX;
+  } else if (value < INT32_MIN) {
+    value = INT32_MIN;
+  }
+
+  return value;
+}
+
 void lcec_fr4000_write(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_fr4000_data_t *hal_data = (lcec_fr4000_data_t *)slave->hal_data;
@@ -612,11 +608,11 @@ void lcec_fr4000_write(struct lcec_slave *slave, long period) {
   float fValue;
 
   float fTmp;
+  int iDir0;
   int iDir1;
   int iDir2;
   int iDir3;
   int iDir4;
-  int iDir5;
 
   // Selezione idx/probe (0=Probe, 1 = index)
   EC_WRITE_BIT(&pd[hal_data->off_RESET_FLAG], 5, 1);
@@ -674,119 +670,39 @@ void lcec_fr4000_write(struct lcec_slave *slave, long period) {
   EC_WRITE_BIT(&pd[hal_data->off_ENABLE_5V], 3, *(hal_data->ENABLE_5V_3));
   EC_WRITE_BIT(&pd[hal_data->off_ENABLE_5V], 4, *(hal_data->ENABLE_5V_4));
 
-  fValue = (((*(hal_data->dac_00_value) * 1000) / hal_data->enc_00_scale)) * hal_data->dac_00_scale;
-  /*if (fValue > 65534)
-  {
-          fValue = 65534;
-  }
-  if (fValue < -65534)
-  {
-          fValue = -65534;
-  }*/
+  fValue = calculateFvalue(*hal_data->dac_00_value, hal_data->enc_00_scale, hal_data->dac_00_scale);
+  *(hal_data->HZ_0) = fabs(fValue);
+  iDir0 = fValue < 0 ? 1 : 0;
 
-  if (fValue >= 0) {
-    iDir1 = 0;
-    fTmp = fValue;
-  } else {
-    iDir1 = 1;
-    fTmp = -fValue;
-  }
+  fValue = calculateFvalue(*hal_data->dac_01_value, hal_data->enc_01_scale, hal_data->dac_01_scale);
+  *(hal_data->HZ_1) = fabs(fValue);
+  iDir1 = fValue < 0 ? 1 : 0;
 
-  *(hal_data->HZ_0) = fTmp;
+  fValue = calculateFvalue(*hal_data->dac_02_value, hal_data->enc_02_scale, hal_data->dac_02_scale);
+  *(hal_data->HZ_2) = fabs(fValue);
+  iDir2 = fValue < 0 ? 1 : 0;
 
-  fValue = (((*(hal_data->dac_01_value) * 1000) / hal_data->enc_01_scale)) * hal_data->dac_01_scale;
-  /*if (fValue > 65534)
-  {
-          fValue = 65534;
-  }
-  if (fValue < -65534)
-  {
-          fValue = -65534;
-  }*/
+  fValue = calculateFvalue(*hal_data->dac_03_value, hal_data->enc_03_scale, hal_data->dac_03_scale);
+  *(hal_data->HZ_3) = fabs(fValue);
+  iDir3 = fValue < 0 ? 1 : 0;
 
-  if (fValue >= 0) {
-    iDir2 = 0;
-    fTmp = fValue;
-  } else {
-    iDir2 = 1;
-    fTmp = -fValue;
-  }
+  fValue = calculateFvalue(*hal_data->dac_04_value, hal_data->enc_04_scale, hal_data->dac_04_scale);
+  *(hal_data->HZ_4) = fabs(fValue);
+  iDir4 = fValue < 0 ? 1 : 0;
 
-  *(hal_data->HZ_1) = fTmp;
-
-  fValue = (((*(hal_data->dac_02_value) * 1000) / hal_data->enc_02_scale)) * hal_data->dac_02_scale;
-  /*if (fValue > 65534)
-  {
-          fValue = 65534;
-  }
-  if (fValue < -65534)
-  {
-          fValue = -65534;
-  }*/
-
-  if (fValue >= 0) {
-    iDir3 = 0;
-    fTmp = fValue;
-  } else {
-    iDir3 = 1;
-    fTmp = -fValue;
-  }
-
-  *(hal_data->HZ_2) = fTmp;
-
-  fValue = (((*(hal_data->dac_03_value) * 1000) / hal_data->enc_03_scale)) * hal_data->dac_03_scale;
-  /*if (fValue > 65534)
-  {
-          fValue = 65534;
-  }
-  if (fValue < -65534)
-  {
-          fValue = -65534;
-  }*/
-
-  if (fValue >= 0) {
-    iDir4 = 0;
-    fTmp = fValue;
-  } else {
-    iDir4 = 1;
-    fTmp = -fValue;
-  }
-
-  *(hal_data->HZ_3) = fTmp;
-
-  fValue = (((*(hal_data->dac_04_value) * 1000) / hal_data->enc_04_scale)) * hal_data->dac_04_scale;
-  /*if (fValue > 65534)
-  {
-          fValue = 65534;
-  }
-  if (fValue < -65534)
-  {
-          fValue = -65534;
-  }*/
-
-  if (fValue >= 0) {
-    iDir5 = 0;
-    fTmp = fValue;
-  } else {
-    iDir5 = 1;
-    fTmp = -fValue;
-  }
-
-  *(hal_data->HZ_4) = fTmp;
-
-  EC_WRITE_BIT(&pd[hal_data->off_DIR], 0, iDir1);
+  EC_WRITE_BIT(&pd[hal_data->off_DIR], 0, iDir0);
   EC_WRITE_U32(&pd[hal_data->off_PWM], *(hal_data->HZ_0));
 
-  EC_WRITE_BIT(&pd[hal_data->off_DIR], 1, iDir2);
+  EC_WRITE_BIT(&pd[hal_data->off_DIR], 1, iDir1);
   EC_WRITE_U32(&pd[hal_data->off_PWM + 4], *(hal_data->HZ_1));
 
-  EC_WRITE_BIT(&pd[hal_data->off_DIR], 2, iDir3);
+  EC_WRITE_BIT(&pd[hal_data->off_DIR], 2, iDir2);
   EC_WRITE_U32(&pd[hal_data->off_PWM + 8], *(hal_data->HZ_2));
 
-  EC_WRITE_BIT(&pd[hal_data->off_DIR], 3, iDir4);
+  EC_WRITE_BIT(&pd[hal_data->off_DIR], 3, iDir3);
   EC_WRITE_U32(&pd[hal_data->off_PWM + 12], *(hal_data->HZ_3));
 
-  EC_WRITE_BIT(&pd[hal_data->off_DIR], 4, iDir5);
+  EC_WRITE_BIT(&pd[hal_data->off_DIR], 4, iDir4);
   EC_WRITE_U32(&pd[hal_data->off_PWM + 16], *(hal_data->HZ_4));
 
   fValue = *(hal_data->dac_inverter_value) / 10 * 0x7fff;
