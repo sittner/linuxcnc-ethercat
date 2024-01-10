@@ -1,13 +1,30 @@
 #!/bin/bash
 
+echo "*** Test #1: invalid device type in XML"
 echo "=== Killing old halrun"
 halrun -U
 
 echo "=== Starting halrun"
+halrun -f test1.hal &> /tmp/testbench-init.out
+
+echo "=== Verifying clean failure"
+if ! grep "ERROR: Cannot find slave type" /tmp/testbench-init.out > /dev/null; then
+    echo "ERROR: expected error not found in output."
+    exit 1; halrun -U
+fi
+echo "*** Test #1 passes"
+echo
+
+echo "*** Test #2: Exercise I/O interfaces"
+echo "=== Killing old halrun"
+halrun -U
+sleep 1
+
+echo "=== Starting halrun"
 halrun -f testbench-init.hal > /tmp/testbench-init.out &
 
-echo "=== Sleeping for 2s to allow ethercat to finish initializing"
-sleep 2 # let ethercat states settle
+echo "=== Sleeping for 3s to allow ethercat to finish initializing"
+sleep 3 # let ethercat states settle
 
 OUT=/tmp/testbench-1.out
 halcmd show > $OUT
@@ -231,16 +248,16 @@ if [ $(fgrep 'lcec.0.D15.' $OUT | wc -l) != 44 ]; then
 fi
 
 
-echo "=== Testing initial config of D16 (EK1101)"
-if ! grep 'TRUE  lcec.0.D16.slave-online' $OUT > /dev/null; then
-    echo "ERROR: device D16 (EK1101) is not 'slave-online'"
-    exit 1; halrun -U
-fi
-
-if ! grep 'TRUE  lcec.0.D16.slave-oper' $OUT > /dev/null; then
-    echo "ERROR: device D16 (EK1101) is not 'slave-oper'"
-    exit 1; halrun -U
-fi
+#echo "=== Testing initial config of D16 (EK1101)"
+#if ! grep 'TRUE  lcec.0.D16.slave-online' $OUT > /dev/null; then
+#    echo "ERROR: device D16 (EK1101) is not 'slave-online'"
+#    exit 1; halrun -U
+#fi
+#
+#if ! grep 'TRUE  lcec.0.D16.slave-oper' $OUT > /dev/null; then
+#    echo "ERROR: device D16 (EK1101) is not 'slave-oper'"
+#    exit 1; halrun -U
+#fi
 
 
 echo "=== Initial config tests pass"

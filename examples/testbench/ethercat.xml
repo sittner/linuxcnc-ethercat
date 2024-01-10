@@ -19,7 +19,10 @@
     <slave idx="13" type="EL1904" name="D13"/>
     <slave idx="14" type="EL2904" name="D14"/>
     <slave idx="15" type="EL3403" name="D15"/>
-    <slave idx="16" type="EK1110" name="D16"/>
+<!--    <slave idx="16" type="EL3204" name="D16"/> -->
+    <slave idx="17" type="EL1859" name="D17"/>
+    <slave idx="18" type="EL4032" name="D18"/>
+<!--    <slave idx="16" type="EK1110" name="D16"/> -->
   </master>
 </masters>
     

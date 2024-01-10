@@ -319,6 +319,11 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
     // parse slave type
     if (strcmp(name, "type") == 0) {
       slaveType = lcec_findslavetype(val);
+      if (slaveType == NULL) {
+	  fprintf(stderr, "%s: ERROR: Cannot find slave type %s, verify type in XML file\n", modname, val);
+	  XML_StopParser(inst->parser, 0);
+	  return;
+      }
 
       if (slaveType->name == NULL) {
         fprintf(stderr, "%s: ERROR: Invalid slave type %s\n", modname, val);
