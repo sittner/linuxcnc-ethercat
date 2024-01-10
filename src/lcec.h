@@ -121,12 +121,13 @@ typedef struct lcec_typelist {
   int is_fsoe_logic;
   lcec_slave_preinit_t proc_preinit;
   lcec_slave_init_t proc_init;
-  lcec_modparam_desc_t *modparams;
-  
+  const lcec_modparam_desc_t *modparams;
+  uint64_t flags;
+  uint32_t channels;
 } lcec_typelist_t;
 
 typedef struct lcec_typelinkedlist {
-  lcec_typelist_t *type;
+  const lcec_typelist_t *type;
   struct lcec_typelinkedlist *next;
 } lcec_typelinkedlist_t;
 
@@ -255,6 +256,8 @@ typedef struct lcec_slave {
   int is_fsoe_logic;
   unsigned int *fsoe_slave_offset;
   unsigned int *fsoe_master_offset;
+  uint64_t flags;
+  uint32_t channels;
 } lcec_slave_t;
 
 typedef struct {
@@ -297,7 +300,7 @@ void lcec_syncs_add_sync(lcec_syncs_t *syncs, ec_direction_t dir, ec_watchdog_mo
 void lcec_syncs_add_pdo_info(lcec_syncs_t *syncs, uint16_t index);
 void lcec_syncs_add_pdo_entry(lcec_syncs_t *syncs, uint16_t index, uint8_t subindex, uint8_t bit_length);
 const lcec_typelist_t *lcec_findslavetype(const char *name);
-void lcec_addtype(lcec_typelist_t *type);
-void lcec_addtypes(lcec_typelist_t types[]);
+void lcec_addtype(const lcec_typelist_t *type);
+void lcec_addtypes(const lcec_typelist_t types[]);
 
 #endif

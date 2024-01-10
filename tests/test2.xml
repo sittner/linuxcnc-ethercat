@@ -1,0 +1,36 @@
+<masters>
+  <master idx="0" appTimePeriod="2000000" refClockSyncCycles="1000">
+    <slave idx="0" type="EK1100" name="D0"/>
+    <slave idx="1" type="EL1018" name="D1"/>
+    <slave idx="2" type="EL1018" name="D2"/>
+    <slave idx="3" type="EL2008" name="D3"/>
+    <slave idx="4" type="EL2008" name="D4"/>
+    <slave idx="5" type="EL2084" name="D5"/>
+    <slave idx="6" type="EL2022" name="D6"/>
+    <slave idx="7" type="EL2022" name="D7"/>
+    <slave idx="8" type="EL2034" name="D8"/>
+    <slave idx="9" type="EL2798" name="D9"/>
+    <slave idx="10" type="EL3068" name="D10"/>
+<!--    <slave idx="11" type="EL6001" name="D11"/> -->
+    <slave idx="12" type="EL6900" name="D12">
+        <modParam name="stdInName" value="run"/>
+        <modParam name="stdInName" value="reset"/>
+    </slave>
+    <slave idx="13" type="EL1904" name="D13"/>
+    <slave idx="14" type="EL2904" name="D14"/>
+    <slave idx="15" type="EL3403" name="D15"/>
+    <slave idx="16" type="EL3204" name="D16">
+      <modParam name="ch0Sensor" value="Pt100"/>
+      <modParam name="ch0Resolution" value="High"/>
+      <modParam name="ch0Wires" value="2"/>
+      <modParam name="ch1Sensor" value="Ohm/16"/>
+      <modParam name="ch2Sensor" value="Pt1000"/>
+      <modParam name="ch3Sensor" value="Ohm/64"/>
+    </slave>
+    <slave idx="17" type="EL1859" name="D17"/>
+    <slave idx="18" type="EL4032" name="D18"/>
+<!--    <slave idx="19" type="EL7041" name="D19"/> -->
+<!--    <slave idx="20" type="EK1110" name="D20"/> -->
+  </master>
+</masters>
+    

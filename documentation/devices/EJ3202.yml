@@ -1,0 +1,11 @@
+---
+Device: EJ3202
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH
+PID: "0x0c822852"
+Description: Beckhoff EJ3202 2Ch. Ana. Input PT100 (RTD)
+DocumentationURL: http://www.beckhoff.com/EJ3202
+DeviceType: Analog input terminals (EJ3xxx)
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "New, untested"

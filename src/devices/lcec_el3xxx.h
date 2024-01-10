@@ -66,6 +66,17 @@
 #define LCEC_EL3182_PID 0x0c6e3052   // https://beckhoff.com/EL3182, 2-port 0/4...20mA single-ended HART
 #define LCEC_EPX3158_PID 0x9809ab69  // https://beckhoff.com/EPX5185, 8-port 4..20mA single-ended, hazardous area
 
+#define LCEC_EL3201_PID 0x0c813052  // https://beckhoff.com/EL3201, 1-port PT100 temperature sensor
+#define LCEC_EL3202_PID 0x0c823052  // https://beckhoff.com/EL3202, 2-port PT100 temperature sensor
+#define LCEC_EL3204_PID 0x0c843052  // https://beckhoff.com/EL3204, 4-port PT100 temperature sensor
+#define LCEC_EL3208_PID 0x0c883052  // https://beckhoff.com/EL3208, 8-port PT100 temperature sensor
+#define LCEC_EL3214_PID 0x0c8e3052  // https://beckhoff.com/EL3214, 4-port PT100 temperature sensor
+#define LCEC_EL3218_PID 0x0c923052  // https://beckhoff.com/EL3218, 8-port PT100 temperature sensor
+#define LCEC_EP3204_PID 0x0c844052  // https://beckhoff.com/EP3204, 4-port PT100 temperature sensor
+#define LCEC_EJ3202_PID 0x0c822852  // https://beckhoff.com/EJ3202, 2-port PT100 temperature sensor
+#define LCEC_EJ3214_PID 0x0c8e2852  // https://beckhoff.com/EJ3214, 4-port PT100 temperature sensor
+
+
 // Related-but-not-quite-the-same devices, kept here for the moment.
 //#define LCEC_EL3072_PID 0x0c003052  // https://beckhoff.com/EL3072, 2-port multifunction
 //#define LCEC_EL3074_PID 0x0c023052  // https://beckhoff.com/EL3074, 4-port multifunction
@@ -93,9 +104,21 @@
 
 #define LCEC_EL3XXX_MAXCHANS 8  // for sizing arrays
 
-#define LCEC_EL3XXX_PDOS_PER_CHANNEL 5
-#define LCEC_EL3XX1_PDOS (LCEC_EL3XXX_PDOS_PER_CHANNEL * 1)
-#define LCEC_EL3XX2_PDOS (LCEC_EL3XXX_PDOS_PER_CHANNEL * 2)
-#define LCEC_EL3XX4_PDOS (LCEC_EL3XXX_PDOS_PER_CHANNEL * 4)
-#define LCEC_EL3XX8_PDOS (LCEC_EL3XXX_PDOS_PER_CHANNEL * 8)
+#define LCEC_EL30XX_PDOS_PER_CHANNEL 4
+#define LCEC_EL30X1_PDOS (LCEC_EL30XX_PDOS_PER_CHANNEL * 1)
+#define LCEC_EL30X2_PDOS (LCEC_EL30XX_PDOS_PER_CHANNEL * 2)
+#define LCEC_EL30X4_PDOS (LCEC_EL30XX_PDOS_PER_CHANNEL * 4)
+#define LCEC_EL30X8_PDOS (LCEC_EL30XX_PDOS_PER_CHANNEL * 8)
+
+#define LCEC_EL31XX_PDOS_PER_CHANNEL 5
+#define LCEC_EL31X1_PDOS (LCEC_EL31XX_PDOS_PER_CHANNEL * 1)
+#define LCEC_EL31X2_PDOS (LCEC_EL31XX_PDOS_PER_CHANNEL * 2)
+#define LCEC_EL31X4_PDOS (LCEC_EL31XX_PDOS_PER_CHANNEL * 4)
+#define LCEC_EL31X8_PDOS (LCEC_EL31XX_PDOS_PER_CHANNEL * 8)
+
+#define LCEC_EL32XX_PDOS_PER_CHANNEL 4
+#define LCEC_EL32X1_PDOS (LCEC_EL32XX_PDOS_PER_CHANNEL * 1)
+#define LCEC_EL32X2_PDOS (LCEC_EL32XX_PDOS_PER_CHANNEL * 2)
+#define LCEC_EL32X4_PDOS (LCEC_EL32XX_PDOS_PER_CHANNEL * 4)
+#define LCEC_EL32X8_PDOS (LCEC_EL32XX_PDOS_PER_CHANNEL * 8)
 #endif

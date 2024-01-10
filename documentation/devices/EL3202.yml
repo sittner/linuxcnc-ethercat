@@ -7,5 +7,5 @@ Description: Beckhoff EL3202 2Ch. Ana. Input PT100 (RTD)
 DocumentationURL: http://www.beckhoff.com/EL3202
 DeviceType: Analog Input
 Notes: ""
-SrcFile: src/devices/lcec_el3202.c
-TestingStatus: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "@scottlaird has hardware"

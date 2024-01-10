@@ -22,7 +22,7 @@ static lcec_typelinkedlist_t *typeslist = NULL;
 
 // Add a single slave type to the `typeslist` linked-list, so it can
 // be looked up by name.
-void lcec_addtype(lcec_typelist_t *type) {
+void lcec_addtype(const lcec_typelist_t *type) {
   lcec_typelinkedlist_t *t, *l;
 
   // using malloc instead of hal_malloc because this can be called
@@ -48,8 +48,8 @@ void lcec_addtype(lcec_typelist_t *type) {
 }
 
 // Add an array of slavetypes to the `typeslist` linked-lisk.
-void lcec_addtypes(lcec_typelist_t types[]) {
-  lcec_typelist_t *type;
+void lcec_addtypes(const lcec_typelist_t types[]) {
+  lcec_typelist_t const *type;
 
   for (type = types; type->name != NULL; type++) {
     lcec_addtype(type);

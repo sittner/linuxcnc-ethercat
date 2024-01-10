@@ -1,0 +1,11 @@
+---
+Device: EJ3214
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH
+PID: "0x0c8e2852"
+Description: Beckhoff EJ3214 4Ch. Ana. Input PT100 (RTD)
+DocumentationURL: http://www.beckhoff.com/EJ3214
+DeviceType: Analog input terminals (EJ3xxx)
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: "New, untested"

@@ -139,6 +139,8 @@ int rtapi_app_main(void) {
     pdo_entry_regs = master->pdo_entry_regs;
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
       // read slave config
+
+      rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "calling ecrt_master_slave_config for slave %s.%s\n", master->name, slave->name);
       if (!(slave->config = ecrt_master_slave_config(master->master, 0, slave->index, slave->vid, slave->pid))) {
 	rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to read slave %s.%s configuration\n", master->name, slave->name);
 	goto fail2;
@@ -149,11 +151,11 @@ int rtapi_app_main(void) {
 	for (sdo_config = slave->sdo_config; sdo_config->index != 0xffff; sdo_config = (lcec_slave_sdoconf_t *) &sdo_config->data[sdo_config->length]) {
 	  if (sdo_config->subindex == LCEC_CONF_SDO_COMPLETE_SUBIDX) {
 	    if (ecrt_slave_config_complete_sdo(slave->config, sdo_config->index, &sdo_config->data[0], sdo_config->length) != 0) {
-	      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo %04x (complete)\n", master->name, slave->name, sdo_config->index);
+	      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo %04x (complete)\n", master->name, slave->name, sdo_config->index);
 	    }
 	  } else {
 	    if (ecrt_slave_config_sdo(slave->config, sdo_config->index, sdo_config->subindex, &sdo_config->data[0], sdo_config->length) != 0) {
-	      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo %04x:%02x\n", master->name, slave->name, sdo_config->index, sdo_config->subindex);
+	      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo %04x:%02x\n", master->name, slave->name, sdo_config->index, sdo_config->subindex);
 	    }
 	  }
 	}
@@ -171,7 +173,9 @@ int rtapi_app_main(void) {
 
       // setup pdos
       if (slave->proc_init != NULL) {
+	rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "proc_init for slave %s.%s\n", master->name, slave->name);
 	if ((slave->proc_init(lcec_comp_id, slave, pdo_entry_regs)) != 0) {
+	  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failure in proc_init for slave %s.%s\n", master->name, slave->name);
 	  goto fail2;
 	}
       }
@@ -195,6 +199,7 @@ int rtapi_app_main(void) {
 
       // configure slave
       if (slave->sync_info != NULL) {
+	rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "sync_info setup for slave %s.%s\n", master->name, slave->name);
 	if (ecrt_slave_config_pdos(slave->config, EC_END, slave->sync_info)) {
 	  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s\n", master->name, slave->name);
 	  goto fail2;
@@ -202,7 +207,9 @@ int rtapi_app_main(void) {
       }
 
       // export state pins
+      rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "init slave state hal for slave %s.%s\n", master->name, slave->name);
       if ((slave->hal_state_data = lcec_init_slave_state_hal(master->name, slave->name)) == NULL) {
+	rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failure to export slave pins for slave %s.%s\n", master->name, slave->name);
 	goto fail2;
       }
     }
@@ -211,12 +218,14 @@ int rtapi_app_main(void) {
     pdo_entry_regs->index = 0;
 
     // register PDO entries
+    rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "register PDO entries\n");
     if (ecrt_domain_reg_pdo_entry_list(master->domain, master->pdo_entry_regs)) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s PDO entry registration failed\n", master->name);
       goto fail2;
     }
 
     // initialize application time
+    rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "Setting time\n");
     lcec_gettimeofday(&tv);
     master->app_time_base = EC_TIMEVAL2NANO(tv);
     ecrt_master_application_time(master->master, master->app_time_base);
@@ -233,6 +242,7 @@ int rtapi_app_main(void) {
 #endif
 
     // activating master
+    rtapi_print_msg (RTAPI_MSG_DBG, LCEC_MSG_PFX "Activating master\n");
     if (ecrt_master_activate(master->master)) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to activate master %s\n", master->name);
       goto fail2;
@@ -245,6 +255,7 @@ int rtapi_app_main(void) {
     // init hal data
     rtapi_snprintf(name, HAL_NAME_LEN, "%s.%s", LCEC_MODULE_NAME, master->name);
     if ((master->hal_data = lcec_init_master_hal(name, 0)) == NULL) {
+      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failure to init hal pins for slave %s.%s\n", master->name, slave->name);
       goto fail2;
     }
 
@@ -287,10 +298,13 @@ int rtapi_app_main(void) {
   return 0;
 
 fail2:
+  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failure, clearing config\n");
   lcec_clear_config();
 fail1:
+  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "exiting\n");
   hal_exit(lcec_comp_id);
 fail0:
+  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "returning -EINVAL\n");
   return -EINVAL;
 }
 
@@ -473,6 +487,8 @@ int lcec_parse_config(void) {
 	  slave->is_fsoe_logic = type->is_fsoe_logic;
 	  slave->proc_preinit = type->proc_preinit;
 	  slave->proc_init = type->proc_init;
+	  slave->flags = type->flags;
+	  slave->channels = type->channels;
 	} else {
 	  // generic slave
 	  slave->vid = slave_conf->vid;

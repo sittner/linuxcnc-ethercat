@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"strconv"
 )
 
 type DeviceDefinition struct {
@@ -104,7 +105,9 @@ func main() {
 			shortname = strings.ReplaceAll(shortname, "lcec_", "")
 			srcName = fmt.Sprintf("[%s](../%s)", shortname, e.SrcFile)
 		}
-		fmt.Printf("%s | %s | %s:%s | %s | %s | %s\n", name, srcName, e.VendorID, e.PID, e.DeviceType, e.TestingStatus, e.Notes)
+		vid, _ := strconv.ParseInt(e.VendorID, 0, 64)
+		pid := e.PID
+		fmt.Printf("%s | %s | 0x%x:%s | %s | %s | %s\n", name, srcName, vid, pid, e.DeviceType, e.TestingStatus, e.Notes)
 	}
 
 	fmt.Printf("\n")

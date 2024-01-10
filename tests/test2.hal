@@ -1,0 +1,10 @@
+loadusr -W lcec_conf test2.xml
+loadrt lcec
+loadrt threads name1=servo-thread period1=2000000
+addf lcec.read-all servo-thread
+addf lcec.write-all servo-thread
+
+start
+
+# don't exit immediately
+waitusr lcec_conf
