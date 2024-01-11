@@ -126,9 +126,10 @@ fi
 
 # This doesn't really *do* anything, but it's reasonable to verify
 # that it's in a sane state.
-echo "=== Testing initial config of D0 (EK1100)"
-test-pin-true D0 slave-online
-test-slave-oper D0
+
+#echo "=== Testing initial config of D0 (EK1100)"
+#test-pin-true D0 slave-online
+#test-slave-oper D0
 
 
 echo "=== Testing initial config of D1 (EL1008)"

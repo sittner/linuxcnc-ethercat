@@ -19,6 +19,13 @@
 #include "../lcec.h"
 #include "lcec_generic.h"
 
+
+static const lcec_typelist_t types[] = {
+    {"generic", 0, 0, 0, 0, NULL, lcec_generic_init },
+    {NULL},
+};
+ADD_TYPES(types);
+
 void lcec_generic_read(struct lcec_slave *slave, long period);
 void lcec_generic_write(struct lcec_slave *slave, long period);
 
@@ -26,6 +33,8 @@ hal_s32_t lcec_generic_read_s32(uint8_t *pd, lcec_generic_pin_t *hal_data);
 hal_u32_t lcec_generic_read_u32(uint8_t *pd, lcec_generic_pin_t *hal_data);
 void lcec_generic_write_s32(uint8_t *pd, lcec_generic_pin_t *hal_data, hal_s32_t sval);
 void lcec_generic_write_u32(uint8_t *pd, lcec_generic_pin_t *hal_data, hal_u32_t uval);
+
+
 
 int lcec_generic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
