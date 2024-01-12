@@ -123,7 +123,6 @@ typedef struct lcec_typelist {
   lcec_slave_init_t proc_init;
   const lcec_modparam_desc_t *modparams;
   uint64_t flags;
-  uint32_t channels;
 } lcec_typelist_t;
 
 typedef struct lcec_typelinkedlist {
@@ -257,7 +256,6 @@ typedef struct lcec_slave {
   unsigned int *fsoe_slave_offset;
   unsigned int *fsoe_master_offset;
   uint64_t flags;
-  uint32_t channels;
 } lcec_slave_t;
 
 typedef struct {

@@ -488,7 +488,6 @@ int lcec_parse_config(void) {
 	  slave->proc_preinit = type->proc_preinit;
 	  slave->proc_init = type->proc_init;
 	  slave->flags = type->flags;
-	  slave->channels = type->channels;
 	} else {
 	  // generic slave
 	  slave->vid = slave_conf->vid;

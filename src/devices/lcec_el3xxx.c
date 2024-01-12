@@ -32,10 +32,10 @@
 //   without 0x6000:e (the sync error PDO).  It looks like it was
 //   added in r18.  Is there a point in keeping the sync error pin at all?
 
-#define FLAG_BITS16      1<<0  // Device is 16 bits
-#define FLAG_BITS12      1<<1  // Device is 12 bits
-#define FLAG_SYNC        1<<4  // on for SYNC, off for no sync
-#define FLAG_TEMPERATURE 1<<5  // Device is a temperature sensor
+#define FLAG_BITS16 1 << 0       // Device is 16 bits
+#define FLAG_BITS12 1 << 1       // Device is 12 bits
+#define FLAG_SYNC 1 << 4         // on for SYNC, off for no sync
+#define FLAG_TEMPERATURE 1 << 5  // Device is a temperature sensor
 
 #define LCEC_EL3XXX_MODPARAM_SENSOR 0
 #define LCEC_EL3XXX_MODPARAM_RESOLUTION 8
@@ -44,31 +44,31 @@
 static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static const lcec_modparam_desc_t modparams_temperature[] = {
-  { "ch0Sensor", LCEC_EL3XXX_MODPARAM_SENSOR+0, MODPARAM_TYPE_STRING },
-  { "ch1Sensor", LCEC_EL3XXX_MODPARAM_SENSOR+1, MODPARAM_TYPE_STRING },
-  { "ch2Sensor", LCEC_EL3XXX_MODPARAM_SENSOR+2, MODPARAM_TYPE_STRING },
-  { "ch3Sensor", LCEC_EL3XXX_MODPARAM_SENSOR+3, MODPARAM_TYPE_STRING },
-  { "ch4Sensor", LCEC_EL3XXX_MODPARAM_SENSOR+4, MODPARAM_TYPE_STRING },
-  { "ch5Sensor", LCEC_EL3XXX_MODPARAM_SENSOR+5, MODPARAM_TYPE_STRING },
-  { "ch6Sensor", LCEC_EL3XXX_MODPARAM_SENSOR+6, MODPARAM_TYPE_STRING },
-  { "ch7Sensor", LCEC_EL3XXX_MODPARAM_SENSOR+7, MODPARAM_TYPE_STRING },
-  { "ch0Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION+0, MODPARAM_TYPE_STRING },
-  { "ch1Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION+1, MODPARAM_TYPE_STRING },
-  { "ch2Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION+2, MODPARAM_TYPE_STRING },
-  { "ch3Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION+3, MODPARAM_TYPE_STRING },
-  { "ch4Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION+4, MODPARAM_TYPE_STRING },
-  { "ch5Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION+5, MODPARAM_TYPE_STRING },
-  { "ch6Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION+6, MODPARAM_TYPE_STRING },
-  { "ch7Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION+7, MODPARAM_TYPE_STRING },
-  { "ch0Wires", LCEC_EL3XXX_MODPARAM_WIRES+0, MODPARAM_TYPE_STRING },
-  { "ch1Wires", LCEC_EL3XXX_MODPARAM_WIRES+1, MODPARAM_TYPE_STRING },
-  { "ch2Wires", LCEC_EL3XXX_MODPARAM_WIRES+2, MODPARAM_TYPE_STRING },
-  { "ch3Wires", LCEC_EL3XXX_MODPARAM_WIRES+3, MODPARAM_TYPE_STRING },
-  { "ch4Wires", LCEC_EL3XXX_MODPARAM_WIRES+4, MODPARAM_TYPE_STRING },
-  { "ch5Wires", LCEC_EL3XXX_MODPARAM_WIRES+5, MODPARAM_TYPE_STRING },
-  { "ch6Wires", LCEC_EL3XXX_MODPARAM_WIRES+6, MODPARAM_TYPE_STRING },
-  { "ch7Wires", LCEC_EL3XXX_MODPARAM_WIRES+7, MODPARAM_TYPE_STRING },
-  { NULL },
+    {"ch0Sensor", LCEC_EL3XXX_MODPARAM_SENSOR + 0, MODPARAM_TYPE_STRING},
+    {"ch1Sensor", LCEC_EL3XXX_MODPARAM_SENSOR + 1, MODPARAM_TYPE_STRING},
+    {"ch2Sensor", LCEC_EL3XXX_MODPARAM_SENSOR + 2, MODPARAM_TYPE_STRING},
+    {"ch3Sensor", LCEC_EL3XXX_MODPARAM_SENSOR + 3, MODPARAM_TYPE_STRING},
+    {"ch4Sensor", LCEC_EL3XXX_MODPARAM_SENSOR + 4, MODPARAM_TYPE_STRING},
+    {"ch5Sensor", LCEC_EL3XXX_MODPARAM_SENSOR + 5, MODPARAM_TYPE_STRING},
+    {"ch6Sensor", LCEC_EL3XXX_MODPARAM_SENSOR + 6, MODPARAM_TYPE_STRING},
+    {"ch7Sensor", LCEC_EL3XXX_MODPARAM_SENSOR + 7, MODPARAM_TYPE_STRING},
+    {"ch0Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION + 0, MODPARAM_TYPE_STRING},
+    {"ch1Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION + 1, MODPARAM_TYPE_STRING},
+    {"ch2Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION + 2, MODPARAM_TYPE_STRING},
+    {"ch3Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION + 3, MODPARAM_TYPE_STRING},
+    {"ch4Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION + 4, MODPARAM_TYPE_STRING},
+    {"ch5Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION + 5, MODPARAM_TYPE_STRING},
+    {"ch6Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION + 6, MODPARAM_TYPE_STRING},
+    {"ch7Resolution", LCEC_EL3XXX_MODPARAM_RESOLUTION + 7, MODPARAM_TYPE_STRING},
+    {"ch0Wires", LCEC_EL3XXX_MODPARAM_WIRES + 0, MODPARAM_TYPE_STRING},
+    {"ch1Wires", LCEC_EL3XXX_MODPARAM_WIRES + 1, MODPARAM_TYPE_STRING},
+    {"ch2Wires", LCEC_EL3XXX_MODPARAM_WIRES + 2, MODPARAM_TYPE_STRING},
+    {"ch3Wires", LCEC_EL3XXX_MODPARAM_WIRES + 3, MODPARAM_TYPE_STRING},
+    {"ch4Wires", LCEC_EL3XXX_MODPARAM_WIRES + 4, MODPARAM_TYPE_STRING},
+    {"ch5Wires", LCEC_EL3XXX_MODPARAM_WIRES + 5, MODPARAM_TYPE_STRING},
+    {"ch6Wires", LCEC_EL3XXX_MODPARAM_WIRES + 6, MODPARAM_TYPE_STRING},
+    {"ch7Wires", LCEC_EL3XXX_MODPARAM_WIRES + 7, MODPARAM_TYPE_STRING},
+    {NULL},
 };
 
 typedef struct {
@@ -80,17 +80,17 @@ typedef struct {
 
 // From https://download.beckhoff.com/download/Document/io/ethercat-terminals/el32xxen.pdf#page=223
 static const temp_sensor_t temp_sensors[] = {
-  { "Pt100", 0, 0, 0.1},         // Pt100 sensor, 
-  { "Ni100", 1, 0, 0.1},         // Ni100 sensor, -60 to 250C
-  { "Pt1000", 2, 0, 0.1},        // Pt1000 sensor, -200 to 850C
-  { "Pt500", 3, 0, 0.1},         // Pt500 sensor, -200 to 850C
-  { "Pt200", 4, 0, 0.1},         // Pt200 sensor, -200 to 850C
-  { "Ni1000", 5, 0, 0.1},        // Ni1000 sensor, -60 to 250C
-  { "Ni1000-TK5000", 6, 0, 0.1}, // Ni1000-TK5000, -30 to 160C
-  { "Ni120", 7, 0, 0.1},         // Ni120 sensor, -60 to 320C
-  { "Ohm/16", 8, 1, 1.0/16},     // no sensor, report Ohms directly.  0-4095 Ohms
-  { "Ohm/64", 9, 1, 1.0/64},     // no sensor, report Ohms directly.  0-1023 Ohms
-  { NULL },
+    {"Pt100", 0, 0, 0.1},          // Pt100 sensor,
+    {"Ni100", 1, 0, 0.1},          // Ni100 sensor, -60 to 250C
+    {"Pt1000", 2, 0, 0.1},         // Pt1000 sensor, -200 to 850C
+    {"Pt500", 3, 0, 0.1},          // Pt500 sensor, -200 to 850C
+    {"Pt200", 4, 0, 0.1},          // Pt200 sensor, -200 to 850C
+    {"Ni1000", 5, 0, 0.1},         // Ni1000 sensor, -60 to 250C
+    {"Ni1000-TK5000", 6, 0, 0.1},  // Ni1000-TK5000, -30 to 160C
+    {"Ni120", 7, 0, 0.1},          // Ni120 sensor, -60 to 320C
+    {"Ohm/16", 8, 1, 1.0 / 16},    // no sensor, report Ohms directly.  0-4095 Ohms
+    {"Ohm/64", 9, 1, 1.0 / 64},    // no sensor, report Ohms directly.  0-1023 Ohms
+    {NULL},
 };
 
 typedef struct {
@@ -101,10 +101,11 @@ typedef struct {
 
 // From https://download.beckhoff.com/download/Document/io/ethercat-terminals/el32xxen.pdf#page=222
 static const temp_resolution_t temp_resolutions[] = {
-  { "Signed", 0, 1.0},  // 0.1C per bit, default on most devices
-  // { "Absolute", 1, 1.0 }, // ones-compliment presentation, why?
-  { "High", 2, 0.1}, // 0.01C per bit, default on "high precision" devices.
-  { NULL },
+    {"Signed", 0, 1.0},  // 0.1C per bit, default on most devices
+    {"Standard", 0, 1.0},  // Same as "signed", but easier to remember WRT "High".
+    // { "Absolute", 1, 1.0 }, // ones-compliment presentation, why?
+    {"High", 2, 0.1},  // 0.01C per bit, default on "high precision" devices.
+    {NULL},
 };
 
 typedef struct {
@@ -112,69 +113,64 @@ typedef struct {
   uint16_t value;
 } temp_wires_t;
 
-static const temp_wires_t temp_wires[] = {
-  { "2", 0 },
-  { "3", 1 },
-  { "4", 2 },
-  { NULL }
-};
+static const temp_wires_t temp_wires[] = {{"2", 0}, {"3", 1}, {"4", 2}, {NULL}};
 
 static const lcec_typelist_t types[] = {
     // 12-bit devices
-    {"EL3001", LCEC_EL3XXX_VID, LCEC_EL3001_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 1},
-    {"EL3002", LCEC_EL3XXX_VID, LCEC_EL3002_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 2},
-    //  { "EL3004", LCEC_EL3XXX_VID, LCEC_EL3004_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 4},
-    {"EL3008", LCEC_EL3XXX_VID, LCEC_EL3008_PID, LCEC_EL30X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 8},
-    {"EL3011", LCEC_EL3XXX_VID, LCEC_EL3011_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 1},
-    {"EL3012", LCEC_EL3XXX_VID, LCEC_EL3012_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 2},
-    {"EL3014", LCEC_EL3XXX_VID, LCEC_EL3014_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 4},
-    {"EL3021", LCEC_EL3XXX_VID, LCEC_EL3021_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 1},
-    {"EL3022", LCEC_EL3XXX_VID, LCEC_EL3022_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 2},
-    {"EL3024", LCEC_EL3XXX_VID, LCEC_EL3024_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 4},
-    {"EL3041", LCEC_EL3XXX_VID, LCEC_EL3041_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 1},
-    {"EL3042", LCEC_EL3XXX_VID, LCEC_EL3042_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 2},
-    //  { "EL3044", LCEC_EL3XXX_VID, LCEC_EL3044_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 4},
-    {"EL3048", LCEC_EL3XXX_VID, LCEC_EL3048_PID, LCEC_EL30X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 8},
-    {"EL3051", LCEC_EL3XXX_VID, LCEC_EL3051_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 1},
-    {"EL3052", LCEC_EL3XXX_VID, LCEC_EL3052_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 2},
-    //  { "EL3054", LCEC_EL3XXX_VID, LCEC_EL3054_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 4},
-    {"EL3058", LCEC_EL3XXX_VID, LCEC_EL3058_PID, LCEC_EL30X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 8},
-    {"EL3061", LCEC_EL3XXX_VID, LCEC_EL3061_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 1},
-    {"EL3062", LCEC_EL3XXX_VID, LCEC_EL3062_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 2},
-    //  { "EL3064", LCEC_EL3XXX_VID, LCEC_EL3064_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 4},
-    {"EL3068", LCEC_EL3XXX_VID, LCEC_EL3068_PID, LCEC_EL30X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12, 8},
+    {"EL3001", LCEC_EL3XXX_VID, LCEC_EL3001_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3002", LCEC_EL3XXX_VID, LCEC_EL3002_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    //  { "EL3004", LCEC_EL3XXX_VID, LCEC_EL3004_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3008", LCEC_EL3XXX_VID, LCEC_EL3008_PID, LCEC_EL30X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3011", LCEC_EL3XXX_VID, LCEC_EL3011_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3012", LCEC_EL3XXX_VID, LCEC_EL3012_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3014", LCEC_EL3XXX_VID, LCEC_EL3014_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3021", LCEC_EL3XXX_VID, LCEC_EL3021_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3022", LCEC_EL3XXX_VID, LCEC_EL3022_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3024", LCEC_EL3XXX_VID, LCEC_EL3024_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3041", LCEC_EL3XXX_VID, LCEC_EL3041_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3042", LCEC_EL3XXX_VID, LCEC_EL3042_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    //  { "EL3044", LCEC_EL3XXX_VID, LCEC_EL3044_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3048", LCEC_EL3XXX_VID, LCEC_EL3048_PID, LCEC_EL30X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3051", LCEC_EL3XXX_VID, LCEC_EL3051_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3052", LCEC_EL3XXX_VID, LCEC_EL3052_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    //  { "EL3054", LCEC_EL3XXX_VID, LCEC_EL3054_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3058", LCEC_EL3XXX_VID, LCEC_EL3058_PID, LCEC_EL30X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3061", LCEC_EL3XXX_VID, LCEC_EL3061_PID, LCEC_EL30X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3062", LCEC_EL3XXX_VID, LCEC_EL3062_PID, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    //  { "EL3064", LCEC_EL3XXX_VID, LCEC_EL3064_PID, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EL3068", LCEC_EL3XXX_VID, LCEC_EL3068_PID, LCEC_EL30X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
 
     // 16-bit devices
-    {"EL3101", LCEC_EL3XXX_VID, LCEC_EL3101_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 1},
-    //  { "EL3102", LCEC_EL3XXX_VID, LCEC_EL3102_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 2},
-    {"EL3104", LCEC_EL3XXX_VID, LCEC_EL3104_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 4},
-    {"EL3111", LCEC_EL3XXX_VID, LCEC_EL3111_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 1},
-    //  { "EL3112", LCEC_EL3XXX_VID, LCEC_EL3112_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 2},
-    {"EL3114", LCEC_EL3XXX_VID, LCEC_EL3114_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 4},
-    {"EL3121", LCEC_EL3XXX_VID, LCEC_EL3121_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 1},
-    //  { "EL3122", LCEC_EL3XXX_VID, LCEC_EL3122_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 2},
-    //  { "EL3124", LCEC_EL3XXX_VID, LCEC_EL3124_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 4},
-    {"EL3141", LCEC_EL3XXX_VID, LCEC_EL3141_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 1},
-    //  { "EL3142", LCEC_EL3XXX_VID, LCEC_EL3142_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 2},
-    {"EL3144", LCEC_EL3XXX_VID, LCEC_EL3144_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 4},
-    {"EL3151", LCEC_EL3XXX_VID, LCEC_EL3151_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 1},
-    //  { "EL3152", LCEC_EL3XXX_VID, LCEC_EL3152_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 2},
-    {"EL3154", LCEC_EL3XXX_VID, LCEC_EL3154_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 4},
-    {"EL3161", LCEC_EL3XXX_VID, LCEC_EL3161_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 1},
-    //  { "EL3162", LCEC_EL3XXX_VID, LCEC_EL3162_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 2},
-    //  { "EL3164", LCEC_EL3XXX_VID, LCEC_EL3164_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 4},
-    {"EL3182", LCEC_EL3XXX_VID, LCEC_EL3182_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 2},
-    {"EPX3158", LCEC_EL3XXX_VID, LCEC_EPX3158_PID, LCEC_EL31X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC, 8},
+    {"EL3101", LCEC_EL3XXX_VID, LCEC_EL3101_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    //  { "EL3102", LCEC_EL3XXX_VID, LCEC_EL3102_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
+    {"EL3104", LCEC_EL3XXX_VID, LCEC_EL3104_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    {"EL3111", LCEC_EL3XXX_VID, LCEC_EL3111_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    //  { "EL3112", LCEC_EL3XXX_VID, LCEC_EL3112_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
+    {"EL3114", LCEC_EL3XXX_VID, LCEC_EL3114_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    {"EL3121", LCEC_EL3XXX_VID, LCEC_EL3121_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    //  { "EL3122", LCEC_EL3XXX_VID, LCEC_EL3122_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
+    //  { "EL3124", LCEC_EL3XXX_VID, LCEC_EL3124_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
+    {"EL3141", LCEC_EL3XXX_VID, LCEC_EL3141_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    //  { "EL3142", LCEC_EL3XXX_VID, LCEC_EL3142_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
+    {"EL3144", LCEC_EL3XXX_VID, LCEC_EL3144_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    {"EL3151", LCEC_EL3XXX_VID, LCEC_EL3151_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    //  { "EL3152", LCEC_EL3XXX_VID, LCEC_EL3152_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
+    {"EL3154", LCEC_EL3XXX_VID, LCEC_EL3154_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    {"EL3161", LCEC_EL3XXX_VID, LCEC_EL3161_PID, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    //  { "EL3162", LCEC_EL3XXX_VID, LCEC_EL3162_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
+    //  { "EL3164", LCEC_EL3XXX_VID, LCEC_EL3164_PID, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
+    {"EL3182", LCEC_EL3XXX_VID, LCEC_EL3182_PID, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    {"EPX3158", LCEC_EL3XXX_VID, LCEC_EPX3158_PID, LCEC_EL31X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
 
-    {"EJ3202", LCEC_EL3XXX_VID, LCEC_EJ3202_PID, LCEC_EL32X2_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16|FLAG_TEMPERATURE, 2},
-    {"EJ3214", LCEC_EL3XXX_VID, LCEC_EJ3214_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16|FLAG_TEMPERATURE, 4},
-    {"EL3201", LCEC_EL3XXX_VID, LCEC_EL3201_PID, LCEC_EL32X1_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16|FLAG_TEMPERATURE, 1},
-    {"EL3202", LCEC_EL3XXX_VID, LCEC_EL3202_PID, LCEC_EL32X2_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16|FLAG_TEMPERATURE, 2},
-    {"EL3204", LCEC_EL3XXX_VID, LCEC_EL3204_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16|FLAG_TEMPERATURE, 4},
-    {"EL3208", LCEC_EL3XXX_VID, LCEC_EL3208_PID, LCEC_EL32X8_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16|FLAG_TEMPERATURE, 8},
-    {"EL3214", LCEC_EL3XXX_VID, LCEC_EL3214_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16|FLAG_TEMPERATURE, 4},
-    {"EL3218", LCEC_EL3XXX_VID, LCEC_EL3218_PID, LCEC_EL32X8_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16|FLAG_TEMPERATURE, 8},
-    {"EP3204", LCEC_EL3XXX_VID, LCEC_EP3204_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16|FLAG_TEMPERATURE, 4},
+    {"EJ3202", LCEC_EL3XXX_VID, LCEC_EJ3202_PID, LCEC_EL32X2_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
+    {"EJ3214", LCEC_EL3XXX_VID, LCEC_EJ3214_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
+    {"EL3201", LCEC_EL3XXX_VID, LCEC_EL3201_PID, LCEC_EL32X1_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
+    {"EL3202", LCEC_EL3XXX_VID, LCEC_EL3202_PID, LCEC_EL32X2_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
+    {"EL3204", LCEC_EL3XXX_VID, LCEC_EL3204_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
+    {"EL3208", LCEC_EL3XXX_VID, LCEC_EL3208_PID, LCEC_EL32X8_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
+    {"EL3214", LCEC_EL3XXX_VID, LCEC_EL3214_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
+    {"EL3218", LCEC_EL3XXX_VID, LCEC_EL3218_PID, LCEC_EL32X8_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
+    {"EP3204", LCEC_EL3XXX_VID, LCEC_EP3204_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
     {NULL},
 };
 ADD_TYPES(types);
@@ -227,10 +223,11 @@ static const lcec_pindesc_t slave_pins_temperature[] = {
     {HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, underrange), "%s.%s.%s.temp-%d-underrange"},
     {HAL_S32, HAL_OUT, offsetof(lcec_el3xxx_chan_t, raw_val), "%s.%s.%s.temp-%d-raw"},
     {HAL_FLOAT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, val), "%s.%s.%s.temp-%d-temperature"},
-    {HAL_FLOAT, HAL_IO, offsetof(lcec_el3xxx_chan_t, scale), "%s.%s.%s.temp-%d-scale"}, // deleteme
+    {HAL_FLOAT, HAL_IO, offsetof(lcec_el3xxx_chan_t, scale), "%s.%s.%s.temp-%d-scale"},  // deleteme
     {HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL}};
 
 typedef struct {
+  uint32_t channels;
   lcec_el3xxx_chan_t chans[LCEC_EL3XXX_MAXCHANS];
 } lcec_el3xxx_data_t;
 
@@ -249,10 +246,17 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
   int err;
   const lcec_pindesc_t *slave_pins;
   uint64_t flags;
+  int pdos_per_channel;
 
   flags = slave->flags;
 
-  rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "initing device as %s, channels %d, flags %lx\n", slave->name, slave->channels, flags);
+  if (flags & FLAG_SYNC) {
+    pdos_per_channel = 5;
+  } else {
+    pdos_per_channel = 4;
+  }
+
+  rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "initing device as %s, flags %lx\n", slave->name, flags);
   rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "- slave is %p\n", slave);
   rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "- pdo_entry_regs is %p\n", pdo_entry_regs);
 
@@ -274,11 +278,12 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
   }
   memset(hal_data, 0, sizeof(lcec_el3xxx_data_t));
   slave->hal_data = hal_data;
+  hal_data->channels = slave->pdo_entry_count / pdos_per_channel;
 
   rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "- setting up pins\n");
 
   // initialize pins
-  for (i = 0; i < slave->channels; i++) {
+  for (i = 0; i < hal_data->channels; i++) {
     chan = &hal_data->chans[i];
     rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "- setting up channel %d (%p)\n", i, chan);
 
@@ -314,7 +319,7 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
     }
 
     chan->is_unsigned = 0;
-    
+
     // Handle modparams
     if (flags & FLAG_TEMPERATURE) {
       LCEC_CONF_MODPARAM_VAL_T *pval;
@@ -323,68 +328,68 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
 
       // <modParam name="chXSensor" value="???"/>
       rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "  - checking modparam sensor for %s %d\n", slave->name, i);
-      pval = lcec_modparam_get(slave, LCEC_EL3XXX_MODPARAM_SENSOR+i);
+      pval = lcec_modparam_get(slave, LCEC_EL3XXX_MODPARAM_SENSOR + i);
       if (pval != NULL) {
-	rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - found sensor param\n");
-	temp_sensor_t const *sensor;
+        rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - found sensor param\n");
+        temp_sensor_t const *sensor;
 
-	sensor = sensor_type(pval->str);
-	if (sensor != NULL) {
-	  rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - setting sensor for %s %d to %d\n", slave->name, i, sensor->value);
-	  *(chan->scale) = sensor->scale;
-	  chan->is_unsigned = sensor->is_unsigned;
+        sensor = sensor_type(pval->str);
+        if (sensor != NULL) {
+          rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - setting sensor for %s %d to %d\n", slave->name, i, sensor->value);
+          *(chan->scale) = sensor->scale;
+          chan->is_unsigned = sensor->is_unsigned;
 
-	  if (ecrt_slave_config_sdo16(slave->config, 0x8000 + (i<<4), 0x19, sensor->value) != 0) {
-	    rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo sensor!\n", master->name, slave->name);
-	    return -1;
-	  }
-	} else {
-	  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown sensor type \"%s\" for slave %s.%s channel %d!\n", pval->str, master->name, slave->name, i);
-	  return -1;
-	}
+          if (ecrt_slave_config_sdo16(slave->config, 0x8000 + (i << 4), 0x19, sensor->value) != 0) {
+            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo sensor!\n", master->name, slave->name);
+            return -1;
+          }
+        } else {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown sensor type \"%s\" for slave %s.%s channel %d!\n", pval->str, master->name, slave->name, i);
+          return -1;
+        }
       }
 
       // <modParam name="chXResolution" value="???"/>
       rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "  - checking modparam resolution for %s %d\n", slave->name, i);
-      pval = lcec_modparam_get(slave, LCEC_EL3XXX_MODPARAM_RESOLUTION+i);
+      pval = lcec_modparam_get(slave, LCEC_EL3XXX_MODPARAM_RESOLUTION + i);
       if (pval != NULL) {
-	rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - found resolution param\n");
-	temp_resolution_t const *resolution;
+        rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - found resolution param\n");
+        temp_resolution_t const *resolution;
 
-	resolution = sensor_resolution(pval->str);
-	if (resolution != NULL) {
-	  rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - setting resolution for %s %d to %d\n", slave->name, i, resolution->value);
-	  *(chan->scale) = *(chan->scale) * resolution->scale_multiplier;
+        resolution = sensor_resolution(pval->str);
+        if (resolution != NULL) {
+          rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - setting resolution for %s %d to %d\n", slave->name, i, resolution->value);
+          *(chan->scale) = *(chan->scale) * resolution->scale_multiplier;
 
-	  if (ecrt_slave_config_sdo8(slave->config, 0x8000 + (i<<4), 0x2, resolution->value) != 0) {
-	    rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo resolution!\n", master->name, slave->name);
-	    return -1;
-	  }
-	} else {
-	  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown resolution \"%s\" for slave %s.%s channel %d!\n", pval->str, master->name, slave->name, i);
-	  return -1;
-	}
+          if (ecrt_slave_config_sdo8(slave->config, 0x8000 + (i << 4), 0x2, resolution->value) != 0) {
+            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo resolution!\n", master->name, slave->name);
+            return -1;
+          }
+        } else {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown resolution \"%s\" for slave %s.%s channel %d!\n", pval->str, master->name, slave->name, i);
+          return -1;
+        }
       }
 
       // <modParam name="chXWires", value="???"/>
       rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "   - checking modparam wires for %s %d\n", slave->name, i);
-      pval = lcec_modparam_get(slave, LCEC_EL3XXX_MODPARAM_WIRES+i);
+      pval = lcec_modparam_get(slave, LCEC_EL3XXX_MODPARAM_WIRES + i);
       if (pval != NULL) {
-	rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "     - found wires param\n");
-	temp_wires_t const *wires;
+        rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "     - found wires param\n");
+        temp_wires_t const *wires;
 
-	wires = sensor_wires(pval->str);
-	if (wires != NULL) {
-	  rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "      - setting wires for %s %d to %d\n", slave->name, i, wires->value);
+        wires = sensor_wires(pval->str);
+        if (wires != NULL) {
+          rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "      - setting wires for %s %d to %d\n", slave->name, i, wires->value);
 
-	  if (ecrt_slave_config_sdo16(slave->config, 0x8000 + (i<<4), 0x1a, wires->value) != 0) {
-	    rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo wires!\n", master->name, slave->name);
-	    return -1;
-	  }
-	} else {
-	  rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown wire setting \"%s\" for slave %s.%s channel %d!\n", pval->str, master->name, slave->name, i);
-	  return -1;
-	}
+          if (ecrt_slave_config_sdo16(slave->config, 0x8000 + (i << 4), 0x1a, wires->value) != 0) {
+            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo wires!\n", master->name, slave->name);
+            return -1;
+          }
+        } else {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown wire setting \"%s\" for slave %s.%s channel %d!\n", pval->str, master->name, slave->name, i);
+          return -1;
+        }
       }
     }
   }
@@ -407,7 +412,7 @@ static void lcec_el3xxx_read(struct lcec_slave *slave, long period, uint32_t mas
   }
 
   // check inputs
-  for (i = 0; i < slave->channels; i++) {
+  for (i = 0; i < hal_data->channels; i++) {
     chan = &hal_data->chans[i];
 
     // update state
@@ -415,8 +420,7 @@ static void lcec_el3xxx_read(struct lcec_slave *slave, long period, uint32_t mas
     *(chan->overrange) = EC_READ_BIT(&pd[chan->ovr_pdo_os], chan->ovr_pdo_bp);
     *(chan->underrange) = EC_READ_BIT(&pd[chan->udr_pdo_os], chan->udr_pdo_bp);
     *(chan->error) = EC_READ_BIT(&pd[chan->error_pdo_os], chan->error_pdo_bp);
-    if (has_sync)
-      *(chan->sync_err) = EC_READ_BIT(&pd[chan->sync_err_pdo_os], chan->sync_err_pdo_bp);
+    if (has_sync) *(chan->sync_err) = EC_READ_BIT(&pd[chan->sync_err_pdo_os], chan->sync_err_pdo_bp);
 
     // update value
     value = EC_READ_S16(&pd[chan->val_pdo_os]) & mask;
@@ -453,9 +457,8 @@ static void lcec_el3xxx_read_temp16(struct lcec_slave *slave, long period) {
   }
 
   // check inputs
-  for (i = 0; i < slave->channels; i++) {
+  for (i = 0; i < hal_data->channels; i++) {
     chan = &hal_data->chans[i];
-    
 
     // update state
     // update state
