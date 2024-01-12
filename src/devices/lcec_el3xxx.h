@@ -91,19 +91,6 @@
 //#define LCEC_EPP3174_PID 0x64768c69  // https://beckhoff.com/EP3174, 4-port multifunction differential
 //#define LCEC_EPP3184_PID 0x64768d09  // https://beckhoff.com/EP3184, 4-port multifunction
 
-//#define LCEC_ELM3002_PID 0x50216da9
-//#define LCEC_ELM3004_PID 0x50216dc9
-//#define LCEC_ELM3102_PID 0x502173e9
-//#define LCEC_ELM3104_PID 0x50217409
-//#define LCEC_ELM3142_PID 0x50217669
-//#define LCEC_ELM3144_PID 0x50217689
-//#define LCEC_ELM3146_PID 0x502176a9
-//#define LCEC_ELM3148_PID 0x502176c9
-//#define LCEC_ELX3152_PID 0x970bc309
-//#define LCEC_ELX3158_PID 0x970bc369
-//#define LCEC_ELX3181_PID 0x970bc4d9
-//#define LCEC_ELX3184_PID 0x970bc509
-
 #define LCEC_EL3XXX_MAXCHANS 8  // for sizing arrays
 
 #define LCEC_EL30XX_PDOS_PER_CHANNEL 4
