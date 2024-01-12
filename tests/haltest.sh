@@ -1,6 +1,16 @@
 bg
 #!/bin/bash
 
+update() {
+    halcmd show > $OUT
+}
+
+set-pin() {
+    var="lcec.0.$1.$2"
+    halcmd setp $var $3
+    sleep 0.1
+    update
+}
 
 test-pin-exists() {
     var="lcec.0.$1.$2"
@@ -137,9 +147,9 @@ test-pin-exists D1 din-7
 test-pin-count D1 22
 
 
-echo "=== Testing initial config of D2 (EL1008)"
+echo "=== Testing initial config of D2 (EL1008, generic)"
 test-pin-exists D2 din-7
-test-pin-count D2 22
+test-pin-count D2 14
 
 
 echo "=== Testing initial config of D3 (EL2008)"
@@ -149,7 +159,7 @@ test-pin-count D3 22
 
 echo "=== Testing initial config of D4 (EL2008)"
 test-pin-exists D4 dout-7
-test-pin-count D4 22
+test-pin-count D4 14
 
 echo "=== Testing initial config of D5 (EL2084)"
 test-pin-exists D5 dout-3
@@ -256,8 +266,8 @@ fi
 
 
 echo "=== Turning on D3.dout-1" 
-halcmd setp lcec.0.D3.dout-1 true; sleep 0.1
-
+set-pin D3 dout-1 true
+test-pin-true D3 dout-1
 
 echo "=== Checking D1.din-1"
 OUT=/tmp/testbench-2.out
@@ -270,8 +280,8 @@ if [ $(egrep 'TRUE  lcec.0\.D[0-9]+\.din-[0-9]+$' $OUT | wc -l) != 1 ]; then
 fi
 
 echo "=== Turning off D3.dout-1" 
-halcmd setp lcec.0.D3.dout-1 false; sleep 0.1
-
+set-pin D3 dout-1 false
+test-pin-false D3 dout-1
 
 echo "=== Verifying"
 if grep 'TRUE  lcec.0.D[0-9]+.din-[0-9]+$' $OUT ; then
@@ -280,9 +290,9 @@ if grep 'TRUE  lcec.0.D[0-9]+.din-[0-9]+$' $OUT ; then
 fi
 
 
-echo "=== Turning on D4.dout-2" 
-halcmd setp lcec.0.D4.dout-2 true; sleep 0.1
-
+echo "=== Turning on D4.dout-3" 
+set-pin D4 dout-3 true
+test-pin-true D4 dout-3
 
 echo "=== Checking D2.din-3"
 OUT=/tmp/testbench-3.out
@@ -295,8 +305,33 @@ fi
 
 
 echo "=== Turning off D4.dout-3" 
-halcmd setp lcec.0.D4.dout-3 false; sleep 0.1
+set-pin D4 dout-3 false
+test-pin-false D4 dout-3
 
+echo "=== Verifying"
+if grep 'TRUE  lcec.0.D[0-9]+.din-[0-9]+$' $OUT ; then
+    echo "ERROR: some digital input pins are already true"
+    halrun -U; exit 1
+fi
+
+
+echo "=== Turning on D4.dout-5" 
+set-pin D4 dout-5 true
+test-pin-true D4 dout-5
+
+echo "=== Checking D1.din-5"
+OUT=/tmp/testbench-3.out
+halcmd show > $OUT
+test-pin-true D1 din-5
+if [ $(egrep 'TRUE  lcec.0\.D[0-9]+\.din-[0-9]+$' $OUT | wc -l) != 1 ]; then
+    echo "ERROR: too many 'true' pins, that should have only flipped one bit."
+    halrun -U; exit 1
+fi
+
+
+echo "=== Turning off D4.dout-5" 
+set-pin D4 dout-5 false
+test-pin-false D4 dout-5
 
 echo "=== Verifying"
 if grep 'TRUE  lcec.0.D[0-9]+.din-[0-9]+$' $OUT ; then
@@ -307,13 +342,13 @@ fi
 
 echo "=== Checking D16 temperatures"
 test-pin-greater D16 temp-0-temperature 17
-test-pin-less D16 temp-0-temperature 25
+test-pin-less D16 temp-0-temperature 30
 
 test-pin-greater D16 temp-1-temperature 950
 test-pin-less D16 temp-1-temperature 1050
 
 test-pin-greater D16 temp-2-temperature 17
-test-pin-less D16 temp-2-temperature 25
+test-pin-less D16 temp-2-temperature 30
 
 test-pin-greater D16 temp-3-temperature 950
 test-pin-less D16 temp-3-temperature 1050

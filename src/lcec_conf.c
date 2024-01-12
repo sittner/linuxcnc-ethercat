@@ -359,7 +359,7 @@ static void parseSlaveAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **a
     }
 
     // generic only attributes
-    if (!strcmp(p->name, "generic")) {
+    if (!strcmp(p->typename, "generic")) {
       // parse vid (hex value)
       if (strcmp(name, "vid") == 0) {
         p->vid = strtol(val, NULL, 16);
@@ -758,7 +758,7 @@ static void parseSyncManagerAttrs(LCEC_CONF_XML_INST_T *inst, int next, const ch
   LCEC_CONF_SYNCMANAGER_T *p;
 
   // only allowed on generic slave
-  if (strcmp(state->currSlave->name, "generic")) {
+  if (strcmp(state->currSlave->typename, "generic")) {
     fprintf(stderr, "%s: ERROR: syncManager is only allowed on generic slaves\n", modname);
     XML_StopParser(inst->parser, 0);
     return;

@@ -1,10 +1,73 @@
 <masters>
   <master idx="0" appTimePeriod="2000000" refClockSyncCycles="1000">
-    <slave idx="0" type="generic" name="D0"/>
+    <slave idx="0" type="EK1100" name="D0"/>
     <slave idx="1" type="EL1018" name="D1"/>
-    <slave idx="2" type="EL1018" name="D2"/>
+
+    <!-- Test an EL1018 using type="generic".  This isn't quite the
+         same as normal, because the el1xxx driver also add negated
+         pins (din-1-not, etc).
+
+         was: <slave idx="2" type="EL1018" name="D2"/> -->
+    <slave idx="2" type="generic" vid="00000002" pid="03fa3052" name="D2" configPdos="true">
+      <syncManager idx="0" dir="in">
+	<pdo idx="1a00">
+	  <pdoEntry idx="6000" subIdx="01" bitLen="1" halPin="din-0" halType="bit"/>
+	</pdo>
+	<pdo idx="1a01">
+	  <pdoEntry idx="6010" subIdx="01" bitLen="1" halPin="din-1" halType="bit"/>
+	</pdo>
+	<pdo idx="1a02">
+	  <pdoEntry idx="6020" subIdx="01" bitLen="1" halPin="din-2" halType="bit"/>
+	</pdo>
+	<pdo idx="1a03">
+	  <pdoEntry idx="6030" subIdx="01" bitLen="1" halPin="din-3" halType="bit"/>
+	</pdo>
+	<pdo idx="1a04">
+	  <pdoEntry idx="6040" subIdx="01" bitLen="1" halPin="din-4" halType="bit"/>
+	</pdo>
+	<pdo idx="1a05">
+	  <pdoEntry idx="6050" subIdx="01" bitLen="1" halPin="din-5" halType="bit"/>
+	</pdo>
+	<pdo idx="1a06">
+	  <pdoEntry idx="6060" subIdx="01" bitLen="1" halPin="din-6" halType="bit"/>
+	</pdo>
+	<pdo idx="1a07">
+	  <pdoEntry idx="6070" subIdx="01" bitLen="1" halPin="din-7" halType="bit"/>
+	</pdo>
+      </syncManager>
+    </slave>
     <slave idx="3" type="EL2008" name="D3"/>
-    <slave idx="4" type="EL2008" name="D4"/>
+    
+    <!-- <slave idx="4" type="EL2008" name="D4"/> -->
+    <slave idx="4" type="generic" vid="00000002" pid="07d83052" name="D4" configPdos="true">
+      <syncManager idx="0" dir="out">
+	<pdo idx="1600">
+	  <pdoEntry idx="7000" subIdx="01" bitLen="1" halPin="dout-0" halType="bit"/>
+	</pdo>
+	<pdo idx="1601">
+	  <pdoEntry idx="7010" subIdx="01" bitLen="1" halPin="dout-1" halType="bit"/>
+	</pdo>
+	<pdo idx="1602">
+	  <pdoEntry idx="7020" subIdx="01" bitLen="1" halPin="dout-2" halType="bit"/>
+	</pdo>
+	<pdo idx="1603">
+	  <pdoEntry idx="7030" subIdx="01" bitLen="1" halPin="dout-3" halType="bit"/>
+	</pdo>
+	<pdo idx="1604">
+	  <pdoEntry idx="7040" subIdx="01" bitLen="1" halPin="dout-4" halType="bit"/>
+	</pdo>
+	<pdo idx="1605">
+	  <pdoEntry idx="7050" subIdx="01" bitLen="1" halPin="dout-5" halType="bit"/>
+	</pdo>
+	<pdo idx="1606">
+	  <pdoEntry idx="7060" subIdx="01" bitLen="1" halPin="dout-6" halType="bit"/>
+	</pdo>
+	<pdo idx="1607">
+	  <pdoEntry idx="7070" subIdx="01" bitLen="1" halPin="dout-7" halType="bit"/>
+	</pdo>
+      </syncManager>
+    </slave>
+
     <slave idx="5" type="EL2084" name="D5"/>
     <slave idx="6" type="EL2022" name="D6"/>
     <slave idx="7" type="EL2022" name="D7"/>
