@@ -22,7 +22,7 @@
 static int lcec_el5032_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EL5032", LCEC_EL5032_VID, LCEC_EL5032_PID, LCEC_EL5032_PDOS, 0, NULL, lcec_el5032_init},
+  { "EL5032", LCEC_BECKHOFF_VID, LCEC_EL5032_PID, LCEC_EL5032_PDOS, 0, NULL, lcec_el5032_init},
   { NULL },
 };
 ADD_TYPES(types);

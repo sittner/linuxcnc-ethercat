@@ -23,10 +23,10 @@ static int lcec_el41x2_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
 
 static lcec_typelist_t types[]={
   // analog out, 2ch, 16 bits
-  { "EL4102", LCEC_EL41x2_VID, LCEC_EL4102_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-  { "EL4112", LCEC_EL41x2_VID, LCEC_EL4112_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-  { "EL4122", LCEC_EL41x2_VID, LCEC_EL4122_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
-  { "EL4132", LCEC_EL41x2_VID, LCEC_EL4132_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
+  { "EL4102", LCEC_BECKHOFF_VID, LCEC_EL4102_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
+  { "EL4112", LCEC_BECKHOFF_VID, LCEC_EL4112_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
+  { "EL4122", LCEC_BECKHOFF_VID, LCEC_EL4122_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
+  { "EL4132", LCEC_BECKHOFF_VID, LCEC_EL4132_PID, LCEC_EL41x2_PDOS, 0, NULL, lcec_el41x2_init},
   { NULL },
 };
 ADD_TYPES(types);

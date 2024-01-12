@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL5002_VID LCEC_BECKHOFF_VID
 #define LCEC_EL5002_PID 0x138a3052
 
 #define LCEC_EL5002_CHANS 2

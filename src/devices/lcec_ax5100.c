@@ -29,11 +29,11 @@ static lcec_modparam_desc_t lcec_ax5100_modparams[] = {
 
 static lcec_typelist_t types[]={
   // AX5000 servo drives
-  { "AX5101", LCEC_AX5100_VID, LCEC_AX5101_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
-  { "AX5103", LCEC_AX5100_VID, LCEC_AX5103_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
-  { "AX5106", LCEC_AX5100_VID, LCEC_AX5106_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
-  { "AX5112", LCEC_AX5100_VID, LCEC_AX5112_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
-  { "AX5118", LCEC_AX5100_VID, LCEC_AX5118_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
+  { "AX5101", LCEC_BECKHOFF_VID, LCEC_AX5101_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
+  { "AX5103", LCEC_BECKHOFF_VID, LCEC_AX5103_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
+  { "AX5106", LCEC_BECKHOFF_VID, LCEC_AX5106_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
+  { "AX5112", LCEC_BECKHOFF_VID, LCEC_AX5112_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
+  { "AX5118", LCEC_BECKHOFF_VID, LCEC_AX5118_PID, 0, 0, lcec_ax5100_preinit, lcec_ax5100_init, lcec_ax5100_modparams},
   { NULL },
 };
 ADD_TYPES(types);

@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL2904_VID LCEC_BECKHOFF_VID
 
 #define LCEC_EL2904_PID 0x0B583052
 

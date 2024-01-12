@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL3XXX_VID LCEC_BECKHOFF_VID
 
 #define LCEC_EL3001_PID 0x0bb93052  // https://beckhoff.com/EL3001, 1-port +/- 10V single-ended
 #define LCEC_EL3002_PID 0x0bba3052  // https://beckhoff.com/EL3002, 2-port +/- 10V single-ended

@@ -45,7 +45,7 @@ static lcec_modparam_desc_t lcec_el7411_modparams[] = {
 };
 
 static lcec_typelist_t types[]={
-  { "EL7411", LCEC_EL7411_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, 0, NULL, lcec_el7411_init, lcec_el7411_modparams},
+  { "EL7411", LCEC_BECKHOFF_VID, LCEC_EL7411_PID, LCEC_EL7411_PDOS, 0, NULL, lcec_el7411_init, lcec_el7411_modparams},
   { NULL },
 };
 ADD_TYPES(types);

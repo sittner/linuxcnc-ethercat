@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL5152_VID LCEC_BECKHOFF_VID
 #define LCEC_EL5152_PID 0x14203052
 
 #define LCEC_EL5152_CHANS 2

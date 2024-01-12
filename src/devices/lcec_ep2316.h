@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EP23xx_VID LCEC_BECKHOFF_VID
 
 #define LCEC_EP2316_PID 0x090C4052
 

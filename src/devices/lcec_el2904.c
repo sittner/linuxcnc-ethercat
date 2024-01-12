@@ -25,7 +25,7 @@ static int lcec_el2904_preinit(struct lcec_slave *slave);
 static int lcec_el2904_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EL2904", LCEC_EL2904_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, 0, lcec_el2904_preinit, lcec_el2904_init},
+  { "EL2904", LCEC_BECKHOFF_VID, LCEC_EL2904_PID, LCEC_EL2904_PDOS, 0, lcec_el2904_preinit, lcec_el2904_init},
   { NULL },
 };
 ADD_TYPES(types);

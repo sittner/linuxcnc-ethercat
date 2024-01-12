@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL1904_VID LCEC_BECKHOFF_VID
 
 #define LCEC_EL1904_PID 0x07703052
 

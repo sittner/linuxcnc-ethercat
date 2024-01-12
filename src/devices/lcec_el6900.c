@@ -32,7 +32,7 @@ static lcec_modparam_desc_t lcec_el6900_modparams[] = {
 };
 
 static lcec_typelist_t types[]={
-  { "EL6900", LCEC_EL6900_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init, lcec_el6900_modparams},
+  { "EL6900", LCEC_BECKHOFF_VID, LCEC_EL6900_PID, 0, 1, lcec_el6900_preinit, lcec_el6900_init, lcec_el6900_modparams},
   { NULL },
 };
 ADD_TYPES(types);

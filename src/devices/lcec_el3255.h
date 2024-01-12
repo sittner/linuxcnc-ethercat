@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL3255_VID LCEC_BECKHOFF_VID
 #define LCEC_EL3255_PID 0x0CB73052
 
 #define LCEC_EL3255_CHANS 5

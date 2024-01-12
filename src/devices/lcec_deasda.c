@@ -24,7 +24,7 @@
 static int lcec_deasda_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "DeASDA", LCEC_DEASDA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, 0, NULL, lcec_deasda_init},
+  { "DeASDA", LCEC_DELTA_VID, LCEC_DEASDA_PID, LCEC_DEASDA_PDOS, 0, NULL, lcec_deasda_init},
   { NULL },
 };
 

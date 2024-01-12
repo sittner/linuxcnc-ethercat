@@ -35,8 +35,8 @@ static lcec_modparam_desc_t lcec_el70x1_modparams[] = {
 };
 
 static lcec_typelist_t types[]={
-  { "EL7031", LCEC_EL70x1_VID, LCEC_EL7031_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7031_init, lcec_el70x1_modparams},
-  { "EL7041-0052", LCEC_EL70x1_VID, LCEC_EL7041_0052_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7041_0052_init, lcec_el70x1_modparams},
+  { "EL7031", LCEC_BECKHOFF_VID, LCEC_EL7031_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7031_init, lcec_el70x1_modparams},
+  { "EL7041-0052", LCEC_BECKHOFF_VID, LCEC_EL7041_0052_PID, LCEC_EL70x1_PDOS, 0, NULL, lcec_el7041_0052_init, lcec_el70x1_modparams},
   { NULL },
 };
 ADD_TYPES(types);

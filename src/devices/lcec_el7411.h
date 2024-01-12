@@ -21,7 +21,6 @@
 #include "../lcec.h"
 #include "lcec_el7211.h"
 
-#define LCEC_EL7411_VID   LCEC_BECKHOFF_VID
 #define LCEC_EL7411_PID   0x1Cf33052
 
 #define LCEC_EL7411_PDOS  LCEC_EL7211_PDOS

@@ -29,6 +29,5 @@
 #define LCEC_EL1252_PDOS (4 * LCEC_EL1252_CHANS )
 
 /** \brief Vendor ID */
-#define LCEC_EL1252_VID LCEC_BECKHOFF_VID
 #endif
 

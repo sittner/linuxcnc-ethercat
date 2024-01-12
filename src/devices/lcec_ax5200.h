@@ -21,7 +21,6 @@
 #include "../lcec.h"
 #include "lcec_class_ax5.h"
 
-#define LCEC_AX5200_VID LCEC_BECKHOFF_VID
 #define LCEC_AX5203_PID 0x14536012
 #define LCEC_AX5206_PID 0x14566012
 

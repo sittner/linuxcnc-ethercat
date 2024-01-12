@@ -23,7 +23,6 @@
 #include "../lcec.h"
 
 
-#define LCEC_EL6090_VID LCEC_BECKHOFF_VID
 
 #define LCEC_EL6090_PID 0x17ca3052
 

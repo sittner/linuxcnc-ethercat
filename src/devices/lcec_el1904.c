@@ -24,7 +24,7 @@ static int lcec_el1904_preinit(struct lcec_slave *slave);
 static int lcec_el1904_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EL1904", LCEC_EL1904_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, 0, lcec_el1904_preinit, lcec_el1904_init},
+  { "EL1904", LCEC_BECKHOFF_VID, LCEC_EL1904_PID, LCEC_EL1904_PDOS, 0, lcec_el1904_preinit, lcec_el1904_init},
   { NULL },
 };
 ADD_TYPES(types);

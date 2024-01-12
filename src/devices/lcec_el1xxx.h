@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL1xxx_VID LCEC_BECKHOFF_VID
 
 #define LCEC_EL1002_PID 0x03EA3052
 #define LCEC_EL1004_PID 0x03EC3052

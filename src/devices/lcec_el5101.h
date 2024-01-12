@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL5101_VID LCEC_BECKHOFF_VID
 #define LCEC_EL5101_PID 0x13ed3052
 
 #define LCEC_EL5101_PDOS 8

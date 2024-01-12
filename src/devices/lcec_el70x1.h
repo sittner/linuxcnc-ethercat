@@ -21,7 +21,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL70x1_VID         LCEC_BECKHOFF_VID
 #define LCEC_EL7031_PID         0x1B773052
 #define LCEC_EL7041_0052_PID    0x1B813052
 

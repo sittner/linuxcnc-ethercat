@@ -24,12 +24,12 @@ static int lcec_el95xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
 
 static lcec_typelist_t types[]={
   // power supply
-  { "EL9505", LCEC_EL95xx_VID, LCEC_EL9505_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9508", LCEC_EL95xx_VID, LCEC_EL9508_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9510", LCEC_EL95xx_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9512", LCEC_EL95xx_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9515", LCEC_EL95xx_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
-  { "EL9576", LCEC_EL95xx_VID, LCEC_EL9576_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9505", LCEC_BECKHOFF_VID, LCEC_EL9505_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9508", LCEC_BECKHOFF_VID, LCEC_EL9508_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9510", LCEC_BECKHOFF_VID, LCEC_EL9510_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9512", LCEC_BECKHOFF_VID, LCEC_EL9512_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9515", LCEC_BECKHOFF_VID, LCEC_EL9515_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
+  { "EL9576", LCEC_BECKHOFF_VID, LCEC_EL9576_PID, LCEC_EL95xx_PDOS, 0, NULL, lcec_el95xx_init},
   { NULL },
 };
 ADD_TYPES(types);

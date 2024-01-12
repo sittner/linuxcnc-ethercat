@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL7342_VID LCEC_BECKHOFF_VID
 #define LCEC_EL7342_PID 0x1cae3052
 
 #define LCEC_EL7342_CHANS 2

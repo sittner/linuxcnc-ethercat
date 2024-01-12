@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EM7004_VID LCEC_BECKHOFF_VID
 #define LCEC_EM7004_PID 0x1B5C3452
 
 #define LCEC_EM7004_DIN_COUNT  16

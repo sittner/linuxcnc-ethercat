@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_AX5805_VID LCEC_BECKHOFF_VID
 
 #define LCEC_AX5805_PID 0x16AD6012
 #endif

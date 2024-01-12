@@ -22,7 +22,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL3403_VID LCEC_BECKHOFF_VID
 
 #define LCEC_EL3403_PID 0x0d4b3052
 

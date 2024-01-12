@@ -20,7 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL1918_LOGIC_VID LCEC_BECKHOFF_VID
 #define LCEC_EL1918_LOGIC_PID 0x077e3052
 
 #define LCEC_EL1918_LOGIC_PDOS 2

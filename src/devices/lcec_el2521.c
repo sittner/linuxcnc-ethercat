@@ -24,7 +24,7 @@
 static int lcec_el2521_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EL2521", LCEC_EL2521_VID, LCEC_EL2521_PID, LCEC_EL2521_PDOS, 0, NULL, lcec_el2521_init},
+  { "EL2521", LCEC_BECKHOFF_VID, LCEC_EL2521_PID, LCEC_EL2521_PDOS, 0, NULL, lcec_el2521_init},
   { NULL },
 };
 ADD_TYPES(types);

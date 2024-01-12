@@ -22,7 +22,7 @@
 static int lcec_dems300_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "DeMS300", LCEC_DEMS300_VID, LCEC_DEMS300_PID, LCEC_DEMS300_PDOS, 0, NULL, lcec_dems300_init},
+  { "DeMS300", LCEC_DELTA_VID, LCEC_DEMS300_PID, LCEC_DEMS300_PDOS, 0, NULL, lcec_dems300_init},
   { NULL },
 };
 

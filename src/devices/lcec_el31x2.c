@@ -22,12 +22,12 @@
 static int lcec_el31x2_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EL3102", LCEC_EL31x2_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3112", LCEC_EL31x2_VID, LCEC_EL3112_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3122", LCEC_EL31x2_VID, LCEC_EL3122_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3142", LCEC_EL31x2_VID, LCEC_EL3142_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3152", LCEC_EL31x2_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
-  { "EL3162", LCEC_EL31x2_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3102", LCEC_BECKHOFF_VID, LCEC_EL3102_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3112", LCEC_BECKHOFF_VID, LCEC_EL3112_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3122", LCEC_BECKHOFF_VID, LCEC_EL3122_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3142", LCEC_BECKHOFF_VID, LCEC_EL3142_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3152", LCEC_BECKHOFF_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
+  { "EL3162", LCEC_BECKHOFF_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
   { NULL },
 };
 ADD_TYPES(types);

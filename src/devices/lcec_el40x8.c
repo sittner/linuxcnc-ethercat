@@ -22,10 +22,10 @@
 static int lcec_el40x8_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EL4008", LCEC_EL40x8_VID, LCEC_EL4008_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-  { "EL4018", LCEC_EL40x8_VID, LCEC_EL4018_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-  { "EL4028", LCEC_EL40x8_VID, LCEC_EL4028_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
-  { "EL4038", LCEC_EL40x8_VID, LCEC_EL4038_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
+  { "EL4008", LCEC_BECKHOFF_VID, LCEC_EL4008_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
+  { "EL4018", LCEC_BECKHOFF_VID, LCEC_EL4018_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
+  { "EL4028", LCEC_BECKHOFF_VID, LCEC_EL4028_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
+  { "EL4038", LCEC_BECKHOFF_VID, LCEC_EL4038_PID, LCEC_EL40x8_PDOS, 0, NULL, lcec_el40x8_init},
   { NULL },
 };
 ADD_TYPES(types);
