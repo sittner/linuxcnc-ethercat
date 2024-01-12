@@ -4,11 +4,12 @@ The [`lcec_el3xxx`](../src/devices/lcec_el3xxx.c) driver supports a
 wide range of analog input devices and replaces a number of older
 single-purpose drivers.
 
-It currently supports 3 basic families of devices:
+It currently supports 4 basic families of devices:
 
 - EL30xx 12-bit analog input modules
 - EL31xx 16-bit analog input modules
 - EL32xx 16-bit temperature sensor modules
+- EM37xx 12-bit pressure modules
 
 See the [source code](../src/devices/lcec_el3xxx.c) or [device
 documentation](devices/) for precise details on which hardware is
@@ -86,6 +87,12 @@ above for directions).
 EL31xx devices should match the description of EL30xx devices above,
 with one minor difference: there is also a `sync-err` pin that will
 report on distributed clock sync failures.
+
+## EM37xx pressure modules and issues
+
+The Beckhoff EM3701, EM3702, and EM3712 should all be supported.  They
+are very similar to EL30xx devices, except the pins are named starting
+with `press*` instead of `ain*`.
 
 ## EL32xx temperature modules and issues
 
