@@ -7,5 +7,5 @@ Description: Beckhoff EM3702  2Ch. relative pressure measuring terminal 7,500 hP
 DocumentationURL: http://www.beckhoff.com/EM3702
 DeviceType: Analog Input
 Notes: ""
-SrcFile: src/devices/lcec_em37xx.c
+SrcFile: src/devices/lcec_el3xxx.c
 TestingStatus: "Uncertain; @scottlaird has one"

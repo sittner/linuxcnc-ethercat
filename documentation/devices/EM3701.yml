@@ -7,5 +7,5 @@ Description: Beckhoff EM3701, 1Ch. differential pressure measuring terminal 100h
 DocumentationURL: http://www.beckhoff.com/EM3701
 DeviceType: Analog Input
 Notes: ""
-SrcFile: src/devices/lcec_em37xx.c
+SrcFile: src/devices/lcec_el3xxx.c
 TestingStatus: ""

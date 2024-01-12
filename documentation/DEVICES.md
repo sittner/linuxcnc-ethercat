@@ -155,9 +155,9 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EL9512 Power supply terminal 12V](http://www.beckhoff.com/EL9512) | [el95xx](../src/devices/lcec_el95xx.c) | 0x2:0x25283052 | System Terminals |  | 
 [Beckhoff EL9515 Power supply terminal 15V](http://www.beckhoff.com/EL9515) | [el95xx](../src/devices/lcec_el95xx.c) | 0x2:0x252b3052 | System Terminals |  | 
 [Beckhoff EL9576 Brake chopper terminal](http://www.beckhoff.com/EL9576) | [el95xx](../src/devices/lcec_el95xx.c) | 0x2:0x25683052 | System Terminals |  | 
-[Beckhoff EM3701, 1Ch. differential pressure measuring terminal 100hPa (100mbar)](http://www.beckhoff.com/EM3701) | [em37xx](../src/devices/lcec_em37xx.c) | 0x2:0x0e753452 | Analog Input |  | 
-[Beckhoff EM3702  2Ch. relative pressure measuring terminal 7,500 hPa (7.5 bar)](http://www.beckhoff.com/EM3702) | [em37xx](../src/devices/lcec_em37xx.c) | 0x2:0x0e763452 | Analog Input | Uncertain; @scottlaird has one | 
-[Beckhoff EM3712  2Ch relative pressure measuring terminal -1,000...+1,000 hPa (-1...+1 bar)](http://www.beckhoff.com/EM3712) | [em37xx](../src/devices/lcec_em37xx.c) | 0x2:0x0e803452 | Analog Input |  | 
+[Beckhoff EM3701, 1Ch. differential pressure measuring terminal 100hPa (100mbar)](http://www.beckhoff.com/EM3701) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0e753452 | Analog Input |  | 
+[Beckhoff EM3702  2Ch. relative pressure measuring terminal 7,500 hPa (7.5 bar)](http://www.beckhoff.com/EM3702) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0e763452 | Analog Input | Uncertain; @scottlaird has one | 
+[Beckhoff EM3712  2Ch relative pressure measuring terminal -1,000...+1,000 hPa (-1...+1 bar)](http://www.beckhoff.com/EM3712) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0e803452 | Analog Input |  | 
 [Beckhoff EM7004 4-Axis Interface Unit](http://www.beckhoff.com/EM7004) | [em7004](../src/devices/lcec_em7004.c) | 0x2:0x1b5c3452 | Servo Drive |  | 
 [Beckhoff EP1008-0001 8 Ch. Dig. Input 24V, 3ms, M8](https://www.beckhoff.com/EP1008-0001) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x03f04052 | Digital Input | Uncertain; @scottlaird has several | 
 [Beckhoff EP1018-0001 8 Ch. Dig. Input 24V, 10µs, M8](https://www.beckhoff.com/EP1018-0001) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x03fa4052 | Digital Input | Uncertain; @scottlaird has several | 

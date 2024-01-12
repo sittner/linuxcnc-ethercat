@@ -36,6 +36,7 @@
 #define FLAG_BITS12 1 << 1       // Device is 12 bits
 #define FLAG_SYNC 1 << 4         // on for SYNC, off for no sync
 #define FLAG_TEMPERATURE 1 << 5  // Device is a temperature sensor
+#define FLAG_PRESSURE 1 << 6     // Device is a pressure sensor
 
 #define LCEC_EL3XXX_MODPARAM_SENSOR 0
 #define LCEC_EL3XXX_MODPARAM_RESOLUTION 8
@@ -171,6 +172,10 @@ static const lcec_typelist_t types[] = {
     {"EL3214", LCEC_EL3XXX_VID, LCEC_EL3214_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
     {"EL3218", LCEC_EL3XXX_VID, LCEC_EL3218_PID, LCEC_EL32X8_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
     {"EP3204", LCEC_EL3XXX_VID, LCEC_EP3204_PID, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
+
+    { "EM3701", LCEC_EL3XXX_VID, LCEC_EM3701_PID, LCEC_EM37X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_PRESSURE },
+    { "EM3702", LCEC_EL3XXX_VID, LCEC_EM3702_PID, LCEC_EM37X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_PRESSURE },
+    { "EM3712", LCEC_EL3XXX_VID, LCEC_EM3712_PID, LCEC_EM37X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_PRESSURE },
     {NULL},
 };
 ADD_TYPES(types);
@@ -225,6 +230,16 @@ static const lcec_pindesc_t slave_pins_temperature[] = {
     {HAL_FLOAT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, val), "%s.%s.%s.temp-%d-temperature"},
     {HAL_FLOAT, HAL_IO, offsetof(lcec_el3xxx_chan_t, scale), "%s.%s.%s.temp-%d-scale"},  // deleteme
     {HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL}};
+
+static const lcec_pindesc_t slave_pins_pressure[] = {
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, error), "%s.%s.%s.press-%d-error" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, overrange), "%s.%s.%s.press-%d-overrange" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, underrange), "%s.%s.%s.press-%d-underrange" },
+  { HAL_S32, HAL_OUT, offsetof(lcec_el3xxx_chan_t, raw_val), "%s.%s.%s.press-%d-raw" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, val), "%s.%s.%s.press-%d-pressure" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3xxx_chan_t, scale), "%s.%s.%s.press-%d-scale" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3xxx_chan_t, bias), "%s.%s.%s.press-%d-bias" },
+  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }};
 
 typedef struct {
   uint32_t channels;
@@ -301,6 +316,8 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
     // export pins
     if (flags & FLAG_TEMPERATURE) {
       slave_pins = slave_pins_temperature;
+    } else if (flags & FLAG_PRESSURE) {
+      slave_pins = slave_pins_pressure;
     } else if (flags & FLAG_SYNC)
       slave_pins = slave_pins_sync;
     else

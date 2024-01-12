@@ -76,6 +76,9 @@
 #define LCEC_EJ3202_PID 0x0c822852  // https://beckhoff.com/EJ3202, 2-port PT100 temperature sensor
 #define LCEC_EJ3214_PID 0x0c8e2852  // https://beckhoff.com/EJ3214, 4-port PT100 temperature sensor
 
+#define LCEC_EM3701_PID 0x0e753452  // https://beckhoff.com/EM3701, 1-channel analog pressure sensor
+#define LCEC_EM3702_PID 0x0e763452  // https://beckhoff.com/EM3702, 2-channel analog pressure sensor
+#define LCEC_EM3712_PID 0x0e803452  // https://beckhoff.com/EM3712, 2-channel analog pressure sensor
 
 // Related-but-not-quite-the-same devices, kept here for the moment.
 //#define LCEC_EL3072_PID 0x0c003052  // https://beckhoff.com/EL3072, 2-port multifunction
@@ -121,4 +124,13 @@
 #define LCEC_EL32X2_PDOS (LCEC_EL32XX_PDOS_PER_CHANNEL * 2)
 #define LCEC_EL32X4_PDOS (LCEC_EL32XX_PDOS_PER_CHANNEL * 4)
 #define LCEC_EL32X8_PDOS (LCEC_EL32XX_PDOS_PER_CHANNEL * 8)
+
+#define LCEC_EM37XX_PDOS_PER_CHANNEL 4
+#define LCEC_EM37X1_PDOS (LCEC_EM37XX_PDOS_PER_CHANNEL * 1)
+#define LCEC_EM37X2_PDOS (LCEC_EM37XX_PDOS_PER_CHANNEL * 2)
+// The EP3744 is sort of similar, but there's some weirdness:
+// - It has 5 pressure ports
+// - It has 6 digital input ports
+// - It has 2 digital output ports
+// - The pressure ports are labeled 1-5, but start at 0x6020, which is where port 2 should live.
 #endif
