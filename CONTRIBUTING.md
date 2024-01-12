@@ -78,3 +78,7 @@ $ yq '.[] | select(.Name | test("E[LPM][A-Z]*3[01][-0-9]+")) | [.ProductCode + "
 #define LCEC_EL3008_PID 0x0bc03052
 ...
 ```
+
+Also, take a look at
+[github.com/linuxcnc-ethercat/esi-data](http://github.com/linuxcnc-ethercat/esi-data),
+which contains additional tools for working with ESI data.
