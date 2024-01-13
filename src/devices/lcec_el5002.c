@@ -49,6 +49,7 @@ static lcec_modparam_desc_t lcec_el5002_modparams[] = {
 
 static lcec_typelist_t types[]={
   { "EL5002", LCEC_BECKHOFF_VID, 0x138a3052, LCEC_EL5002_PDOS, 0, NULL, lcec_el5002_init, lcec_el5002_modparams},
+  { "EJ5002", LCEC_BECKHOFF_VID, 0x138a2852, LCEC_EL5002_PDOS, 0, NULL, lcec_el5002_init, lcec_el5002_modparams},
   { NULL },
 };
 ADD_TYPES(types);
