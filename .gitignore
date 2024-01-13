@@ -31,6 +31,8 @@ debian/linuxcnc-ethercat/
 
 # Binaries
 scripts/devicetable/devicetable
+scripts/devicelist/devicelist
+scripts/deviceequivs/deviceequivs
 
 # emacs tmp files
 \#*\#
