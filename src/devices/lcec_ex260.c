@@ -7,10 +7,10 @@
 static int lcec_ex260_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[] = {
-    {"EX260-SEC1", LCEC_SMC_VID, LCEC_EX260_SEC1_PID, LCEC_EX260_SEC1_PDOS, 0, NULL, lcec_ex260_init},
-    {"EX260-SEC2", LCEC_SMC_VID, LCEC_EX260_SEC2_PID, LCEC_EX260_SEC2_PDOS, 0, NULL, lcec_ex260_init},
-    {"EX260-SEC3", LCEC_SMC_VID, LCEC_EX260_SEC3_PID, LCEC_EX260_SEC3_PDOS, 0, NULL, lcec_ex260_init},
-    {"EX260-SEC4", LCEC_SMC_VID, LCEC_EX260_SEC4_PID, LCEC_EX260_SEC4_PDOS, 0, NULL, lcec_ex260_init},
+    {"EX260-SEC1", LCEC_SMC_VID, 0x01000001, LCEC_EX260_SEC1_PDOS, 0, NULL, lcec_ex260_init},
+    {"EX260-SEC2", LCEC_SMC_VID, 0x01000002, LCEC_EX260_SEC2_PDOS, 0, NULL, lcec_ex260_init},
+    {"EX260-SEC3", LCEC_SMC_VID, 0x01000003, LCEC_EX260_SEC3_PDOS, 0, NULL, lcec_ex260_init},
+    {"EX260-SEC4", LCEC_SMC_VID, 0x01000004, LCEC_EX260_SEC4_PDOS, 0, NULL, lcec_ex260_init},
     {NULL},
 };
 

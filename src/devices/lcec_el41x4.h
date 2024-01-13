@@ -21,11 +21,7 @@
 
 #include "../lcec.h"
 
-
-#define LCEC_EL4104_PID 0x10083052
-#define LCEC_EL4134_PID 0x10263052
-
-#define LCEC_EL41x4_PDOS  4
+#define LCEC_EL41x4_PDOS 4
 
 #define LCEC_EL41x4_CHANS 4
 #endif

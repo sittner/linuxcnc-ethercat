@@ -20,14 +20,5 @@
 
 #include "../lcec.h"
 
-
-#define LCEC_EL9505_PID 0x25213052
-#define LCEC_EL9508_PID 0x25243052
-#define LCEC_EL9510_PID 0x25263052
-#define LCEC_EL9512_PID 0x25283052
-#define LCEC_EL9515_PID 0x252b3052
-#define LCEC_EL9576_PID 0x25683052
-
 #define LCEC_EL95xx_PDOS 2
 #endif
-

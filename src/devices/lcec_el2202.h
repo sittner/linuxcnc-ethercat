@@ -20,7 +20,6 @@
 #define _LCEC_EL2202_H_
 
 /** \brief Product Code */
-#define LCEC_EL2202_PID 0x089A3052
 
 /** \brief Number of channels */
 #define LCEC_EL2202_CHANS 2
@@ -30,4 +29,3 @@
 
 /** \brief Vendor ID */
 #endif
-

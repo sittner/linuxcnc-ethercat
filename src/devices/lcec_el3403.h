@@ -22,10 +22,7 @@
 
 #include "../lcec.h"
 
-
-#define LCEC_EL3403_PID 0x0d4b3052
-
 #define LCEC_EL3403_CHANS 3
-                         
+
 #define LCEC_EL3403_PDOS 29
 #endif

@@ -20,10 +20,6 @@
 
 #include "../lcec.h"
 
-
-#define LCEC_EL1859_PID 0x07433052
-
 #define LCEC_EL1859_PINS 8
 #define LCEC_EL1859_PDOS (2 * LCEC_EL1859_PINS)
 #endif
-

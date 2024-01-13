@@ -38,7 +38,7 @@ static void lcec_el7342_write(struct lcec_slave *slave, long period);
 static int lcec_el7342_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EL7342", LCEC_BECKHOFF_VID, LCEC_EL7342_PID, LCEC_EL7342_PDOS, 0, NULL, lcec_el7342_init},
+  { "EL7342", LCEC_BECKHOFF_VID, 0x1cae3052, LCEC_EL7342_PDOS, 0, NULL, lcec_el7342_init},
   { NULL },
 };
 ADD_TYPES(types);

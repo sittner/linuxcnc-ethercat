@@ -21,7 +21,7 @@
 #include "../lcec.h"
 #include "lcec_class_enc.h"
 
-#define LCEC_AX5_PARAM_ENABLE_FB2  1
+#define LCEC_AX5_PARAM_ENABLE_FB2 1
 #define LCEC_AX5_PARAM_ENABLE_DIAG 2
 
 typedef struct {
@@ -70,9 +70,9 @@ typedef struct {
 } lcec_class_ax5_chan_t;
 
 int lcec_class_ax5_pdos(struct lcec_slave *slave);
-int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, lcec_class_ax5_chan_t *chan, int index, const char *pfx);
+int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs, lcec_class_ax5_chan_t *chan, int index,
+                        const char *pfx);
 void lcec_class_ax5_read(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan);
 void lcec_class_ax5_write(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan);
 
 #endif
-

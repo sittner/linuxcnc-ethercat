@@ -20,10 +20,6 @@
 
 #include "../lcec.h"
 
-
-#define LCEC_EL2904_PID 0x0B583052
-
 #define LCEC_EL2904_PDOS 14
 
 #endif
-

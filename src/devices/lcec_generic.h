@@ -40,4 +40,3 @@ typedef struct {
 int lcec_generic_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
-

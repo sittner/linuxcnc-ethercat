@@ -21,12 +21,5 @@
 #include "../lcec.h"
 #include "lcec_class_ax5.h"
 
-#define LCEC_AX5101_PID 0x13ed6012
-#define LCEC_AX5103_PID 0x13ef6012
-#define LCEC_AX5106_PID 0x13f26012
-#define LCEC_AX5112_PID 0x13f86012
-#define LCEC_AX5118_PID 0x13fe6012
-
 int lcec_ax5100_preinit(struct lcec_slave *slave);
 #endif
-

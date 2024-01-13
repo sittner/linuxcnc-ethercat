@@ -20,14 +20,12 @@
 #define _LCEC_EL1252_H_
 
 /** \brief Product Code */
-#define LCEC_EL1252_PID 0x04E43052
 
 /** \brief Number of channels */
 #define LCEC_EL1252_CHANS 2
 
 /** \brief Number of PDO */
-#define LCEC_EL1252_PDOS (4 * LCEC_EL1252_CHANS )
+#define LCEC_EL1252_PDOS (4 * LCEC_EL1252_CHANS)
 
 /** \brief Vendor ID */
 #endif
-

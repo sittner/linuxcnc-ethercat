@@ -23,7 +23,7 @@
 static int lcec_fr4000_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[] = {
-    {"EpoCAT", LCEC_ABET_VID, LCEC_EPOCAT_PID, LCEC_EPOCAT_PDOS, 0, NULL, lcec_fr4000_init},
+    {"EpoCAT", LCEC_ABET_VID, 0x04decade, LCEC_EPOCAT_PDOS, 0, NULL, lcec_fr4000_init},
     {NULL},
 };
 

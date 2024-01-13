@@ -28,8 +28,8 @@ static lcec_modparam_desc_t lcec_ax5200_modparams[] = {
 };
 
 static lcec_typelist_t types[]={
-  { "AX5203", LCEC_BECKHOFF_VID, LCEC_AX5203_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init, lcec_ax5200_modparams},
-  { "AX5206", LCEC_BECKHOFF_VID, LCEC_AX5206_PID, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init, lcec_ax5200_modparams},
+  { "AX5203", LCEC_BECKHOFF_VID, 0x14536012, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init, lcec_ax5200_modparams},
+  { "AX5206", LCEC_BECKHOFF_VID, 0x14566012, 0, 0, lcec_ax5200_preinit, lcec_ax5200_init, lcec_ax5200_modparams},
   { NULL },
 };
 ADD_TYPES(types);

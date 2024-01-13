@@ -25,7 +25,7 @@ static int lcec_el3403_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
 
 static lcec_typelist_t types[]={
   // analog in, 3ch, 16 bits
-  { "EL3403", LCEC_BECKHOFF_VID, LCEC_EL3403_PID, LCEC_EL3403_PDOS, 0, NULL, lcec_el3403_init},
+  { "EL3403", LCEC_BECKHOFF_VID, 0x0d4b3052, LCEC_EL3403_PDOS, 0, NULL, lcec_el3403_init},
   { NULL },
 };
 ADD_TYPES(types);

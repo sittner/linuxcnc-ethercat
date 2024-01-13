@@ -24,7 +24,7 @@ static void lcec_em7004_write(struct lcec_slave *slave, long period);
 static int lcec_em7004_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EM7004", LCEC_BECKHOFF_VID, LCEC_EM7004_PID, LCEC_EM7004_PDOS, 0, NULL, lcec_em7004_init},
+  { "EM7004", LCEC_BECKHOFF_VID, 0x1B5C3452, LCEC_EM7004_PDOS, 0, NULL, lcec_em7004_init},
   { NULL },
 };
 ADD_TYPES(types);

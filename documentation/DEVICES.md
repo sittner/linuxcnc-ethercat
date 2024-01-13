@@ -13,8 +13,8 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff AX5203-0000-0214 EtherCAT Drive (SoE, 2 Ch.)](http://www.beckhoff.com/ax52xx/) | [ax5200](../src/devices/lcec_ax5200.c) | 0x2:0x14536012 | Servo Drive |  | 
 [Beckhoff AX5206-0000-0214 EtherCAT Drive (SoE, 2 Ch.)](http://www.beckhoff.com/ax52xx/) | [ax5200](../src/devices/lcec_ax5200.c) | 0x2:0x14566012 | Servo Drive |  | 
 [Beckhoff AX5805 (Safety Drive Option)](http://beckhoff.com/AX5805) | [ax5805](../src/devices/lcec_ax5805.c) | 0x2:0x16ad6012 | Safety Terminals |  | 
-[Delta ASDA-A2-E](https://www.deltaww.com/en-us/products/Servo-Systems-AC-Servo-Motors-and-Drives/23) | [deasda](../src/devices/lcec_deasda.c) | 0x1dd:0x10305070 | Servo Drive |  | 
 [Delta MS-300 AC Motor Drive](https://www.deltaww.com/en-us/products/AC-Motor-Drives/3449) | [dems300](../src/devices/lcec_dems300.c) | 0x1dd:0x10400200 | AC Motor Drive |  | 
+[Delta ASDA-A2-E](https://www.deltaww.com/en-us/products/Servo-Systems-AC-Servo-Motors-and-Drives/23) | [deasda](../src/devices/lcec_deasda.c) | 0x1dd:0x10305070 | Servo Drive |  | 
 [Beckhoff EJ3202 2Ch. Ana. Input PT100 (RTD)](http://www.beckhoff.com/EJ3202) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0c822852 | Analog input terminals (EJ3xxx) | New, untested | 
 [Beckhoff EJ3214 4Ch. Ana. Input PT100 (RTD)](http://www.beckhoff.com/EJ3214) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0c8e2852 | Analog input terminals (EJ3xxx) | New, untested | 
 [Beckhoff EK1100 EtherCAT Coupler (0.5A E-Bus)](http://www.beckhoff.com/EK1100) | [passive](../src/devices/lcec_passive.c) | 0x2:0x044c2c52 | System Terminals | Part of @scottlaird's test suite. | Passive device
@@ -141,8 +141,8 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EL6090 Display terminal](http://www.beckhoff.com/EL6090) | [el6090](../src/devices/lcec_el6090.c) | 0x2:0x17ca3052 | LCD Display | Uncertain; @scottlaird has one, but the driver was just merged. | 
 [Beckhoff EL6900, TwinSAFE PLC](http://www.beckhoff.com/EL6900) | [el6900](../src/devices/lcec_el6900.c) | 0x2:0x1af43052 | Safety Terminals | Part of @scottlaird's test suite, but not currently being evaluated. | 
 [Beckhoff EL7031 1Ch. Stepper motor output stage (24V, 1.5A)](http://www.beckhoff.com/EL7031) | [el70x1](../src/devices/lcec_el70x1.c) | 0x2:0x1b773052 | Stepper Drive |  | 
-[Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [el7041](../src/devices/lcec_el7041.c) | 0x2:0x1b813052 | Stepper Drive |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [el70x1](../src/devices/lcec_el70x1.c) | 0x2:0x1b813052 | Stepper Drive |  | 
+[Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [el7041](../src/devices/lcec_el7041.c) | 0x2:0x1b813052 | Stepper Drive |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [el7041](../src/devices/lcec_el7041.c) | 0x2:0x1b813052 | Stepper Drive |  | 
 [Beckhoff EL7201 1Ch. MDP742 Servo motor output stage (50V, 4A)](http://www.beckhoff.com/EL7201) | [el7211](../src/devices/lcec_el7211.c) | 0x2:0x1c213052 | Servo Drive |  | 
 [Beckhoff EL7211 1Ch. MDP742 Servo motor output stage (50V, 4.5A RMS)](http://www.beckhoff.com/EL7211) | [el7211](../src/devices/lcec_el7211.c) | 0x2:0x1c2b3052 | Servo Drive |  | 
@@ -174,12 +174,12 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EP2809-0021 16 Ch. Dig. Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2809-0021) | [el2xxx](../src/devices/lcec_el2xxx.c) | 0x2:0x0af94052 | Digital Output |  | 
 [Beckhoff EP3204-0002 4Ch. Ana. Input PT100 (RTD)](https://www.beckhoff.com/EP3204-0002) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0c844052 | EtherCAT Fieldbus Boxes (EP3xxx) |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [el7041](../src/devices/lcec_el7041.c) | 0x2:0x1b813052 | Stepper Drive | Uncertain; @scottlaird has several EP7041-0002 | 
-[AB&T EpoCAT FR4000](https://www.bausano.net/en/hardware/epocat-fr-1000.html) | [epocat](../src/devices/lcec_epocat.c) | 0x79a:0x00decade | Stepper Drive | Merged 2023-12-31, untested | by @abausano
 [Beckhoff EPX3158 8Ch. Ana. Input 4-20mA, Ex i](http://www.beckhoff.com/EPX3158) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x9809ab69 | Analog Input | New, untested. | 
 [SMC EX260-SEC1](https://www.smcpneumatics.com/EX260-SEC1.html) | [ex260](../src/devices/lcec_ex260.c) | 0x114:0x01000001 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc
 [SMC EX260-SEC1](https://www.smcpneumatics.com/EX260-SEC2.html) | [ex260](../src/devices/lcec_ex260.c) | 0x114:0x01000002 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc
 [SMC EX260-SEC3](https://www.smcpneumatics.com/EX260-SEC3.html) | [ex260](../src/devices/lcec_ex260.c) | 0x114:0x01000003 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc
 [SMC EX260-SEC4](https://www.smcpneumatics.com/EX260-SEC4.html) | [ex260](../src/devices/lcec_ex260.c) | 0x114:0x01000004 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc
+[AB&T EpoCAT FR4000](https://www.bausano.net/en/hardware/epocat-fr-1000.html) | [epocat](../src/devices/lcec_epocat.c) | 0x79a:0x00decade | Stepper Drive | Merged 2023-12-31, untested | by @abausano
 [Omron R88D-KN01H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [omrg5](../src/devices/lcec_omrg5.c) | 0x83:0x00000005 | Servo Drive |  | 
 [Omron R88D-KN01L-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [omrg5](../src/devices/lcec_omrg5.c) | 0x83:0x00000002 | Servo Drive |  | 
 [Omron R88D-KN02H-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [omrg5](../src/devices/lcec_omrg5.c) | 0x83:0x00000006 | Servo Drive |  | 
@@ -205,6 +205,6 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Omron R88D-KNA5L-ECT G5 Series ServoDrive/Motor](http://www.ia.omron.com/) | [omrg5](../src/devices/lcec_omrg5.c) | 0x83:0x00000001 | Servo Drive |  | 
 [Stoeber Posidrive MDS 5000](https://www.ethercat.org/en/products/CE4C65D2ED8B4F39A8166D6CEDB2C872.htm) | [stmds5k](../src/devices/lcec_stmds5k.c) | 0xb9:0x00001388 | Servo Drive |  | 
 
-There are an additional 1 device(s) supported that do not have enough
+There are an additional 2 device(s) supported that do not have enough
 documentation to display here.  Please look at the `documentation/devices/` files
 and update them if you're able.

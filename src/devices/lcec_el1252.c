@@ -37,7 +37,7 @@
 static int lcec_el1252_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EL1252", LCEC_BECKHOFF_VID, LCEC_EL1252_PID, LCEC_EL1252_PDOS, 0, NULL, lcec_el1252_init},  // 2 fast channels with timestamp
+  { "EL1252", LCEC_BECKHOFF_VID, 0x04E43052, LCEC_EL1252_PDOS, 0, NULL, lcec_el1252_init},  // 2 fast channels with timestamp
   { NULL },
 };
 ADD_TYPES(types);

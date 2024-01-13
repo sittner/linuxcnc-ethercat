@@ -62,7 +62,7 @@ Pins:
   BIT OUT stat-at-speed
     motor has reached requested velocity
 
-  
+
   BIT IN enable
     Switch motor driver on
 
@@ -75,12 +75,12 @@ Pins:
   BIT IN halt
     Set controlword driver halt flag
 
-  
+
 Parameters:
   BIT IN auto-fault-reset
     If set to 1 errors get automatically reset if drive is enabled again (enable = 0 -> 1)
 
-  
+
 #############################################################################*/
 
 #ifndef _LCEC_DEMS300_H_
@@ -89,8 +89,6 @@ Parameters:
 #include "../lcec.h"
 
 #define LCEC_DEMS300_VID LCEC_DELTA_VID
-#define LCEC_DEMS300_PID 0x10400200
 
 #define LCEC_DEMS300_PDOS 11
 #endif
-

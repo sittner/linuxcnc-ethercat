@@ -20,14 +20,7 @@
 
 #include "../lcec.h"
 
-
-#define LCEC_EL4002_PID 0x0fa23052
-#define LCEC_EL4012_PID 0x0fac3052
-#define LCEC_EL4022_PID 0x0fb63052
-#define LCEC_EL4032_PID 0x0fc03052
-
-#define LCEC_EL40x2_PDOS  2
+#define LCEC_EL40x2_PDOS 2
 
 #define LCEC_EL40x2_CHANS 2
 #endif
-

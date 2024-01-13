@@ -31,7 +31,7 @@ static lcec_modparam_desc_t lcec_stmds5k_modparams[]={
 };
 
 static lcec_typelist_t types[]={
-  { "StMDS5k", LCEC_STOEBER_VID, LCEC_STMDS5K_PID, 0, 0, lcec_stmds5k_preinit, lcec_stmds5k_init, lcec_stmds5k_modparams},
+  { "StMDS5k", LCEC_STOEBER_VID, 0x00001388, 0, 0, lcec_stmds5k_preinit, lcec_stmds5k_init, lcec_stmds5k_modparams},
   { NULL },
 };
 

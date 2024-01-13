@@ -28,8 +28,5 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL2521_PID 0x09d93052
-
-#define LCEC_EL2521_PDOS  4
+#define LCEC_EL2521_PDOS 4
 #endif
-

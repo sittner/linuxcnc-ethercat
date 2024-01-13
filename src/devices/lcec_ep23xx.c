@@ -27,11 +27,11 @@
 static int lcec_ep23xx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EP2308", LCEC_BECKHOFF_VID, LCEC_EP2308_PID, LCEC_EP2308_PDOS, 0, NULL, lcec_ep23xx_init},
-  { "EP2318", LCEC_BECKHOFF_VID, LCEC_EP2318_PID, LCEC_EP2318_PDOS, 0, NULL, lcec_ep23xx_init},
-  { "EP2328", LCEC_BECKHOFF_VID, LCEC_EP2328_PID, LCEC_EP2328_PDOS, 0, NULL, lcec_ep23xx_init},
-  { "EP2338", LCEC_BECKHOFF_VID, LCEC_EP2338_PID, LCEC_EP2338_PDOS, 0, NULL, lcec_ep23xx_init},
-  { "EP2349", LCEC_BECKHOFF_VID, LCEC_EP2349_PID, LCEC_EP2349_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2308", LCEC_BECKHOFF_VID, 0x09044052, LCEC_EP2308_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2318", LCEC_BECKHOFF_VID, 0x090E4052, LCEC_EP2318_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2328", LCEC_BECKHOFF_VID, 0x09184052, LCEC_EP2328_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2338", LCEC_BECKHOFF_VID, 0x09224052, LCEC_EP2338_PDOS, 0, NULL, lcec_ep23xx_init},
+  { "EP2349", LCEC_BECKHOFF_VID, 0x092d4052, LCEC_EP2349_PDOS, 0, NULL, lcec_ep23xx_init},
   { NULL },
 };
 ADD_TYPES(types);

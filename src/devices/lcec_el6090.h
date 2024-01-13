@@ -22,10 +22,6 @@
 
 #include "../lcec.h"
 
-
-
-#define LCEC_EL6090_PID 0x17ca3052
-
 #define LCEC_EL6090_CHANS 4
 
 #define LCEC_EL6090_PDOS 33

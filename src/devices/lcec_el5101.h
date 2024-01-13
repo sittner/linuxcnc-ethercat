@@ -20,11 +20,8 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL5101_PID 0x13ed3052
-
 #define LCEC_EL5101_PDOS 8
 
-#define LCEC_EL5101_PERIOD_SCALE    500e-9
+#define LCEC_EL5101_PERIOD_SCALE 500e-9
 #define LCEC_EL5101_FREQUENCY_SCALE 5e-2
 #endif
-

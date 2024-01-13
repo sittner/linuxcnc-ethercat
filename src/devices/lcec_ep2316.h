@@ -20,9 +20,5 @@
 
 #include "../lcec.h"
 
-
-#define LCEC_EP2316_PID 0x090C4052
-
-#define LCEC_EP2316_PDOS 32  // 8 inputs, 8 diag inputs, 8 outputs, 8 auxiliary 
+#define LCEC_EP2316_PDOS 32  // 8 inputs, 8 diag inputs, 8 outputs, 8 auxiliary
 #endif
-

@@ -32,7 +32,7 @@ static lcec_modparam_desc_t lcec_el1918_logic_modparams[] = {
 };
 
 static lcec_typelist_t types[]={
-  { "EL1918_LOGIC", LCEC_BECKHOFF_VID, LCEC_EL1918_LOGIC_PID, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init, lcec_el1918_logic_modparams},
+  { "EL1918_LOGIC", LCEC_BECKHOFF_VID, 0x077e3052, 0, 1, lcec_el1918_logic_preinit, lcec_el1918_logic_init, lcec_el1918_logic_modparams},
   { NULL },
 };
 ADD_TYPES(types);

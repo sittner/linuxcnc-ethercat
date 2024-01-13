@@ -1,0 +1,11 @@
+---
+Device: DeMS300
+VendorID: "0x000001dd"
+VendorName: ""
+PID: "0x10400200"
+Description: UNKNOWN
+DocumentationURL: ""
+DeviceType: ""
+Notes: ""
+SrcFile: src/devices/lcec_dems300.c.c
+TestingStatus: ""

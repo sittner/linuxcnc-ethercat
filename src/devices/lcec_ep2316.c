@@ -22,7 +22,7 @@
 static int lcec_ep2316_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EP2316", LCEC_BECKHOFF_VID, LCEC_EP2316_PID, LCEC_EP2316_PDOS, 0, NULL, lcec_ep2316_init},
+  { "EP2316", LCEC_BECKHOFF_VID, 0x090C4052, LCEC_EP2316_PDOS, 0, NULL, lcec_ep2316_init},
   { NULL },
 };
 ADD_TYPES(types);

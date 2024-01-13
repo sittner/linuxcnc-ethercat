@@ -20,9 +20,6 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL3255_PID 0x0CB73052
-
 #define LCEC_EL3255_CHANS 5
-#define LCEC_EL3255_PDOS  (LCEC_EL3255_CHANS * 5)
+#define LCEC_EL3255_PDOS (LCEC_EL3255_CHANS * 5)
 #endif
-

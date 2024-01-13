@@ -29,9 +29,9 @@
 static int lcec_el7201_9014_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "EL7201_9014", LCEC_BECKHOFF_VID, LCEC_EL7201_9014_PID, LCEC_EL7201_9014_PDOS, 0, NULL, lcec_el7201_9014_init},
-  { "EL7211", LCEC_BECKHOFF_VID, LCEC_EL7211_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
-  { "EL7221", LCEC_BECKHOFF_VID, LCEC_EL7221_PID, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
+  { "EL7201_9014", LCEC_BECKHOFF_VID, 0x1C213052, LCEC_EL7201_9014_PDOS, 0, NULL, lcec_el7201_9014_init},
+  { "EL7211", LCEC_BECKHOFF_VID, 0x1C2B3052, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
+  { "EL7221", LCEC_BECKHOFF_VID, 0x1C353052, LCEC_EL7211_PDOS, 0, NULL, lcec_el7211_init},
   { NULL },
 };
 ADD_TYPES(types);

@@ -20,11 +20,7 @@
 
 #include "../lcec.h"
 
-
-#define LCEC_EL3164_PID 0x0C5C3052
-
 #define LCEC_EL31x4_CHANS 4
 
-#define LCEC_EL31x4_PDOS  (5 * LCEC_EL31x4_CHANS)
+#define LCEC_EL31x4_PDOS (5 * LCEC_EL31x4_CHANS)
 #endif
-

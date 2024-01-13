@@ -20,11 +20,7 @@
 
 #include "../lcec.h"
 
-
-#define LCEC_EL1904_PID 0x07703052
-
 #define LCEC_EL1904_INPUT_COUNT 4
 
 #define LCEC_EL1904_PDOS (6 + LCEC_EL1904_INPUT_COUNT * 1)
 #endif
-

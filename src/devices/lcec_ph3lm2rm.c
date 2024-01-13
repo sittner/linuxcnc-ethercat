@@ -24,7 +24,7 @@
 static int lcec_ph3lm2rm_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "Ph3LM2RM", LCEC_MODUSOFT_VID, LCEC_PH3LM2RM_PID, LCEC_PH3LM2RM_PDOS, 0, NULL, lcec_ph3lm2rm_init},
+  { "Ph3LM2RM", LCEC_MODUSOFT_VID, 0x10000001, LCEC_PH3LM2RM_PDOS, 0, NULL, lcec_ph3lm2rm_init},
   { NULL },
 };
 

@@ -27,7 +27,7 @@ static int lcec_ax5805_preinit(struct lcec_slave *slave);
 static int lcec_ax5805_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 static lcec_typelist_t types[]={
-  { "AX5805", LCEC_BECKHOFF_VID, LCEC_AX5805_PID, 0, 0, lcec_ax5805_preinit, lcec_ax5805_init},
+  { "AX5805", LCEC_BECKHOFF_VID, 0x16AD6012, 0, 0, lcec_ax5805_preinit, lcec_ax5805_init},
   { NULL },
 };
 ADD_TYPES(types);
