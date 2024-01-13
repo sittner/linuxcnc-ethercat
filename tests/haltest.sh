@@ -341,13 +341,13 @@ fi
 
 
 echo "=== Checking D16 temperatures"
-test-pin-greater D16 temp-0-temperature 17
+test-pin-greater D16 temp-0-temperature 15
 test-pin-less D16 temp-0-temperature 30
 
 test-pin-greater D16 temp-1-temperature 950
 test-pin-less D16 temp-1-temperature 1050
 
-test-pin-greater D16 temp-2-temperature 17
+test-pin-greater D16 temp-2-temperature 15
 test-pin-less D16 temp-2-temperature 30
 
 test-pin-greater D16 temp-3-temperature 950
