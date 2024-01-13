@@ -102,7 +102,7 @@ typedef struct {
 
 // From https://download.beckhoff.com/download/Document/io/ethercat-terminals/el32xxen.pdf#page=222
 static const temp_resolution_t temp_resolutions[] = {
-    {"Signed", 0, 1.0},  // 0.1C per bit, default on most devices
+    {"Signed", 0, 1.0},    // 0.1C per bit, default on most devices
     {"Standard", 0, 1.0},  // Same as "signed", but easier to remember WRT "High".
     // { "Absolute", 1, 1.0 }, // ones-compliment presentation, why?
     {"High", 2, 0.1},  // 0.01C per bit, default on "high precision" devices.
@@ -140,6 +140,7 @@ static const lcec_typelist_t types[] = {
     {"EL3062", LCEC_BECKHOFF_VID, 0x0bf63052, LCEC_EL30X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
     //  { "EL3064", LCEC_BECKHOFF_VID, 0x0bf83052, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
     {"EL3068", LCEC_BECKHOFF_VID, 0x0bfc3052, LCEC_EL30X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
+    {"EJ3004", LCEC_BECKHOFF_VID, 0x0bbc2852, LCEC_EL30X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS12},
 
     // 16-bit devices
     {"EL3101", LCEC_BECKHOFF_VID, 0x0c1d3052, LCEC_EL31X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
@@ -161,6 +162,8 @@ static const lcec_typelist_t types[] = {
     //  { "EL3162", LCEC_BECKHOFF_VID, 0x0c5a3052, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
     //  { "EL3164", LCEC_BECKHOFF_VID, 0x0c5c3052, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16|FLAG_SYNC},
     {"EL3182", LCEC_BECKHOFF_VID, 0x0c6e3052, LCEC_EL31X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    {"EP3174", LCEC_BECKHOFF_VID, 0x0c664052, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
+    {"EP3184", LCEC_BECKHOFF_VID, 0x0c704052, LCEC_EL31X4_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
     {"EPX3158", LCEC_BECKHOFF_VID, 0x9809ab69, LCEC_EL31X8_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_SYNC},
 
     {"EJ3202", LCEC_BECKHOFF_VID, 0x0c822852, LCEC_EL32X2_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
@@ -173,9 +176,9 @@ static const lcec_typelist_t types[] = {
     {"EL3218", LCEC_BECKHOFF_VID, 0x0c923052, LCEC_EL32X8_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
     {"EP3204", LCEC_BECKHOFF_VID, 0x0c844052, LCEC_EL32X4_PDOS, 0, NULL, lcec_el3xxx_init, modparams_temperature, FLAG_BITS16 | FLAG_TEMPERATURE},
 
-    { "EM3701", LCEC_BECKHOFF_VID, 0x0e753452, LCEC_EM37X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_PRESSURE },
-    { "EM3702", LCEC_BECKHOFF_VID, 0x0e763452, LCEC_EM37X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_PRESSURE },
-    { "EM3712", LCEC_BECKHOFF_VID, 0x0e803452, LCEC_EM37X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_PRESSURE },
+    {"EM3701", LCEC_BECKHOFF_VID, 0x0e753452, LCEC_EM37X1_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_PRESSURE},
+    {"EM3702", LCEC_BECKHOFF_VID, 0x0e763452, LCEC_EM37X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_PRESSURE},
+    {"EM3712", LCEC_BECKHOFF_VID, 0x0e803452, LCEC_EM37X2_PDOS, 0, NULL, lcec_el3xxx_init, NULL, FLAG_BITS16 | FLAG_PRESSURE},
     {NULL},
 };
 ADD_TYPES(types);
@@ -232,14 +235,14 @@ static const lcec_pindesc_t slave_pins_temperature[] = {
     {HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL}};
 
 static const lcec_pindesc_t slave_pins_pressure[] = {
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, error), "%s.%s.%s.press-%d-error" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, overrange), "%s.%s.%s.press-%d-overrange" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, underrange), "%s.%s.%s.press-%d-underrange" },
-  { HAL_S32, HAL_OUT, offsetof(lcec_el3xxx_chan_t, raw_val), "%s.%s.%s.press-%d-raw" },
-  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, val), "%s.%s.%s.press-%d-pressure" },
-  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3xxx_chan_t, scale), "%s.%s.%s.press-%d-scale" },
-  { HAL_FLOAT, HAL_IO, offsetof(lcec_el3xxx_chan_t, bias), "%s.%s.%s.press-%d-bias" },
-  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }};
+    {HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, error), "%s.%s.%s.press-%d-error"},
+    {HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, overrange), "%s.%s.%s.press-%d-overrange"},
+    {HAL_BIT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, underrange), "%s.%s.%s.press-%d-underrange"},
+    {HAL_S32, HAL_OUT, offsetof(lcec_el3xxx_chan_t, raw_val), "%s.%s.%s.press-%d-raw"},
+    {HAL_FLOAT, HAL_OUT, offsetof(lcec_el3xxx_chan_t, val), "%s.%s.%s.press-%d-pressure"},
+    {HAL_FLOAT, HAL_IO, offsetof(lcec_el3xxx_chan_t, scale), "%s.%s.%s.press-%d-scale"},
+    {HAL_FLOAT, HAL_IO, offsetof(lcec_el3xxx_chan_t, bias), "%s.%s.%s.press-%d-bias"},
+    {HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL}};
 
 typedef struct {
   uint32_t channels;
@@ -303,13 +306,17 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
     rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "- setting up channel %d (%p)\n", i, chan);
 
     // initialize POD entries
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x01, &chan->udr_pdo_os, &chan->udr_pdo_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x02, &chan->ovr_pdo_os, &chan->ovr_pdo_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x07, &chan->error_pdo_os, &chan->error_pdo_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x01, &chan->udr_pdo_os,
+                  &chan->udr_pdo_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x02, &chan->ovr_pdo_os,
+                  &chan->ovr_pdo_bp);
+    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x07, &chan->error_pdo_os,
+                  &chan->error_pdo_bp);
     if (flags & FLAG_SYNC) {
       // Only EL31xx devices have this PDO, if we try to initialize it
       // with 30xxs, then we get a PDO error and fail out.
-      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x0E, &chan->sync_err_pdo_os, &chan->sync_err_pdo_bp);
+      LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x0E, &chan->sync_err_pdo_os,
+                    &chan->sync_err_pdo_bp);
     }
     LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x11, &chan->val_pdo_os, NULL);
 
@@ -324,7 +331,8 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
       slave_pins = slave_pins_nosync;
 
     if ((err = lcec_pin_newf_list(chan, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "lcec_pin_newf_list() for slave %s.%s failed: %d\n", master->name, slave->name, err);
+      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "lcec_pin_newf_list() for slave %s.%s failed: %d\n", master->name, slave->name,
+                      err);
       return err;
     }
 
@@ -357,11 +365,13 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
           chan->is_unsigned = sensor->is_unsigned;
 
           if (ecrt_slave_config_sdo16(slave->config, 0x8000 + (i << 4), 0x19, sensor->value) != 0) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo sensor!\n", master->name, slave->name);
+            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo sensor!\n", master->name,
+                            slave->name);
             return -1;
           }
         } else {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown sensor type \"%s\" for slave %s.%s channel %d!\n", pval->str, master->name, slave->name, i);
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown sensor type \"%s\" for slave %s.%s channel %d!\n", pval->str,
+                          master->name, slave->name, i);
           return -1;
         }
       }
@@ -375,15 +385,18 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
 
         resolution = sensor_resolution(pval->str);
         if (resolution != NULL) {
-          rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - setting resolution for %s %d to %d\n", slave->name, i, resolution->value);
+          rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "    - setting resolution for %s %d to %d\n", slave->name, i,
+                          resolution->value);
           *(chan->scale) = *(chan->scale) * resolution->scale_multiplier;
 
           if (ecrt_slave_config_sdo8(slave->config, 0x8000 + (i << 4), 0x2, resolution->value) != 0) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo resolution!\n", master->name, slave->name);
+            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo resolution!\n", master->name,
+                            slave->name);
             return -1;
           }
         } else {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown resolution \"%s\" for slave %s.%s channel %d!\n", pval->str, master->name, slave->name, i);
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown resolution \"%s\" for slave %s.%s channel %d!\n", pval->str,
+                          master->name, slave->name, i);
           return -1;
         }
       }
@@ -400,11 +413,13 @@ static int lcec_el3xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
           rtapi_print_msg(RTAPI_MSG_DBG, LCEC_MSG_PFX "      - setting wires for %s %d to %d\n", slave->name, i, wires->value);
 
           if (ecrt_slave_config_sdo16(slave->config, 0x8000 + (i << 4), 0x1a, wires->value) != 0) {
-            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo wires!\n", master->name, slave->name);
+            rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "failed to configure slave %s.%s sdo wires!\n", master->name,
+                            slave->name);
             return -1;
           }
         } else {
-          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown wire setting \"%s\" for slave %s.%s channel %d!\n", pval->str, master->name, slave->name, i);
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unknown wire setting \"%s\" for slave %s.%s channel %d!\n", pval->str,
+                          master->name, slave->name, i);
           return -1;
         }
       }
@@ -446,9 +461,7 @@ static void lcec_el3xxx_read(struct lcec_slave *slave, long period, uint32_t mas
   }
 }
 
-static void lcec_el3xxx_read_16(struct lcec_slave *slave, long period) {
-  lcec_el3xxx_read(slave, period, 0x7fff, true);
-}
+static void lcec_el3xxx_read_16(struct lcec_slave *slave, long period) { lcec_el3xxx_read(slave, period, 0x7fff, true); }
 
 static void lcec_el3xxx_read_12(struct lcec_slave *slave, long period) {
   // According to
