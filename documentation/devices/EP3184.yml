@@ -1,0 +1,11 @@
+---
+Device: EP3184
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0c704052"
+Description: Beckhoff EP3184-0002 4Ch. Ana. Input +/-10V, 0-10V, 0/4-20mA configurable, single ended
+DocumentationURL: https://www.beckhoff.com/EP3184-0002
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: ""

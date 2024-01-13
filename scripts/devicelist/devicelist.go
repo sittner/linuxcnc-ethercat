@@ -193,7 +193,7 @@ func main() {
 						// Found an entry!
 						deviceLines++
 						srcFile, _, _ := strings.Cut(filename[len(*srcFlag)+1:], ".h")
-						srcFile = fmt.Sprintf("src/%s.c", srcFile)
+						srcFile = fmt.Sprintf("src/%s", srcFile)
 
 						def := &DeviceDefinition{
 							Device:   match[1],

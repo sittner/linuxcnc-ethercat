@@ -5,7 +5,7 @@ VendorName: Beckhoff Automation GmbH & Co. KG
 PID: "0x0c844052"
 Description: Beckhoff EP3204-0002 4Ch. Ana. Input PT100 (RTD)
 DocumentationURL: https://www.beckhoff.com/EP3204-0002
-DeviceType: EtherCAT Fieldbus Boxes (EP3xxx)
+DeviceType: Analog Input
 Notes: ""
 SrcFile: src/devices/lcec_el3xxx.c
 TestingStatus: ""

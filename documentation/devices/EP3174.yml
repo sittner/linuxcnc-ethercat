@@ -1,0 +1,11 @@
+---
+Device: EP3174
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x0c664052"
+Description: Beckhoff EP3174-0002 4Ch. Ana. Input +/-10V, 0-10V, 0/4-20mA configurable
+DocumentationURL: https://www.beckhoff.com/EP3174-0002
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: ""

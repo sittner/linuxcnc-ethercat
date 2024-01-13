@@ -1,0 +1,11 @@
+---
+Device: EJ3004
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH
+PID: "0x0bbc2852"
+Description: Beckhoff EJ3004 4Ch. Ana. Input +/-10V
+DocumentationURL: http://www.beckhoff.com/EJ3004
+DeviceType: Analog Input
+Notes: ""
+SrcFile: src/devices/lcec_el3xxx.c
+TestingStatus: ""
