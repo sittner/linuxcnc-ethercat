@@ -11,8 +11,59 @@ the backlog of drivers that has built up over the past few years.
 
 ## Installing
 
-TBD.  Include instructions for installing LinuxCNC and Ethercat from
-their Debian repositories.
+The recommended way to install this driver is to use the `.deb` apt
+repository managed by the Etherlab folks.  It should contain
+everything that you need to install Ethercat support for LinuxCNC with
+minimal manual work.
+
+### Initial setup
+
+First, you need to tell `apt` how to find the Etherlab repository,
+hosted at https://build.opensuse.org/projects/science:EtherLab.  This
+is the preferred mechanism from the [LinuxCNC
+forum](https://forum.linuxcnc.org/ethercat/45336-ethercat-installation-from-repositories-how-to-step-by-step):
+
+
+```
+sudo mkdir -p /usr/local/share/keyrings/
+wget -O- https://build.opensuse.org/projects/science:EtherLab/signing_keys/download?kind=gpg | gpg --dearmor | sudo dd of=/etc/apt/trusted.gpg.d/science_EtherLab.gpg
+sudo tee -a /etc/apt/sources.list.d/ighvh.sources > /dev/null <<EOT
+Types: deb
+Signed-By: /etc/apt/trusted.gpg.d/science_EtherLab.gpg
+Suites: ./
+URIs: http://download.opensuse.org/repositories/science:/EtherLab/Debian_12/
+EOT
+sudo apt update
+sudo apt install -y linux-headers-$(uname -r) ethercat-master linuxcnc-ethercat
+```
+
+(These directions are for Debian 12.  Debian 11 should be very similar,
+just change `Debian_12` to `Debian_11`.)
+
+You will then need to do a bit of setup for Ethercat; at a minimum
+you'll need to edit `/etc/ethercat.conf` to tell it which interface it
+should use.  See the forum link, above, for additional details.
+
+You can verify that Ethercat is working when `ethercat slaves` shows
+the devices attached to your system.  See the forum link above for
+additional helpful steps.
+
+### Updates
+
+Ongoing updates should be easy and *mostly* handled automatically by
+`apt`.  Just run `sudo apt update` followed by `sudo apt upgrade` and
+things will mostly work, with one possible exception.  If the kernel
+is upgraded, then you *may* need to re-run this command in order to
+get Ethercat working again:
+
+```
+sudo apt install -y linux-headers-$(uname -r
+```
+
+This is because the real-time kernel that LinuxCNC prefers doesn't get
+its headers intalled by default, and this breaks compiling the
+Ethercat modules for the new kernel.  Just run this `apt` command and
+then either reboot or run `sudo systemctl start ethercat`.
 
 ## Contributing
 
