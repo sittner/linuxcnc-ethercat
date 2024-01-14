@@ -28,7 +28,7 @@ static int lcec_pin_newfv(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_ad
   int err;
 
   sz = rtapi_vsnprintf(name, sizeof(name), fmt, ap);
-  if(sz == -1 || sz > HAL_NAME_LEN) {
+  if (sz == -1 || sz > HAL_NAME_LEN) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "length %d too long for name starting '%s'\n", sz, name);
     return -ENOMEM;
   }
@@ -41,16 +41,16 @@ static int lcec_pin_newfv(hal_type_t type, hal_pin_dir_t dir, void **data_ptr_ad
 
   switch (type) {
     case HAL_BIT:
-      **((hal_bit_t **) data_ptr_addr) = 0;
+      **((hal_bit_t **)data_ptr_addr) = 0;
       break;
     case HAL_FLOAT:
-      **((hal_float_t **) data_ptr_addr) = 0.0;
+      **((hal_float_t **)data_ptr_addr) = 0.0;
       break;
     case HAL_S32:
-      **((hal_s32_t **) data_ptr_addr) = 0;
+      **((hal_s32_t **)data_ptr_addr) = 0;
       break;
     case HAL_U32:
-      **((hal_u32_t **) data_ptr_addr) = 0;
+      **((hal_u32_t **)data_ptr_addr) = 0;
       break;
     default:
       break;
@@ -77,7 +77,7 @@ static int lcec_pin_newfv_list(void *base, const lcec_pindesc_t *list, va_list a
 
   for (p = list; p->type != HAL_TYPE_UNSPECIFIED; p++) {
     va_copy(ac, ap);
-    err = lcec_pin_newfv(p->type, p->dir, (void **) (base + p->offset), p->fmt, ac);
+    err = lcec_pin_newfv(p->type, p->dir, (void **)(base + p->offset), p->fmt, ac);
     va_end(ac);
     if (err) {
       return err;

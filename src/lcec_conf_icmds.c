@@ -16,11 +16,11 @@
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include <ctype.h>
 #include <expat.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "lcec_conf.h"
 #include "lcec_conf_priv.h"
@@ -70,30 +70,30 @@ static void icmdTypeSoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const cha
 static void icmdTypeSoeIcmdEnd(LCEC_CONF_XML_INST_T *inst, int next);
 
 static const LCEC_CONF_XML_HANLDER_T xml_states[] = {
-  { "EtherCATMailbox", icmdTypeNone, icmdTypeMailbox, NULL, NULL },
-  { "CoE", icmdTypeMailbox, icmdTypeCoe, NULL, NULL },
-  { "InitCmds", icmdTypeCoe, icmdTypeCoeIcmds, NULL, NULL },
-  { "InitCmd", icmdTypeCoeIcmds, icmdTypeCoeIcmd, icmdTypeCoeIcmdStart, icmdTypeCoeIcmdEnd },
-  { "Transition", icmdTypeCoeIcmd, icmdTypeCoeIcmdTrans, NULL, NULL },
-  { "Comment", icmdTypeCoeIcmd, icmdTypeCoeIcmdComment, NULL, NULL },
-  { "Timeout", icmdTypeCoeIcmd, icmdTypeCoeIcmdTimeout, NULL, NULL },
-  { "Ccs", icmdTypeCoeIcmd, icmdTypeCoeIcmdCcs, NULL, NULL },
-  { "Index", icmdTypeCoeIcmd, icmdTypeCoeIcmdIndex, NULL, NULL },
-  { "SubIndex", icmdTypeCoeIcmd, icmdTypeCoeIcmdSubindex, NULL, NULL },
-  { "Data", icmdTypeCoeIcmd, icmdTypeCoeIcmdData, NULL, NULL },
-  { "SoE", icmdTypeMailbox, icmdTypeSoe, NULL, NULL },
-  { "InitCmds", icmdTypeSoe, icmdTypeSoeIcmds, NULL, NULL },
-  { "InitCmd", icmdTypeSoeIcmds, icmdTypeSoeIcmd, icmdTypeSoeIcmdStart, icmdTypeSoeIcmdEnd },
-  { "Transition", icmdTypeSoeIcmd, icmdTypeSoeIcmdTrans, NULL, NULL },
-  { "Comment", icmdTypeSoeIcmd, icmdTypeSoeIcmdComment, NULL, NULL },
-  { "Timeout", icmdTypeSoeIcmd, icmdTypeSoeIcmdTimeout, NULL, NULL },
-  { "OpCode", icmdTypeSoeIcmd, icmdTypeSoeIcmdOpcode, NULL, NULL },
-  { "DriveNo", icmdTypeSoeIcmd, icmdTypeSoeIcmdDriveno, NULL, NULL },
-  { "IDN", icmdTypeSoeIcmd, icmdTypeSoeIcmdIdn, NULL, NULL },
-  { "Elements", icmdTypeSoeIcmd, icmdTypeSoeIcmdElements, NULL, NULL },
-  { "Attribute", icmdTypeSoeIcmd, icmdTypeSoeIcmdAttribute, NULL, NULL },
-  { "Data", icmdTypeSoeIcmd, icmdTypeSoeIcmdData, NULL, NULL },
-  { "NULL", -1, -1, NULL, NULL }
+    {"EtherCATMailbox", icmdTypeNone, icmdTypeMailbox, NULL, NULL},
+    {"CoE", icmdTypeMailbox, icmdTypeCoe, NULL, NULL},
+    {"InitCmds", icmdTypeCoe, icmdTypeCoeIcmds, NULL, NULL},
+    {"InitCmd", icmdTypeCoeIcmds, icmdTypeCoeIcmd, icmdTypeCoeIcmdStart, icmdTypeCoeIcmdEnd},
+    {"Transition", icmdTypeCoeIcmd, icmdTypeCoeIcmdTrans, NULL, NULL},
+    {"Comment", icmdTypeCoeIcmd, icmdTypeCoeIcmdComment, NULL, NULL},
+    {"Timeout", icmdTypeCoeIcmd, icmdTypeCoeIcmdTimeout, NULL, NULL},
+    {"Ccs", icmdTypeCoeIcmd, icmdTypeCoeIcmdCcs, NULL, NULL},
+    {"Index", icmdTypeCoeIcmd, icmdTypeCoeIcmdIndex, NULL, NULL},
+    {"SubIndex", icmdTypeCoeIcmd, icmdTypeCoeIcmdSubindex, NULL, NULL},
+    {"Data", icmdTypeCoeIcmd, icmdTypeCoeIcmdData, NULL, NULL},
+    {"SoE", icmdTypeMailbox, icmdTypeSoe, NULL, NULL},
+    {"InitCmds", icmdTypeSoe, icmdTypeSoeIcmds, NULL, NULL},
+    {"InitCmd", icmdTypeSoeIcmds, icmdTypeSoeIcmd, icmdTypeSoeIcmdStart, icmdTypeSoeIcmdEnd},
+    {"Transition", icmdTypeSoeIcmd, icmdTypeSoeIcmdTrans, NULL, NULL},
+    {"Comment", icmdTypeSoeIcmd, icmdTypeSoeIcmdComment, NULL, NULL},
+    {"Timeout", icmdTypeSoeIcmd, icmdTypeSoeIcmdTimeout, NULL, NULL},
+    {"OpCode", icmdTypeSoeIcmd, icmdTypeSoeIcmdOpcode, NULL, NULL},
+    {"DriveNo", icmdTypeSoeIcmd, icmdTypeSoeIcmdDriveno, NULL, NULL},
+    {"IDN", icmdTypeSoeIcmd, icmdTypeSoeIcmdIdn, NULL, NULL},
+    {"Elements", icmdTypeSoeIcmd, icmdTypeSoeIcmdElements, NULL, NULL},
+    {"Attribute", icmdTypeSoeIcmd, icmdTypeSoeIcmdAttribute, NULL, NULL},
+    {"Data", icmdTypeSoeIcmd, icmdTypeSoeIcmdData, NULL, NULL},
+    {"NULL", -1, -1, NULL, NULL},
 };
 
 static long int parse_int(LCEC_CONF_ICMDS_STATE_T *state, const char *s, int len, long int min, long int max);
@@ -115,7 +115,7 @@ int parseIcmds(LCEC_CONF_SLAVE_T *slave, LCEC_CONF_OUTBUF_T *outputBuf, const ch
 
   // create xml parser
   memset(&state, 0, sizeof(state));
-  if (initXmlInst((LCEC_CONF_XML_INST_T *) &state, xml_states)) {
+  if (initXmlInst((LCEC_CONF_XML_INST_T *)&state, xml_states)) {
     fprintf(stderr, "%s: ERROR: Couldn't allocate memory for parser\n", modname);
     goto fail2;
   }
@@ -125,7 +125,7 @@ int parseIcmds(LCEC_CONF_SLAVE_T *slave, LCEC_CONF_OUTBUF_T *outputBuf, const ch
 
   state.currSlave = slave;
   state.outputBuf = outputBuf;
-  for (done=0; !done;) {
+  for (done = 0; !done;) {
     // read block
     int len = fread(buffer, 1, BUFFSIZE, file);
     if (ferror(file)) {
@@ -138,9 +138,8 @@ int parseIcmds(LCEC_CONF_SLAVE_T *slave, LCEC_CONF_OUTBUF_T *outputBuf, const ch
 
     // parse current block
     if (!XML_Parse(state.xml.parser, buffer, len, done)) {
-      fprintf(stderr, "%s: ERROR: Parse error at line %u: %s\n", modname,
-        (unsigned int)XML_GetCurrentLineNumber(state.xml.parser),
-        XML_ErrorString(XML_GetErrorCode(state.xml.parser)));
+      fprintf(stderr, "%s: ERROR: Parse error at line %u: %s\n", modname, (unsigned int)XML_GetCurrentLineNumber(state.xml.parser),
+          XML_ErrorString(XML_GetErrorCode(state.xml.parser)));
       goto fail3;
     }
   }
@@ -157,8 +156,8 @@ fail1:
 }
 
 static void xml_data_handler(void *data, const XML_Char *s, int len) {
-  LCEC_CONF_XML_INST_T *inst = (LCEC_CONF_XML_INST_T *) data;
-  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+  LCEC_CONF_XML_INST_T *inst = (LCEC_CONF_XML_INST_T *)data;
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *)inst;
 
   switch (inst->state) {
     case icmdTypeCoeIcmdTrans:
@@ -216,7 +215,7 @@ static void xml_data_handler(void *data, const XML_Char *s, int len) {
 }
 
 static void icmdTypeCoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
-  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *)inst;
 
   state->currSdoConf = addOutputBuffer(state->outputBuf, sizeof(LCEC_CONF_SDOCONF_T));
 
@@ -244,7 +243,7 @@ static void icmdTypeCoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const cha
 }
 
 static void icmdTypeCoeIcmdEnd(LCEC_CONF_XML_INST_T *inst, int next) {
-  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *)inst;
 
   if (state->currSdoConf->index == 0xffff) {
     fprintf(stderr, "%s: ERROR: sdoConfig has no idx attribute\n", modname);
@@ -261,9 +260,8 @@ static void icmdTypeCoeIcmdEnd(LCEC_CONF_XML_INST_T *inst, int next) {
   state->currSlave->sdoConfigLength += sizeof(LCEC_CONF_SDOCONF_T) + state->currSdoConf->length;
 }
 
-
 static void icmdTypeSoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const char **attr) {
-  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *)inst;
 
   state->currIdnConf = addOutputBuffer(state->outputBuf, sizeof(LCEC_CONF_IDNCONF_T));
 
@@ -279,7 +277,7 @@ static void icmdTypeSoeIcmdStart(LCEC_CONF_XML_INST_T *inst, int next, const cha
 }
 
 static void icmdTypeSoeIcmdEnd(LCEC_CONF_XML_INST_T *inst, int next) {
-  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *) inst;
+  LCEC_CONF_ICMDS_STATE_T *state = (LCEC_CONF_ICMDS_STATE_T *)inst;
 
   if (state->currIdnConf->idn == 0xffff) {
     fprintf(stderr, "%s: ERROR: idnConfig has no idn attribute\n", modname);
@@ -339,7 +337,7 @@ static int parse_data(LCEC_CONF_ICMDS_STATE_T *state, const char *s, int len) {
   }
 
   // allocate memory
-  p = (uint8_t *) addOutputBuffer(state->outputBuf, size);
+  p = (uint8_t *)addOutputBuffer(state->outputBuf, size);
   if (p == NULL) {
     XML_StopParser(state->xml.parser, 0);
     return 0;
@@ -349,4 +347,3 @@ static int parse_data(LCEC_CONF_ICMDS_STATE_T *state, const char *s, int len) {
   parseHex(s, len, p);
   return size;
 }
-

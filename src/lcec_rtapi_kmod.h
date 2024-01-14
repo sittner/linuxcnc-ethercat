@@ -19,19 +19,19 @@
 #ifndef _LCEC_RTAPI_KMOD_H_
 #define _LCEC_RTAPI_KMOD_H_
 
-#include <linux/slab.h>
 #include <linux/jiffies.h>
-#include <linux/time.h>
-#include <linux/sched.h>
 #include <linux/math64.h>
+#include <linux/sched.h>
+#include <linux/slab.h>
+#include <linux/time.h>
 
 #define lcec_zalloc(size) kzalloc(size, GFP_KERNEL)
-#define lcec_free(ptr) kfree(ptr)
+#define lcec_free(ptr)    kfree(ptr)
 
-#define lcec_gettimeofday(x) do_gettimeofday(x) 
+#define lcec_gettimeofday(x) do_gettimeofday(x)
 
 #define LCEC_MS_TO_TICKS(x) (HZ * x / 1000)
-#define lcec_get_ticks() ((long) jiffies)
+#define lcec_get_ticks()    ((long)jiffies)
 
 #define lcec_schedule() schedule()
 
@@ -42,4 +42,3 @@ static inline long long lcec_mod_64(long long val, unsigned long div) {
 }
 
 #endif
-

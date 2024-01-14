@@ -33,7 +33,7 @@ void lcec_addtype(const lcec_typelist_t *type) {
   t->next = NULL;
 
   if (typeslist == NULL) {
-    typeslist=t;
+    typeslist = t;
   } else {
     // This should really validate that we don't have duplicate names,
     // but there's no good way to print error messages here.  If we're
@@ -42,7 +42,8 @@ void lcec_addtype(const lcec_typelist_t *type) {
     //
     // Note that if there are duplicate names, then the first match
     // found will win in lcec_findslavetype, below.
-    for (l=typeslist; l->next != NULL; l=l->next);
+    for (l = typeslist; l->next != NULL; l = l->next)
+      ;
     l->next = t;
   }
 }
@@ -60,13 +61,13 @@ void lcec_addtypes(const lcec_typelist_t types[]) {
 const lcec_typelist_t *lcec_findslavetype(const char *name) {
   lcec_typelinkedlist_t *tl;
 
-  for (tl = typeslist; tl != NULL && tl->type != NULL && strcmp(tl->type->name, name) ; tl=tl->next);
-  
+  for (tl = typeslist; tl != NULL && tl->type != NULL && strcmp(tl->type->name, name); tl = tl->next)
+    ;
+
   if (tl != NULL) {
     return tl->type;
   }
-  
+
   // Not found
   return NULL;
 }
-

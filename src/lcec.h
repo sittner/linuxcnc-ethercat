@@ -18,50 +18,47 @@
 #ifndef _LCEC_H_
 #define _LCEC_H_
 
-#include "lcec_rtapi.h"
-
-#include "hal.h"
-
-#include "rtapi_ctype.h"
-#include "rtapi_string.h"
-#include "rtapi_math.h"
-
 #include "ecrt.h"
+#include "hal.h"
 #include "lcec_conf.h"
+#include "lcec_rtapi.h"
+#include "rtapi_ctype.h"
+#include "rtapi_math.h"
+#include "rtapi_string.h"
 
 // list macros
 #define LCEC_LIST_APPEND(first, last, item) \
-do {                             \
-  (item)->prev = (last);         \
-  if ((item)->prev != NULL) {    \
-    (item)->prev->next = (item); \
-  } else {                       \
-    (first) = (item);            \
-  }                              \
-  (last) = (item);               \
-} while (0);                     \
+  do {                                      \
+    (item)->prev = (last);                  \
+    if ((item)->prev != NULL) {             \
+      (item)->prev->next = (item);          \
+    } else {                                \
+      (first) = (item);                     \
+    }                                       \
+    (last) = (item);                        \
+  } while (0);
 
 // pdo macros
 #define LCEC_PDO_INIT(pdo, pos, vid, pid, idx, sidx, off, bpos) \
-do {                        \
-  pdo->position = pos;      \
-  pdo->vendor_id = vid;     \
-  pdo->product_code = pid;  \
-  pdo->index = idx;         \
-  pdo->subindex = sidx;     \
-  pdo->offset = off;        \
-  pdo->bit_position = bpos; \
-  pdo++;                    \
-} while (0);                \
+  do {                                                          \
+    pdo->position = pos;                                        \
+    pdo->vendor_id = vid;                                       \
+    pdo->product_code = pid;                                    \
+    pdo->index = idx;                                           \
+    pdo->subindex = sidx;                                       \
+    pdo->offset = off;                                          \
+    pdo->bit_position = bpos;                                   \
+    pdo++;                                                      \
+  } while (0);
 
 #define LCEC_MSG_PFX "LCEC: "
 
 // init macro; this will make GCC run calls to AddTypes() before
 // main() is called.  This is used to register new slave types
 // dynamically without needing a giant list in lcec_main.c.
-#define ADD_TYPES(types) \
-static void AddTypes(void) __attribute__((constructor)); \
-static void AddTypes(void) { lcec_addtypes(types); }
+#define ADD_TYPES(types)                                   \
+  static void AddTypes(void) __attribute__((constructor)); \
+  static void AddTypes(void) { lcec_addtypes(types); }
 
 // vendor ids, please keep sorted.
 #define LCEC_BECKHOFF_VID 0x00000002
@@ -81,8 +78,8 @@ static void AddTypes(void) { lcec_addtypes(types); }
 
 #define LCEC_IDN(type, set, block) (type | ((set & 0x07) << 12) | (block & 0x0fff))
 
-#define LCEC_FSOE_CMD_LEN 1
-#define LCEC_FSOE_CRC_LEN 2
+#define LCEC_FSOE_CMD_LEN    1
+#define LCEC_FSOE_CRC_LEN    2
 #define LCEC_FSOE_CONNID_LEN 2
 
 #define LCEC_FSOE_SIZE(ch_count, data_len) (LCEC_FSOE_CMD_LEN + ch_count * (data_len + LCEC_FSOE_CRC_LEN) + LCEC_FSOE_CONNID_LEN)
@@ -94,10 +91,10 @@ static void AddTypes(void) { lcec_addtypes(types); }
 struct lcec_master;
 struct lcec_slave;
 
-typedef int (*lcec_slave_preinit_t) (struct lcec_slave *slave);
-typedef int (*lcec_slave_init_t) (int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-typedef void (*lcec_slave_cleanup_t) (struct lcec_slave *slave);
-typedef void (*lcec_slave_rw_t) (struct lcec_slave *slave, long period);
+typedef int (*lcec_slave_preinit_t)(struct lcec_slave *slave);
+typedef int (*lcec_slave_init_t)(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+typedef void (*lcec_slave_cleanup_t)(struct lcec_slave *slave);
+typedef void (*lcec_slave_rw_t)(struct lcec_slave *slave, long period);
 
 typedef enum {
   MODPARAM_TYPE_BIT,

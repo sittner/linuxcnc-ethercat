@@ -16,11 +16,11 @@
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include <ctype.h>
 #include <expat.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "lcec_conf.h"
 #include "lcec_conf_priv.h"
@@ -37,7 +37,6 @@ void initOutputBuffer(LCEC_CONF_OUTBUF_T *buf) {
 }
 
 void *addOutputBuffer(LCEC_CONF_OUTBUF_T *buf, size_t len) {
-
   void *p = calloc(1, sizeof(LCEC_CONF_OUTBUF_ITEM_T) + len);
   if (p == NULL) {
     fprintf(stderr, "%s: ERROR: Couldn't allocate memory for config token\n", modname);
@@ -95,7 +94,7 @@ int initXmlInst(LCEC_CONF_XML_INST_T *inst, const LCEC_CONF_XML_HANLDER_T *state
 }
 
 static void xml_start_handler(void *data, const char *el, const char **attr) {
-  LCEC_CONF_XML_INST_T *inst = (LCEC_CONF_XML_INST_T *) data;
+  LCEC_CONF_XML_INST_T *inst = (LCEC_CONF_XML_INST_T *)data;
   const LCEC_CONF_XML_HANLDER_T *state;
 
   for (state = inst->states; state->el != NULL; state++) {
@@ -105,7 +104,7 @@ static void xml_start_handler(void *data, const char *el, const char **attr) {
       }
       inst->state = state->state_to;
       return;
-    } 
+    }
   }
 
   fprintf(stderr, "%s: ERROR: unexpected node %s found\n", modname, el);
@@ -113,7 +112,7 @@ static void xml_start_handler(void *data, const char *el, const char **attr) {
 }
 
 static void xml_end_handler(void *data, const char *el) {
-  LCEC_CONF_XML_INST_T *inst = (LCEC_CONF_XML_INST_T *) data;
+  LCEC_CONF_XML_INST_T *inst = (LCEC_CONF_XML_INST_T *)data;
   const LCEC_CONF_XML_HANLDER_T *state;
 
   for (state = inst->states; state->el != NULL; state++) {
@@ -123,7 +122,7 @@ static void xml_end_handler(void *data, const char *el) {
       }
       inst->state = state->state_from;
       return;
-    } 
+    }
   }
 
   fprintf(stderr, "%s: ERROR: unexpected close tag %s found\n", modname, el);
@@ -139,7 +138,7 @@ int parseHex(const char *s, int slen, uint8_t *buf) {
   for (len = 0, nib = 0, tmp = 0; (slen == -1 || slen > 0) && (c = *s) != 0; s++) {
     // update remaining length
     if (slen > 0) {
-      slen --;
+      slen--;
     }
 
     // skip blanks if no current nibble
@@ -178,4 +177,3 @@ int parseHex(const char *s, int slen, uint8_t *buf) {
 
   return len;
 }
-

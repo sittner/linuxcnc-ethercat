@@ -19,11 +19,11 @@
 #ifndef _LCEC_RTAPI_USER_H_
 #define _LCEC_RTAPI_USER_H_
 
+#include <sched.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include <sys/time.h>
-#include <sched.h>
+#include <time.h>
 
 static inline void *lcec_zalloc(size_t size) {
   void *p = malloc(size);
@@ -43,9 +43,6 @@ static inline long lcec_get_ticks(void) {
 
 #define lcec_schedule() sched_yield()
 
-static inline long long lcec_mod_64(long long val, unsigned long div) {
-  return val % div;
-}
+static inline long long lcec_mod_64(long long val, unsigned long div) { return val % div; }
 
 #endif
-

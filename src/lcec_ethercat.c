@@ -20,7 +20,7 @@
 
 static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, va_list ap);
 static int lcec_param_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap);
-int lcec_comp_id=-1;
+int lcec_comp_id = -1;
 
 lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index) {
   lcec_slave_t *slave;
@@ -52,9 +52,7 @@ void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigne
   }
 }
 
-void lcec_syncs_init(lcec_syncs_t *syncs) {
-  memset(syncs, 0, sizeof(lcec_syncs_t));
-}
+void lcec_syncs_init(lcec_syncs_t *syncs) { memset(syncs, 0, sizeof(lcec_syncs_t)); }
 
 void lcec_syncs_add_sync(lcec_syncs_t *syncs, ec_direction_t dir, ec_watchdog_mode_t watchdog_mode) {
   syncs->curr_sync = &syncs->syncs[syncs->sync_count];
@@ -103,13 +101,13 @@ int lcec_read_sdo(struct lcec_slave *slave, uint16_t index, uint8_t subindex, ui
 
   if ((err = ecrt_master_sdo_upload(master->master, slave->index, index, subindex, target, size, &result_size, &abort_code))) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to execute SDO upload (0x%04x:0x%02x, error %d, abort_code %08x)\n",
-      master->name, slave->name, index, subindex, err, abort_code);
+        master->name, slave->name, index, subindex, err, abort_code);
     return -1;
   }
 
   if (result_size != size) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Invalid result size on SDO upload (0x%04x:0x%02x, req: %u, res: %u)\n",
-      master->name, slave->name, index, subindex, (unsigned int) size, (unsigned int) result_size);
+        master->name, slave->name, index, subindex, (unsigned int)size, (unsigned int)result_size);
     return -1;
   }
 
@@ -123,14 +121,16 @@ int lcec_read_idn(struct lcec_slave *slave, uint8_t drive_no, uint16_t idn, uint
   uint16_t error_code;
 
   if ((err = ecrt_master_read_idn(master->master, slave->index, drive_no, idn, target, size, &result_size, &error_code))) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Failed to execute IDN read (drive %u idn %c-%u-%u, error %d, error_code %08x)\n",
-      master->name, slave->name, drive_no, (idn & 0x8000) ? 'P' : 'S', (idn >> 12) & 0x0007, idn & 0x0fff, err, error_code);
+    rtapi_print_msg(RTAPI_MSG_ERR,
+        LCEC_MSG_PFX "slave %s.%s: Failed to execute IDN read (drive %u idn %c-%u-%u, error %d, error_code %08x)\n", master->name,
+        slave->name, drive_no, (idn & 0x8000) ? 'P' : 'S', (idn >> 12) & 0x0007, idn & 0x0fff, err, error_code);
     return -1;
   }
 
   if (result_size != size) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "slave %s.%s: Invalid result size on IDN read (drive %u idn %c-%d-%d, req: %u, res: %u)\n",
-      master->name, slave->name, drive_no, (idn & 0x8000) ? 'P' : 'S', (idn >> 12) & 0x0007, idn & 0x0fff, (unsigned int) size, (unsigned int) result_size);
+        master->name, slave->name, drive_no, (idn & 0x8000) ? 'P' : 'S', (idn >> 12) & 0x0007, idn & 0x0fff, (unsigned int)size,
+        (unsigned int)result_size);
     return -1;
   }
 
@@ -143,7 +143,7 @@ static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr,
   int err;
 
   sz = rtapi_vsnprintf(name, sizeof(name), fmt, ap);
-  if(sz == -1 || sz > HAL_NAME_LEN) {
+  if (sz == -1 || sz > HAL_NAME_LEN) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "length %d too long for name starting '%s'\n", sz, name);
     return -ENOMEM;
   }
@@ -156,16 +156,16 @@ static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr,
 
   switch (type) {
     case HAL_BIT:
-      *((hal_bit_t *) data_addr) = 0;
+      *((hal_bit_t *)data_addr) = 0;
       break;
     case HAL_FLOAT:
-      *((hal_float_t *) data_addr) = 0.0;
+      *((hal_float_t *)data_addr) = 0.0;
       break;
     case HAL_S32:
-      *((hal_s32_t *) data_addr) = 0;
+      *((hal_s32_t *)data_addr) = 0;
       break;
     case HAL_U32:
-      *((hal_u32_t *) data_addr) = 0;
+      *((hal_u32_t *)data_addr) = 0;
       break;
     default:
       break;
@@ -192,7 +192,7 @@ static int lcec_param_newfv_list(void *base, const lcec_pindesc_t *list, va_list
 
   for (p = list; p->type != HAL_TYPE_UNSPECIFIED; p++) {
     va_copy(ac, ap);
-    err = lcec_param_newfv(p->type, p->dir, (void *) (base + p->offset), p->fmt, ac);
+    err = lcec_param_newfv(p->type, p->dir, (void *)(base + p->offset), p->fmt, ac);
     va_end(ac);
     if (err) {
       return err;
