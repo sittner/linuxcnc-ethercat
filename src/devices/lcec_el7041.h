@@ -21,8 +21,8 @@
 
 #include "../lcec.h"
 
-#define LCEC_EL7041_PDOS 34
+#define LCEC_EL7041_PDOS      34
 #define LCEC_EL7041_1000_PDOS 34
-#define LCEC_EP7041_PDOS 34
+#define LCEC_EP7041_PDOS      34
 
 #endif
