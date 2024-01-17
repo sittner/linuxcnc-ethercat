@@ -92,8 +92,8 @@
     </slave>
     <slave idx="17" type="EL1859" name="D17"/>
     <slave idx="18" type="EL4032" name="D18"/>
-<!--    <slave idx="19" type="EL7041" name="D19"/> -->
-<!--    <slave idx="20" type="EK1110" name="D20"/> -->
+    <slave idx="19" type="EL7041" name="D19"/>
+    <slave idx="20" type="EK1110" name="D20"/>
   </master>
 </masters>
     
