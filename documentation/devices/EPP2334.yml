@@ -1,0 +1,11 @@
+---
+Device: EPP2334
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x647657e9"
+Description: Beckhoff EPP2334-0061 4 Ch. Dig. Input/Output 24V, 0,5A, M8
+DocumentationURL: https://www.beckhoff.com/EPP2334-0061
+DeviceType: Digital Input/Output
+Notes: ""
+SrcFile: src/devices/lcec_el1859.c
+TestingStatus: ""

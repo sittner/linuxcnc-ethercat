@@ -15,6 +15,7 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff AX5805 (Safety Drive Option)](http://beckhoff.com/AX5805) | [ax5805](../src/devices/lcec_ax5805.c) | 0x2:0x16ad6012 | Safety Terminals |  | 
 [Delta MS-300 AC Motor Drive](https://www.deltaww.com/en-us/products/AC-Motor-Drives/3449) | [dems300](../src/devices/lcec_dems300.c) | 0x1dd:0x10400200 | AC Motor Drive |  | 
 [Delta ASDA-A2-E](https://www.deltaww.com/en-us/products/Servo-Systems-AC-Servo-Motors-and-Drives/23) | [deasda](../src/devices/lcec_deasda.c) | 0x1dd:0x10305070 | Servo Drive |  | 
+[Beckhoff EJ1859 8Ch. Dig. Input 24V, 3ms, 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EJ1859) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x07432852 | Digital Input/Output |  | 
 [Beckhoff EJ3004 4Ch. Ana. Input +/-10V](http://www.beckhoff.com/EJ3004) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0bbc2852 | Analog Input |  | 
 [Beckhoff EJ3202 2Ch. Ana. Input PT100 (RTD)](http://www.beckhoff.com/EJ3202) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0c822852 | Analog Input | New, untested | 
 [Beckhoff EJ3214 4Ch. Ana. Input PT100 (RTD)](http://www.beckhoff.com/EJ3214) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0c8e2852 | Analog Input | New, untested | 
@@ -45,6 +46,7 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EL1808 8Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1808) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x07103052 | Digital Input | Uncertain; @scottlaird has one | 
 [Beckhoff EL1809 16Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1809) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x07113052 | Digital Input |  | 
 [Beckhoff EL1819 16Ch. Dig. Input 24V, 10µs](http://www.beckhoff.com/EL1819) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x071b3052 | Digital Input |  | 
+[Beckhoff EL1852 8Ch. Dig. Input 24V, 3ms, 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL1852) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x073c3052 | Digital Input/Output |  | 
 [Beckhoff EL1859 8Ch. Dig. Input 24V, 3ms, 8Ch. Dig. Output 24V, 0.5A](http://www.beckhoff.com/EL1859) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x07433052 | Digital Input |  | 
 [Beckhoff EL1904, 4 Ch. Safety Input 24V, TwinSAFE](http://www.beckhoff.com/EL1904) | [el1904](../src/devices/lcec_el1904.c) | 0x2:0x07703052 | Safety Terminals | Part of @scottlaird's test suite, but not currently being evaluated. | 
 [Beckhoff EL1918, 8Ch. Safety Input 24V, TwinSAFE](http://www.beckhoff.com/EL1918) | [el1918_logic](../src/devices/lcec_el1918_logic.c) | 0x2:0x077e3052 | Safety Terminals |  | 
@@ -167,18 +169,27 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EP1819-0005 16 Ch. Dig. Input 24V, 10µs, M8 4pol](https://www.beckhoff.com/EP1819) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x071b4052 | Digital Input |  | 
 [Beckhoff EP2008-0001 8 Ch. Dig. Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2008-0001) | [el2xxx](../src/devices/lcec_el2xxx.c) | 0x2:0x07d84052 | Digital Output |  | 
 [Beckhoff EP2028-0001 8 Ch. Dig. Output 24V, 2A, M8](https://www.beckhoff.com/EP2028-0001) | [el2xxx](../src/devices/lcec_el2xxx.c) | 0x2:0x07ec4052 | Digital Output |  | 
-[Beckhoff EP2308-0000 4 Ch. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 0,5A, S8](https://www.beckhoff.com/EP2308-0000) | [ep23xx](../src/devices/lcec_ep23xx.c) | 0x2:0x09044052 | Digital Input/Output |  | 
+[Beckhoff EP2308-0000 4 Ch. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 0,5A, S8](https://www.beckhoff.com/EP2308-0000) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x09044052 | Digital Input/Output |  | 
 [Beckhoff EP2316-0003 8 Ch. Dig. In, 10µs, 8Ch. Dig. Out 24V, 0,5A, Diagnostic, 10-Pole Plug Connector](https://www.beckhoff.com/EP2316-0003) | [ep2316](../src/devices/lcec_ep2316.c) | 0x2:0x090c4052 | Digital Input/Output |  | 
-[Beckhoff EP2318-0001 4 Ch. Dig. In, 10µs, 4 Ch. Dig. Out 24V, 0,5A, M8](https://www.beckhoff.com/EP2318-0001) | [ep23xx](../src/devices/lcec_ep23xx.c) | 0x2:0x090e4052 | Digital Input/Output |  | 
-[Beckhoff EP2328-0001 4 CH. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 2A, M8](https://www.beckhoff.com/EP2328-0001) | [ep23xx](../src/devices/lcec_ep23xx.c) | 0x2:0x09184052 | Digital Input/Output |  | 
-[Beckhoff EP2338-0001 8 Ch. Dig. Input/Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2338-0001) | [ep23xx](../src/devices/lcec_ep23xx.c) | 0x2:0x09224052 | Digital Input/Output | Uncertain; @scottlaird has several | 
-[Beckhoff EP2349-0021 16 Ch. Dig. Input/Output 24V, 10µs, 0,5A, M8](https://www.beckhoff.com/EP2349-0021) | [ep23xx](../src/devices/lcec_ep23xx.c) | 0x2:0x092d4052 | Digital Input/Output |  | 
+[Beckhoff EP2318-0001 4 Ch. Dig. In, 10µs, 4 Ch. Dig. Out 24V, 0,5A, M8](https://www.beckhoff.com/EP2318-0001) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x090e4052 | Digital Input/Output |  | 
+[Beckhoff EP2328-0001 4 CH. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 2A, M8](https://www.beckhoff.com/EP2328-0001) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x09184052 | Digital Input/Output |  | 
+[Beckhoff EP2338-0001 8 Ch. Dig. Input/Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2338-0001) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x09224052 | Digital Input/Output | Uncertain; @scottlaird has several | 
+[Beckhoff EP2339 16 Ch. Dig. Input/Output 24V, 0,5A, 10-Pole Plug Connector](https://www.beckhoff.com/EP2339-0003) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x09234052 | Digital Input/Output |  | NOTE: some r16 EP2339 devices have a different PDO layout and will not work.
+[Beckhoff EP2349-0021 16 Ch. Dig. Input/Output 24V, 10µs, 0,5A, M8](https://www.beckhoff.com/EP2349-0021) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x092d4052 | Digital Input/Output |  | 
 [Beckhoff EP2809-0021 16 Ch. Dig. Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2809-0021) | [el2xxx](../src/devices/lcec_el2xxx.c) | 0x2:0x0af94052 | Digital Output |  | 
 [Beckhoff EP3174-0002 4Ch. Ana. Input +/-10V, 0-10V, 0/4-20mA configurable](https://www.beckhoff.com/EP3174-0002) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0c664052 | Analog Input |  | 
 [Beckhoff EP3184-0002 4Ch. Ana. Input +/-10V, 0-10V, 0/4-20mA configurable, single ended](https://www.beckhoff.com/EP3184-0002) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0c704052 | Analog Input |  | 
 [Beckhoff EP3204-0002 4Ch. Ana. Input PT100 (RTD)](https://www.beckhoff.com/EP3204-0002) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x0c844052 | Analog Input |  | 
 [Beckhoff EL7041 1Ch. Stepper motor output stage (50V, 5A)](http://www.beckhoff.com/EL7041) | [el7041](../src/devices/lcec_el7041.c) | 0x2:0x1b813052 | Stepper Drive | Uncertain; @scottlaird has several EP7041-0002 | 
+[Beckhoff EPP2308-0001 4 Ch. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 0,5A, M8](https://www.beckhoff.com/EPP2308-0001) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x64765649 | Digital Input/Output |  | 
+[Beckhoff EPP2318-0001 4 Ch. Dig. In, 10µs, 4 Ch. Dig. Out 24V, 0,5A, M8](https://www.beckhoff.com/EPP2318-0001) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x647656e9 | Digital Input/Output |  | 
+[Beckhoff EPP2328-0001 4 CH. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 2A, M8](https://www.beckhoff.com/EPP2328-0001) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x64765789 | Digital Input/Output |  | 
+[Beckhoff EPP2334-0061 4 Ch. Dig. Input/Output 24V, 0,5A, M8](https://www.beckhoff.com/EPP2334-0061) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x647657e9 | Digital Input/Output |  | 
+[Beckhoff EP2338-0001 8 Ch. Dig. Input/Output 24V, 0,5A, M8](https://www.beckhoff.com/EP2338-0001) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x09224052 | Digital Input/Output |  | 
+[Beckhoff EPP2339-0003 16 Ch. Dig. Input/Output 24V, 0,5A, 10-Pole Plug Connector](https://www.beckhoff.com/EPP2339-0003) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x64765839 | Digital Input/Output |  | 
+[Beckhoff EPP2349-0021 16 Ch. Dig. Input/Output 24V, 10µs, 0,5A, M8](https://www.beckhoff.com/EPP2349-0021) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x647658d9 | Digital Input/Output |  | 
 [Beckhoff EPX3158 8Ch. Ana. Input 4-20mA, Ex i](http://www.beckhoff.com/EPX3158) | [el3xxx](../src/devices/lcec_el3xxx.c) | 0x2:0x9809ab69 | Analog Input | New, untested. | 
+[Beckhoff EP2349-0021 16 Ch. Dig. Input/Output 24V, 10µs, 0,5A, M8](https://www.beckhoff.com/EP2349-0021) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x092d4052 | Digital Input/Output |  | 
 [SMC EX260-SEC1](https://www.smcpneumatics.com/EX260-SEC1.html) | [ex260](../src/devices/lcec_ex260.c) | 0x114:0x01000001 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc
 [SMC EX260-SEC1](https://www.smcpneumatics.com/EX260-SEC2.html) | [ex260](../src/devices/lcec_ex260.c) | 0x114:0x01000002 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc
 [SMC EX260-SEC3](https://www.smcpneumatics.com/EX260-SEC3.html) | [ex260](../src/devices/lcec_ex260.c) | 0x114:0x01000003 | Valve Controller | Merged 2023-12-31, untested | by @satiowadahc

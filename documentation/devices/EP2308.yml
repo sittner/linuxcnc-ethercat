@@ -7,5 +7,5 @@ Description: Beckhoff EP2308-0000 4 Ch. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 0,5A, 
 DocumentationURL: https://www.beckhoff.com/EP2308-0000
 DeviceType: Digital Input/Output
 Notes: ""
-SrcFile: src/devices/lcec_ep23xx.c
 TestingStatus: ""
+SrcFile: src/devices/lcec_el1859.c

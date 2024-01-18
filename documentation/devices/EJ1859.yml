@@ -1,0 +1,11 @@
+---
+Device: EJ1859
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH
+PID: "0x07432852"
+Description: Beckhoff EJ1859 8Ch. Dig. Input 24V, 3ms, 8Ch. Dig. Output 24V, 0.5A
+DocumentationURL: http://www.beckhoff.com/EJ1859
+DeviceType: Digital Input/Output
+Notes: ""
+SrcFile: src/devices/lcec_el1859.c
+TestingStatus: ""

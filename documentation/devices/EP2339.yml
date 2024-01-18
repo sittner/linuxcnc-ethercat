@@ -1,0 +1,11 @@
+---
+Device: EP2339
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x09234052"
+Description: Beckhoff EP2339 16 Ch. Dig. Input/Output 24V, 0,5A, 10-Pole Plug Connector
+DocumentationURL: https://www.beckhoff.com/EP2339-0003
+DeviceType: Digital Input/Output
+Notes: "NOTE: some r16 EP2339 devices have a different PDO layout and will not work."
+SrcFile: src/devices/lcec_el1859.c
+TestingStatus: ""

@@ -1,0 +1,11 @@
+---
+Device: EPP2308
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x64765649"
+Description: Beckhoff EPP2308-0001 4 Ch. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 0,5A, M8
+DocumentationURL: https://www.beckhoff.com/EPP2308-0001
+DeviceType: Digital Input/Output
+Notes: ""
+SrcFile: src/devices/lcec_el1859.c
+TestingStatus: ""

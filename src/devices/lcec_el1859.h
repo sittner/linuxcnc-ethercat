@@ -22,4 +22,9 @@
 
 #define LCEC_EL1859_PINS 8
 #define LCEC_EL1859_PDOS (2 * LCEC_EL1859_PINS)
+#define LCEC_EP2308_PDOS 8   // Can be in or out on each port, so 2 PDOs per port.
+#define LCEC_EP2318_PDOS 8   // Can be in or out on each port, so 2 PDOs per port.
+#define LCEC_EP2328_PDOS 8   // Can be in or out on each port, so 2 PDOs per port.
+#define LCEC_EP2338_PDOS 16  // Can be in or out on each port, so 2 PDOs per port.
+#define LCEC_EP2349_PDOS 32  // Can be in or out on each port, so 2 PDOs per port.
 #endif
