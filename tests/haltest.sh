@@ -126,11 +126,12 @@ sleep 1
 echo "=== Starting halrun"
 halrun -f test2.hal > /tmp/testbench-init.out &
 
-echo "=== Sleeping for 3s to allow ethercat to finish initializing"
+# It seems to take around 200ms per device to init, with a 2s delay, we only make it through D12 or so.
+echo "... Sleeping for 3s to allow ethercat to finish initializing"
 sleep 3 # let ethercat states settle
 
 OUT=/tmp/testbench-1.out
-halcmd show > $OUT
+update
 
 echo "=== Testing for failed devices"
 if ! grep 'lcec.state-op' $OUT > /dev/null; then
@@ -152,56 +153,58 @@ fi
 # This doesn't really *do* anything, but it's reasonable to verify
 # that it's in a sane state.
 
-#echo "=== Testing initial config of D0 (EK1100)"
-#test-pin-true D0 slave-online
-#test-slave-oper D0
+echo "=== Testing initial configs"
+echo "... Testing initial config of D0 (EK1100)"
+test-pin-true D0 slave-online
+test-slave-oper D0
 
-
-echo "=== Testing initial config of D1 (EL1008)"
+echo "... Testing initial config of D1 (EL1008)"
+test-slave-oper D1
 test-pin-exists D1 din-7
 test-pin-count D1 22
 
-
-echo "=== Testing initial config of D2 (EL1008, generic)"
+echo "... Testing initial config of D2 (EL1008, generic)"
+test-slave-oper D2
 test-pin-exists D2 din-7
 test-pin-count D2 14
 
-
-echo "=== Testing initial config of D3 (EL2008)"
+echo "... Testing initial config of D3 (EL2008)"
+test-slave-oper D3
 test-pin-exists D3 dout-7
 test-pin-count D3 22
 
-
-echo "=== Testing initial config of D4 (EL2008)"
+echo "... Testing initial config of D4 (EL2008, generic)"
+test-slave-oper D4
 test-pin-exists D4 dout-7
 test-pin-count D4 14
 
-echo "=== Testing initial config of D5 (EL2084)"
+echo "... Testing initial config of D5 (EL2084)"
+test-slave-oper D5
 test-pin-exists D5 dout-3
 test-pin-count D5 14
 
-
-echo "=== Testing initial config of D6 (EL2022)"
+echo "... Testing initial config of D6 (EL2022)"
+test-slave-oper D6
 test-pin-exists D6 dout-1
 test-pin-count D6 10
 
-
-echo "=== Testing initial config of D7 (EL2022)"
+echo "... Testing initial config of D7 (EL2022)"
+test-slave-oper D7
 test-pin-exists D7 dout-1
 test-pin-count D7 10
 
-
-echo "=== Testing initial config of D8 (EL2034)"
+echo "... Testing initial config of D8 (EL2034)"
+test-slave-oper D8
 test-pin-exists D8 dout-3
 test-pin-count D8 14
 
-
-echo "=== Testing initial config of D9 (EL2798)"
+echo "... Testing initial config of D9 (EL2798)"
+test-slave-oper D9
 test-pin-exists D9 dout-7
 test-pin-count D9 22
 
-
-echo "=== Testing initial config of D10 (EL3068)"
+echo "... Testing initial config of D10 (EL3068)"
+test-slave-oper D10
 test-pin-exists D10 ain-7-val
 test-pin-notexists D10 ain-7-sync-err
 test-pin-count D10 62
@@ -218,54 +221,46 @@ test-pin-greater D10 ain-0-val 0.1
 #    halrun -U; exit 1
 #fi
 
-echo "=== Testing initial config of D12 (EL6900)"
+echo "... Testing initial config of D12 (EL6900)"
+test-slave-oper D12
 test-pin-exists D12 control
 test-pin-count D12 13
 
-
-echo "=== Testing initial config of D13 (EL1904)"
+echo "... Testing initial config of D13 (EL1904)"
+test-slave-oper D13
 test-pin-exists D13 fsoe-in-3
 test-pin-count D13 20
 
-
-echo "=== Testing initial config of D14 (EL2904)"
+echo "... Testing initial config of D14 (EL2904)"
+test-slave-oper D14
 test-pin-exists D14 out-3
 test-pin-exists D14 fsoe-out-3
 test-pin-count D14 20
 
-
-echo "=== Testing initial config of D15 (EL3403)"
+echo "... Testing initial config of D15 (EL3403)"
+test-slave-oper D15
 test-pin-exists D15 l2.cosphi
 test-pin-count D15 44
 
-
-echo "=== Testing initial config of D16 (EL3204)"
+echo "... Testing initial config of D16 (EL3204)"
+test-slave-oper D16
 test-pin-exists D16 temp-3-temperature
 test-pin-count D16 30
 
-
-echo "=== Testing initial config of D18 (EL1859)"
+echo "... Testing initial config of D18 (EL1859)"
+test-slave-oper D18
 test-pin-exists D18 din-7
 test-pin-exists D18 dout-7
 test-pin-count D18 38
 
-
-echo "=== Testing initial config of D19 (EL4032)"
+echo "... Testing initial config of D19 (EL4032)"
+test-slave-oper D19
 test-pin-exists D19 aout-1-value
 test-pin-exists D19 aout-1-min-dc
 test-pin-count D19 28
 
-#echo "=== Testing initial config of D19 (EK1101)"
-#if ! grep 'TRUE  lcec.0.D19.slave-online' $OUT > /dev/null; then
-#    echo "ERROR: device D19 (EK1101) is not 'slave-online'"
-#    halrun -U; exit 1
-#fi
-#
-#if ! grep 'TRUE  lcec.0.D19.slave-oper' $OUT > /dev/null; then
-#    echo "ERROR: device D19 (EK1101) is not 'slave-oper'"
-#    halrun -U; exit 1
-#fi
-
+echo "... Testing initial config of D20 (EK1101)"
+test-slave-oper D20
 
 echo "=== Initial config tests pass"
 
@@ -273,61 +268,55 @@ echo "=== Initial config tests pass"
 echo "=== Testing Digital I/O"
 
 
-echo "=== Verifying initial state"
+echo "... Verifying initial state"
 test-all-din-false
 
-echo "=== Turning on D3.dout-1" 
+echo "... Checking D3.1->D1.1"
 set-pin D3 dout-1 true
 test-pin-true D3 dout-1
-
-echo "=== Checking D1.din-1"
-OUT=/tmp/testbench-2.out
-halcmd show > $OUT
 test-pin-true D1 din-1
 test-all-din-true-count 1
-
-echo "=== Turning off D3.dout-1" 
 set-pin D3 dout-1 false
-test-pin-false D3 dout-1
-
-echo "=== Verifying"
 test-all-din-false
 
-echo "=== Turning on D4.dout-3" 
+echo "... Checking D4.3->D2.3"
 set-pin D4 dout-3 true
 test-pin-true D4 dout-3
-
-echo "=== Checking D2.din-3"
-OUT=/tmp/testbench-3.out
-halcmd show > $OUT
 test-pin-true D2 din-3
 test-all-din-true-count 1
-
-echo "=== Turning off D4.dout-3" 
 set-pin D4 dout-3 false
-test-pin-false D4 dout-3
-
-echo "=== Verifying"
 test-all-din-false
 
-echo "=== Turning on D4.dout-5" 
+echo "... Checking D4.4->D1.5"
 set-pin D4 dout-5 true
 test-pin-true D4 dout-5
-
-echo "=== Checking D1.din-5"
-OUT=/tmp/testbench-3.out
-halcmd show > $OUT
 test-pin-true D1 din-5
 test-all-din-true-count 1
-
-echo "=== Turning off D4.dout-5" 
 set-pin D4 dout-5 false
-test-pin-false D4 dout-5
-
-echo "=== Verifying"
 test-all-din-false
 
-echo "=== Checking D15 power"
+echo "... checking D18 cross-connect"
+set-pin D18 dout-0 true
+test-pin-true D18 din-0
+test-all-din-true-count 1
+set-pin D18 dout-0 false
+test-all-din-false
+
+echo "... checking D18 to D1"
+set-pin D18 dout-6 true
+test-pin-true D1 din-7
+test-all-din-true-count 1
+set-pin D18 dout-6 false
+test-all-din-false
+
+echo "... checking D18 to D2"
+set-pin D18 dout-7 true
+test-pin-true D2 din-7
+test-all-din-true-count 1
+set-pin D18 dout-7 false
+test-all-din-false
+
+echo "... Checking D15 power measurements"
 test-pin-greater D15 l0.frequency 59
 test-pin-less D15 l0.frequency 61
 
@@ -335,7 +324,7 @@ test-pin-greater D15 l0.voltage 110
 test-pin-less D15 l0.voltage 125
 
 
-echo "=== Checking D16 temperatures"
+echo "... Checking D16 temperatures"
 test-pin-greater D16 temp-0-temperature 15
 test-pin-less D16 temp-0-temperature 30
 
@@ -347,8 +336,6 @@ test-pin-less D16 temp-2-temperature 30
 
 test-pin-greater D16 temp-3-temperature 950
 test-pin-less D16 temp-3-temperature 1050
-
-
 
 echo "=== ALL TESTS PASS ==="
 halrun -U -Q

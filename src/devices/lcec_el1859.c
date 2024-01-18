@@ -16,118 +16,72 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
-#include "../lcec.h"
 #include "lcec_el1859.h"
+
+#include "../lcec.h"
+#include "lcec_class_din.h"
+#include "lcec_class_dout.h"
 
 static int lcec_el1859_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
-static lcec_typelist_t types[]={
-  { "EL1859", LCEC_BECKHOFF_VID, 0x07433052, LCEC_EL1859_PDOS, 0, NULL, lcec_el1859_init},
-  { NULL },
+static lcec_typelist_t types[] = {
+    {"EL1859", LCEC_BECKHOFF_VID, 0x07433052, LCEC_EL1859_PDOS, 0, NULL, lcec_el1859_init},
+    {NULL},
 };
 ADD_TYPES(types);
 
 typedef struct {
-  hal_bit_t *in;
-  hal_bit_t *in_not;
-  hal_bit_t *out;
-  hal_bit_t invert;
-  unsigned int pdo_in_os;
-  unsigned int pdo_in_bp;
-  unsigned int pdo_out_os;
-  unsigned int pdo_out_bp;
-
-} lcec_el1859_pin_t;
-
-static const lcec_pindesc_t slave_pins[] = {
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el1859_pin_t, in), "%s.%s.%s.din-%d" },
-  { HAL_BIT, HAL_OUT, offsetof(lcec_el1859_pin_t, in_not), "%s.%s.%s.din-%d-not" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_el1859_pin_t, out), "%s.%s.%s.dout-%d" },
-  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
-};
-
-static const lcec_pindesc_t slave_params[] = {
-  { HAL_BIT, HAL_RW, offsetof(lcec_el1859_pin_t, invert), "%s.%s.%s.dout-%d-invert" },
-  { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
-};
-
+  lcec_class_din_pins_t *pins_in;
+  lcec_class_dout_pins_t *pins_out;
+} lcec_el1859_data_t;
 
 static void lcec_el1859_read(struct lcec_slave *slave, long period);
 static void lcec_el1859_write(struct lcec_slave *slave, long period);
 
 static int lcec_el1859_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
-  lcec_master_t *master = slave->master;
-  lcec_el1859_pin_t *hal_data;
-  lcec_el1859_pin_t *pin;
+  lcec_el1859_data_t *hal_data;
   int i;
-  int err;
 
   // initialize callbacks
   slave->proc_read = lcec_el1859_read;
   slave->proc_write = lcec_el1859_write;
 
   // alloc hal memory
-  if ((hal_data = hal_malloc(sizeof(lcec_el1859_pin_t) * LCEC_EL1859_PINS)) == NULL) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for slave %s.%s failed\n", master->name, slave->name);
+  if ((hal_data = hal_malloc(sizeof(lcec_el1859_data_t) * LCEC_EL1859_PINS)) == NULL) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for slave %s.%s failed\n", slave->master->name, slave->name);
     return -EIO;
   }
-  memset(hal_data, 0, sizeof(lcec_el1859_pin_t) * LCEC_EL1859_PINS);
+  memset(hal_data, 0, sizeof(lcec_el1859_data_t) * LCEC_EL1859_PINS);
   slave->hal_data = hal_data;
 
+  hal_data->pins_in = lcec_din_allocate_pins(LCEC_EL1859_PINS);
+  hal_data->pins_out = lcec_dout_allocate_pins(LCEC_EL1859_PINS);
+
   // initialize pins
-  for (i=0, pin=hal_data; i<LCEC_EL1859_PINS; i++, pin++) {
-    // initialize POD entry
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x01, &pin->pdo_in_os, &pin->pdo_in_bp);
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7080 + (i << 4), 0x01, &pin->pdo_out_os, &pin->pdo_out_bp);
-
-    // export pins
-    if ((err = lcec_pin_newf_list(pin, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      return err;
-    }
-
-    // export parameters
-    if ((err = lcec_param_newf_list(pin, slave_params, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      return err;
-    }
+  for (i = 0; i < LCEC_EL1859_PINS; i++) {
+    hal_data->pins_in->pins[i] = lcec_din_register_pin(&pdo_entry_regs, slave, i, 0x6000 + (i << 4), 0x01);
+    hal_data->pins_out->pins[i] = lcec_dout_register_pin(&pdo_entry_regs, slave, i, 0x7000 + (i << 4), 0x01);
   }
-
-  return 0;
 }
 
 static void lcec_el1859_read(struct lcec_slave *slave, long period) {
-  lcec_master_t *master = slave->master;
-  lcec_el1859_pin_t *hal_data = (lcec_el1859_pin_t *) slave->hal_data;
-  uint8_t *pd = master->process_data;
-  lcec_el1859_pin_t *pin;
-  int i, s;
+  lcec_el1859_data_t *hal_data = (lcec_el1859_data_t *)slave->hal_data;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
     return;
   }
 
-  // check inputs
-  for (i=0, pin=hal_data; i<LCEC_EL1859_PINS; i++, pin++) {
-    s = EC_READ_BIT(&pd[pin->pdo_in_os], pin->pdo_in_bp);
-    *(pin->in) = s;
-    *(pin->in_not) = !s;
-  }
+  lcec_din_read_all(slave, hal_data->pins_in);
 }
 
 static void lcec_el1859_write(struct lcec_slave *slave, long period) {
-  lcec_master_t *master = slave->master;
-  lcec_el1859_pin_t *hal_data = (lcec_el1859_pin_t *) slave->hal_data;
-  uint8_t *pd = master->process_data;
-  lcec_el1859_pin_t *pin;
-  int i, s;
+  lcec_el1859_data_t *hal_data = (lcec_el1859_data_t *)slave->hal_data;
 
-  // set outputs
-  for (i=0, pin=hal_data; i<LCEC_EL1859_PINS; i++, pin++) {
-    s = *(pin->out);
-    if (pin->invert) {
-      s = !s;
-    }
-    EC_WRITE_BIT(&pd[pin->pdo_out_os], pin->pdo_out_bp, s);
+  // wait for slave to be operational
+  if (!slave->state.operational) {
+    return;
   }
-}
 
+  lcec_dout_write_all(slave, hal_data->pins_out);
+}
