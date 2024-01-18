@@ -29,8 +29,20 @@ static const lcec_pindesc_t slave_pins[] = {
 // lcec_din_allocate_pins returns a block of memory for holding the
 // result of `count` calls to `lcec_din_register_device()`.  It is the
 // caller's responsibility to verify that the result is not NULL.
-lcec_class_din_pin_t **lcec_din_allocate_pins(int count) {
-  return hal_malloc(sizeof(lcec_class_din_pin_t *)*count);
+lcec_class_din_pins_t *lcec_din_allocate_pins(int count) {
+  lcec_class_din_pins_t *pins;
+
+  pins = hal_malloc(sizeof(lcec_class_din_pins_t));
+  if (pins == NULL) {
+    return NULL;
+  }
+  pins->count = count;
+  pins->pins = hal_malloc(sizeof(lcec_class_din_pin_t *) * count);
+  if (pins->pins == NULL) {
+    return NULL;
+  }
+
+  return pins;
 }
 
 // lcec_din_register_pin registers a single digital-input channel and publishes it as a LinuxCNC HAL pin.
@@ -44,19 +56,20 @@ lcec_class_din_pin_t **lcec_din_allocate_pins(int count) {
 // - sindx: the PDO sub-index for the digital input.
 //
 // See lcec_el1xxx.c for an example of use.
-lcec_class_din_pin_t *lcec_din_register_pin(ec_pdo_entry_reg_t **pdo_entry_regs, struct lcec_slave *slave, int id, uint16_t idx, uint16_t sidx) {
+lcec_class_din_pin_t *lcec_din_register_pin(
+    ec_pdo_entry_reg_t **pdo_entry_regs, struct lcec_slave *slave, int id, uint16_t idx, uint16_t sidx) {
   lcec_class_din_pin_t *data;
   int err;
-  
+
   data = hal_malloc(sizeof(lcec_class_din_pin_t));
   if (data == NULL) {
     rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for slave %s.%s pin %d failed\n", slave->master->name, slave->name, id);
     return NULL;
   }
   memset(data, 0, sizeof(lcec_class_din_pin_t));
-  //data->idx = idx;
-  //data->sidx = sidx;
-  
+  // data->idx = idx;
+  // data->sidx = sidx;
+
   LCEC_PDO_INIT((*pdo_entry_regs), slave->index, slave->vid, slave->pid, idx, sidx, &data->pdo_os, &data->pdo_bp);
   err = lcec_pin_newf_list(data, slave_pins, LCEC_MODULE_NAME, slave->master->name, slave->name, id);
   if (err != 0) {
@@ -80,12 +93,36 @@ void lcec_din_read(struct lcec_slave *slave, lcec_class_din_pin_t *data) {
   lcec_master_t *master = slave->master;
   uint8_t *pd = master->process_data;
   int s;
-  
+
   if (!slave->state.operational) {
-    return ;
+    return;
   }
 
-  s = EC_READ_BIT(&pd[data->pdo_os],data->pdo_bp);
+  s = EC_READ_BIT(&pd[data->pdo_os], data->pdo_bp);
   *(data->in) = s;
   *(data->in_not) = !s;
+}
+
+// lcec_din_read_all reads data from all digital in ports.
+//
+// Parameters:
+//
+// - slave: the slave, passed from the per-device `_read`.
+// - pins: a lcec_class_din_pins_t *, as returned by lcec_din_register_pin.
+void lcec_din_read_all(struct lcec_slave *slave, lcec_class_din_pins_t *pins) {
+  lcec_master_t *master = slave->master;
+  uint8_t *pd = master->process_data;
+  int s;
+
+  if (!slave->state.operational) {
+    return;
+  }
+
+  for (int i = 0; i < pins->count; i++) {
+    lcec_class_din_pin_t *pin = pins->pins[i];
+
+    s = EC_READ_BIT(&pd[pin->pdo_os], pin->pdo_bp);
+    *(pin->in) = s;
+    *(pin->in_not) = !s;
+  }
 }

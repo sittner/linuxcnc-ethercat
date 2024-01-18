@@ -57,7 +57,7 @@ static void lcec_el1xxx_read(struct lcec_slave *slave, long period);
 
 static int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
-  lcec_class_din_pin_t **hal_data;
+  lcec_class_din_pins_t *hal_data;
   int i;
 
   // initialize callbacks
@@ -69,16 +69,16 @@ static int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
 
   // initialize pins
   for (i = 0; i < slave->pdo_entry_count; i++) {
-    hal_data[i]=lcec_din_register_pin(&pdo_entry_regs, slave, i, 0x6000 + (i<<4), 0x01);
+    hal_data->pins[i]=lcec_din_register_pin(&pdo_entry_regs, slave, i, 0x6000 + (i<<4), 0x01);
 
-    if (hal_data[i]==NULL) { return -EIO; }
+    if (hal_data->pins[i]==NULL) { return -EIO; }
   }
 
   return 0;
 }
 
 static void lcec_el1xxx_read(struct lcec_slave *slave, long period) {
-  lcec_class_din_pin_t **hal_data = (lcec_class_din_pin_t **)slave->hal_data;
+  lcec_class_din_pins_t *hal_data = (lcec_class_din_pins_t *)slave->hal_data;
   int i;
 
   // wait for slave to be operational
@@ -86,8 +86,5 @@ static void lcec_el1xxx_read(struct lcec_slave *slave, long period) {
     return;
   }
 
-  // check inputs
-  for (i = 0; i < slave->pdo_entry_count; i++) {
-    lcec_din_read(slave, hal_data[i]);
-  }
+  lcec_din_read_all(slave, hal_data);
 }

@@ -24,6 +24,13 @@ typedef struct {
   unsigned int pdo_os, pdo_bp;
 } lcec_class_din_pin_t;
 
-lcec_class_din_pin_t **lcec_din_allocate_pins(int count);
-lcec_class_din_pin_t *lcec_din_register_pin(ec_pdo_entry_reg_t **pdo_entry_regs, struct lcec_slave *slave, int id, uint16_t idx, uint16_t sidx);
+typedef struct {
+  int count;
+  lcec_class_din_pin_t **pins;
+} lcec_class_din_pins_t;
+
+lcec_class_din_pins_t *lcec_din_allocate_pins(int count);
+lcec_class_din_pin_t *lcec_din_register_pin(
+    ec_pdo_entry_reg_t **pdo_entry_regs, struct lcec_slave *slave, int id, uint16_t idx, uint16_t sidx);
 void lcec_din_read(struct lcec_slave *slave, lcec_class_din_pin_t *data);
+void lcec_din_read_all(struct lcec_slave *slave, lcec_class_din_pins_t *pins);
