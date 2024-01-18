@@ -79,7 +79,6 @@ static int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_
 
 static void lcec_el1xxx_read(struct lcec_slave *slave, long period) {
   lcec_class_din_pins_t *hal_data = (lcec_class_din_pins_t *)slave->hal_data;
-  int i;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
