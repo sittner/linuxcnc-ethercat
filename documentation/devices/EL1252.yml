@@ -6,6 +6,6 @@ PID: "0x04e43052"
 Description: Beckhoff EL1252 2Ch. Fast Dig. Input 24V, 1µs, DC Latch
 DocumentationURL: http://www.beckhoff.com/EL1252
 DeviceType: Digital Input
-Notes: ""
+Notes: "Driver does not support hardware timestamping"
 SrcFile: src/devices/lcec_el1252.c
 TestingStatus: ""

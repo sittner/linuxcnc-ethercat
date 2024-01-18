@@ -19,13 +19,7 @@
 #ifndef _LCEC_EL1252_H_
 #define _LCEC_EL1252_H_
 
-/** \brief Product Code */
-
-/** \brief Number of channels */
 #define LCEC_EL1252_CHANS 2
+#define LCEC_EL1252_PDOS  LCEC_EL1252_CHANS  // Should match what we register, not what the device publishes.  I think.
 
-/** \brief Number of PDO */
-#define LCEC_EL1252_PDOS (4 * LCEC_EL1252_CHANS)
-
-/** \brief Vendor ID */
 #endif

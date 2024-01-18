@@ -41,7 +41,7 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EL1124 4Ch. Dig. Input 5V, 10µs, Sensor Power](http://www.beckhoff.com/EL1124) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x04643052 | Digital Input |  | 
 [Beckhoff EL1134 4Ch. Dig. Input 48V, 10µs, Sensor Power](http://www.beckhoff.com/EL1134) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x046e3052 | Digital Input |  | 
 [Beckhoff EL1144 4Ch. Dig. Input 12V, 10µs, Sensor Power](http://www.beckhoff.com/EL1144) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x04783052 | Digital Input |  | 
-[Beckhoff EL1252 2Ch. Fast Dig. Input 24V, 1µs, DC Latch](http://www.beckhoff.com/EL1252) | [el1252](../src/devices/lcec_el1252.c) | 0x2:0x04e43052 | Digital Input |  | 
+[Beckhoff EL1252 2Ch. Fast Dig. Input 24V, 1µs, DC Latch](http://www.beckhoff.com/EL1252) | [el1252](../src/devices/lcec_el1252.c) | 0x2:0x04e43052 | Digital Input |  | Driver does not support hardware timestamping
 [Beckhoff EL1804 4Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1804) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x070c3052 | Digital Input |  | 
 [Beckhoff EL1808 8Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1808) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x07103052 | Digital Input | Uncertain; @scottlaird has one | 
 [Beckhoff EL1809 16Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1809) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x07113052 | Digital Input |  | 
