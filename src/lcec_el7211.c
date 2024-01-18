@@ -38,6 +38,16 @@ typedef struct {
   hal_bit_t *status_warning;
   hal_bit_t *status_limit_active;
 
+  hal_bit_t *err_adc;
+  hal_bit_t *err_overcurrent;
+  hal_bit_t *err_undervoltage;
+  hal_bit_t *err_overvoltage;
+  hal_bit_t *err_overtemp;
+  hal_bit_t *err_i2t_amp;
+  hal_bit_t *err_i2t_motor;
+  hal_bit_t *err_encoder;
+  hal_bit_t *err_watchdog;
+
   hal_bit_t *input_0;
   hal_bit_t *input_0_not;
   hal_bit_t *input_1;
@@ -74,6 +84,7 @@ typedef struct {
   unsigned int ctrl_pdo_os;
   unsigned int vel_cmd_pdo_os;
   unsigned int info1_pdo_os;
+  unsigned int info2_pdo_os;
 
   double vel_scale;
   double vel_rcpt;
@@ -114,6 +125,15 @@ static const lcec_pindesc_t slave_pins_el7201_9014[] = {
   { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, input_1), "%s.%s.%s.input-1" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, input_1_not), "%s.%s.%s.input-1-not" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, input_sto), "%s.%s.%s.input-sto" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, err_adc), "%s.%s.%s.err-adc" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, err_overcurrent), "%s.%s.%s.err-overcurrent" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, err_undervoltage), "%s.%s.%s.err-undervoltage" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, err_overvoltage), "%s.%s.%s.err-overvoltage" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, err_overtemp), "%s.%s.%s.err-overtemp" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, err_i2t_amp), "%s.%s.%s.err-i2t-amp" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, err_i2t_motor), "%s.%s.%s.err-i2t-motor" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, err_encoder), "%s.%s.%s.err-encoder" },
+  { HAL_BIT, HAL_OUT, offsetof(lcec_el7211_data_t, err_watchdog), "%s.%s.%s.err-watchdog" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -140,6 +160,10 @@ static ec_pdo_entry_info_t lcec_el7211_in_info1[] = {
    {0x6010, 0x12, 16}  // info 1
 };
 
+static ec_pdo_entry_info_t lcec_el7211_in_info2[] = {
+   {0x6010, 0x13, 16}  // info 2
+};
+
 static ec_pdo_entry_info_t lcec_el7211_in_vel[] = {
    {0x6010, 0x07, 32}  // actual velocity
 };
@@ -163,6 +187,7 @@ static ec_pdo_info_t lcec_el7201_9014_pdos_in[] = {
     {0x1A01, 1, lcec_el7211_in_status},
     {0x1A02, 1, lcec_el7211_in_vel},
     {0x1A04, 1, lcec_el7211_in_info1},
+    {0x1A05, 1, lcec_el7211_in_info2},
 };
 
 static ec_pdo_info_t lcec_el7211_pdos_out[] = {
@@ -182,7 +207,7 @@ static ec_sync_info_t lcec_el7201_9014_syncs[] = {
     {0, EC_DIR_OUTPUT, 0, NULL},
     {1, EC_DIR_INPUT,  0, NULL},
     {2, EC_DIR_OUTPUT, 2, lcec_el7211_pdos_out},
-    {3, EC_DIR_INPUT,  4, lcec_el7201_9014_pdos_in},
+    {3, EC_DIR_INPUT,  5, lcec_el7201_9014_pdos_in},
     {0xff}
 };
 
@@ -309,6 +334,12 @@ int lcec_el7201_9014_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_re
     return -1;
   }
 
+  // set info2 to errors
+  if (ecrt_slave_config_sdo8(slave->config, 0x8010, 0x3a, 5) != 0) {
+    rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "fail to configure slave %s.%s sdo info2 select\n", master->name, slave->name);
+    return -1;
+  }
+
   // initialize callbacks
   slave->proc_read = lcec_el7201_9014_read;
   slave->proc_write = lcec_el7211_write;
@@ -323,6 +354,7 @@ int lcec_el7201_9014_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_re
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7010, 0x01, &hal_data->ctrl_pdo_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x7010, 0x06, &hal_data->vel_cmd_pdo_os, NULL);
   LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6010, 0x12, &hal_data->info1_pdo_os, NULL);
+  LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6010, 0x13, &hal_data->info2_pdo_os, NULL);
 
   // export pins
   if ((err = lcec_el7211_export_pins(master, slave, hal_data)) != 0) {
@@ -429,7 +461,7 @@ void lcec_el7201_9014_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el7211_data_t *hal_data = (lcec_el7211_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
-  uint16_t info1;
+  uint16_t info1, info2;
 
   lcec_el7211_read(slave, period);
 
@@ -440,6 +472,18 @@ void lcec_el7201_9014_read(struct lcec_slave *slave, long period) {
   *(hal_data->input_1) = (info1 >> 1) & 0x01;
   *(hal_data->input_1_not) = !*(hal_data->input_1);
   *(hal_data->input_sto) = (info1 >> 8) & 0x01;
+
+  // read info2
+  info2 = EC_READ_U16(&pd[hal_data->info2_pdo_os]);
+  *(hal_data->err_adc) = (info2 >> 0) & 0x01;
+  *(hal_data->err_overcurrent) = (info2 >> 1) & 0x01;
+  *(hal_data->err_undervoltage) = (info2 >> 2) & 0x01;
+  *(hal_data->err_overvoltage) = (info2 >> 3) & 0x01;
+  *(hal_data->err_overtemp) = (info2 >> 4) & 0x01;
+  *(hal_data->err_i2t_amp) = (info2 >> 5) & 0x01;
+  *(hal_data->err_i2t_motor) = (info2 >> 6) & 0x01;
+  *(hal_data->err_encoder) = (info2 >> 7) & 0x01;
+  *(hal_data->err_watchdog) = (info2 >> 8) & 0x01;
 }
 
 static inline double clamp(double v, double sub, double sup) {
