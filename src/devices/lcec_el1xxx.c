@@ -17,17 +17,11 @@
 //
 
 #include "lcec_el1xxx.h"
+#include "lcec_class_din.h"
 
 #include "../lcec.h"
 
 static int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
-
-typedef struct {
-  hal_bit_t *in;
-  hal_bit_t *in_not;
-  unsigned int pdo_os;
-  unsigned int pdo_bp;
-} lcec_el1xxx_pin_t;
 
 static lcec_typelist_t types[] = {
     {"EL1002", LCEC_BECKHOFF_VID, 0x03EA3052, LCEC_EL1002_PDOS, 0, NULL, lcec_el1xxx_init},
@@ -59,52 +53,33 @@ static lcec_typelist_t types[] = {
 
 ADD_TYPES(types);
 
-static const lcec_pindesc_t slave_pins[] = {
-    {HAL_BIT, HAL_OUT, offsetof(lcec_el1xxx_pin_t, in), "%s.%s.%s.din-%d"},
-    {HAL_BIT, HAL_OUT, offsetof(lcec_el1xxx_pin_t, in_not), "%s.%s.%s.din-%d-not"},
-    {HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL},
-};
-
 static void lcec_el1xxx_read(struct lcec_slave *slave, long period);
 
 static int lcec_el1xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
   lcec_master_t *master = slave->master;
-  lcec_el1xxx_pin_t *hal_data;
-  lcec_el1xxx_pin_t *pin;
+  lcec_class_din_pin_t **hal_data;
   int i;
-  int err;
 
   // initialize callbacks
   slave->proc_read = lcec_el1xxx_read;
 
-  // alloc hal memory
-  if ((hal_data = hal_malloc(sizeof(lcec_el1xxx_pin_t) * slave->pdo_entry_count)) == NULL) {
-    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "hal_malloc() for slave %s.%s failed\n", master->name, slave->name);
-    return -EIO;
-  }
-  memset(hal_data, 0, sizeof(lcec_el1xxx_pin_t) * slave->pdo_entry_count);
+  hal_data = lcec_din_allocate_pins(slave->pdo_entry_count);
+  if (hal_data == NULL) { return -EIO; }
   slave->hal_data = hal_data;
 
   // initialize pins
-  for (i = 0, pin = hal_data; i < slave->pdo_entry_count; i++, pin++) {
-    // initialize POD entry
-    LCEC_PDO_INIT(pdo_entry_regs, slave->index, slave->vid, slave->pid, 0x6000 + (i << 4), 0x01, &pin->pdo_os, &pin->pdo_bp);
+  for (i = 0; i < slave->pdo_entry_count; i++) {
+    hal_data[i]=lcec_din_register_pin(&pdo_entry_regs, slave, i, 0x6000 + (i<<4), 0x01);
 
-    // export pins
-    if ((err = lcec_pin_newf_list(pin, slave_pins, LCEC_MODULE_NAME, master->name, slave->name, i)) != 0) {
-      return err;
-    }
+    if (hal_data[i]==NULL) { return -EIO; }
   }
 
   return 0;
 }
 
 static void lcec_el1xxx_read(struct lcec_slave *slave, long period) {
-  lcec_master_t *master = slave->master;
-  lcec_el1xxx_pin_t *hal_data = (lcec_el1xxx_pin_t *)slave->hal_data;
-  uint8_t *pd = master->process_data;
-  lcec_el1xxx_pin_t *pin;
-  int i, s;
+  lcec_class_din_pin_t **hal_data = (lcec_class_din_pin_t **)slave->hal_data;
+  int i;
 
   // wait for slave to be operational
   if (!slave->state.operational) {
@@ -112,9 +87,7 @@ static void lcec_el1xxx_read(struct lcec_slave *slave, long period) {
   }
 
   // check inputs
-  for (i = 0, pin = hal_data; i < slave->pdo_entry_count; i++, pin++) {
-    s = EC_READ_BIT(&pd[pin->pdo_os], pin->pdo_bp);
-    *(pin->in) = s;
-    *(pin->in_not) = !s;
+  for (i = 0; i < slave->pdo_entry_count; i++) {
+    lcec_din_read(slave, hal_data[i]);
   }
 }
