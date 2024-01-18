@@ -62,6 +62,7 @@ do {                        \
 #define LCEC_DELTA_VID    0x000001dd
 #define LCEC_MODUSOFT_VID 0x00000907
 #define LCEC_OMRON_VID    0x00000083
+#define LCEC_ABET_VID     0x0000079A
 
 // State update period (ns)
 #define LCEC_STATE_UPDATE_PERIOD 1000000000LL

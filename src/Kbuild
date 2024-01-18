@@ -41,5 +41,5 @@ lcec-objs := \
     lcec_deasda.o \
 	lcec_dems300.o \
     lcec_omrg5.o \
-    lcec_ph3lm2rm.o
-
+    lcec_ph3lm2rm.o \
+    lcec_epocat.o
