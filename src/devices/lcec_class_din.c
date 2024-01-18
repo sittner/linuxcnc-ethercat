@@ -94,10 +94,6 @@ void lcec_din_read(struct lcec_slave *slave, lcec_class_din_pin_t *data) {
   uint8_t *pd = master->process_data;
   int s;
 
-  if (!slave->state.operational) {
-    return;
-  }
-
   s = EC_READ_BIT(&pd[data->pdo_os], data->pdo_bp);
   *(data->in) = s;
   *(data->in_not) = !s;
@@ -113,10 +109,6 @@ void lcec_din_read_all(struct lcec_slave *slave, lcec_class_din_pins_t *pins) {
   lcec_master_t *master = slave->master;
   uint8_t *pd = master->process_data;
   int s;
-
-  if (!slave->state.operational) {
-    return;
-  }
 
   for (int i = 0; i < pins->count; i++) {
     lcec_class_din_pin_t *pin = pins->pins[i];
