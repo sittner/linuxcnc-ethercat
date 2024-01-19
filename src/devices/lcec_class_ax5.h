@@ -15,6 +15,10 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+
+/// @file
+/// @brief Library for Beckhoff AX5xxx controllers
+
 #ifndef _LCEC_CLASS_AX5_H_
 #define _LCEC_CLASS_AX5_H_
 

@@ -15,6 +15,10 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+
+/// @file
+/// @brief Driver for Beckhoff EL2904 4-port safety output
+
 #ifndef _LCEC_EL2904_H_
 #define _LCEC_EL2904_H_
 

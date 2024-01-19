@@ -15,6 +15,10 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+
+/// @file
+/// @brief Driver for EpoCAT FR4000 controllers
+
 #ifndef _LCEC_EPOCAT_H_
 #define _LCEC_EPOCAT_H_
 

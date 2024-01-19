@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for Beckhoff EL3xxx Analog input modules
+
 #include "lcec_el3xxx.h"
 
 #include "../lcec.h"
@@ -25,8 +28,6 @@
 //   Specifically, support disabling the filter (0x8000:06) and DC mode.
 //
 // TODO(scottlaird): using generic support, add EL3255 pot input.
-//
-// TODO(scottlaird): using generic support, add EM37xx pressure sensor input.
 //
 // TODO(scottlaird): Figure out what to do with older EL31xx devices
 //   without 0x6000:e (the sync error PDO).  It looks like it was

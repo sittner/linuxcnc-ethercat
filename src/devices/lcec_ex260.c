@@ -2,6 +2,9 @@
 // Created by chad on 2021-05-28.
 //
 
+/// @file
+/// @brief Driver for SMC EX260 Valve controllers
+
 #include "lcec_ex260.h"
 
 static int lcec_ex260_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);

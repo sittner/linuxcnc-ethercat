@@ -1,3 +1,4 @@
+
 //
 //    Copyright (C) 2021 Dominik Braun <dominik.braun@eventor.de>
 //
@@ -15,6 +16,9 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+
+/// @file
+/// @brief Driver for Delta MS-3000 AC motor controllers
 
 /*#############################################################################
 

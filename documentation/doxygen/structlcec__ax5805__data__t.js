@@ -1,0 +1,25 @@
+var structlcec__ax5805__data__t =
+[
+    [ "fsoe_in_sto0", "structlcec__ax5805__data__t.html#a9b114d6905bcd22c576fdc3f94ff62c1", null ],
+    [ "fsoe_in_sto0_bp", "structlcec__ax5805__data__t.html#a564ae99e802337acc7677d2c91ed92f9", null ],
+    [ "fsoe_in_sto0_os", "structlcec__ax5805__data__t.html#af1d6553924007b820bf934f42b3e6910", null ],
+    [ "fsoe_in_sto1", "structlcec__ax5805__data__t.html#a75c497c7678adb37c0927250881dd9c6", null ],
+    [ "fsoe_in_sto1_bp", "structlcec__ax5805__data__t.html#abad735ac0364b900594ef8f2495263e7", null ],
+    [ "fsoe_in_sto1_os", "structlcec__ax5805__data__t.html#af2d90266acc95870fc216cf62798b2ef", null ],
+    [ "fsoe_master_cmd", "structlcec__ax5805__data__t.html#ab853523cdf71e3b3e472c8b20e00be61", null ],
+    [ "fsoe_master_cmd_os", "structlcec__ax5805__data__t.html#abf91e8ee7cbb41bc4853dc9e3a749587", null ],
+    [ "fsoe_master_connid", "structlcec__ax5805__data__t.html#a9ed89fb62db6a4819c3be4db4c4635a1", null ],
+    [ "fsoe_master_connid_os", "structlcec__ax5805__data__t.html#a9140c30789ae88073784b2c8d6f8637a", null ],
+    [ "fsoe_master_crc0", "structlcec__ax5805__data__t.html#ab667efc924976a683f63324026a768a3", null ],
+    [ "fsoe_master_crc0_os", "structlcec__ax5805__data__t.html#a096c9f24d0f598c8e6a50b46b11e774c", null ],
+    [ "fsoe_master_crc1", "structlcec__ax5805__data__t.html#a08a92471704f0513770ca3022942c53b", null ],
+    [ "fsoe_master_crc1_os", "structlcec__ax5805__data__t.html#a806d5efdc1f23cb3f8bd79ff28cee2b0", null ],
+    [ "fsoe_slave_cmd", "structlcec__ax5805__data__t.html#a1678cbf00212c5f504fd1099f2e523b4", null ],
+    [ "fsoe_slave_cmd_os", "structlcec__ax5805__data__t.html#aa438386ca438c3fb6799ce621aef788b", null ],
+    [ "fsoe_slave_connid", "structlcec__ax5805__data__t.html#af82cbe32f83643e2d7647521f868383c", null ],
+    [ "fsoe_slave_connid_os", "structlcec__ax5805__data__t.html#a199832f464efba4c7665f558439ea301", null ],
+    [ "fsoe_slave_crc0", "structlcec__ax5805__data__t.html#ab860968ab8f0a7abc98fddfe03086c54", null ],
+    [ "fsoe_slave_crc0_os", "structlcec__ax5805__data__t.html#a31920f24a7f9ca2ff3c00233c87e85fd", null ],
+    [ "fsoe_slave_crc1", "structlcec__ax5805__data__t.html#ae2439abf71478e942fb175b3c4495a4c", null ],
+    [ "fsoe_slave_crc1_os", "structlcec__ax5805__data__t.html#a0d26d606cb7431f969788b7b9106fc7e", null ]
+];

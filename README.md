@@ -71,6 +71,8 @@ See [the contributing documentation](CONTRIBUTING.md) for details.  If
 you have any issues with the contributing process, *please* file an
 issue here.  Everything is new, and it may be broken.
 
+[API Documentation](/documentation/doxygen/index.html) via Doxygen is available, but incomplete.
+
 
 ## Devices Supported
 

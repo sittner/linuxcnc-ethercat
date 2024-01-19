@@ -1,0 +1,52 @@
+<map id="src/lcec_conf.h" name="src/lcec_conf.h">
+<area shape="rect" id="node1" title=" " alt="" coords="5071,5,5189,32"/>
+<area shape="rect" id="node2" href="$lcec__generic_8h.html" title="Driver for Generic devices, controlled by XML." alt="" coords="4983,162,5175,189"/>
+<area shape="rect" id="node5" href="$lcec_8h.html" title="Header file for LinuxCNC&#45;Ethercat." alt="" coords="2657,80,2739,107"/>
+<area shape="rect" id="node48" href="$lcec__conf_8c.html" title="Code for lcec_conf configuration tool." alt="" coords="5273,162,5389,189"/>
+<area shape="rect" id="node49" href="$lcec__conf__icmds_8c.html" title=" " alt="" coords="5167,80,5330,107"/>
+<area shape="rect" id="node50" href="$lcec__conf__util_8c.html" title=" " alt="" coords="5355,80,5500,107"/>
+<area shape="rect" id="node3" href="$lcec__generic_8c.html" title="Driver for Generic devices, controlled by XML." alt="" coords="4860,251,5051,278"/>
+<area shape="rect" id="node4" href="$lcec__main_8c.html" title="Initialization code for LinuxCNC&#45;Ethercat." alt="" coords="5075,251,5198,278"/>
+<area shape="rect" id="node6" href="$lcec__ax5100_8c.html" title="Driver for Beckhoff AX5100 Servo controllers." alt="" coords="4863,423,5053,449"/>
+<area shape="rect" id="node7" href="$lcec__ax5100_8h.html" title="Driver for Beckhoff AX5100 Servo controllers." alt="" coords="4809,341,5001,367"/>
+<area shape="rect" id="node8" href="$lcec__ax5805_8c.html" title="Driver for Beckhoff AX5805 Servo controllers." alt="" coords="4623,423,4813,449"/>
+<area shape="rect" id="node9" href="$lcec__ax5200_8c.html" title="Driver for Beckhoff AX5200 Servo controllers." alt="" coords="5,423,196,449"/>
+<area shape="rect" id="node10" href="$lcec__ax5200_8h.html" title="Driver for Beckhoff AX5200 Servo controllers." alt="" coords="71,341,263,367"/>
+<area shape="rect" id="node11" href="$lcec__ax5805_8h.html" title="Driver for Beckhoff AX5805 Servo controllers." alt="" coords="4199,341,4391,367"/>
+<area shape="rect" id="node12" href="$lcec__class__ax5_8c.html" title="Library for Beckhoff AX5xxx controllers." alt="" coords="287,333,453,375"/>
+<area shape="rect" id="node13" href="$lcec__class__ax5_8h.html" title="Library for Beckhoff AX5xxx controllers." alt="" coords="173,244,338,285"/>
+<area shape="rect" id="node14" href="$lcec__class__din_8c.html" title="Library for digital input devices." alt="" coords="818,244,983,285"/>
+<area shape="rect" id="node15" href="$lcec__class__din_8h.html" title="Library for digital input devices." alt="" coords="919,155,1085,196"/>
+<area shape="rect" id="node16" href="$lcec__el1252_8c.html" title="Linuxcnc and Machinekit HAL driver for Beckhoff EL1252 2&#45;channel fast digital input terminal with tim..." alt="" coords="1007,251,1194,278"/>
+<area shape="rect" id="node17" href="$lcec__el1859_8c.html" title="Driver for Beckhoff EL1859 and related digital input/output modules." alt="" coords="1218,251,1405,278"/>
+<area shape="rect" id="node18" href="$lcec__el1xxx_8c.html" title="Driver for Beckhoff EL1xxx digital input modules." alt="" coords="1829,251,2015,278"/>
+<area shape="rect" id="node19" href="$lcec__class__dout_8c.html" title="Library for digital output devices." alt="" coords="1429,244,1594,285"/>
+<area shape="rect" id="node20" href="$lcec__class__dout_8h.html" title="Library for digital output devices." alt="" coords="1373,155,1538,196"/>
+<area shape="rect" id="node21" href="$lcec__el2xxx_8c.html" title="Driver for Beckhoff EL2xxx Digital output modules." alt="" coords="1618,251,1805,278"/>
+<area shape="rect" id="node22" href="$lcec__class__enc_8c.html" title="Library for encoder&#45;like devices." alt="" coords="413,244,578,285"/>
+<area shape="rect" id="node23" href="$lcec__class__enc_8h.html" title="Library for encoder&#45;like devices." alt="" coords="311,155,477,196"/>
+<area shape="rect" id="node24" href="$lcec__deasda_8c.html" title="Driver for Delta ASDA servo controllers." alt="" coords="603,251,793,278"/>
+<area shape="rect" id="node25" href="$lcec__deasda_8h.html" title="Driver for Delta ASDA servo controllers." alt="" coords="603,162,793,189"/>
+<area shape="rect" id="node26" href="$lcec__dems300_8c.html" title="Driver for Delta MS&#45;3000 AC motor controllers." alt="" coords="2123,251,2326,278"/>
+<area shape="rect" id="node27" href="$lcec__dems300_8h.html" title="Driver for Delta MS&#45;3000 AC motor controllers." alt="" coords="2192,162,2396,189"/>
+<area shape="rect" id="node28" href="$lcec__el1859_8h.html" title="Driver for Beckhoff EL1859 and related digital input/output modules." alt="" coords="1160,162,1348,189"/>
+<area shape="rect" id="node29" href="$lcec__el1904_8c.html" title="Driver for Beckhoff EL1904 safety terminals." alt="" coords="2446,251,2633,278"/>
+<area shape="rect" id="node30" href="$lcec__el1904_8h.html" title="Driver for Beckhoff EL1904 safety terminals." alt="" coords="2472,162,2660,189"/>
+<area shape="rect" id="node31" href="$lcec__el1918__logic_8c.html" title="Driver for Beckhoff EL1918&#45;LOGIC safety terminals." alt="" coords="2697,244,2873,285"/>
+<area shape="rect" id="node32" href="$lcec__el1918__logic_8h.html" title="Driver for Beckhoff EL1918&#45;LOGIC safety terminals." alt="" coords="2735,155,2911,196"/>
+<area shape="rect" id="node33" href="$lcec__el1xxx_8h.html" title="Driver for Beckhoff EL1xxx digital input modules." alt="" coords="1928,162,2116,189"/>
+<area shape="rect" id="node34" href="$lcec__el2202_8c.html" title="Linuxcnc and Machinekit HAL driver for Beckhoff EL2202 2&#45;channel fast digital output terminal with tr..." alt="" coords="2935,162,3122,189"/>
+<area shape="rect" id="node35" href="$lcec__el2521_8c.html" title="Driver for Beckhoff EL2521 pulse train output modules." alt="" coords="3133,251,3319,278"/>
+<area shape="rect" id="node36" href="$lcec__el2521_8h.html" title="Driver for Beckhoff EL2521 pulse train output modules." alt="" coords="3197,162,3385,189"/>
+<area shape="rect" id="node37" href="$lcec__el2904_8c.html" title="Driver for Beckhoff EL2904 4&#45;port safety output." alt="" coords="3403,251,3590,278"/>
+<area shape="rect" id="node38" href="$lcec__el2904_8h.html" title="Driver for Beckhoff EL2904 4&#45;port safety output." alt="" coords="3461,162,3649,189"/>
+<area shape="rect" id="node39" href="$lcec__el2xxx_8h.html" title="Driver for Beckhoff EL2xxx Digital output modules." alt="" coords="1664,162,1852,189"/>
+<area shape="rect" id="node40" href="$lcec__el31x2_8c.html" title="Driver for Beckhoff EL31x2 Analog input modules." alt="" coords="3670,251,3857,278"/>
+<area shape="rect" id="node41" href="$lcec__el31x2_8h.html" title="Driver for Beckhoff EL31x2 Analog input modules." alt="" coords="3725,162,3913,189"/>
+<area shape="rect" id="node42" href="$lcec__el31x4_8c.html" title="Driver for Beckhoff EL31x4 Analog input modules." alt="" coords="4002,251,4189,278"/>
+<area shape="rect" id="node43" href="$lcec__el31x4_8h.html" title="Driver for Beckhoff EL31x4 Analog input modules." alt="" coords="4040,162,4228,189"/>
+<area shape="rect" id="node44" href="$lcec__el3255_8c.html" title="Driver for Beckhoff EL3255 potentiometer modules." alt="" coords="4262,251,4449,278"/>
+<area shape="rect" id="node45" href="$lcec__el3255_8h.html" title="Driver for Beckhoff EL3255 potentiometer modules." alt="" coords="4304,162,4492,189"/>
+<area shape="rect" id="node46" href="$lcec__el3403_8c.html" title="Driver for Beckhoff EL3403 3&#45;phase power measurement modules." alt="" coords="4479,251,4666,278"/>
+<area shape="rect" id="node47" href="$lcec__el3403_8h.html" title="Driver for Beckhoff EL3403 3&#45;phase power measurement modules." alt="" coords="4568,162,4756,189"/>
+</map>

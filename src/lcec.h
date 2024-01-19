@@ -15,6 +15,10 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+
+/// @file
+/// @brief Header file for LinuxCNC-Ethercat
+
 #ifndef _LCEC_H_
 #define _LCEC_H_
 
@@ -105,21 +109,21 @@ typedef enum {
 } lcec_modparam_type_t;
 
 typedef struct {
-  const char *name;
-  int id;
-  lcec_modparam_type_t type;
+  const char *name;  ///< the name that appears in the XML.
+  int id;  ///< Numeric ID, should be unique per device driver.
+  lcec_modparam_type_t type; ///< The type (bit, int, float, string) of this modParam.
 } lcec_modparam_desc_t;
 
-typedef struct lcec_typelist {
-  char *name;
-  uint32_t vid;
-  uint32_t pid;
-  int pdo_entry_count;
-  int is_fsoe_logic;
-  lcec_slave_preinit_t proc_preinit;
-  lcec_slave_init_t proc_init;
-  const lcec_modparam_desc_t *modparams;
-  uint64_t flags;
+typedef struct {
+  char *name;  ///< The device's name ("EL1008")
+  uint32_t vid;  ///< The EtherCAT vendor ID
+  uint32_t pid;  ///< The EtherCAT product ID
+  int pdo_entry_count;  ///< The number of PDOs registered by this device.
+  int is_fsoe_logic;  ///< Does this device use Safety-over-EtherCAT?
+  lcec_slave_preinit_t proc_preinit;  ///< pre-init function, if any
+  lcec_slave_init_t proc_init;  ///< init function.  Sets up the device.
+  const lcec_modparam_desc_t *modparams;  ///< XML modparams, if any
+  uint64_t flags;  ///< Flags, passed through to `proc_init` as `slave->flags`.
 } lcec_typelist_t;
 
 typedef struct lcec_typelinkedlist {

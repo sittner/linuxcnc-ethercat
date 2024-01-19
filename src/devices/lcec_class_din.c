@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Library for digital input devices
+
 #include "lcec_class_din.h"
 
 #include "../lcec.h"
@@ -26,9 +29,13 @@ static const lcec_pindesc_t slave_pins[] = {
     {HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL},
 };
 
-// lcec_din_allocate_pins returns a block of memory for holding the
-// result of `count` calls to `lcec_din_register_device()`.  It is the
-// caller's responsibility to verify that the result is not NULL.
+/// \brief allocates a block of memory for holding the result of
+/// `count` calls to `lcec_din_register_device()`.
+///
+/// It is the caller's responsibility to verify that the result is not
+/// NULL.
+///
+/// @param count The number of input pins to allocate memory for.
 lcec_class_din_pins_t *lcec_din_allocate_pins(int count) {
   lcec_class_din_pins_t *pins;
 
@@ -45,17 +52,15 @@ lcec_class_din_pins_t *lcec_din_allocate_pins(int count) {
   return pins;
 }
 
-// lcec_din_register_pin registers a single digital-input channel and publishes it as a LinuxCNC HAL pin.
-//
-// Parameters:
-//
-// - pdo_entry_regs: a pointer to the pdo_entry_regs passed into the device `_init` function.
-// - slave: the slave, from `_init`.
-// - id: the pin ID.  Used for naming.  Should generally start at 0 and increment once per digital in pin.
-// - idx: the PDO index for the digital input.
-// - sindx: the PDO sub-index for the digital input.
-//
-// See lcec_el1xxx.c for an example of use.
+/// \brief registers a single digital-input channel and publishes it as a LinuxCNC HAL pin.
+///
+/// @param pdo_entry_regs a pointer to the pdo_entry_regs passed into the device `_init` function.
+/// @param slave the slave, from `_init`.
+/// @param id  the pin ID.  Used for naming.  Should generally start at 0 and increment once per digital in pin.
+/// @param idx the PDO index for the digital input.
+/// @param sindx the PDO sub-index for the digital input.
+///
+/// See lcec_el1xxx.c for an example of use.
 lcec_class_din_pin_t *lcec_din_register_pin(
     ec_pdo_entry_reg_t **pdo_entry_regs, struct lcec_slave *slave, int id, uint16_t idx, uint16_t sidx) {
   lcec_class_din_pin_t *data;
@@ -67,8 +72,6 @@ lcec_class_din_pin_t *lcec_din_register_pin(
     return NULL;
   }
   memset(data, 0, sizeof(lcec_class_din_pin_t));
-  // data->idx = idx;
-  // data->sidx = sidx;
 
   LCEC_PDO_INIT((*pdo_entry_regs), slave->index, slave->vid, slave->pid, idx, sidx, &data->pdo_os, &data->pdo_bp);
   err = lcec_pin_newf_list(data, slave_pins, LCEC_MODULE_NAME, slave->master->name, slave->name, id);
@@ -80,15 +83,13 @@ lcec_class_din_pin_t *lcec_din_register_pin(
   return data;
 }
 
-// lcec_din_read reads data from a digital in port.
-//
-// Parameters:
-//
-// - slave: the slave, passed from the per-device `_read`.
-// - data: a lcec_class_din_pin_t *, as returned by lcec_din_register_pin.
-//
-// Call this once per pin registered, from inside of your device's
-// read function.
+/// \brief reads data from a single digital in port.
+///
+/// @param slave the slave, passed from the per-device `_read`.
+/// @param data  a lcec_class_din_pin_t *, as returned by lcec_din_register_pin.
+///
+/// Call this once per pin registered, from inside of your device's
+/// read function.  See `lcec_din_read_all` for an alternative approach.
 void lcec_din_read(struct lcec_slave *slave, lcec_class_din_pin_t *data) {
   lcec_master_t *master = slave->master;
   uint8_t *pd = master->process_data;
@@ -99,12 +100,10 @@ void lcec_din_read(struct lcec_slave *slave, lcec_class_din_pin_t *data) {
   *(data->in_not) = !s;
 }
 
-// lcec_din_read_all reads data from all digital in ports.
-//
-// Parameters:
-//
-// - slave: the slave, passed from the per-device `_read`.
-// - pins: a lcec_class_din_pins_t *, as returned by lcec_din_register_pin.
+/// \brief reads data from all digital in ports.
+///
+/// @param slave the slave, passed from the per-device `_read`.
+/// @param pins a `lcec_class_din_pins_t *`, as returned by lcec_din_register_pin.
 void lcec_din_read_all(struct lcec_slave *slave, lcec_class_din_pins_t *pins) {
   for (int i = 0; i < pins->count; i++) {
     lcec_class_din_pin_t *pin = pins->pins[i];

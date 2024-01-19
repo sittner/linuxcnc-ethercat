@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for Beckhoff EL6900 TwinSAFE PLCs
+
 #include "../lcec.h"
 #include "lcec_el6900.h"
 

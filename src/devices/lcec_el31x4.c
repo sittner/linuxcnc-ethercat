@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for Beckhoff EL31x4 Analog input modules
+
 #include "../lcec.h"
 #include "lcec_el31x4.h"
 

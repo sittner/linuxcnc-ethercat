@@ -1,0 +1,21 @@
+<map id="src/lcec_main.c" name="src/lcec_main.c">
+<area shape="rect" id="node1" title="Initialization code for LinuxCNC&#45;Ethercat." alt="" coords="667,5,789,32"/>
+<area shape="rect" id="node2" href="$lcec__generic_8h.html" title="Driver for Generic devices, controlled by XML." alt="" coords="643,80,813,107"/>
+<area shape="rect" id="node3" href="$lcec_8h.html" title="Header file for LinuxCNC&#45;Ethercat." alt="" coords="569,155,641,181"/>
+<area shape="rect" id="node19" title=" " alt="" coords="837,80,931,107"/>
+<area shape="rect" id="node6" href="$lcec__conf_8h.html" title=" " alt="" coords="801,229,895,256"/>
+<area shape="rect" id="node4" title=" " alt="" coords="573,304,632,331"/>
+<area shape="rect" id="node5" title=" " alt="" coords="778,304,833,331"/>
+<area shape="rect" id="node7" href="$lcec__rtapi_8h.html" title=" " alt="" coords="183,229,281,256"/>
+<area shape="rect" id="node16" title=" " alt="" coords="356,229,463,256"/>
+<area shape="rect" id="node17" title=" " alt="" coords="487,229,593,256"/>
+<area shape="rect" id="node18" title=" " alt="" coords="617,229,725,256"/>
+<area shape="rect" id="node8" title=" " alt="" coords="321,304,385,331"/>
+<area shape="rect" id="node9" title=" " alt="" coords="34,304,142,331"/>
+<area shape="rect" id="node10" href="$lcec__rtapi__user_8h.html" title=" " alt="" coords="167,304,297,331"/>
+<area shape="rect" id="node11" title=" " alt="" coords="5,379,77,405"/>
+<area shape="rect" id="node12" title=" " alt="" coords="102,379,173,405"/>
+<area shape="rect" id="node13" title=" " alt="" coords="197,379,267,405"/>
+<area shape="rect" id="node14" title=" " alt="" coords="292,379,383,405"/>
+<area shape="rect" id="node15" title=" " alt="" coords="407,379,471,405"/>
+</map>

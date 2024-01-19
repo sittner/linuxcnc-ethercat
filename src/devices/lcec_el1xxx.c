@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for Beckhoff EL1xxx digital input modules
+
 #include "lcec_el1xxx.h"
 #include "lcec_class_din.h"
 

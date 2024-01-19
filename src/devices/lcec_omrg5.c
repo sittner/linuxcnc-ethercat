@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for Omron G5-series servos
+
 #include "../lcec.h"
 #include "lcec_omrg5.h"
 

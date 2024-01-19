@@ -17,7 +17,8 @@
 //
 //    Edit A.Chimeno 12/3/19 Version 1.0
 
-
+/// @file
+/// @brief Driver for Beckhoff EL6090 Display terminals
 
 #include "../lcec.h"
 #include "lcec_el6090.h"

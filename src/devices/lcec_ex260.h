@@ -2,6 +2,9 @@
 // Created by chad on 2021-05-28.
 //
 
+/// @file
+/// @brief Driver for SMC EX260 Valve controllers
+
 #ifndef _LCEC_EX260_H
 #define _LCEC_EX260_H
 

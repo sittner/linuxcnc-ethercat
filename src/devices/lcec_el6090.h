@@ -17,6 +17,9 @@
 //
 //    Edit A.Chimeno 12/3/19 Version 1.0
 
+/// @file
+/// @brief Driver for Beckhoff EL6090 Display terminals
+
 #ifndef _LCEC_EL6090_H_
 #define _LCEC_EL6090_H_
 

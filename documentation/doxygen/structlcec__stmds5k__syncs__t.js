@@ -1,0 +1,25 @@
+var structlcec__stmds5k__syncs__t =
+[
+    [ "ch1", "structlcec__stmds5k__syncs__t.html#a9ca08831ac8ff286b4a5219c2a6d4cd4", null ],
+    [ "ch2", "structlcec__stmds5k__syncs__t.html#a8c4c84949afdb61ed502f2dce072a23d", null ],
+    [ "cmd_status", "structlcec__stmds5k__syncs__t.html#a4c3fcb64d637ccd2049077d36d2a84ef", null ],
+    [ "ctrl", "structlcec__stmds5k__syncs__t.html#aa382f856a5158a4ac42542083967d196", null ],
+    [ "eot", "structlcec__stmds5k__syncs__t.html#a436e1222ece491e1b0c1ba7c78f4307b", null ],
+    [ "extenc", "structlcec__stmds5k__syncs__t.html#aa61db3a441a125ef35cec427e58a28cd", null ],
+    [ "in", "structlcec__stmds5k__syncs__t.html#aa1dcf57de37a5064721e6d6fb0ca3dd8", null ],
+    [ "in_ch1", "structlcec__stmds5k__syncs__t.html#aa7fa3aeaef369c92ad962f4589f65e1d", null ],
+    [ "in_ch2", "structlcec__stmds5k__syncs__t.html#a3d75aade42125959dafac0f129139b49", null ],
+    [ "m_fb", "structlcec__stmds5k__syncs__t.html#a0239e6a74946d681408fccc9273c190e", null ],
+    [ "m_max", "structlcec__stmds5k__syncs__t.html#ae470ca40190ef821db7fba4a9f1bf082", null ],
+    [ "mb_in", "structlcec__stmds5k__syncs__t.html#a893cef24cf4f5a9ac9af8cd581243204", null ],
+    [ "mb_out", "structlcec__stmds5k__syncs__t.html#a29c622fd8fe424373aa0e7e62a2f1d50", null ],
+    [ "n_cmd", "structlcec__stmds5k__syncs__t.html#ad297c204d73398b5b45411f9099c46bc", null ],
+    [ "n_fb", "structlcec__stmds5k__syncs__t.html#a0697b7035c7cae2ea2a45d66302d57c7", null ],
+    [ "out", "structlcec__stmds5k__syncs__t.html#afab4ceefc1d1d8a671755fb72f7a930b", null ],
+    [ "out_ch1", "structlcec__stmds5k__syncs__t.html#a468582910286ec7b9e39c0b0f980c331", null ],
+    [ "pdo_in", "structlcec__stmds5k__syncs__t.html#a7e31f114aa8d2a94e48f9aafc203ae06", null ],
+    [ "pdo_out", "structlcec__stmds5k__syncs__t.html#abb22fbabded9ceb658128462060e38b4", null ],
+    [ "rotor", "structlcec__stmds5k__syncs__t.html#a4a8a71c92840049d9af304bc6f1cd79b", null ],
+    [ "status", "structlcec__stmds5k__syncs__t.html#a14c75b385fb42b783ff2cfbe8e75334c", null ],
+    [ "syncs", "structlcec__stmds5k__syncs__t.html#a9f680abb53d991a384664a12a0e86ec6", null ]
+];

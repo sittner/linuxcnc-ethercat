@@ -17,6 +17,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for Beckhoff EL41x4 Analog output modules
+
 #include "../lcec.h"
 #include "lcec_el41x4.h"
 

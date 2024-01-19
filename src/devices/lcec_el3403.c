@@ -17,6 +17,8 @@
 //
 //    A.Chimeno Edit 14/06/2019 Rev 2.0
 
+/// @file
+/// @brief Driver for Beckhoff EL3403 3-phase power measurement modules
 
 #include "../lcec.h"
 #include "lcec_el3403.h"

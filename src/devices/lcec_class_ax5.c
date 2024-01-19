@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Library for Beckhoff AX5xxx controllers
+
 #include "../lcec.h"
 #include "lcec_class_enc.h"
 #include "lcec_class_ax5.h"

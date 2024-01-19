@@ -17,9 +17,11 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
-/**   \brief Linuxcnc and Machinekit HAL driver for Beckhoff EL2202
+
+/**   @file
+      @brief Linuxcnc and Machinekit HAL driver for Beckhoff EL2202
       2-channel fast digital output terminal with tri-state.
-      \details Voltage on Output terminal is controlled by the Output hal pin,
+      @details Voltage on Output terminal is controlled by the Output hal pin,
       if the Tristate hal pin is activated the output value is placed in high 
       impedence status. 
       http://www.beckhoff.com/english.asp?EtherCAT/el2202.htm%20 */

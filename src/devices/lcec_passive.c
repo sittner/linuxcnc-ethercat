@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for "passive" devices with no PDOs.
+
 #include "lcec.h"
 #include "lcec_passive.h"
 

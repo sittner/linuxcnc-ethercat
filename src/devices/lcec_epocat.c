@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for EpoCAT FR4000 controllers
+
 #include "lcec_epocat.h"
 
 #include "../lcec.h"

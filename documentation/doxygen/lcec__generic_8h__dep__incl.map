@@ -1,0 +1,5 @@
+<map id="src/devices/lcec_generic.h" name="src/devices/lcec_generic.h">
+<area shape="rect" id="node1" title="Driver for Generic devices, controlled by XML." alt="" coords="95,5,287,32"/>
+<area shape="rect" id="node2" href="$lcec__generic_8c.html" title="Driver for Generic devices, controlled by XML." alt="" coords="5,80,196,107"/>
+<area shape="rect" id="node3" href="$lcec__main_8c.html" title="Initialization code for LinuxCNC&#45;Ethercat." alt="" coords="221,80,343,107"/>
+</map>

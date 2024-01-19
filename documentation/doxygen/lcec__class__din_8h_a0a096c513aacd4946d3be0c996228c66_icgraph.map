@@ -1,0 +1,4 @@
+<map id="lcec_din_read" name="lcec_din_read">
+<area shape="rect" id="node1" title="reads data from a single digital in port." alt="" coords="188,5,299,32"/>
+<area shape="rect" id="node2" href="$lcec__class__din_8c.html#ab211d4abf50dd0ada143f0627fab8011" title="reads data from all digital in ports." alt="" coords="5,5,140,32"/>
+</map>

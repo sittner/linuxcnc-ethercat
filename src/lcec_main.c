@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Initialization code for LinuxCNC-Ethercat
+
 #include "devices/lcec_generic.h"
 #include "lcec.h"
 #include "rtapi_app.h"

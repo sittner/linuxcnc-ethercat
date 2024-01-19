@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Stoeber MDS5000 driver
+
 #include "../lcec.h"
 #include "lcec_stmds5k.h"
 

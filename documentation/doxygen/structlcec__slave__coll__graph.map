@@ -1,0 +1,13 @@
+<map id="lcec_slave" name="lcec_slave">
+<area shape="rect" id="node1" title=" " alt="" coords="631,183,722,209"/>
+<area shape="rect" id="node8" href="$structlcec__master.html" title=" " alt="" coords="865,137,967,164"/>
+<area shape="rect" id="node2" href="$structlcec__slave__state.html" title=" " alt="" coords="303,31,434,57"/>
+<area shape="rect" id="node3" href="$structlcec__slave__watchdog__t.html" title=" " alt="" coords="283,81,455,108"/>
+<area shape="rect" id="node4" href="$structlcec__slave__idnconf__t.html" title=" " alt="" coords="290,132,447,159"/>
+<area shape="rect" id="node5" href="$structlcec__slave__modparam__t.html" title=" " alt="" coords="279,183,459,209"/>
+<area shape="rect" id="node6" href="$unionLCEC__CONF__MODPARAM__VAL__T.html" title=" " alt="" coords="5,175,189,217"/>
+<area shape="rect" id="node7" href="$structlcec__slave__dc__t.html" title=" " alt="" coords="307,233,431,260"/>
+<area shape="rect" id="node9" href="$structlcec__master__data.html" title=" " alt="" coords="608,5,745,32"/>
+<area shape="rect" id="node10" href="$structlcec__slave__sdoconf__t.html" title=" " alt="" coords="289,284,449,311"/>
+<area shape="rect" id="node11" href="$structLCEC__CONF__FSOE__T.html" title=" " alt="" coords="291,335,446,361"/>
+</map>

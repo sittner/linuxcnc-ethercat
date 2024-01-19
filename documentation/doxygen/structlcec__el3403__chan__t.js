@@ -1,0 +1,27 @@
+var structlcec__el3403__chan__t =
+[
+    [ "active_power", "structlcec__el3403__chan__t.html#ae1421733f19c96a6c5c81937b390f90e", null ],
+    [ "active_power_pdo_os", "structlcec__el3403__chan__t.html#af352dd1827a4859515f8589725694e0d", null ],
+    [ "apparent_power", "structlcec__el3403__chan__t.html#a3b0616b599d8acc792ce28524bdaf7c4", null ],
+    [ "cosphi", "structlcec__el3403__chan__t.html#a4f7a8662df37d8c864c232924b26af1d", null ],
+    [ "current", "structlcec__el3403__chan__t.html#a60b510bfbc4e7f49ba7fbb39202a76cc", null ],
+    [ "current_pdo_os", "structlcec__el3403__chan__t.html#a371104c6b13ff36c0f7ca983c42c1384", null ],
+    [ "energy", "structlcec__el3403__chan__t.html#a4e8a7e01dcc95e782652edf0c11303aa", null ],
+    [ "energy_negative", "structlcec__el3403__chan__t.html#a3ad0eb7311b591d425ec3bfe528dc105", null ],
+    [ "frequency", "structlcec__el3403__chan__t.html#a068eb806346319c56435be5487623e74", null ],
+    [ "index_pdo_os", "structlcec__el3403__chan__t.html#a1270cbdfe816e292217f09716a47f50f", null ],
+    [ "missing_zero_crossing", "structlcec__el3403__chan__t.html#af82ea050ba899a21724a354d379605cf", null ],
+    [ "missing_zero_crossing_pdo_bp", "structlcec__el3403__chan__t.html#afe0ca7a3d3c0b682037ae2b8c8bde3d3", null ],
+    [ "missing_zero_crossing_pdo_os", "structlcec__el3403__chan__t.html#a359ddd044cae281a3c4345048abdd8bc", null ],
+    [ "ovc_pdo_os", "structlcec__el3403__chan__t.html#addb0d64fb23891fa918750fa051a16ed", null ],
+    [ "reactive_power", "structlcec__el3403__chan__t.html#a9213fb369348816a87e0a7b7525537e6", null ],
+    [ "sync_error", "structlcec__el3403__chan__t.html#a8b37a65e45ac11325eedf86b70b0b46a", null ],
+    [ "sync_error_pdo_bp", "structlcec__el3403__chan__t.html#a84ee25fb726ec8e5c554a3a42f0ac11a", null ],
+    [ "sync_error_pdo_os", "structlcec__el3403__chan__t.html#a4f092f56c48aa5d0f46c34b5285549ff", null ],
+    [ "txpdo_toggle", "structlcec__el3403__chan__t.html#a7b7e15552a17ff2f4709b8a9d2185271", null ],
+    [ "txpdo_toggle_pdo_bp", "structlcec__el3403__chan__t.html#a02b94b229a06fb0e15a19510fda1f2ef", null ],
+    [ "txpdo_toggle_pdo_os", "structlcec__el3403__chan__t.html#a3017076f1363d6acc2795799c5668906", null ],
+    [ "variable_pdo_os", "structlcec__el3403__chan__t.html#a9e6a9e218f4e2b1053e279e0afa09d60", null ],
+    [ "voltage", "structlcec__el3403__chan__t.html#a7beaadda065f8086d30cd2145f304fbc", null ],
+    [ "voltage_pdo_os", "structlcec__el3403__chan__t.html#a5057e7195abbbb30550d99ff6d501efc", null ]
+];

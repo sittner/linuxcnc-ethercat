@@ -1,0 +1,9 @@
+<map id="src/devices/lcec_class_ax5.h" name="src/devices/lcec_class_ax5.h">
+<area shape="rect" id="node1" title="Library for Beckhoff AX5xxx controllers." alt="" coords="341,5,506,47"/>
+<area shape="rect" id="node2" href="$lcec__ax5100_8h.html" title="Driver for Beckhoff AX5100 Servo controllers." alt="" coords="111,102,303,129"/>
+<area shape="rect" id="node5" href="$lcec__ax5200_8h.html" title="Driver for Beckhoff AX5200 Servo controllers." alt="" coords="327,102,519,129"/>
+<area shape="rect" id="node7" href="$lcec__class__ax5_8c.html" title="Library for Beckhoff AX5xxx controllers." alt="" coords="543,95,709,136"/>
+<area shape="rect" id="node3" href="$lcec__ax5100_8c.html" title="Driver for Beckhoff AX5100 Servo controllers." alt="" coords="5,184,196,211"/>
+<area shape="rect" id="node4" href="$lcec__ax5805_8c.html" title="Driver for Beckhoff AX5805 Servo controllers." alt="" coords="220,184,411,211"/>
+<area shape="rect" id="node6" href="$lcec__ax5200_8c.html" title="Driver for Beckhoff AX5200 Servo controllers." alt="" coords="435,184,625,211"/>
+</map>

@@ -16,6 +16,9 @@
 //  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Code for `lcec_conf` configuration tool.
+
 #include "lcec_conf.h"
 
 #include <ctype.h>

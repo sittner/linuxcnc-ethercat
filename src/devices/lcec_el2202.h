@@ -16,10 +16,12 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+
+/// @file
+/// @brief Driver for Beckhoff EL2202 digital output modules
+
 #ifndef _LCEC_EL2202_H_
 #define _LCEC_EL2202_H_
-
-/** \brief Product Code */
 
 /** \brief Number of channels */
 #define LCEC_EL2202_CHANS 2
@@ -27,5 +29,4 @@
 /** \brief Number of PDO */
 #define LCEC_EL2202_PDOS (2 * LCEC_EL2202_CHANS)
 
-/** \brief Vendor ID */
 #endif

@@ -1,0 +1,20 @@
+<map id="src/devices/lcec_el5002.c" name="src/devices/lcec_el5002.c">
+<area shape="rect" id="node1" title="Driver for Beckhoff EL5002 Encoder modules." alt="" coords="196,5,383,32"/>
+<area shape="rect" id="node2" href="$lcec_8h.html" title="Header file for LinuxCNC&#45;Ethercat." alt="" coords="253,155,325,181"/>
+<area shape="rect" id="node18" href="$lcec__el5002_8h.html" title="Driver for Beckhoff EL5002 Encoder modules." alt="" coords="281,80,391,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,304,64,331"/>
+<area shape="rect" id="node4" title=" " alt="" coords="90,304,145,331"/>
+<area shape="rect" id="node5" href="$lcec__conf_8h.html" title=" " alt="" coords="70,229,165,256"/>
+<area shape="rect" id="node6" href="$lcec__rtapi_8h.html" title=" " alt="" coords="241,229,338,256"/>
+<area shape="rect" id="node15" title=" " alt="" coords="363,229,469,256"/>
+<area shape="rect" id="node16" title=" " alt="" coords="494,229,599,256"/>
+<area shape="rect" id="node17" title=" " alt="" coords="623,229,731,256"/>
+<area shape="rect" id="node7" title=" " alt="" coords="169,304,233,331"/>
+<area shape="rect" id="node8" title=" " alt="" coords="258,304,366,331"/>
+<area shape="rect" id="node9" href="$lcec__rtapi__user_8h.html" title=" " alt="" coords="391,304,521,331"/>
+<area shape="rect" id="node10" title=" " alt="" coords="229,379,301,405"/>
+<area shape="rect" id="node11" title=" " alt="" coords="326,379,397,405"/>
+<area shape="rect" id="node12" title=" " alt="" coords="421,379,491,405"/>
+<area shape="rect" id="node13" title=" " alt="" coords="516,379,607,405"/>
+<area shape="rect" id="node14" title=" " alt="" coords="631,379,695,405"/>
+</map>

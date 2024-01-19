@@ -16,17 +16,21 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Library for digital input devices
+
 #include "../lcec.h"
 
 typedef struct {
-  hal_bit_t *in;
-  hal_bit_t *in_not;
-  unsigned int pdo_os, pdo_bp;
+  hal_bit_t *in;  ///< `hal_bit_t` pin for the `din-X` pin in LinuxCNC
+  hal_bit_t *in_not; ///< `hal_bit_t` pin for the `din-X-not` pin in LinuxCNC
+  unsigned int pdo_os;  ///< This bit's offset in the master's PDO data structure.
+  unsigned int pdo_bp;  ///< This bit's bit position in the master's PDO data structure.
 } lcec_class_din_pin_t;
 
 typedef struct {
-  int count;
-  lcec_class_din_pin_t **pins;
+  int count;  ///< The number of pins described by this structure.
+  lcec_class_din_pin_t **pins;  ///< a dynamic array of `lcec_class_din_pin_t` pins.
 } lcec_class_din_pins_t;
 
 lcec_class_din_pins_t *lcec_din_allocate_pins(int count);

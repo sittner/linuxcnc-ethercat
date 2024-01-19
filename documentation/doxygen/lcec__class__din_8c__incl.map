@@ -1,0 +1,20 @@
+<map id="src/devices/lcec_class_din.c" name="src/devices/lcec_class_din.c">
+<area shape="rect" id="node1" title="Library for digital input devices." alt="" coords="207,5,372,47"/>
+<area shape="rect" id="node2" href="$lcec__class__din_8h.html" title="Library for digital input devices." alt="" coords="175,95,302,121"/>
+<area shape="rect" id="node3" href="$lcec_8h.html" title="Header file for LinuxCNC&#45;Ethercat." alt="" coords="253,169,325,196"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,319,64,345"/>
+<area shape="rect" id="node5" title=" " alt="" coords="90,319,145,345"/>
+<area shape="rect" id="node6" href="$lcec__conf_8h.html" title=" " alt="" coords="70,244,165,271"/>
+<area shape="rect" id="node7" href="$lcec__rtapi_8h.html" title=" " alt="" coords="241,244,338,271"/>
+<area shape="rect" id="node16" title=" " alt="" coords="363,244,469,271"/>
+<area shape="rect" id="node17" title=" " alt="" coords="494,244,599,271"/>
+<area shape="rect" id="node18" title=" " alt="" coords="623,244,731,271"/>
+<area shape="rect" id="node8" title=" " alt="" coords="169,319,233,345"/>
+<area shape="rect" id="node9" title=" " alt="" coords="258,319,366,345"/>
+<area shape="rect" id="node10" href="$lcec__rtapi__user_8h.html" title=" " alt="" coords="391,319,521,345"/>
+<area shape="rect" id="node11" title=" " alt="" coords="229,393,301,420"/>
+<area shape="rect" id="node12" title=" " alt="" coords="326,393,397,420"/>
+<area shape="rect" id="node13" title=" " alt="" coords="421,393,491,420"/>
+<area shape="rect" id="node14" title=" " alt="" coords="516,393,607,420"/>
+<area shape="rect" id="node15" title=" " alt="" coords="631,393,695,420"/>
+</map>

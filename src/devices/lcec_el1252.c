@@ -17,16 +17,17 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
-/**   \brief Linuxcnc and Machinekit HAL driver for Beckhoff EL1252
+/**   @file
+      @brief Linuxcnc and Machinekit HAL driver for Beckhoff EL1252
       2-channel fast digital input terminal with timestamp.
 
-      \details LatchPosX is time of the last positive edge event (0->1) on input X.
+      @details LatchPosX is time of the last positive edge event (0->1) on input X.
       LatchNegX is time of the last negative edge event (1_>0) on input X.
       StatusX.0 (bit 0) is set when a positive edge event (0->1) is detected on the inputX.
       StatusX.1 (bit 1) is set when a negative edge event (1->0) is detected on the inputX.
       StatusX capture bits are cleared by reading the corrisponding latch register.
 
-      \note This driver at the moment provides pins ONLY for input data,
+      @note This driver at the moment provides pins ONLY for input data,
       timestamping infos is not exposed to HAL.
 
       http://www.beckhoff.com/english.asp?EtherCAT/el1252.htm */

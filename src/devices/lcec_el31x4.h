@@ -15,6 +15,10 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+
+/// @file
+/// @brief Driver for Beckhoff EL31x4 Analog input modules
+
 #ifndef _LCEC_EL31X4_H_
 #define _LCEC_EL31X4_H_
 

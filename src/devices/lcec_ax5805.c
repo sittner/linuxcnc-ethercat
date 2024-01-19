@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for Beckhoff AX5805 Servo controllers
+
 #include "../lcec.h"
 #include "lcec_ax5805.h"
 #include "lcec_ax5100.h"

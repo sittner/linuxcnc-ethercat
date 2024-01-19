@@ -15,6 +15,10 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+
+/// @file
+/// @brief Driver for Beckhoff EL5151 Encoder modules
+
 #ifndef _LCEC_EL5151_H_
 #define _LCEC_EL5151_H_
 

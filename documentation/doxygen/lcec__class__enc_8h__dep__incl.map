@@ -1,0 +1,15 @@
+<map id="src/devices/lcec_class_enc.h" name="src/devices/lcec_class_enc.h">
+<area shape="rect" id="node1" title="Library for encoder&#45;like devices." alt="" coords="579,5,744,47"/>
+<area shape="rect" id="node2" href="$lcec__class__ax5_8c.html" title="Library for Beckhoff AX5xxx controllers." alt="" coords="5,184,171,225"/>
+<area shape="rect" id="node3" href="$lcec__class__ax5_8h.html" title="Library for Beckhoff AX5xxx controllers." alt="" coords="187,95,352,136"/>
+<area shape="rect" id="node9" href="$lcec__class__enc_8c.html" title="Library for encoder&#45;like devices." alt="" coords="376,95,541,136"/>
+<area shape="rect" id="node10" href="$lcec__deasda_8c.html" title="Driver for Delta ASDA servo controllers." alt="" coords="566,102,757,129"/>
+<area shape="rect" id="node11" href="$lcec__el7211_8c.html" title="Driver for Beckhoff EL7211 Servo drives." alt="" coords="781,102,968,129"/>
+<area shape="rect" id="node12" href="$lcec__ph3lm2rm_8c.html" title=" " alt="" coords="992,102,1203,129"/>
+<area shape="rect" id="node13" href="$lcec__stmds5k_8c.html" title="Stoeber MDS5000 driver." alt="" coords="1226,102,1425,129"/>
+<area shape="rect" id="node4" href="$lcec__ax5100_8h.html" title="Driver for Beckhoff AX5100 Servo controllers." alt="" coords="195,191,387,218"/>
+<area shape="rect" id="node7" href="$lcec__ax5200_8h.html" title="Driver for Beckhoff AX5200 Servo controllers." alt="" coords="411,191,603,218"/>
+<area shape="rect" id="node5" href="$lcec__ax5100_8c.html" title="Driver for Beckhoff AX5100 Servo controllers." alt="" coords="89,273,279,300"/>
+<area shape="rect" id="node6" href="$lcec__ax5805_8c.html" title="Driver for Beckhoff AX5805 Servo controllers." alt="" coords="303,273,494,300"/>
+<area shape="rect" id="node8" href="$lcec__ax5200_8c.html" title="Driver for Beckhoff AX5200 Servo controllers." alt="" coords="518,273,709,300"/>
+</map>

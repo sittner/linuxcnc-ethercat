@@ -16,6 +16,9 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/// @file
+/// @brief Driver for Beckhoff EP2316 digital I/O modules
+
 #include "../lcec.h"
 #include "lcec_ep2316.h"
 
