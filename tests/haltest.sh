@@ -316,10 +316,11 @@ test-all-din-true-count 1
 set-pin D18 dout-7 false
 test-all-din-false
 
+
+echo "=== Testing Analog I/O"
 echo "... Checking D15 power measurements"
 test-pin-greater D15 l0.frequency 59
 test-pin-less D15 l0.frequency 61
-
 test-pin-greater D15 l0.voltage 110
 test-pin-less D15 l0.voltage 125
 
@@ -327,15 +328,20 @@ test-pin-less D15 l0.voltage 125
 echo "... Checking D16 temperatures"
 test-pin-greater D16 temp-0-temperature 15
 test-pin-less D16 temp-0-temperature 30
-
 test-pin-greater D16 temp-1-temperature 950
 test-pin-less D16 temp-1-temperature 1050
-
 test-pin-greater D16 temp-2-temperature 15
 test-pin-less D16 temp-2-temperature 30
-
 test-pin-greater D16 temp-3-temperature 950
 test-pin-less D16 temp-3-temperature 1050
+
+echo "... Checking D19.0->D10.1"
+test-pin-less D10 ain-1-val 0.01
+set-pin D19 aout-0-value 1
+set-pin D19 aout-0-enable 1
+test-pin-greater D10 ain-1-val 0.99
+set-pin D19 aout-0-value 0
+test-pin-less D10 ain-1-val 0.01
 
 echo "=== ALL TESTS PASS ==="
 halrun -U -Q
