@@ -457,7 +457,6 @@ void lcec_fr4000_read(struct lcec_slave *slave, long period) {
   uint8_t *pd = master->process_data;
 
   uint16_t raw_counts[5];
-  uint16_t raw_latch_counts[5];
   int32_t raw_forced_counts[5];
 
   *(hal_data->IN_0) = EC_READ_BIT(&pd[hal_data->off_dig_inp], 0);
@@ -493,35 +492,30 @@ void lcec_fr4000_read(struct lcec_slave *slave, long period) {
     // cancel index-enable
     *(hal_data->enc_00_index_enable) = 0;
 
-    raw_latch_counts[0] = EC_READ_U16(&pd[hal_data->off_LATCH]);
     counts[0] = 0;
   }
   if (EC_READ_BIT(&pd[hal_data->off_FLAG], 1) == 1) {
     // cancel index-enable
     *(hal_data->enc_01_index_enable) = 0;
 
-    raw_latch_counts[1] = EC_READ_U16(&pd[hal_data->off_LATCH + 2]);
     counts[1] = 0;
   }
   if (EC_READ_BIT(&pd[hal_data->off_FLAG], 2) == 1) {
     // cancel index-enable
     *(hal_data->enc_02_index_enable) = 0;
 
-    raw_latch_counts[2] = EC_READ_U16(&pd[hal_data->off_LATCH + 4]);
     counts[2] = 0;
   }
   if (EC_READ_BIT(&pd[hal_data->off_FLAG], 3) == 1) {
     // cancel index-enable
     *(hal_data->enc_03_index_enable) = 0;
 
-    raw_latch_counts[3] = EC_READ_U16(&pd[hal_data->off_LATCH + 6]);
     counts[3] = 0;
   }
   if (EC_READ_BIT(&pd[hal_data->off_FLAG], 4) == 1) {
     // cancel index-enable
     *(hal_data->enc_04_index_enable) = 0;
 
-    raw_latch_counts[4] = EC_READ_U16(&pd[hal_data->off_LATCH + 8]);
     counts[4] = 0;
   }
 
@@ -607,7 +601,6 @@ void lcec_fr4000_write(struct lcec_slave *slave, long period) {
 
   float fValue;
 
-  float fTmp;
   int iDir0;
   int iDir1;
   int iDir2;

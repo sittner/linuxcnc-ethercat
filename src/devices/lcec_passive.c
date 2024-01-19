@@ -19,8 +19,6 @@
 #include "lcec.h"
 #include "lcec_passive.h"
 
-static lcec_typelinkedlist_t *typeslist = NULL;
-
 static lcec_typelist_t types[] = {
   // bus coupler, no actual driver.
   { "EK1100", LCEC_BECKHOFF_VID, 0x044C2C52, LCEC_EK1100_PDOS, 0, NULL, NULL},
@@ -28,8 +26,7 @@ static lcec_typelist_t types[] = {
   { "EK1110", LCEC_BECKHOFF_VID, 0x04562C52, LCEC_EK1110_PDOS, 0, NULL, NULL},
   { "EK1122", LCEC_BECKHOFF_VID, 0x04622C52, LCEC_EK1122_PDOS, 0, NULL, NULL},
   { "EP1122", LCEC_BECKHOFF_VID, 0x04624052, LCEC_EP1122_PDOS, 0, NULL, NULL},
-
-  { NULL }
+  { NULL },
 };
 
 ADD_TYPES(types);

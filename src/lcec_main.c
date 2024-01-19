@@ -86,9 +86,6 @@ void lcec_write_all(void *arg, long period);
 void lcec_read_master(void *arg, long period);
 void lcec_write_master(void *arg, long period);
 
-static int lcec_param_newfv(hal_type_t type, hal_pin_dir_t dir, void *data_addr, const char *fmt, va_list ap);
-static int lcec_param_newfv_list(void *base, const lcec_pindesc_t *list, va_list ap);
-
 int rtapi_app_main(void) {
   int slave_count;
   lcec_master_t *master;
@@ -519,8 +516,9 @@ int lcec_parse_config(void) {
           // alloc pdo memory
           generic_pdos = lcec_zalloc(sizeof(ec_pdo_info_t) * slave_conf->pdoCount);
           if (generic_pdos == NULL) {
-            rtapi_print_msg(
+	    rtapi_print_msg(
                 RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic pdo memory\n", master->name, slave_conf->name);
+	    lcec_free(generic_pdo_entries);
             goto fail2;
           }
 
@@ -529,6 +527,8 @@ int lcec_parse_config(void) {
           if (generic_sync_managers == NULL) {
             rtapi_print_msg(
                 RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s generic sync manager memory\n", master->name, slave_conf->name);
+	    lcec_free(generic_pdo_entries);
+	    lcec_free(generic_pdos);
             goto fail2;
           }
           generic_sync_managers->index = 0xff;
@@ -540,6 +540,9 @@ int lcec_parse_config(void) {
           if (sdo_config == NULL) {
             rtapi_print_msg(
                 RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s sdo entry memory\n", master->name, slave_conf->name);
+	    lcec_free(generic_pdo_entries);
+	    lcec_free(generic_pdos);
+	    lcec_free(generic_sync_managers);
             goto fail2;
           }
         }
@@ -550,6 +553,10 @@ int lcec_parse_config(void) {
           if (idn_config == NULL) {
             rtapi_print_msg(
                 RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s idn entry memory\n", master->name, slave_conf->name);
+	    lcec_free(generic_pdo_entries);
+	    lcec_free(generic_pdos);
+	    lcec_free(generic_sync_managers);
+	    lcec_free(sdo_config);
             goto fail2;
           }
         }
@@ -559,6 +566,11 @@ int lcec_parse_config(void) {
           modparams = lcec_zalloc(sizeof(lcec_slave_modparam_t) * (slave_conf->modParamCount + 1));
           if (modparams == NULL) {
             rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate slave %s.%s modparam memory\n", master->name, slave_conf->name);
+	    lcec_free(generic_pdo_entries);
+	    lcec_free(generic_pdos);
+	    lcec_free(generic_sync_managers);
+	    lcec_free(sdo_config);
+	    lcec_free(idn_config);
             goto fail2;
           }
           modparams[slave_conf->modParamCount].id = -1;
@@ -801,6 +813,11 @@ int lcec_parse_config(void) {
         sdo_conf = (LCEC_CONF_SDOCONF_T *)conf;
         conf += sizeof(LCEC_CONF_SDOCONF_T) + sdo_conf->length;
 
+	if (sdo_config == NULL) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "sdo_config is NULL\n");
+          goto fail2;
+	}
+	
         // copy attributes
         sdo_config->index = sdo_conf->index;
         sdo_config->subindex = sdo_conf->subindex;
@@ -818,6 +835,11 @@ int lcec_parse_config(void) {
         idn_conf = (LCEC_CONF_IDNCONF_T *)conf;
         conf += sizeof(LCEC_CONF_IDNCONF_T) + idn_conf->length;
 
+	if (idn_config == NULL) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "idn_config is NULL\n");
+          goto fail2;
+	}
+	
         // copy attributes
         idn_config->drive = idn_conf->drive;
         idn_config->idn = idn_conf->idn;
@@ -838,6 +860,11 @@ int lcec_parse_config(void) {
         // check for slave
         if (slave == NULL) {
           rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Slave node for modparam config missing\n");
+          goto fail2;
+        }
+
+        if (modparams == NULL) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "modparams is nullg\n");
           goto fail2;
         }
 

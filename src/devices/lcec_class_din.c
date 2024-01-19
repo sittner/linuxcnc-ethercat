@@ -106,15 +106,9 @@ void lcec_din_read(struct lcec_slave *slave, lcec_class_din_pin_t *data) {
 // - slave: the slave, passed from the per-device `_read`.
 // - pins: a lcec_class_din_pins_t *, as returned by lcec_din_register_pin.
 void lcec_din_read_all(struct lcec_slave *slave, lcec_class_din_pins_t *pins) {
-  lcec_master_t *master = slave->master;
-  uint8_t *pd = master->process_data;
-  int s;
-
   for (int i = 0; i < pins->count; i++) {
     lcec_class_din_pin_t *pin = pins->pins[i];
 
-    s = EC_READ_BIT(&pd[pin->pdo_os], pin->pdo_bp);
-    *(pin->in) = s;
-    *(pin->in_not) = !s;
+    lcec_din_read(slave, pin);
   }
 }

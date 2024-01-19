@@ -109,10 +109,6 @@ void lcec_dout_write(struct lcec_slave *slave, lcec_class_dout_pin_t *data) {
 // - slave: the slave, passed from the per-device `_write`.
 // - pins: a lcec_class_dout_pins_t *, as returned by lcec_dout_register_pin.
 void lcec_dout_write_all(struct lcec_slave *slave, lcec_class_dout_pins_t *pins) {
-  lcec_master_t *master = slave->master;
-  uint8_t *pd = master->process_data;
-  int s;
-
   for (int i = 0; i < pins->count; i++) {
     lcec_class_dout_pin_t *pin = pins->pins[i];
 

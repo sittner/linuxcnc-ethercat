@@ -52,7 +52,6 @@ ADD_TYPES(types);
 static void lcec_el2xxx_write(struct lcec_slave *slave, long period);
 
 static int lcec_el2xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs) {
-  lcec_master_t *master = slave->master;
   lcec_class_dout_pins_t *hal_data;
   int i;
 

@@ -8,6 +8,9 @@ include Makefile.clean
 RTLDFLAGS += -Wl,-rpath,$(LIBDIR)
 RTEXTRA_LDFLAGS += -Wl,--whole-archive liblcecdevices.a -Wl,--no-whole-archive -L$(LIBDIR) -llinuxcnchal -lethercat -lrt
 
+#EXTRA_CFLAGS += --std=c2x
+EXTRA_CFLAGS += -Wall  # Increase debugging level
+
 ## targets
 lcec-common-objs := lcec_devicelist.o lcec_ethercat.o lcec_pins.o
 lcec-objs := lcec_main.o $(lcec-common-objs)
