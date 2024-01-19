@@ -24,6 +24,7 @@ Description | Driver | EtherCAT VID:PID | Device Type | Testing Status | Notes
 [Beckhoff EK1101 EtherCAT Coupler (2A E-Bus, ID switch)](http://www.beckhoff.com/EK1101) | [passive](../src/devices/lcec_passive.c) | 0x2:0x044d2c52 | System Terminals |  | Passive device
 [Beckhoff EK1110 EtherCAT extension](http://www.beckhoff.com/EK1110) | [passive](../src/devices/lcec_passive.c) | 0x2:0x04562c52 | System Terminals | Part of @scottlaird's test suite | Passive device
 [Beckhoff EK1122 2 port EtherCAT junction](http://www.beckhoff.com/EK1122) | [passive](../src/devices/lcec_passive.c) | 0x2:0x04622c52 | System Terminals |  | Passive device
+[Beckhoff EK1814 EtherCAT IO-Coupler  (0,5A E-Bus, 4 Ch. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 0,5A)](http://www.beckhoff.com/EK1814) | [el1859](../src/devices/lcec_el1859.c) | 0x2:0x07162c52 | System Couplers | New, @scottlaird will be using in testing. | 
 [Beckhoff EL1002 2Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1002) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x03ea3052 | Digital Input Terminals |  | 
 [Beckhoff EL1004 4Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1004) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x03ec3052 | Digital Input Terminals |  | 
 [Beckhoff EL1008 8Ch. Dig. Input 24V, 3ms](http://www.beckhoff.com/EL1008) | [el1xxx](../src/devices/lcec_el1xxx.c) | 0x2:0x03f03052 | Digital Input Terminals |  | 

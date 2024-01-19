@@ -1,0 +1,11 @@
+---
+Device: EK1814
+VendorID: "0x00000002"
+VendorName: Beckhoff Automation GmbH & Co. KG
+PID: "0x07162c52"
+Description: Beckhoff EK1814 EtherCAT IO-Coupler  (0,5A E-Bus, 4 Ch. Dig. In, 3ms, 4 Ch. Dig. Out 24V, 0,5A)
+DocumentationURL: http://www.beckhoff.com/EK1814
+DeviceType: System Couplers
+Notes: ""
+SrcFile: src/devices/lcec_el1859.c
+TestingStatus: "New, @scottlaird will be using in testing."
