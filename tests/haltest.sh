@@ -244,16 +244,16 @@ test-pin-exists D16 temp-3-temperature
 test-pin-count D16 30
 
 
-echo "=== Testing initial config of D17 (EL1859)"
-test-pin-exists D17 din-7
-test-pin-exists D17 dout-7
-test-pin-count D17 38
+echo "=== Testing initial config of D18 (EL1859)"
+test-pin-exists D18 din-7
+test-pin-exists D18 dout-7
+test-pin-count D18 38
 
 
-echo "=== Testing initial config of D18 (EL4032)"
-test-pin-exists D18 aout-1-value
-test-pin-exists D18 aout-1-min-dc
-test-pin-count D18 28
+echo "=== Testing initial config of D19 (EL4032)"
+test-pin-exists D19 aout-1-value
+test-pin-exists D19 aout-1-min-dc
+test-pin-count D19 28
 
 #echo "=== Testing initial config of D19 (EK1101)"
 #if ! grep 'TRUE  lcec.0.D19.slave-online' $OUT > /dev/null; then
