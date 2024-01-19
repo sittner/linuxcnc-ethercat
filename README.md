@@ -19,7 +19,7 @@ minimal manual work.
 ### Initial setup
 
 First, you need to tell `apt` how to find the Etherlab repository,
-hosted at https://build.opensuse.org/projects/science:EtherLab.  This
+hosted at https://build.opensuse.org/project/show/science:EtherLab.  This
 is the preferred mechanism from the [LinuxCNC
 forum](https://forum.linuxcnc.org/ethercat/45336-ethercat-installation-from-repositories-how-to-step-by-step):
 
