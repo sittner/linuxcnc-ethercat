@@ -25,12 +25,15 @@ configure:
 	@echo "RTLIBDIR = $(RTLIBDIR)"
 	@echo "LIBDIR = $(LIBDIR)"
 	@echo "prefix = $(prefix)"
+	@echo "MODINC_HAS_EXTRA_LDFLAGS = $(MODINC_HAS_EXTRA_LDFLAGS)"
 
 # include modinc
 MODINC=$(shell $(COMP) --print-modinc)
 ifeq (, $(MODINC))
   $(error Unable to get modinc path)
 endif
+
+MODINC_HAS_EXTRA_LDFLAGS = $(shell fgrep -q EXTRA_LDFLAGS $(MODINC) && echo 'y')
 
 include $(MODINC)
 

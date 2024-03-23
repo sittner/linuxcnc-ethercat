@@ -16,7 +16,12 @@ all:
 
 else
 
-LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat
+ifeq ($(MODINC_HAS_EXTRA_LDFLAGS),y)
+  LDFLAGS += -Wl,-rpath,$(LIBDIR)
+  EXTRA_LDFLAGS += -L$(LIBDIR) -llinuxcnchal -lethercat -lrt
+else
+  LDFLAGS += -Wl,-rpath,$(LIBDIR) -L$(LIBDIR) -llinuxcnchal -lethercat
+endif
 
 all: modules
 
