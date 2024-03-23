@@ -23,4 +23,4 @@ debian/files
 debian/*.log
 debian/*.substvars
 debian/linuxcnc-ethercat/
-
+debian/debhelper-build-stamp
