@@ -28,6 +28,7 @@
 #include "lcec_el2202.h"
 #include "lcec_el31x2.h"
 #include "lcec_el31x4.h"
+#include "lcec_el32x4.h"
 #include "lcec_el3255.h"
 #include "lcec_el40x1.h"
 #include "lcec_el40x2.h"
@@ -151,8 +152,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL3152, LCEC_EL31x2_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
   { lcecSlaveTypeEL3162, LCEC_EL31x2_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
 
-  // analog in, 2ch, 16 bits
+  // analog in, 4ch, 16 bits
   { lcecSlaveTypeEL3164, LCEC_EL31x4_VID, LCEC_EL3164_PID, LCEC_EL31x4_PDOS, 0, NULL, lcec_el31x4_init},
+  { lcecSlaveTypeEL3204, LCEC_EL32x4_VID, LCEC_EL3204_PID, LCEC_EL32x4_PDOS, 0, NULL, lcec_el32x4_init},
 
   // analog in, 5ch, 16 bits
   { lcecSlaveTypeEL3255, LCEC_EL3255_VID, LCEC_EL3255_PID, LCEC_EL3255_PDOS, 0, NULL, lcec_el3255_init},

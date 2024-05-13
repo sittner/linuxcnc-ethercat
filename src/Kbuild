@@ -14,6 +14,7 @@ lcec-objs := \
     lcec_el2202.o \
     lcec_el31x2.o \
     lcec_el31x4.o \
+    lcec_el32x4.o \
     lcec_el3255.o \
     lcec_el40x1.o \
     lcec_el40x2.o \
