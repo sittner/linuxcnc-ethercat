@@ -35,6 +35,7 @@
 #include "lcec_el41x2.h"
 #include "lcec_el41x4.h"
 #include "lcec_el5002.h"
+#include "lcec_el5021.h"
 #include "lcec_el5032.h"
 #include "lcec_el5101.h"
 #include "lcec_el5151.h"
@@ -186,6 +187,7 @@ static const lcec_typelist_t types[] = {
 
   // encoder inputs
   { lcecSlaveTypeEL5002, LCEC_EL5002_VID, LCEC_EL5002_PID, LCEC_EL5002_PDOS, 0, NULL, lcec_el5002_init},
+  { lcecSlaveTypeEL5021, LCEC_EL5021_VID, LCEC_EL5021_PID, LCEC_EL5021_PDOS, 0, NULL, lcec_el5021_init},
   { lcecSlaveTypeEL5032, LCEC_EL5032_VID, LCEC_EL5032_PID, LCEC_EL5032_PDOS, 0, NULL, lcec_el5032_init},
   { lcecSlaveTypeEL5101, LCEC_EL5101_VID, LCEC_EL5101_PID, LCEC_EL5101_PDOS, 0, NULL, lcec_el5101_init},
   { lcecSlaveTypeEL5151, LCEC_EL5151_VID, LCEC_EL5151_PID, LCEC_EL5151_PDOS, 0, NULL, lcec_el5151_init},

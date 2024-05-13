@@ -262,6 +262,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // encoder inputs
   { "EL5002", lcecSlaveTypeEL5002, slaveEL5002Params },
+  { "EL5021", lcecSlaveTypeEL5021, NULL },
   { "EL5032", lcecSlaveTypeEL5032, NULL },
   { "EL5101", lcecSlaveTypeEL5101, NULL },
   { "EL5151", lcecSlaveTypeEL5151, NULL },
