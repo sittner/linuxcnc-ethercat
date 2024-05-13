@@ -24,6 +24,7 @@ lcec-objs := \
     lcec_el5032.o \
     lcec_el5101.o \
     lcec_el5151.o \
+    lcec_el5122.o \
     lcec_el5152.o \
     lcec_el6900.o \
     lcec_el1918_logic.o \

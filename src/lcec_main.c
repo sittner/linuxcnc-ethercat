@@ -38,6 +38,7 @@
 #include "lcec_el5032.h"
 #include "lcec_el5101.h"
 #include "lcec_el5151.h"
+#include "lcec_el5122.h"
 #include "lcec_el5152.h"
 #include "lcec_el2521.h"
 #include "lcec_el6900.h"
@@ -188,6 +189,7 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL5032, LCEC_EL5032_VID, LCEC_EL5032_PID, LCEC_EL5032_PDOS, 0, NULL, lcec_el5032_init},
   { lcecSlaveTypeEL5101, LCEC_EL5101_VID, LCEC_EL5101_PID, LCEC_EL5101_PDOS, 0, NULL, lcec_el5101_init},
   { lcecSlaveTypeEL5151, LCEC_EL5151_VID, LCEC_EL5151_PID, LCEC_EL5151_PDOS, 0, NULL, lcec_el5151_init},
+  { lcecSlaveTypeEL5122, LCEC_EL5122_VID, LCEC_EL5122_PID, LCEC_EL5122_PDOS, 0, NULL, lcec_el5122_init},
   { lcecSlaveTypeEL5152, LCEC_EL5152_VID, LCEC_EL5152_PID, LCEC_EL5152_PDOS, 0, NULL, lcec_el5152_init},
 
   // pulse train (stepper) output
