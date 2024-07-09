@@ -131,7 +131,7 @@ void lcec_el32x4_read(struct lcec_slave *slave, long period) {
     // update value
     value = EC_READ_S16(&pd[chan->val_pdo_os]);
     *(chan->raw_val) = value;
-    *(chan->val) = *(chan->bias) + *(chan->scale) * (double)value * ((double)1/(double)0x7fff);
+    *(chan->val) = *(chan->bias) + *(chan->scale) * (double)value * 0.1;
   }
 }
 
