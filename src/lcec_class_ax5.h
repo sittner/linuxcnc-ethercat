@@ -31,7 +31,7 @@ typedef struct {
   hal_bit_t *fault;
 
   hal_bit_t *halt;
-  hal_bit_t *drive_off;
+  hal_bit_t *drive_on;
 
   hal_float_t *velo_cmd;
 

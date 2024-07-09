@@ -26,7 +26,7 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_BIT, HAL_OUT, offsetof(lcec_class_ax5_chan_t, halted), "%s.%s.%s.%ssrv-halted" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_class_ax5_chan_t, fault), "%s.%s.%s.%ssrv-fault" },
   { HAL_BIT, HAL_IN, offsetof(lcec_class_ax5_chan_t, halt), "%s.%s.%s.%ssrv-halt" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_class_ax5_chan_t, drive_off), "%s.%s.%s.%ssrv-drive-off" },
+  { HAL_BIT, HAL_IN, offsetof(lcec_class_ax5_chan_t, drive_on), "%s.%s.%s.%ssrv-drive-on" },
   { HAL_FLOAT, HAL_IN, offsetof(lcec_class_ax5_chan_t, velo_cmd), "%s.%s.%s.%ssrv-velo-cmd" },
 
   { HAL_U32, HAL_IN, offsetof(lcec_class_ax5_chan_t, status), "%s.%s.%s.%ssrv-status" },
@@ -254,7 +254,7 @@ void lcec_class_ax5_write(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan)
       ctrl |= (1 << 13); // halt/restart
     }
     ctrl |= (1 << 14); // enable
-    if (!(*(chan->drive_off))) {
+    if (*(chan->drive_on)) {
       ctrl |= (1 << 15); // drive on
     }
   }
