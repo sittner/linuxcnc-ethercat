@@ -53,6 +53,9 @@ typedef struct {
   hal_float_t *pos;
   hal_float_t *period;
   hal_float_t *frequency;
+  hal_float_t *freq_scale;
+  hal_float_t *freq_filter_gain;
+  hal_float_t *freq_filtered;
 
   unsigned int status_pdo_os;
   unsigned int value_pdo_os;
@@ -93,6 +96,9 @@ static const lcec_pindesc_t slave_pins[] = {
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el5101_data_t, period), "%s.%s.%s.enc-period" },
   { HAL_FLOAT, HAL_OUT, offsetof(lcec_el5101_data_t, frequency), "%s.%s.%s.enc-frequency" },
   { HAL_FLOAT, HAL_IO, offsetof(lcec_el5101_data_t, pos_scale), "%s.%s.%s.enc-pos-scale" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el5101_data_t, freq_scale), "%s.%s.%s.enc-freq-scale" },
+  { HAL_FLOAT, HAL_IO, offsetof(lcec_el5101_data_t, freq_filter_gain), "%s.%s.%s.enc-freq-filter-gain" },
+  { HAL_FLOAT, HAL_OUT, offsetof(lcec_el5101_data_t, freq_filtered), "%s.%s.%s.enc-freq-filtered" },
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
 };
 
@@ -174,6 +180,8 @@ int lcec_el5101_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *
 
   // initialize pins
   *(hal_data->pos_scale) = 1.0;
+  *(hal_data->freq_scale) = 1.0;
+  *(hal_data->freq_filter_gain) = 1.0;
 
   // initialize variables
   hal_data->do_init = 1;
@@ -277,8 +285,11 @@ void lcec_el5101_read(struct lcec_slave *slave, long period) {
   *(hal_data->pos) = *(hal_data->count) * hal_data->scale;
 
   // scale period
-  *(hal_data->frequency) = ((double) (*(hal_data->raw_frequency))) * LCEC_EL5101_FREQUENCY_SCALE;
+  *(hal_data->frequency) = ((double) (*(hal_data->raw_frequency))) * LCEC_EL5101_FREQUENCY_SCALE * *(hal_data->freq_scale);
   *(hal_data->period) = ((double) (*(hal_data->raw_period))) * LCEC_EL5101_PERIOD_SCALE;
+
+  // filter frequency
+  *(hal_data->freq_filtered) += (*(hal_data->frequency) - *(hal_data->freq_filtered)) * *(hal_data->freq_filter_gain);
 
   hal_data->last_operational = 1;
 }
