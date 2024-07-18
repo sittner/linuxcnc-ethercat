@@ -25,13 +25,14 @@
 #define LCEC_AX5_PARAM_ENABLE_DIAG 2
 
 typedef struct {
+  hal_bit_t *drive_on;
+
   hal_bit_t *enable;
   hal_bit_t *enabled;
   hal_bit_t *halted;
   hal_bit_t *fault;
 
   hal_bit_t *halt;
-  hal_bit_t *drive_on;
 
   hal_float_t *velo_cmd;
 
