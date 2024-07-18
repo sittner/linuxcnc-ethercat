@@ -21,12 +21,12 @@
 #include "lcec_class_ax5.h"
 
 static const lcec_pindesc_t slave_pins[] = {
+  { HAL_BIT, HAL_IN, offsetof(lcec_class_ax5_chan_t, drive_on), "%s.%s.%s.%ssrv-drive-on" },
   { HAL_BIT, HAL_IN, offsetof(lcec_class_ax5_chan_t, enable), "%s.%s.%s.%ssrv-enable" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_class_ax5_chan_t, enabled), "%s.%s.%s.%ssrv-enabled" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_class_ax5_chan_t, halted), "%s.%s.%s.%ssrv-halted" },
   { HAL_BIT, HAL_OUT, offsetof(lcec_class_ax5_chan_t, fault), "%s.%s.%s.%ssrv-fault" },
   { HAL_BIT, HAL_IN, offsetof(lcec_class_ax5_chan_t, halt), "%s.%s.%s.%ssrv-halt" },
-  { HAL_BIT, HAL_IN, offsetof(lcec_class_ax5_chan_t, drive_off), "%s.%s.%s.%ssrv-drive-off" },
   { HAL_FLOAT, HAL_IN, offsetof(lcec_class_ax5_chan_t, velo_cmd), "%s.%s.%s.%ssrv-velo-cmd" },
 
   { HAL_U32, HAL_IN, offsetof(lcec_class_ax5_chan_t, status), "%s.%s.%s.%ssrv-status" },
@@ -144,6 +144,9 @@ int lcec_class_ax5_init(struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_
     }
   }
 
+  // init pins
+  *(chan->drive_on) = 1;
+
   // init parameters
   chan->scale = 1.0;
   chan->scale_fb2 = 1.0;
@@ -249,12 +252,13 @@ void lcec_class_ax5_write(struct lcec_slave *slave, lcec_class_ax5_chan_t *chan)
   if (chan->toggle) {
     ctrl |= (1 << 10); // sync
   }
-  if (*(chan->enable)) {
-    if (!(*(chan->halt))) {
-      ctrl |= (1 << 13); // halt/restart
-    }
+
+  if (*(chan->drive_on)) {
     ctrl |= (1 << 14); // enable
-    if (!(*(chan->drive_off))) {
+    if (*(chan->enable)) {
+      if (!(*(chan->halt))) {
+        ctrl |= (1 << 13); // halt/restart
+      }
       ctrl |= (1 << 15); // drive on
     }
   }
