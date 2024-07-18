@@ -15,20 +15,18 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
-#ifndef _LCEC_EL5101_H_
-#define _LCEC_EL5101_H_
+#ifndef _LCEC_EL5122_H_
+#define _LCEC_EL5122_H_
 
 #include "lcec.h"
 
-#define LCEC_EL5101_VID LCEC_BECKHOFF_VID
-#define LCEC_EL5101_PID 0x13ed3052
+#define LCEC_EL5122_VID LCEC_BECKHOFF_VID
+#define LCEC_EL5122_PID 0x14023052
 
-#define LCEC_EL5101_PDOS 8
+#define LCEC_EL5122_CHANS 2
+#define LCEC_EL5122_PDOS  (13 * LCEC_EL5122_CHANS)
 
-#define LCEC_EL5101_PERIOD_SCALE    500e-9
-#define LCEC_EL5101_FREQUENCY_SCALE 0.01
-
-int lcec_el5101_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
+int lcec_el5122_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t *pdo_entry_regs);
 
 #endif
 

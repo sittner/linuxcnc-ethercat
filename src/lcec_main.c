@@ -28,6 +28,7 @@
 #include "lcec_el2202.h"
 #include "lcec_el31x2.h"
 #include "lcec_el31x4.h"
+#include "lcec_el32x4.h"
 #include "lcec_el3255.h"
 #include "lcec_el40x1.h"
 #include "lcec_el40x2.h"
@@ -35,9 +36,11 @@
 #include "lcec_el41x2.h"
 #include "lcec_el41x4.h"
 #include "lcec_el5002.h"
+#include "lcec_el5021.h"
 #include "lcec_el5032.h"
 #include "lcec_el5101.h"
 #include "lcec_el5151.h"
+#include "lcec_el5122.h"
 #include "lcec_el5152.h"
 #include "lcec_el2521.h"
 #include "lcec_el6900.h"
@@ -149,8 +152,9 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeEL3152, LCEC_EL31x2_VID, LCEC_EL3152_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
   { lcecSlaveTypeEL3162, LCEC_EL31x2_VID, LCEC_EL3162_PID, LCEC_EL31x2_PDOS, 0, NULL, lcec_el31x2_init},
 
-  // analog in, 2ch, 16 bits
+  // analog in, 4ch, 16 bits
   { lcecSlaveTypeEL3164, LCEC_EL31x4_VID, LCEC_EL3164_PID, LCEC_EL31x4_PDOS, 0, NULL, lcec_el31x4_init},
+  { lcecSlaveTypeEL3204, LCEC_EL32x4_VID, LCEC_EL3204_PID, LCEC_EL32x4_PDOS, 0, NULL, lcec_el32x4_init},
 
   // analog in, 5ch, 16 bits
   { lcecSlaveTypeEL3255, LCEC_EL3255_VID, LCEC_EL3255_PID, LCEC_EL3255_PDOS, 0, NULL, lcec_el3255_init},
@@ -185,9 +189,11 @@ static const lcec_typelist_t types[] = {
 
   // encoder inputs
   { lcecSlaveTypeEL5002, LCEC_EL5002_VID, LCEC_EL5002_PID, LCEC_EL5002_PDOS, 0, NULL, lcec_el5002_init},
+  { lcecSlaveTypeEL5021, LCEC_EL5021_VID, LCEC_EL5021_PID, LCEC_EL5021_PDOS, 0, NULL, lcec_el5021_init},
   { lcecSlaveTypeEL5032, LCEC_EL5032_VID, LCEC_EL5032_PID, LCEC_EL5032_PDOS, 0, NULL, lcec_el5032_init},
   { lcecSlaveTypeEL5101, LCEC_EL5101_VID, LCEC_EL5101_PID, LCEC_EL5101_PDOS, 0, NULL, lcec_el5101_init},
   { lcecSlaveTypeEL5151, LCEC_EL5151_VID, LCEC_EL5151_PID, LCEC_EL5151_PDOS, 0, NULL, lcec_el5151_init},
+  { lcecSlaveTypeEL5122, LCEC_EL5122_VID, LCEC_EL5122_PID, LCEC_EL5122_PDOS, 0, NULL, lcec_el5122_init},
   { lcecSlaveTypeEL5152, LCEC_EL5152_VID, LCEC_EL5152_PID, LCEC_EL5152_PDOS, 0, NULL, lcec_el5152_init},
 
   // pulse train (stepper) output
@@ -462,7 +468,6 @@ int rtapi_app_main(void) {
     // initialize application time
     lcec_gettimeofday(&tv);
     master->app_time_base = EC_TIMEVAL2NANO(tv);
-    ecrt_master_application_time(master->master, master->app_time_base);
 #ifdef RTAPI_TASK_PLL_SUPPORT
     master->dc_time_valid_last = 0;
     if (master->sync_ref_cycles >= 0) {
@@ -1423,7 +1428,7 @@ void lcec_write_master(void *arg, long period) {
     // check for invalid error values
     if (abs(*(hal_data->pll_err)) > hal_data->pll_max_err) {
       // force resync of master time
-      master->dc_ref -= *(hal_data->pll_err);
+      master->dc_ref -= *(hal_data->pll_err) - (*(hal_data->pll_err) % period);
       // skip next control cycle to allow resync
       dc_time_valid = 0;
       // increment reset counter to document this event

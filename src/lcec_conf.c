@@ -228,6 +228,7 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // analog in, 4ch, 16 bits
   { "EL3164", lcecSlaveTypeEL3164, NULL },
+  { "EL3204", lcecSlaveTypeEL3204, NULL },
 
   // analog in, 5ch, 16 bits
   { "EL3255", lcecSlaveTypeEL3255, NULL },
@@ -262,9 +263,11 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // encoder inputs
   { "EL5002", lcecSlaveTypeEL5002, slaveEL5002Params },
+  { "EL5021", lcecSlaveTypeEL5021, NULL },
   { "EL5032", lcecSlaveTypeEL5032, NULL },
   { "EL5101", lcecSlaveTypeEL5101, NULL },
   { "EL5151", lcecSlaveTypeEL5151, NULL },
+  { "EL5122", lcecSlaveTypeEL5122, NULL },
   { "EL5152", lcecSlaveTypeEL5152, NULL },
 
   // pulse train (stepper) output
