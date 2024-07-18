@@ -468,7 +468,6 @@ int rtapi_app_main(void) {
     // initialize application time
     lcec_gettimeofday(&tv);
     master->app_time_base = EC_TIMEVAL2NANO(tv);
-    ecrt_master_application_time(master->master, master->app_time_base);
 #ifdef RTAPI_TASK_PLL_SUPPORT
     master->dc_time_valid_last = 0;
     if (master->sync_ref_cycles >= 0) {
@@ -1429,7 +1428,7 @@ void lcec_write_master(void *arg, long period) {
     // check for invalid error values
     if (abs(*(hal_data->pll_err)) > hal_data->pll_max_err) {
       // force resync of master time
-      master->dc_ref -= *(hal_data->pll_err);
+      master->dc_ref -= *(hal_data->pll_err) - (*(hal_data->pll_err) % period);
       // skip next control cycle to allow resync
       dc_time_valid = 0;
       // increment reset counter to document this event
