@@ -60,6 +60,7 @@
 #include "lcec_dems300.h"
 #include "lcec_omrg5.h"
 #include "lcec_ph3lm2rm.h"
+#include "lcec_ex260.h"
 
 #include "rtapi_app.h"
 
@@ -267,6 +268,11 @@ static const lcec_typelist_t types[] = {
   { lcecSlaveTypeOmrG5_KN75F,  LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN75F_ECT_PID,  LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
   { lcecSlaveTypeOmrG5_KN150F, LCEC_OMRG5_VID, LCEC_OMRG5_R88D_KN150F_ECT_PID, LCEC_OMRG5_PDOS, 0, NULL, lcec_omrg5_init},
 
+  { lcecSlaveTypeEX260_SEC1, LCEC_EX260_VID, LCEC_EX260_SEC1_PID, LCEC_EX260_SEC1_PDOS, lcec_ex260_init},
+  { lcecSlaveTypeEX260_SEC2, LCEC_EX260_VID, LCEC_EX260_SEC2_PID, LCEC_EX260_SEC2_PDOS, lcec_ex260_init},
+  { lcecSlaveTypeEX260_SEC3, LCEC_EX260_VID, LCEC_EX260_SEC3_PID, LCEC_EX260_SEC3_PDOS, lcec_ex260_init},
+  { lcecSlaveTypeEX260_SEC4, LCEC_EX260_VID, LCEC_EX260_SEC4_PID, LCEC_EX260_SEC4_PDOS, lcec_ex260_init},
+  
   // modusoft PH3LM2RM converter
   { lcecSlaveTypePh3LM2RM, LCEC_PH3LM2RM_VID, LCEC_PH3LM2RM_PID, LCEC_PH3LM2RM_PDOS, 0, NULL, lcec_ph3lm2rm_init},
 

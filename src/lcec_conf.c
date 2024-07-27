@@ -343,6 +343,11 @@ static const LCEC_CONF_TYPELIST_T slaveTypes[] = {
 
   // modusoft PH3LM2RM converter
   { "Ph3LM2RM", lcecSlaveTypePh3LM2RM, NULL },
+        // modusoft PH3LM2RM converter
+  { "EX260-SEC1", lcecSlaveTypeEX260_SEC1, NULL },
+  { "EX260-SEC2", lcecSlaveTypeEX260_SEC2, NULL },
+  { "EX260-SEC3", lcecSlaveTypeEX260_SEC3, NULL },
+  { "EX260-SEC4", lcecSlaveTypeEX260_SEC4, NULL },
 
   { NULL }
 };
