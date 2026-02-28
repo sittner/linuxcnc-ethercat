@@ -1516,7 +1516,9 @@ void lcec_write_master(void *arg, long period) {
 
     // Wait for two successive valid dc_time reads before starting
     if (dc_time_valid && master->dc_time_valid_last) {
-      // Compute time difference between master app_time (lower 32 bits) and ref clock
+      // Raw 32-bit time difference (before modulo normalization).
+      // Used identically for both startup snap and error-bound re-snap
+      // to ensure app_time_base correction is consistent.
       int32_t dc_diff_raw = (int32_t)(master->app_time_last - dc_time);
 
       // Calculate drift delta (change in raw diff between cycles)
@@ -1533,7 +1535,8 @@ void lcec_write_master(void *arg, long period) {
 
       if (master->dc_started) {
         // Error-bound check — every cycle, before accumulation
-        if (master->dc_diff_ns > (int32_t)hal_data->pll_max_err || master->dc_diff_ns < -(int32_t)hal_data->pll_max_err) {
+        // pll_max_err == 0 means "error-bound check disabled"
+        if (hal_data->pll_max_err > 0 && (master->dc_diff_ns > (int32_t)hal_data->pll_max_err || master->dc_diff_ns < -(int32_t)hal_data->pll_max_err)) {
           // Error too large — re-snap like startup
           master->app_time_base -= dc_diff_raw;
           master->prev_dc_diff_ns = 0;
@@ -1543,6 +1546,8 @@ void lcec_write_master(void *arg, long period) {
           master->dc_filter_idx = 0;
           pll_correction = 0;
           (*(hal_data->pll_reset_cnt))++;
+          rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "master %s: PLL error bound exceeded (dc_diff=%d, max_err=%u), re-snapping (reset count: %u)\n",
+              master->name, master->dc_diff_ns, hal_data->pll_max_err, *(hal_data->pll_reset_cnt));
         } else {
           // Accumulate for filter
           master->dc_diff_total_ns += master->dc_diff_ns;
