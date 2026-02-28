@@ -600,6 +600,17 @@ static void parseMasterAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **
     // parse refClockSyncCycles
     if (strcmp(name, "refClockSyncCycles") == 0) {
       p->refClockSyncCycles = atoll(val);
+      if (p->refClockSyncCycles < 0) {
+        fprintf(stderr, "%s: ERROR: Negative refClockSyncCycles is no longer supported. Use syncMasterToRef=\"1\" instead.\n", modname);
+        XML_StopParser(inst->parser, 0);
+        return;
+      }
+      continue;
+    }
+
+    // parse syncMasterToRef
+    if (strcmp(name, "syncMasterToRef") == 0) {
+      p->syncMasterToRef = atoi(val);
       continue;
     }
 
