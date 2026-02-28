@@ -132,6 +132,8 @@ typedef struct lcec_master {
   char backup_interface[LCEC_CONF_STR_MAXLEN];
   unsigned int debug_level;
   int run_on_cpu;
+  ec_transport_t *transport;
+  ec_transport_t *backup_transport;
 #endif
   char name[LCEC_CONF_STR_MAXLEN];
   ec_master_t *master;
