@@ -333,6 +333,17 @@ static int comp_id = -1;
 static lcec_master_data_t *global_hal_data;
 static ec_master_state_t global_ms;
 
+#ifdef EC_USPACE_MASTER
+static char *ipc_socket = NULL;
+RTAPI_MP_STRING(ipc_socket, "EtherCAT userspace master IPC socket path (NULL = no tool access)");
+
+static void lcec_ec_log_callback(int level, const char *fmt, va_list ap) {
+  char buf[256];
+  rtapi_vsnprintf(buf, sizeof(buf), fmt, ap);
+  rtapi_print(LCEC_MSG_PFX "%s", buf);
+}
+#endif
+
 int lcec_parse_config(void);
 void lcec_clear_config(void);
 
@@ -380,18 +391,64 @@ int rtapi_app_main(void) {
     goto fail2;
   }
 
+#ifdef EC_USPACE_MASTER
+  // initialize userspace ethercat master library
+  if (ecrt_lib_init(lcec_ec_log_callback, ipc_socket) < 0) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "ecrt_lib_init() failed (ipc_socket=%s)\n",
+        ipc_socket ? ipc_socket : "NULL");
+    goto fail2;
+  }
+#endif
+
   // initialize masters
   for (master = first_master; master != NULL; master = master->next) {
-    // request ethercat master
-    if (!(master->master = ecrt_request_master(master->index))) {
-      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "requesting master %s (index %d) failed\n", master->name, master->index);
+#ifdef EC_USPACE_MASTER
+    // create main transport
+    master->transport = ec_transport_create(
+        (ec_transport_type_t) master->transport_type, master->interface);
+    if (!master->transport) {
+      rtapi_print_msg(RTAPI_MSG_ERR,
+          LCEC_MSG_PFX "failed to create transport for master %s (iface %s)\n",
+          master->name, master->interface);
       goto fail2;
     }
 
+    // create backup transport (if configured)
+    master->backup_transport = NULL;
+    if (master->backup_interface[0]) {
+      master->backup_transport = ec_transport_create(
+          (ec_transport_type_t) master->transport_type, master->backup_interface);
+      if (!master->backup_transport) {
+        rtapi_print_msg(RTAPI_MSG_ERR,
+            LCEC_MSG_PFX "failed to create backup transport for master %s (iface %s)\n",
+            master->name, master->backup_interface);
+        goto fail2;
+      }
+    }
+
+    // startup userspace master
+    master->master = ecrt_startup_master(
+        master->index, master->transport, master->backup_transport,
+        master->debug_level, master->run_on_cpu);
+    if (!master->master) {
+      rtapi_print_msg(RTAPI_MSG_ERR,
+          LCEC_MSG_PFX "startup of master %s (index %d, iface %s) failed\n",
+          master->name, master->index, master->interface);
+      goto fail2;
+    }
+#else
+    // request kernel ethercat master
+    if (!(master->master = ecrt_request_master(master->index))) {
+      rtapi_print_msg(RTAPI_MSG_ERR,
+          LCEC_MSG_PFX "requesting master %s (index %d) failed\n",
+          master->name, master->index);
+      goto fail2;
+    }
 #ifdef __KERNEL__
     // register callbacks
     ecrt_master_callbacks(master->master, lcec_request_lock, lcec_release_lock, master);
 #endif
+#endif /* EC_USPACE_MASTER */
 
     // create domain
     if (!(master->domain = ecrt_master_create_domain(master->master))) {
@@ -568,6 +625,9 @@ void rtapi_app_exit(void) {
   }
 
   lcec_clear_config();
+#ifdef EC_USPACE_MASTER
+  ecrt_lib_cleanup();
+#endif
   hal_exit(comp_id);
 }
 
@@ -677,6 +737,7 @@ int lcec_parse_config(void) {
         master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
         master->app_time_period = master_conf->appTimePeriod;
         master->sync_ref_cycles = master_conf->refClockSyncCycles;
+
 #ifdef RTAPI_TASK_PLL_SUPPORT
         master->sync_master_to_ref = master_conf->syncMasterToRef;
 #else
@@ -684,6 +745,16 @@ int lcec_parse_config(void) {
           rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unable to sync master %s cycle to reference clock, RTAPI_TASK_PLL_SUPPORT not present\n", master_conf->name);
           goto fail2;
         }
+#endif
+
+#ifdef EC_USPACE_MASTER
+        master->transport_type = master_conf->transportType;
+        strncpy(master->interface, master_conf->interface, LCEC_CONF_STR_MAXLEN);
+        master->interface[LCEC_CONF_STR_MAXLEN - 1] = 0;
+        strncpy(master->backup_interface, master_conf->backupInterface, LCEC_CONF_STR_MAXLEN);
+        master->backup_interface[LCEC_CONF_STR_MAXLEN - 1] = 0;
+        master->debug_level = master_conf->debugLevel;
+        master->run_on_cpu = master_conf->runOnCpu;
 #endif
 
         // add master to list
@@ -1201,6 +1272,15 @@ void lcec_clear_config(void) {
     if (master->master) {
       ecrt_release_master(master->master);
     }
+#ifdef EC_USPACE_MASTER
+    // destroy transports (caller owns create/destroy lifecycle)
+    if (master->transport) {
+      ec_transport_destroy(master->transport);
+    }
+    if (master->backup_transport) {
+      ec_transport_destroy(master->backup_transport);
+    }
+#endif
 
     // free PDO entry memory
     if (master->pdo_entry_regs != NULL) {
