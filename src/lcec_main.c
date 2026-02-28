@@ -310,7 +310,6 @@ static const lcec_pindesc_t master_pins[] = {
 
 static const lcec_pindesc_t master_params[] = {
 #ifdef RTAPI_TASK_PLL_SUPPORT
-  { HAL_U32, HAL_RW, offsetof(lcec_master_data_t, pll_step), "%s.pll-step" },
   { HAL_U32, HAL_RW, offsetof(lcec_master_data_t, pll_max_err), "%s.pll-max-err" },
 #endif
   { HAL_TYPE_UNSPECIFIED, HAL_DIR_UNSPECIFIED, -1, NULL }
@@ -571,10 +570,8 @@ int rtapi_app_main(void) {
     }
 
 #ifdef RTAPI_TASK_PLL_SUPPORT
-    // set default PLL_STEP: use +/-0.1% of period
-    master->hal_data->pll_step = master->app_time_period / 1000;
-    // set default PLL_MAX_ERR: one period
-    master->hal_data->pll_max_err = master->app_time_period;
+    // set default PLL_MAX_ERR: half period
+    master->hal_data->pll_max_err = master->app_time_period / 2;
 #endif
 
     // export read function
@@ -1535,31 +1532,46 @@ void lcec_write_master(void *arg, long period) {
       master->dc_diff_ns = (int32_t)rem - (cycle_ns / 2);
 
       if (master->dc_started) {
-        // Accumulate for filter
-        master->dc_diff_total_ns += master->dc_diff_ns;
-        master->dc_delta_total_ns += delta;
-        master->dc_filter_idx++;
-
-        if (master->dc_filter_idx >= DC_FILTER_CNT) {
-          // Add rounded delta average (drift rate correction)
-          master->dc_adjust_ns +=
-            ((master->dc_delta_total_ns + (DC_FILTER_CNT / 2)) / DC_FILTER_CNT);
-
-          // Add adjustment for general offset (pull toward zero diff)
-          master->dc_adjust_ns += sign(master->dc_diff_total_ns / DC_FILTER_CNT);
-
-          // Limit to ±1000ns (matches rtai_rtdm_dc reference: 0.1% of 1ms cycle)
-          if (master->dc_adjust_ns < -1000) master->dc_adjust_ns = -1000;
-          if (master->dc_adjust_ns >  1000) master->dc_adjust_ns =  1000;
-
-          // Reset accumulators
+        // Error-bound check — every cycle, before accumulation
+        if (master->dc_diff_ns > (int32_t)hal_data->pll_max_err || master->dc_diff_ns < -(int32_t)hal_data->pll_max_err) {
+          // Error too large — re-snap like startup
+          master->app_time_base -= dc_diff_raw;
+          master->prev_dc_diff_ns = 0;
+          master->dc_adjust_ns = 0;
           master->dc_diff_total_ns = 0;
           master->dc_delta_total_ns = 0;
           master->dc_filter_idx = 0;
-        }
+          pll_correction = 0;
+          (*(hal_data->pll_reset_cnt))++;
+        } else {
+          // Accumulate for filter
+          master->dc_diff_total_ns += master->dc_diff_ns;
+          master->dc_delta_total_ns += delta;
+          master->dc_filter_idx++;
 
-        // Compute per-cycle correction (drift adjust + spot offset correction)
-        pll_correction = (int32_t)(master->dc_adjust_ns + sign(master->dc_diff_ns));
+          if (master->dc_filter_idx >= DC_FILTER_CNT) {
+            // Add rounded delta average (drift rate correction)
+            master->dc_adjust_ns +=
+              ((master->dc_delta_total_ns + (DC_FILTER_CNT / 2)) / DC_FILTER_CNT);
+
+            // Add adjustment for general offset (pull toward zero diff)
+            master->dc_adjust_ns += sign(master->dc_diff_total_ns / DC_FILTER_CNT);
+
+            // Limit to ±1000ns (matches rtai_rtdm_dc reference: 0.1% of 1ms cycle)
+            if (master->dc_adjust_ns < -1000) master->dc_adjust_ns = -1000;
+            if (master->dc_adjust_ns >  1000) master->dc_adjust_ns =  1000;
+
+            // Reset accumulators
+            master->dc_diff_total_ns = 0;
+            master->dc_delta_total_ns = 0;
+            master->dc_filter_idx = 0;
+          }
+
+          // Compute per-cycle correction (drift adjust + spot offset correction)
+          // This MUST be outside the dc_filter_idx >= DC_FILTER_CNT block
+          // so correction is applied every cycle, not just every DC_FILTER_CNT cycles
+          pll_correction = (int32_t)(master->dc_adjust_ns + sign(master->dc_diff_ns));
+        }
       } else {
         // Startup: snap app_time_base so dc_diff starts near zero
         master->dc_started = 1;
@@ -1579,13 +1591,12 @@ void lcec_write_master(void *arg, long period) {
     } else {
       *(hal_data->pll_err) = 0;
       *(hal_data->pll_out) = 0;
+      pll_correction = 0;
     }
 
-    // Shift app_time_base to correct the measured time (like reference's system_time_base)
-    master->app_time_base -= master->dc_adjust_ns + sign(master->dc_diff_ns);
-
-    // Also shift thread phase to keep frame timing aligned with DC
-    rtapi_task_pll_set_correction(-(master->dc_adjust_ns + sign(master->dc_diff_ns)));
+    // Apply correction (zero when dc_time invalid, filter output otherwise)
+    master->app_time_base -= pll_correction;
+    rtapi_task_pll_set_correction(-pll_correction);
 
     master->app_time_last = (uint32_t) master->app_time_last_full;
     master->dc_time_valid_last = dc_time_valid;
