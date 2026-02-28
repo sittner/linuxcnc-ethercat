@@ -213,6 +213,7 @@ typedef struct {
   int index;
   uint32_t appTimePeriod;
   int refClockSyncCycles;
+  int syncMasterToRef;
   char name[LCEC_CONF_STR_MAXLEN];
 } LCEC_CONF_MASTER_T;
 

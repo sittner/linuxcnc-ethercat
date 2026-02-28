@@ -69,6 +69,13 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Sascha Ittner <sascha.ittner@modusoft.de>");
 MODULE_DESCRIPTION("Driver for EtherCAT devices");
 
+// DC distributed clock filter constants (matches rtai_rtdm_dc example)
+#define DC_FILTER_CNT 1024
+
+#define sign(val) \
+    ({ typeof (val) _val = (val); \
+    ((_val > 0) - (_val < 0)); })
+
 typedef struct lcec_typelist {
   LCEC_SLAVE_TYPE_T type;
   uint32_t vid;
@@ -476,16 +483,18 @@ int rtapi_app_main(void) {
     // initialize application time
     lcec_gettimeofday(&tv);
     master->app_time_base = EC_TIMEVAL2NANO(tv);
+    master->app_time_base -= rtapi_get_time();
 #ifdef RTAPI_TASK_PLL_SUPPORT
     master->dc_time_valid_last = 0;
-    if (master->sync_ref_cycles >= 0) {
-      master->app_time_base -= rtapi_get_time();
-    }
-#else
-    master->app_time_base -= rtapi_get_time();
-    if (master->sync_ref_cycles < 0) {
-      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "unable to sync master %s cycle to reference clock, RTAPI_TASK_PLL_SUPPORT not present\n", master->name);
-    }
+    master->dc_started = 0;
+    master->dc_diff_ns = 0;
+    master->prev_dc_diff_ns = 0;
+    master->dc_diff_total_ns = 0;
+    master->dc_delta_total_ns = 0;
+    master->dc_filter_idx = 0;
+    master->dc_adjust_ns = 0;
+    master->app_time_last = 0;
+    master->app_time_last_full = 0;
 #endif
 
     // activating master
@@ -668,6 +677,14 @@ int lcec_parse_config(void) {
         master->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
         master->app_time_period = master_conf->appTimePeriod;
         master->sync_ref_cycles = master_conf->refClockSyncCycles;
+#ifdef RTAPI_TASK_PLL_SUPPORT
+        master->sync_master_to_ref = master_conf->syncMasterToRef;
+#else
+        if (master_conf->syncMasterToRef) {
+          rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "unable to sync master %s cycle to reference clock, RTAPI_TASK_PLL_SUPPORT not present\n", master_conf->name);
+          goto fail2;
+        }
+#endif
 
         // add master to list
         LCEC_LIST_APPEND(first_master, last_master, master);
@@ -1299,6 +1316,7 @@ void lcec_read_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
   lcec_slave_t *slave;
   int check_states;
+  uint64_t app_time;
 
   // check period
   if (period != master->period_last) {
@@ -1308,6 +1326,20 @@ void lcec_read_master(void *arg, long period) {
         master->app_time_period, master->name, period);
     }
   }
+
+  // Set application time FIRST — at a stable point in the cycle, before ecrt_master_receive()
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  {
+    long long ref = rtapi_task_pll_get_reference();
+    app_time = master->app_time_base + (uint64_t) ref;
+  }
+#else
+  app_time = master->app_time_base + (uint64_t) rtapi_get_time();
+#endif
+  ecrt_master_application_time(master->master, app_time);
+#ifdef RTAPI_TASK_PLL_SUPPORT
+  master->app_time_last_full = app_time;
+#endif
 
   // get state check flag
   if (master->state_update_timer > 0) {
@@ -1357,10 +1389,7 @@ void lcec_read_master(void *arg, long period) {
 void lcec_write_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
   lcec_slave_t *slave;
-  uint64_t app_time;
-  long long now;
 #ifdef RTAPI_TASK_PLL_SUPPORT
-  long long ref;
   uint32_t dc_time;
   int dc_time_valid;
   lcec_master_data_t *hal_data;
@@ -1373,32 +1402,18 @@ void lcec_write_master(void *arg, long period) {
     }
   }
 
-#ifdef RTAPI_TASK_PLL_SUPPORT
-  // get reference time
-  ref = rtapi_task_pll_get_reference();
-#endif
-
   // send process data
   rtapi_mutex_get(&master->mutex);
   ecrt_domain_queue(master->domain);
 
-  // update application time
-  now = rtapi_get_time();
+  // NOTE: ecrt_master_application_time() has been moved to lcec_read_master()
+
+  // sync ref clock to master (only in non-syncMasterToRef mode)
 #ifdef RTAPI_TASK_PLL_SUPPORT
-  if (master->sync_ref_cycles >= 0) {
-    app_time = master->app_time_base + now;
-  } else {
-    master->dc_ref += period;
-    app_time = master->app_time_base + master->dc_ref + (now - ref);
-  }
+  if (master->sync_ref_cycles > 0 && !master->sync_master_to_ref) {
 #else
-  app_time = master->app_time_base + now;
-#endif
-
-  ecrt_master_application_time(master->master, app_time);
-
-  // sync ref clock to master
   if (master->sync_ref_cycles > 0) {
+#endif
     if (master->sync_ref_cnt == 0) {
       master->sync_ref_cnt = master->sync_ref_cycles;
       ecrt_master_sync_reference_clock(master->master);
@@ -1407,17 +1422,15 @@ void lcec_write_master(void *arg, long period) {
   }
 
 #ifdef RTAPI_TASK_PLL_SUPPORT
-  // sync master to ref clock
+  // In syncMasterToRef mode: read reference clock time
   dc_time = 0;
-  if (master->sync_ref_cycles < 0) {
-    // get reference clock time to synchronize master cycle
+  dc_time_valid = 0;
+  if (master->sync_master_to_ref) {
     dc_time_valid = (ecrt_master_reference_clock_time(master->master, &dc_time) == 0);
-  } else {
-    dc_time_valid = 0;
   }
 #endif
 
-  // sync slaves to ref clock
+  // sync slaves to ref clock (always needed for inter-slave sync)
   ecrt_master_sync_slave_clocks(master->master);
 
   // send domain data
@@ -1425,30 +1438,69 @@ void lcec_write_master(void *arg, long period) {
   rtapi_mutex_give(&master->mutex);
 
 #ifdef RTAPI_TASK_PLL_SUPPORT
-  // BANG-BANG controller for master thread PLL sync
-  // this part is done after ecrt_master_send() to reduce jitter
-  hal_data = master->hal_data;
-  *(hal_data->pll_err) = 0;
-  *(hal_data->pll_out) = 0;
-  // the first read dc_time value semms to be invalid, so wait for two successive succesfull reads
-  if (dc_time_valid && master->dc_time_valid_last) {
-    *(hal_data->pll_err) = master->app_time_last - dc_time;
-    // check for invalid error values
-    if (abs(*(hal_data->pll_err)) > hal_data->pll_max_err) {
-      // force resync of master time
-      master->dc_ref -= *(hal_data->pll_err) - (*(hal_data->pll_err) % period);
-      // skip next control cycle to allow resync
-      dc_time_valid = 0;
-      // increment reset counter to document this event
-      (*(hal_data->pll_reset_cnt))++;
-    } else {
-      *(hal_data->pll_out) = (*(hal_data->pll_err) < 0) ? -(hal_data->pll_step) : (hal_data->pll_step);
-    }
-  }
+  // Filtered controller for master thread PLL sync (syncMasterToRef mode)
+  // Called AFTER ecrt_master_send() to reduce jitter — matches rtai_rtdm_dc example
+  if (master->sync_master_to_ref) {
+    hal_data = master->hal_data;
+    int32_t pll_correction = 0;
 
-  rtapi_task_pll_set_correction(*(hal_data->pll_out));
-  master->app_time_last = (uint32_t) app_time;
-  master->dc_time_valid_last = dc_time_valid;
+    // Wait for two successive valid dc_time reads before starting
+    if (dc_time_valid && master->dc_time_valid_last) {
+      // Compute time difference between master app_time (lower 32 bits) and ref clock
+      int32_t dc_diff_raw = (int32_t)(master->app_time_last - dc_time);
+
+      // Calculate drift delta (change in raw diff between cycles)
+      int32_t delta = dc_diff_raw - master->prev_dc_diff_ns;
+      master->prev_dc_diff_ns = dc_diff_raw;
+
+      // Normalise the time diff (modulo cycle time, into range [-period/2, +period/2])
+      // app_time_period is always well within int32_t range for CNC use (1ms-10ms typical)
+      int32_t cycle_ns = (int32_t) master->app_time_period;
+      master->dc_diff_ns = (int32_t)(((int64_t)dc_diff_raw + (cycle_ns / 2)) % cycle_ns) - (cycle_ns / 2);
+
+      if (master->dc_started) {
+        // Accumulate for filter
+        master->dc_diff_total_ns += master->dc_diff_ns;
+        master->dc_delta_total_ns += delta;
+        master->dc_filter_idx++;
+
+        if (master->dc_filter_idx >= DC_FILTER_CNT) {
+          // Add rounded delta average (drift rate correction)
+          master->dc_adjust_ns +=
+            ((master->dc_delta_total_ns + (DC_FILTER_CNT / 2)) / DC_FILTER_CNT);
+
+          // Add adjustment for general offset (pull toward zero diff)
+          master->dc_adjust_ns += sign(master->dc_diff_total_ns / DC_FILTER_CNT);
+
+          // Limit to ±1000ns (matches rtai_rtdm_dc reference: 0.1% of 1ms cycle)
+          if (master->dc_adjust_ns < -1000) master->dc_adjust_ns = -1000;
+          if (master->dc_adjust_ns >  1000) master->dc_adjust_ns =  1000;
+
+          // Reset accumulators
+          master->dc_diff_total_ns = 0;
+          master->dc_delta_total_ns = 0;
+          master->dc_filter_idx = 0;
+        }
+
+        // Compute per-cycle correction (drift adjust + spot offset correction)
+        pll_correction = (int32_t)(master->dc_adjust_ns + sign(master->dc_diff_ns));
+      } else {
+        // Startup: wait for first non-zero diff to confirm DC is running
+        master->dc_started = (master->dc_diff_ns != 0);
+      }
+
+      // Export to HAL
+      *(hal_data->pll_err) = master->dc_diff_ns;
+      *(hal_data->pll_out) = pll_correction;
+    } else {
+      *(hal_data->pll_err) = 0;
+      *(hal_data->pll_out) = 0;
+    }
+
+    rtapi_task_pll_set_correction(pll_correction);
+    master->app_time_last = (uint32_t) master->app_time_last_full;
+    master->dc_time_valid_last = dc_time_valid;
+  }
 #endif
 }
 
