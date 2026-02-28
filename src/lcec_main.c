@@ -1536,7 +1536,10 @@ void lcec_write_master(void *arg, long period) {
       // Normalise the time diff (modulo cycle time, into range [-period/2, +period/2])
       // app_time_period is always well within int32_t range for CNC use (1ms-10ms typical)
       int32_t cycle_ns = (int32_t) master->app_time_period;
-      master->dc_diff_ns = (int32_t)(((int64_t)dc_diff_raw + (cycle_ns / 2)) % cycle_ns) - (cycle_ns / 2);
+      int64_t tmp = (int64_t)dc_diff_raw + (cycle_ns / 2);
+      int64_t rem = tmp % cycle_ns;
+      if (rem < 0) rem += cycle_ns;
+      master->dc_diff_ns = (int32_t)rem - (cycle_ns / 2);
 
       if (master->dc_started) {
         // Accumulate for filter
