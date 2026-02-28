@@ -1408,14 +1408,7 @@ void lcec_read_master(void *arg, long period) {
   }
 
   // Set application time FIRST — at a stable point in the cycle, before ecrt_master_receive()
-#ifdef RTAPI_TASK_PLL_SUPPORT
-  {
-    long long ref = rtapi_task_pll_get_reference();
-    app_time = master->app_time_base + (uint64_t) ref;
-  }
-#else
   app_time = master->app_time_base + (uint64_t) rtapi_get_time();
-#endif
   ecrt_master_application_time(master->master, app_time);
 #ifdef RTAPI_TASK_PLL_SUPPORT
   master->app_time_last_full = app_time;
@@ -1568,8 +1561,16 @@ void lcec_write_master(void *arg, long period) {
         // Compute per-cycle correction (drift adjust + spot offset correction)
         pll_correction = (int32_t)(master->dc_adjust_ns + sign(master->dc_diff_ns));
       } else {
-        // Startup: wait for first non-zero diff to confirm DC is running
-        master->dc_started = (master->dc_diff_ns != 0);
+        // Startup: snap app_time_base so dc_diff starts near zero
+        master->dc_started = 1;
+        master->app_time_base -= dc_diff_raw;
+
+        // Reset filter state — previous values are pre-snap garbage
+        master->prev_dc_diff_ns = 0;
+        master->dc_adjust_ns = 0;
+        master->dc_diff_total_ns = 0;
+        master->dc_delta_total_ns = 0;
+        master->dc_filter_idx = 0;
       }
 
       // Export to HAL
@@ -1580,7 +1581,12 @@ void lcec_write_master(void *arg, long period) {
       *(hal_data->pll_out) = 0;
     }
 
-    rtapi_task_pll_set_correction(pll_correction);
+    // Shift app_time_base to correct the measured time (like reference's system_time_base)
+    master->app_time_base -= master->dc_adjust_ns + sign(master->dc_diff_ns);
+
+    // Also shift thread phase to keep frame timing aligned with DC
+    rtapi_task_pll_set_correction(-(master->dc_adjust_ns + sign(master->dc_diff_ns)));
+
     master->app_time_last = (uint32_t) master->app_time_last_full;
     master->dc_time_valid_last = dc_time_valid;
   }
