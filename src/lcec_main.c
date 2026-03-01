@@ -544,13 +544,12 @@ int rtapi_app_main(void) {
     master->dc_time_valid_last = 0;
     master->dc_started = 0;
     master->dc_diff_ns = 0;
-    master->prev_dc_diff_ns = 0;
+    master->prev_dc_diff_raw = 0;
     master->dc_diff_total_ns = 0;
     master->dc_delta_total_ns = 0;
     master->dc_filter_idx = 0;
     master->dc_adjust_ns = 0;
     master->app_time_last = 0;
-    master->app_time_last_full = 0;
 #endif
 
     // activating master
@@ -1408,7 +1407,7 @@ void lcec_read_master(void *arg, long period) {
   app_time = master->app_time_base + (uint64_t) rtapi_get_time();
   ecrt_master_application_time(master->master, app_time);
 #ifdef RTAPI_TASK_PLL_SUPPORT
-  master->app_time_last_full = app_time;
+  master->app_time_last = (uint32_t) app_time;
 #endif
 
   // get state check flag
@@ -1455,6 +1454,21 @@ void lcec_read_master(void *arg, long period) {
     }
   }
 }
+
+#ifdef RTAPI_TASK_PLL_SUPPORT
+/** Reset the DC filter state after a time base snap.
+ *  Called on initial startup and when the PLL error bound is exceeded.
+ */
+static void lcec_dc_reset_filter(lcec_master_t *master, int32_t dc_diff_raw)
+{
+    master->app_time_base -= dc_diff_raw;
+    master->prev_dc_diff_raw = 0;
+    master->dc_adjust_ns = 0;
+    master->dc_diff_total_ns = 0;
+    master->dc_delta_total_ns = 0;
+    master->dc_filter_idx = 0;
+}
+#endif
 
 void lcec_write_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
@@ -1522,8 +1536,8 @@ void lcec_write_master(void *arg, long period) {
       int32_t dc_diff_raw = (int32_t)(master->app_time_last - dc_time);
 
       // Calculate drift delta (change in raw diff between cycles)
-      int32_t delta = dc_diff_raw - master->prev_dc_diff_ns;
-      master->prev_dc_diff_ns = dc_diff_raw;
+      int32_t delta = dc_diff_raw - master->prev_dc_diff_raw;
+      master->prev_dc_diff_raw = dc_diff_raw;
 
       // Normalise the time diff (modulo cycle time, into range [-period/2, +period/2])
       // app_time_period is always well within int32_t range for CNC use (1ms-10ms typical)
@@ -1538,12 +1552,7 @@ void lcec_write_master(void *arg, long period) {
         // pll_max_err == 0 means "error-bound check disabled"
         if (hal_data->pll_max_err > 0 && (master->dc_diff_ns > (int32_t)hal_data->pll_max_err || master->dc_diff_ns < -(int32_t)hal_data->pll_max_err)) {
           // Error too large — re-snap like startup
-          master->app_time_base -= dc_diff_raw;
-          master->prev_dc_diff_ns = 0;
-          master->dc_adjust_ns = 0;
-          master->dc_diff_total_ns = 0;
-          master->dc_delta_total_ns = 0;
-          master->dc_filter_idx = 0;
+          lcec_dc_reset_filter(master, dc_diff_raw);
           pll_correction = 0;
           (*(hal_data->pll_reset_cnt))++;
           rtapi_print_msg(RTAPI_MSG_WARN, LCEC_MSG_PFX "master %s: PLL error bound exceeded (dc_diff=%d, max_err=%u), re-snapping (reset count: %u)\n",
@@ -1580,14 +1589,7 @@ void lcec_write_master(void *arg, long period) {
       } else {
         // Startup: snap app_time_base so dc_diff starts near zero
         master->dc_started = 1;
-        master->app_time_base -= dc_diff_raw;
-
-        // Reset filter state — previous values are pre-snap garbage
-        master->prev_dc_diff_ns = 0;
-        master->dc_adjust_ns = 0;
-        master->dc_diff_total_ns = 0;
-        master->dc_delta_total_ns = 0;
-        master->dc_filter_idx = 0;
+        lcec_dc_reset_filter(master, dc_diff_raw);
       }
 
       // Export to HAL
@@ -1599,11 +1601,13 @@ void lcec_write_master(void *arg, long period) {
       pll_correction = 0;
     }
 
-    // Apply correction (zero when dc_time invalid, filter output otherwise)
+    // Apply correction to time base. Sign is inverted vs the rtai_rtdm_dc
+    // reference (which does system_time_base += correction) because:
+    //   Reference: app_time = system_time - system_time_base  (adding base decreases app_time)
+    //   Here:      app_time = app_time_base + rtapi_get_time() (subtracting base decreases app_time)
     master->app_time_base -= pll_correction;
     rtapi_task_pll_set_correction(-pll_correction);
 
-    master->app_time_last = (uint32_t) master->app_time_last_full;
     master->dc_time_valid_last = dc_time_valid;
   }
 #endif

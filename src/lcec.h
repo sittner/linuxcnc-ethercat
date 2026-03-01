@@ -154,10 +154,9 @@ typedef struct lcec_master {
   ec_master_state_t ms;
 #ifdef RTAPI_TASK_PLL_SUPPORT
   int sync_master_to_ref;        // enable master-to-ref sync mode
-  uint64_t app_time_last_full;   // last full app_time computed in lcec_read_master
   uint8_t dc_started;            // flag: first valid dc_diff received
   int32_t dc_diff_ns;            // current cycle time difference
-  int32_t prev_dc_diff_ns;       // previous cycle time difference
+  int32_t prev_dc_diff_raw;      // previous raw (un-normalized) time difference for delta calc
   int64_t dc_diff_total_ns;      // accumulated time differences for filter
   int64_t dc_delta_total_ns;     // accumulated drift deltas for filter
   int dc_filter_idx;             // filter sample counter
