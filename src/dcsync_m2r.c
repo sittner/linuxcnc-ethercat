@@ -1,5 +1,7 @@
 #include "priv.h"
 
+#ifdef RTAPI_TASK_PLL_SUPPORT
+
 #define DC_SETTLE_TIME       1.5    // target settling time in seconds
 #define DC_DAMPING           0.707  // damping ratio (critically damped)
 #define DC_INTEGRATOR_MAX    1000.0 // integrator anti-windup clamp (ns)
@@ -99,7 +101,7 @@ static void post_send(struct lcec_master *master) {
   if (correction < -DC_CORRECTION_MAX_NS) correction = -DC_CORRECTION_MAX_NS;
 
   int32_t correction_ns = (int32_t)correction;
-  rtapi_task_pll_set_correction(correction_ns);
+  rtapi_task_pll_set_correction(-correction_ns);
   *(hal_data->pll_out) = correction_ns;
 }
 
@@ -122,7 +124,7 @@ void lcec_dc_init_m2r(struct lcec_master *master) {
   master->dc_ki = wd * wd;
   master->dc_integrator = 0.0;
 }
+#endif
 
 // TODO
-// RTAPI_TASK_PLL_SUPPORT guard
 // ecrt_master_select_reference_clock
