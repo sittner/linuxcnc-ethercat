@@ -568,6 +568,7 @@ static void parseMasterAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **
   }
 
   p->confType = lcecConfTypeMaster;
+  p->refClockSlaveIdx = -1;
 #ifdef EC_USPACE_MASTER
   p->transportType = 0;         // EC_TRANSPORT_RAW
   p->interface[0] = 0;
@@ -601,6 +602,12 @@ static void parseMasterAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **
     // parse refClockSyncCycles
     if (strcmp(name, "refClockSyncCycles") == 0) {
       p->refClockSyncCycles = atoll(val);
+      continue;
+    }
+
+    // parse refClockSlaveIdx
+    if (strcmp(name, "refClockSlaveIdx") == 0) {
+      p->refClockSlaveIdx = atoi(val);
       continue;
     }
 
@@ -1662,7 +1669,7 @@ static void parseModParamAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char 
 }
 
 static int parseSyncCycle(LCEC_CONF_XML_STATE_T *state, const char *nptr) {
-  // chack for master period multiples
+  // check for master period multiples
   if (*nptr == '*') {
     nptr++;
     return atoi(nptr) * state->currMaster->appTimePeriod;

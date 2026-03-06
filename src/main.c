@@ -50,6 +50,8 @@ void lcec_write_all(void *arg, long period);
 void lcec_read_master(void *arg, long period);
 void lcec_write_master(void *arg, long period);
 
+int64_t dc_time_offset;
+
 int rtapi_app_main(void) {
   int slave_count;
   lcec_master_t *master;
@@ -59,6 +61,12 @@ int rtapi_app_main(void) {
   lcec_slave_sdoconf_t *sdo_config;
   lcec_slave_idnconf_t *idn_config;
   struct timeval tv;
+  long long rtapi_now;
+
+  // get time base
+  lcec_gettimeofday(&tv);
+  rtapi_now = rtapi_get_time();
+  dc_time_offset = EC_TIMEVAL2NANO(tv) - rtapi_now;
 
   // connect to the HAL
   if ((comp_id = hal_init (LCEC_MODULE_NAME)) < 0) {
@@ -184,20 +192,34 @@ int rtapi_app_main(void) {
       goto fail2;
     }
 
-    // initialize application time
-    lcec_gettimeofday(&tv);
-    master->app_time_base = EC_TIMEVAL2NANO(tv);
+    // initialize dc sync
 #ifdef RTAPI_TASK_PLL_SUPPORT
-    master->dc_time_valid_last = 0;
-    if (master->sync_ref_cycles >= 0) {
-      master->app_time_base -= rtapi_get_time();
+    if (master->ref_clock_sync_cycles < 0) {
+      lcec_dc_init_m2r(master);
+    } else {
+      lcec_dc_init_r2m(master);
     }
 #else
-    master->app_time_base -= rtapi_get_time();
-    if (master->sync_ref_cycles < 0) {
-      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "unable to sync master %s cycle to reference clock, RTAPI_TASK_PLL_SUPPORT not present\n", master->name);
-    }
+    lcec_dc_init_r2m(master);
 #endif
+
+    // select reference clock slave (if configured)
+    if (master->ref_clock_slave_idx >= 0) {
+      lcec_slave_t *ref_slave = lcec_slave_by_index(master, master->ref_clock_slave_idx);
+      if (ref_slave == NULL) {
+        rtapi_print_msg(RTAPI_MSG_ERR,
+            LCEC_MSG_PFX "master %s: refClockSlaveIdx %d not found\n",
+            master->name, master->ref_clock_slave_idx);
+        goto fail2;
+      }
+      if (ref_slave->config == NULL) {
+        rtapi_print_msg(RTAPI_MSG_ERR,
+            LCEC_MSG_PFX "master %s: refClockSlaveIdx %d has no EtherCAT config\n",
+            master->name, master->ref_clock_slave_idx);
+        goto fail2;
+      }
+      ecrt_master_select_reference_clock(master->master, ref_slave->config);
+    }
 
     // activating master
     if (ecrt_master_activate(master->master)) {
@@ -214,13 +236,6 @@ int rtapi_app_main(void) {
     if ((master->hal_data = lcec_init_master_hal(name, 0)) == NULL) {
       goto fail2;
     }
-
-#ifdef RTAPI_TASK_PLL_SUPPORT
-    // set default PLL_STEP: use +/-0.1% of period
-    master->hal_data->pll_step = master->app_time_period / 1000;
-    // set default PLL_MAX_ERR: one period
-    master->hal_data->pll_max_err = master->app_time_period;
-#endif
 
     // export read function
     rtapi_snprintf(name, HAL_NAME_LEN, "%s.%s.read", LCEC_MODULE_NAME, master->name);
@@ -355,7 +370,7 @@ int lcec_parse_config(void) {
         conf += sizeof(LCEC_CONF_MASTER_T);
 
         // create master
-        master = lcec_create_master(master_conf );
+        master = lcec_create_master(master_conf);
         if (master == NULL) {
           goto fail2;
         }

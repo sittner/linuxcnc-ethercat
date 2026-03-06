@@ -89,12 +89,19 @@ typedef int (*lcec_slave_preinit_t) (struct lcec_slave *slave);
 typedef int (*lcec_slave_init_t) (int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t **pdo_entry_regs);
 typedef void (*lcec_slave_cleanup_t) (struct lcec_slave *slave);
 typedef void (*lcec_slave_rw_t) (struct lcec_slave *slave, long period);
+typedef void (*lcec_dcsync_callback_t) (struct lcec_master *master);
 
 typedef struct {
   int slave_data_len;
   int master_data_len;
   int data_channels;
 } LCEC_CONF_FSOE_T;
+
+typedef struct {
+  lcec_dcsync_callback_t cycle_start;
+  lcec_dcsync_callback_t pre_send;
+  lcec_dcsync_callback_t post_send;
+} lcec_dcsync_callbacks_t;
 
 typedef struct lcec_master_data {
   hal_u32_t *slaves_responding;
@@ -107,8 +114,6 @@ typedef struct lcec_master_data {
 #ifdef RTAPI_TASK_PLL_SUPPORT
   hal_s32_t *pll_err;
   hal_s32_t *pll_out;
-  hal_u32_t pll_step;
-  hal_u32_t pll_max_err;
   hal_u32_t *pll_reset_cnt;
 #endif
 } lcec_master_data_t;
@@ -146,18 +151,25 @@ typedef struct lcec_master {
   struct lcec_slave *first_slave;
   struct lcec_slave *last_slave;
   lcec_master_data_t *hal_data;
-  uint64_t app_time_base;
-  uint32_t app_time_period;
-  long period_last;
-  int sync_ref_cnt;
-  int sync_ref_cycles;
   long long state_update_timer;
+  uint32_t app_time_period;
+  int ref_clock_sync_cycles;
+  int ref_clock_slave_idx;
+  long period_last;
   ec_master_state_t ms;
-#ifdef RTAPI_TASK_PLL_SUPPORT
-  uint64_t dc_ref;
-  uint32_t app_time_last;
-  int dc_time_valid_last;
-#endif
+
+  lcec_dcsync_callbacks_t dcsync_callbacks;
+  int ref_clock_sync_counter;
+
+  uint64_t app_time_ns;
+  uint64_t ref_time_ns;
+
+  uint64_t dc_time_ns;
+  int dc_started;
+  int64_t dc_diff_ns;
+  double dc_kp;          // PI proportional gain
+  double dc_ki;          // PI integral gain
+  double dc_integrator;  // PI integral accumulator
 } lcec_master_t;
 
 typedef struct {
