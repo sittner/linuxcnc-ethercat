@@ -16,6 +16,14 @@
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
 
+/**
+ * @file el2xxx.c
+ * @brief Driver for Beckhoff EL2xxx digital output terminals.
+ *
+ * Supports all EL2xxx/EP2xxx variants listed in el2xxx.h, providing
+ * per-channel HAL bit output pins with optional polarity inversion.
+ */
+
 #include "../lcec.h"
 #include "el2xxx.h"
 

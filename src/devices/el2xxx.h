@@ -15,6 +15,15 @@
 //    along with this program; if not, write to the Free Software
 //    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 //
+/**
+ * @file el2xxx.h
+ * @brief Header for Beckhoff EL2xxx digital output terminals.
+ *
+ * Covers EL2002, EL2004, EL2008, EL2022, EL2024, EL2032, EL2034,
+ * EL2042, EL2084, EL2088, EL2124, EL2612, EL2622, EL2634, EL2652,
+ * EL2798, EL2808, EL2809, EP2008, EP2028, and EP2809 — providing
+ * 2–16 channel digital outputs over EtherCAT.
+ */
 #ifndef _LCEC_EL2XXX_H_
 #define _LCEC_EL2XXX_H_
 
@@ -66,6 +75,13 @@
 #define LCEC_EP2028_PDOS 8
 #define LCEC_EP2809_PDOS 16
 
+/**
+ * @brief Initialize an EL2xxx digital output slave.
+ * @param comp_id   HAL component ID.
+ * @param slave     Pointer to the slave structure.
+ * @param pdo_entry_regs  PDO entry registration array (updated in place).
+ * @return 0 on success, negative errno on failure.
+ */
 int lcec_el2xxx_init(int comp_id, struct lcec_slave *slave, ec_pdo_entry_reg_t **pdo_entry_regs);
 
 #endif
