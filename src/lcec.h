@@ -368,9 +368,9 @@ typedef struct lcec_master {
   uint64_t dc_time_ns;     /**< DC system time read from the reference clock slave (ns). */
   int dc_started;          /**< Non-zero once the DC synchronisation PI controller has been seeded. */
   int64_t dc_diff_ns;      /**< Current DC phase error (application time minus DC time) in ns. */
-  double dc_kp;          // PI proportional gain
-  double dc_ki;          // PI integral gain
-  double dc_integrator;  // PI integral accumulator
+  double dc_kp;          /**< PI proportional gain for DC synchronisation. */
+  double dc_ki;          /**< PI integral gain for DC synchronisation. */
+  double dc_integrator;  /**< PI integral accumulator for DC synchronisation. */
 } lcec_master_t;
 
 /**
