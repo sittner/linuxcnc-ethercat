@@ -29,50 +29,93 @@
 
 #include "../lcec.h"
 
+/** @brief Beckhoff vendor ID shared by all EL2xxx / EP2xxx output terminals. */
 #define LCEC_EL2xxx_VID LCEC_BECKHOFF_VID
 
+/** @brief EtherCAT product code for the EL2002 (2-channel digital output). */
 #define LCEC_EL2002_PID 0x07D23052
+/** @brief EtherCAT product code for the EL2004 (4-channel digital output). */
 #define LCEC_EL2004_PID 0x07D43052
+/** @brief EtherCAT product code for the EL2008 (8-channel digital output). */
 #define LCEC_EL2008_PID 0x07D83052
+/** @brief EtherCAT product code for the EL2022 (2-channel relay output). */
 #define LCEC_EL2022_PID 0x07E63052
+/** @brief EtherCAT product code for the EL2024 (4-channel relay output). */
 #define LCEC_EL2024_PID 0x07E83052
+/** @brief EtherCAT product code for the EL2032 (2-channel digital output with diagnostic). */
 #define LCEC_EL2032_PID 0x07F03052
+/** @brief EtherCAT product code for the EL2034 (4-channel digital output with diagnostic). */
 #define LCEC_EL2034_PID 0x07F23052
+/** @brief EtherCAT product code for the EL2042 (2-channel digital output, 24 V, 2 A). */
 #define LCEC_EL2042_PID 0x07FA3052
+/** @brief EtherCAT product code for the EL2084 (4-channel digital output, 24 V, switching). */
 #define LCEC_EL2084_PID 0x08243052
+/** @brief EtherCAT product code for the EL2088 (8-channel digital output, 24 V). */
 #define LCEC_EL2088_PID 0x08283052
+/** @brief EtherCAT product code for the EL2124 (4-channel digital output, 5 V). */
 #define LCEC_EL2124_PID 0x084C3052
+/** @brief EtherCAT product code for the EL2612 (2-channel relay output). */
 #define LCEC_EL2612_PID 0x0A343052
+/** @brief EtherCAT product code for the EL2622 (2-channel relay output). */
 #define LCEC_EL2622_PID 0x0A3E3052
+/** @brief EtherCAT product code for the EL2634 (4-channel relay output). */
 #define LCEC_EL2634_PID 0x0A4A3052
+/** @brief EtherCAT product code for the EL2652 (2-channel relay output). */
 #define LCEC_EL2652_PID 0x0A5C3052
+/** @brief EtherCAT product code for the EL2808 (8-channel digital output, 24 V, 0.5 A). */
 #define LCEC_EL2808_PID 0x0AF83052
+/** @brief EtherCAT product code for the EL2798 (8-channel digital output, 24 V, PWM). */
 #define LCEC_EL2798_PID 0x0AEE3052
+/** @brief EtherCAT product code for the EL2809 (16-channel digital output, 24 V). */
 #define LCEC_EL2809_PID 0x0AF93052
+/** @brief EtherCAT product code for the EP2008 (8-channel digital output, IP67, 24 V). */
 #define LCEC_EP2008_PID 0x07D84052
+/** @brief EtherCAT product code for the EP2028 (8-channel digital output, IP67). */
 #define LCEC_EP2028_PID 0x07EC4052
+/** @brief EtherCAT product code for the EP2809 (16-channel digital output, IP67). */
 #define LCEC_EP2809_PID 0x0AF94052
 
+/** @brief Number of PDO entries for the EL2002 (2 output channels). */
 #define LCEC_EL2002_PDOS 2
+/** @brief Number of PDO entries for the EL2004 (4 output channels). */
 #define LCEC_EL2004_PDOS 4
+/** @brief Number of PDO entries for the EL2008 (8 output channels). */
 #define LCEC_EL2008_PDOS 8
+/** @brief Number of PDO entries for the EL2022 (2 output channels). */
 #define LCEC_EL2022_PDOS 2
+/** @brief Number of PDO entries for the EL2024 (4 output channels). */
 #define LCEC_EL2024_PDOS 4
+/** @brief Number of PDO entries for the EL2032 (2 output channels). */
 #define LCEC_EL2032_PDOS 2
+/** @brief Number of PDO entries for the EL2034 (4 output channels). */
 #define LCEC_EL2034_PDOS 4
+/** @brief Number of PDO entries for the EL2042 (2 output channels). */
 #define LCEC_EL2042_PDOS 2
+/** @brief Number of PDO entries for the EL2084 (4 output channels). */
 #define LCEC_EL2084_PDOS 4
+/** @brief Number of PDO entries for the EL2088 (8 output channels). */
 #define LCEC_EL2088_PDOS 8
+/** @brief Number of PDO entries for the EL2124 (4 output channels). */
 #define LCEC_EL2124_PDOS 4
+/** @brief Number of PDO entries for the EL2612 (2 output channels). */
 #define LCEC_EL2612_PDOS 2
+/** @brief Number of PDO entries for the EL2622 (2 output channels). */
 #define LCEC_EL2622_PDOS 2
+/** @brief Number of PDO entries for the EL2634 (4 output channels). */
 #define LCEC_EL2634_PDOS 4
+/** @brief Number of PDO entries for the EL2652 (2 output channels). */
 #define LCEC_EL2652_PDOS 2
+/** @brief Number of PDO entries for the EL2808 (8 output channels). */
 #define LCEC_EL2808_PDOS 8
+/** @brief Number of PDO entries for the EL2798 (8 output channels). */
 #define LCEC_EL2798_PDOS 8
+/** @brief Number of PDO entries for the EL2809 (16 output channels). */
 #define LCEC_EL2809_PDOS 16
+/** @brief Number of PDO entries for the EP2008 (8 output channels). */
 #define LCEC_EP2008_PDOS 8
+/** @brief Number of PDO entries for the EP2028 (8 output channels). */
 #define LCEC_EP2028_PDOS 8
+/** @brief Number of PDO entries for the EP2809 (16 output channels). */
 #define LCEC_EP2809_PDOS 16
 
 /**
