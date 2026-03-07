@@ -196,9 +196,9 @@ if (new32 < hw32) upper += (uint64_t)1 << 32;   // rollover
 master->dc_time_ns = upper | new32;
 ```
 
-### 4.5 PLL Reset
+### 4.5 Re-snap on Large Phase Error
 
-If the phase error exceeds 1.5 servo periods (the re-snap threshold), the PI integrator is reset to zero and `pll_reset_cnt` is incremented. This prevents integrator windup after large disturbances such as network topology changes.
+If the phase error exceeds 1.5 servo periods (the re-snap threshold), `app_time_ns` is corrected by the nearest whole number of periods so that the residual sub-period phase error is preserved. `pll_reset_cnt` is then incremented. Because the correction is a whole-period shift, the sub-period phase error remains continuous and the PI integrator state is deliberately kept intact — no integrator reset occurs.
 
 ---
 
@@ -313,7 +313,7 @@ All pin names are prefixed with the component name and master index, e.g. `lcec.
 |---|---|---|---|
 | `pll-err` | `s32` | OUT | Current phase error between application time and EtherCAT reference clock, in nanoseconds. Positive values mean the reference clock is behind. |
 | `pll-out` | `s32` | OUT | Current PLL correction value being applied, in nanoseconds. |
-| `pll-reset-cnt` | `u32` | OUT | Cumulative number of PI controller resets triggered by excessive phase error. |
+| `pll-reset-cnt` | `u32` | OUT | Cumulative number of re-snap corrections applied when the phase error exceeded 1.5 servo periods. The PI integrator is not reset during a re-snap. |
 
 These pins are useful for monitoring synchronisation quality. In a well-tuned system `pll-err` should settle to within a few hundred nanoseconds after startup.
 
