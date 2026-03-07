@@ -34,7 +34,7 @@ Two synchronisation modes are available. Both set the EtherCAT *application time
 
 ### 2.1 M2R — Master-to-Reference Mode
 
-> **Requires** kernel-level `RTAPI_TASK_PLL_SUPPORT`.
+> **Requires** LinuxCNC `RTAPI_TASK_PLL_SUPPORT`.
 
 In M2R mode the **LinuxCNC RTAPI task** is the authoritative time source. A discrete-time PI controller continuously measures the phase difference between the LinuxCNC application time and the EtherCAT reference clock, then drives `rtapi_task_pll_set_correction()` to nudge the RTAPI task's own wakeup time so that the two clocks converge. Because the RTAPI task fires at exactly the corrected interval, the EtherCAT reference clock and the servo thread are locked together in a closed-loop phase-locked loop (PLL).
 
@@ -84,7 +84,7 @@ The mode is selected by the **sign** of the `refClockSyncCycles` configuration a
 | negative integer (e.g. `-1`) | M2R — PLL-based, requires `RTAPI_TASK_PLL_SUPPORT` |
 | `0` | DC sync disabled |
 
-When the kernel does **not** provide `RTAPI_TASK_PLL_SUPPORT`, M2R is silently downgraded to R2M regardless of the configured value.
+When LinuxCNC does **not** provide `RTAPI_TASK_PLL_SUPPORT`, M2R is silently downgraded to R2M regardless of the configured value.
 
 ---
 
@@ -305,7 +305,7 @@ To use M2R mode (requires `RTAPI_TASK_PLL_SUPPORT`), set `refClockSyncCycles` to
 
 ## 7. HAL Pins
 
-DC-sync-related HAL pins are created on each master instance. They are only present when the kernel provides `RTAPI_TASK_PLL_SUPPORT`.
+DC-sync-related HAL pins are created on each master instance. They are only present when LinuxCNC provides `RTAPI_TASK_PLL_SUPPORT`.
 
 All pin names are prefixed with the component name and master index, e.g. `lcec.0.` for master 0.
 
@@ -409,13 +409,13 @@ Lower values mean more frequent reference clock updates, which reduces maximum c
 
 ### 9.5 Enabling M2R mode
 
-M2R requires a real-time kernel with `RTAPI_TASK_PLL_SUPPORT`. Verify this is available:
+M2R requires a real-time kernel and LinuxCNC with `RTAPI_TASK_PLL_SUPPORT`. Verify this is available:
 
 ```bash
 grep RTAPI_TASK_PLL_SUPPORT /usr/include/rtapi.h
 ```
 
-If the symbol is absent, the build will silently fall back to R2M mode. Check the kernel configuration and ensure you are running a LinuxCNC-patched `PREEMPT_RT` or `Xenomai` kernel.
+If the symbol is absent, the build will silently fall back to R2M mode.
 
 ---
 
