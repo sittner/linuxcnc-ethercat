@@ -32,7 +32,7 @@
  * parent slave's @c sdoConfigLength / @c idnConfigLength accumulators are
  * updated accordingly.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

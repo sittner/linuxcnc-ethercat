@@ -7,7 +7,7 @@
  * EL2798, EL2808, EL2809, EP2008, EP2028, and EP2809 — providing
  * 2–16 channel digital outputs over EtherCAT.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

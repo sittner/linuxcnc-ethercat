@@ -15,7 +15,7 @@
  *   - LCEC_EL1918_LOGIC_PARAM_STDIN_NAME  (2): HAL pin name for a standard input bit.
  *   - LCEC_EL1918_LOGIC_PARAM_STDOUT_NAME (3): HAL pin name for a standard output bit.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2021-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

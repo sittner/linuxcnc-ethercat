@@ -12,7 +12,7 @@
  * status byte in object 0x3101/0x3102 subindex 1 and are exposed as individual
  * HAL bit pins.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

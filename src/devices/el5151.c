@@ -9,7 +9,7 @@
  * measurement, and separate C-index and external (positive/negative edge)
  * latch inputs.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2012-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

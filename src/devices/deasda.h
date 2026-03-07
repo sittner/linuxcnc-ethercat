@@ -13,7 +13,7 @@
  * CiA-402 status bits, and control inputs including a built-in automatic
  * fault-reset feature with configurable retry count and inter-reset delay.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2014-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

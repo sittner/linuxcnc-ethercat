@@ -12,8 +12,8 @@
  * EtherCAT process data image.  Output limiting (min-dc / max-dc) and
  * absolute-value mode are supported per channel through HAL pins.
  *
- * @copyright Copyright (C) 2026 Frank Brossette<frank.brossette@gmail.com>
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2016-2026 Frank Brossette<frank.brossette@gmail.com>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

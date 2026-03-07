@@ -11,7 +11,7 @@
  *   - fsoe-in-sto[-0/-1]  (Safe Torque Off status per axis)
  * The read callback copies FSoE data and updates all HAL pin values.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -10,7 +10,7 @@
  * The EL7201-9014 variant additionally exposes digital inputs (info1) and
  * an extended error word (info2) via two extra TxPDOs.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

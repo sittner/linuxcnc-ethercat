@@ -6,7 +6,7 @@
  * (sync-manager PDO assignment for both axes, two class_ax5 channels prefixed
  * ch0./ch1.), and cyclic read/write loops over both channels.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

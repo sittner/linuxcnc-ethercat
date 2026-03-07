@@ -13,7 +13,7 @@
  * giving a resolution of 0.1 units per LSB (e.g. 0.1 °C per count when used
  * with a temperature sensor).
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2024-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

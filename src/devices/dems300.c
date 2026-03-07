@@ -6,7 +6,7 @@
  * over EtherCAT. It supports velocity control, fault handling with optional
  * automatic reset, ramp time configuration, and status/diagnostic feedback.
  *
- * @copyright Copyright (C) 2026 Dominik Braun <dominik.braun@eventor.de>
+ * @copyright Copyright (C) 2021-2026 Dominik Braun <dominik.braun@eventor.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -15,7 +15,7 @@
  *   - `<pfx>.fsoe-in-<n>`        (HAL_BIT, HAL_OUT): Safe digital input state (n=0..3).
  *   - `<pfx>.fsoe-in-<n>-not`    (HAL_BIT, HAL_OUT): Inverted safe digital input state.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

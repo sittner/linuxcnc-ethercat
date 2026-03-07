@@ -17,7 +17,7 @@
  *       - Direct input mode (0x8000:08) = FALSE (0x00)
  *       - Travel distance control (0x8000:0A) = FALSE (0x00)
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -15,8 +15,8 @@
  *
  * @see http://www.beckhoff.com/english.asp?EtherCAT/el2202.htm
  *
- * @copyright Copyright (C) 2026 Claudio lorini <claudio.lorini@iit.it>
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2015-2026 Claudio lorini <claudio.lorini@iit.it>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -31,7 +31,7 @@
  *  - @c stp-maxaccel-rise (HAL_FLOAT, RO) — maximum acceleration (pos units/s²)
  *  - @c stp-pos-scale    (HAL_FLOAT, RW) — steps per position unit
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

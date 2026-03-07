@@ -6,7 +6,7 @@
  * Two selectable synchronous information words per channel allow monitoring
  * of motor voltage, current, duty cycle, velocity, temperature, and more.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

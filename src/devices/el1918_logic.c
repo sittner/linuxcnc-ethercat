@@ -5,7 +5,7 @@
  * Manages dynamic FSoE slave associations, configurable standard I/O bits,
  * and the EL1918 internal state/cycle-counter PDOs.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2021-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

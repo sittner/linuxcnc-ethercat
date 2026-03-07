@@ -9,7 +9,7 @@
  *             + torque feedback (0x0054:01, 16-bit), with optional second position
  *             feedback (0x0035:01) and diagnostic number (0x0186:01).
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

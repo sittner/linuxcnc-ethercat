@@ -10,8 +10,8 @@
  * 16-bit signed DAC word written to the EtherCAT process image each cycle.
  * PDO channel mapping uses the 0x70xx CoE object scheme (same as EL40x8).
  *
- * @copyright Copyright (C) 2026 Frank Brossette<frank.brossette@gmail.com>
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2016-2026 Frank Brossette<frank.brossette@gmail.com>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

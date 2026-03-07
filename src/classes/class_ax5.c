@@ -16,7 +16,7 @@
  * - `LCEC_AX5_PARAM_ENABLE_FB2`  – secondary feedback encoder.
  * - `LCEC_AX5_PARAM_ENABLE_DIAG` – diagnostics word.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

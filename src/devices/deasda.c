@@ -6,7 +6,7 @@
  * writes, then maps CiA-402 PDOs.  Implements automatic fault reset with
  * configurable retry count and inter-reset cycle count.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2014-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

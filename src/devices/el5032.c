@@ -8,7 +8,7 @@
  * 2-bit cycle counter for data-freshness monitoring. Both absolute and
  * relative (incremental) position modes are supported.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2023-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

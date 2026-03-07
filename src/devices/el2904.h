@@ -12,7 +12,7 @@
  *  - Vendor ID  : 0x00000002 (Beckhoff) — use ::LCEC_EL2904_VID
  *  - Product code: 0x0B583052            — use ::LCEC_EL2904_PID
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

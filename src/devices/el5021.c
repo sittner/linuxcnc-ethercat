@@ -8,7 +8,7 @@
  * preset, frequency and amplitude error detection, sync error, and TxPDO
  * toggle for data-freshness monitoring.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2024-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

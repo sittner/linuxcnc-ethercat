@@ -24,7 +24,7 @@
  * controller (or HAL component) can seed or persist the 64-bit accumulator
  * across restarts for multi-turn tracking.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

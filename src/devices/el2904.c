@@ -22,7 +22,7 @@
  *  - @c fsoe-out-0 … fsoe-out-3 (HAL_BIT, OUT) — readback of safety outputs 0–3
  *  - @c out-0 … out-3      (HAL_BIT, IN)  — non-safety output commands 0–3
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

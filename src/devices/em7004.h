@@ -11,7 +11,7 @@
  * Each encoder supports preset, external latch on rising/falling edge, and
  * exposes position as a scaled floating-point value.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2014-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

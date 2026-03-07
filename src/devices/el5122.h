@@ -8,7 +8,7 @@
  * direct readback of the A and B input states. Both channels share a common
  * HAL pin descriptor table parameterised by channel index.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

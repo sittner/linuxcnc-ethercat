@@ -7,7 +7,7 @@
  * Channel configuration (baud rate, frame format, coding, etc.) is applied
  * during initialisation via CoE SDO writes driven by XML module parameters.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2023-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

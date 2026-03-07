@@ -7,8 +7,8 @@
  * 1.5 A coil current; the EL7041 supports up to 5 A.  Both use a 32-bit
  * position setpoint PDO (position mode via 0x8012:01 = 3).
  *
- * @copyright Copyright (C) 2026 Jakob Flierl  <jakob.flierl@gmail.com>
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2015-2026 Jakob Flierl  <jakob.flierl@gmail.com>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

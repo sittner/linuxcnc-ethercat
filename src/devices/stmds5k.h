@@ -17,7 +17,7 @@
  * at-speed, overload, ready, error, toggle, loc-ena) and control inputs
  * (enable, error-reset, fast-ramp, brake).
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2011-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

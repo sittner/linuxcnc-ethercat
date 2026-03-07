@@ -8,7 +8,7 @@
  * @c ch0. and @c ch1.  The FSoE configuration carries two data channels,
  * matching the two axes exposed to an AX5805 safety card.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -6,7 +6,7 @@
  * by AX5100 / AX5200 slave drivers.  Each physical drive channel maps to one
  * `lcec_class_ax5_chan_t` instance.
  *
- * @copyright Copyright (C) 2026 Sascha Ittner <sascha.ittner@modusoft.de>
+ * @copyright Copyright (C) 2018-2026 Sascha Ittner <sascha.ittner@modusoft.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
