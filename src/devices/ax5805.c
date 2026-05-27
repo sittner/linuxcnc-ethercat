@@ -177,20 +177,21 @@ void lcec_ax5805_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_ax5805_data_t *hal_data = (lcec_ax5805_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
+  uint8_t *pd_out = lcec_master_output_data(master);
 
   copy_fsoe_data(slave, hal_data->fsoe_slave_cmd_os, hal_data->fsoe_master_cmd_os);
 
-  *(hal_data->fsoe_master_cmd) = EC_READ_U8(&pd[hal_data->fsoe_master_cmd_os]);
-  *(hal_data->fsoe_master_connid) = EC_READ_U16(&pd[hal_data->fsoe_master_connid_os]);
+  *(hal_data->fsoe_master_cmd) = EC_READ_U8(&pd_out[hal_data->fsoe_master_cmd_os]);
+  *(hal_data->fsoe_master_connid) = EC_READ_U16(&pd_out[hal_data->fsoe_master_connid_os]);
   *(hal_data->fsoe_slave_cmd) = EC_READ_U8(&pd[hal_data->fsoe_slave_cmd_os]);
   *(hal_data->fsoe_slave_connid) = EC_READ_U16(&pd[hal_data->fsoe_slave_connid_os]);
 
-  *(hal_data->fsoe_master_crc0) = EC_READ_U16(&pd[hal_data->fsoe_master_crc0_os]);
+  *(hal_data->fsoe_master_crc0) = EC_READ_U16(&pd_out[hal_data->fsoe_master_crc0_os]);
   *(hal_data->fsoe_slave_crc0) = EC_READ_U16(&pd[hal_data->fsoe_slave_crc0_os]);
   *(hal_data->fsoe_in_sto0) = EC_READ_BIT(&pd[hal_data->fsoe_in_sto0_os], hal_data->fsoe_in_sto0_bp);
 
   if (slave->fsoeConf->data_channels >= 2) {
-    *(hal_data->fsoe_master_crc1) = EC_READ_U16(&pd[hal_data->fsoe_master_crc1_os]);
+    *(hal_data->fsoe_master_crc1) = EC_READ_U16(&pd_out[hal_data->fsoe_master_crc1_os]);
     *(hal_data->fsoe_slave_crc1) = EC_READ_U16(&pd[hal_data->fsoe_slave_crc1_os]);
     *(hal_data->fsoe_in_sto1) = EC_READ_BIT(&pd[hal_data->fsoe_in_sto1_os], hal_data->fsoe_in_sto1_bp);
   }

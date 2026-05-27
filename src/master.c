@@ -158,6 +158,7 @@ lcec_master_t * lcec_create_master(LCEC_CONF_MASTER_T *master_conf) {
   master->app_time_period = master_conf->appTimePeriod;
   master->ref_clock_sync_cycles = master_conf->refClockSyncCycles;
   master->ref_clock_slave_idx = master_conf->refClockSlaveIdx;
+  master->use_separate_lrd_lwr = master_conf->useSeparateLrdLwr;
 #ifdef EC_USPACE_MASTER
   master->transport_type = master_conf->transportType;
   strncpy(master->interface, master_conf->interface, LCEC_CONF_STR_MAXLEN);
@@ -377,6 +378,9 @@ void lcec_read_master(void *arg, long period) {
   rtapi_mutex_get(&master->mutex);
   ecrt_master_receive(master->master);
   ecrt_domain_process(master->domain);
+  if (master->use_separate_lrd_lwr && master->domain_lwr != NULL) {
+    ecrt_domain_process(master->domain_lwr);
+  }
   if (check_states) {
     ecrt_master_state(master->master, &master->ms);
   }
@@ -435,7 +439,18 @@ void lcec_write_master(void *arg, long period) {
   // process slaves
   for (slave = master->first_slave; slave != NULL; slave = slave->next) {
     if (slave->proc_write != NULL) {
-      slave->proc_write(slave, period);
+      if (master->use_separate_lrd_lwr && master->process_data_lwr != NULL) {
+        uint8_t *saved_process_data = master->process_data;
+        int saved_process_data_len = master->process_data_len;
+
+        master->process_data = master->process_data_lwr;
+        master->process_data_len = master->process_data_len_lwr;
+        slave->proc_write(slave, period);
+        master->process_data = saved_process_data;
+        master->process_data_len = saved_process_data_len;
+      } else {
+        slave->proc_write(slave, period);
+      }
     }
   }
 
@@ -443,6 +458,9 @@ void lcec_write_master(void *arg, long period) {
 
   // queue process data
   ecrt_domain_queue(master->domain);
+  if (master->use_separate_lrd_lwr && master->domain_lwr != NULL) {
+    ecrt_domain_queue(master->domain_lwr);
+  }
 
   // sync distributed clock just before master_send to set
   // most accurate master clock time

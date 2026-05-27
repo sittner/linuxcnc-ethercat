@@ -281,6 +281,8 @@ typedef struct {
                                 *   synchronisation calls (0 = disabled). */
   int refClockSlaveIdx;        /**< EtherCAT position of the slave used as DC reference clock,
                                 *   or -1 to use the first DC-capable slave. */
+  int useSeparateLrdLwr;        /**< Non-zero to register input and output PDOs in separate
+                                *   domains so the master emits LRD/LWR instead of LRW. */
   char name[LCEC_CONF_STR_MAXLEN]; /**< Human-readable master name used as the HAL pin prefix.
                                     *   Defaults to the decimal string of @c index. */
 #ifdef EC_USPACE_MASTER

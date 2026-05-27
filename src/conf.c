@@ -679,6 +679,7 @@ fail0:
  *  - @c appTimePeriod    — Application time period in ns (uint32).
  *  - @c refClockSyncCycles — DC reference-clock sync cycle count (int).
  *  - @c refClockSlaveIdx — Bus position of DC reference slave, or -1 (int).
+ *  - @c useSeparateLrdLwr — Use separate read/write domains (bool, default false).
  *  - @c interface        — (EC_USPACE_MASTER only) Primary NIC name, REQUIRED.
  *  - @c backupInterface  — (EC_USPACE_MASTER only) Backup NIC name, optional.
  *  - @c transportType    — (EC_USPACE_MASTER only) "raw", "xdp-skb", "xdp-native".
@@ -739,6 +740,12 @@ static void parseMasterAttrs(LCEC_CONF_XML_INST_T *inst, int next, const char **
     // parse refClockSlaveIdx
     if (strcmp(name, "refClockSlaveIdx") == 0) {
       p->refClockSlaveIdx = atoi(val);
+      continue;
+    }
+
+    // parse useSeparateLrdLwr
+    if (strcmp(name, "useSeparateLrdLwr") == 0) {
+      p->useSeparateLrdLwr = (strcasecmp(val, "true") == 0 || strcmp(val, "1") == 0 || strcasecmp(val, "yes") == 0);
       continue;
     }
 

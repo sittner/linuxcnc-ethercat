@@ -345,9 +345,15 @@ typedef struct lcec_master {
   unsigned long mutex;             /**< Mutex protecting concurrent access to this master. */
   int pdo_entry_count;             /**< Total PDO entries across all slaves (set during parse). */
   ec_pdo_entry_reg_t *pdo_entry_regs; /**< PDO entry registration array (length pdo_entry_count + 1). */
+  int pdo_entry_count_lwr;         /**< Output PDO entries registered in the LWR domain. */
+  ec_pdo_entry_reg_t *pdo_entry_regs_lwr; /**< Output PDO entry registration array. */
   ec_domain_t *domain;             /**< EtherCAT process-data domain handle. */
+  ec_domain_t *domain_lwr;         /**< Optional output process-data domain for LWR frames. */
   uint8_t *process_data;           /**< Pointer to the mapped process-data image for the domain. */
   int process_data_len;            /**< Size of the process-data image in bytes. */
+  uint8_t *process_data_lwr;       /**< Pointer to the mapped output-domain process-data image. */
+  int process_data_len_lwr;        /**< Size of the output-domain process-data image in bytes. */
+  int use_separate_lrd_lwr;        /**< Non-zero when input/output PDOs use separate domains. */
   struct lcec_slave *first_slave;  /**< Head of the slave linked list for this master. */
   struct lcec_slave *last_slave;   /**< Tail of the slave linked list for this master. */
   lcec_master_data_t *hal_data;    /**< Per-master HAL state pins. */
@@ -370,6 +376,16 @@ typedef struct lcec_master {
   double dc_integrator;  /**< PI integral accumulator for DC synchronisation. */
 #endif
 } lcec_master_t;
+
+/**
+ * @brief Return the process-data image used for output PDOs.
+ *
+ * In normal LRW mode input and output PDOs share @c process_data.  When
+ * useSeparateLrdLwr is enabled, output PDO offsets belong to @c process_data_lwr.
+ */
+static inline uint8_t *lcec_master_output_data(lcec_master_t *master) {
+  return master->process_data_lwr != NULL ? master->process_data_lwr : master->process_data;
+}
 
 /**
  * @brief Distributed Clock (DC) configuration for a single slave.

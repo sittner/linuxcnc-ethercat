@@ -84,6 +84,9 @@ EtherCAT bus configuration is done via XML files that are processed by `lcec_con
 
 See the [`examples/`](examples/) directory for sample configurations.
 
+Masters that need separate read/write datagrams, for example drives that reject
+LRW, can opt in with `useSeparateLrdLwr="true"` on the `<master>` element.
+
 ---
 
 ## EtherCAT Master Support

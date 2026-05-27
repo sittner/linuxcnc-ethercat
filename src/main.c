@@ -61,6 +61,105 @@ static lcec_master_data_t *global_hal_data;
 /** @brief Aggregate EtherCAT master state updated each cycle by lcec_read_all(). */
 ec_master_state_t global_ms;
 
+static lcec_slave_t *lcec_pdo_owner(lcec_master_t *master, const ec_pdo_entry_reg_t *entry) {
+  lcec_slave_t *slave;
+
+  for (slave = master->first_slave; slave != NULL; slave = slave->next) {
+    if (slave->index == entry->position && slave->vid == entry->vendor_id && slave->pid == entry->product_code) {
+      return slave;
+    }
+  }
+
+  return NULL;
+}
+
+static int lcec_pdo_entry_direction(lcec_slave_t *slave, const ec_pdo_entry_reg_t *entry, ec_direction_t *dir) {
+  const ec_sync_info_t *sync;
+  unsigned int pdo_idx;
+  unsigned int entry_idx;
+
+  if (slave == NULL || slave->sync_info == NULL) {
+    return -1;
+  }
+
+  for (sync = slave->sync_info; sync->index != 0xff; sync++) {
+    if (sync->pdos == NULL) {
+      continue;
+    }
+    for (pdo_idx = 0; pdo_idx < sync->n_pdos; pdo_idx++) {
+      const ec_pdo_info_t *pdo = &sync->pdos[pdo_idx];
+
+      if (pdo->entries == NULL) {
+        continue;
+      }
+      for (entry_idx = 0; entry_idx < pdo->n_entries; entry_idx++) {
+        const ec_pdo_entry_info_t *pdo_entry = &pdo->entries[entry_idx];
+
+        if (pdo_entry->index == entry->index && pdo_entry->subindex == entry->subindex) {
+          *dir = sync->dir;
+          return 0;
+        }
+      }
+    }
+  }
+
+  return -1;
+}
+
+static int lcec_pdo_entry_is_output(lcec_master_t *master, const ec_pdo_entry_reg_t *entry) {
+  ec_direction_t dir;
+
+  if (lcec_pdo_entry_direction(lcec_pdo_owner(master, entry), entry, &dir) == 0) {
+    return dir == EC_DIR_OUTPUT;
+  }
+
+  return (entry->index & 0xf000) == 0x7000;
+}
+
+static int lcec_split_pdo_domains(lcec_master_t *master) {
+  ec_pdo_entry_reg_t *entry;
+  ec_pdo_entry_reg_t *in_write;
+  ec_pdo_entry_reg_t *out_write;
+  ec_pdo_entry_reg_t *out_regs;
+  int input_count = 0;
+  int output_count = 0;
+
+  for (entry = master->pdo_entry_regs; entry->index != 0; entry++) {
+    if (lcec_pdo_entry_is_output(master, entry)) {
+      output_count++;
+    } else {
+      input_count++;
+    }
+  }
+
+  out_regs = lcec_zalloc(sizeof(ec_pdo_entry_reg_t) * (output_count + 1));
+  if (out_regs == NULL) {
+    rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s output PDO entry allocation failed\n", master->name);
+    return -1;
+  }
+
+  in_write = master->pdo_entry_regs;
+  out_write = out_regs;
+  for (entry = master->pdo_entry_regs; entry->index != 0; entry++) {
+    ec_pdo_entry_reg_t copy = *entry;
+
+    if (lcec_pdo_entry_is_output(master, &copy)) {
+      *(out_write++) = copy;
+    } else {
+      *(in_write++) = copy;
+    }
+  }
+  in_write->index = 0;
+  out_write->index = 0;
+
+  master->pdo_entry_count = input_count;
+  master->pdo_entry_count_lwr = output_count;
+  master->pdo_entry_regs_lwr = out_regs;
+  rtapi_print_msg(RTAPI_MSG_INFO, LCEC_MSG_PFX "master %s split PDO domains: %d input entries, %d output entries\n",
+      master->name, input_count, output_count);
+  return 0;
+}
+
 #ifdef EC_USPACE_MASTER
 static char *ipc_socket = NULL;
 RTAPI_MP_STRING(ipc_socket, "EtherCAT userspace master IPC socket path (NULL = no tool access)");
@@ -156,6 +255,12 @@ int rtapi_app_main(void) {
       rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s domain creation failed\n", master->name);
       goto fail2;
     }
+    if (master->use_separate_lrd_lwr) {
+      if (!(master->domain_lwr = ecrt_master_create_domain(master->master))) {
+        rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s output domain creation failed\n", master->name);
+        goto fail2;
+      }
+    }
 
     // initialize slaves
     pdo_entry_regs = master->pdo_entry_regs;
@@ -238,9 +343,23 @@ int rtapi_app_main(void) {
     pdo_entry_regs->index = 0;
 
     // register PDO entries
-    if (ecrt_domain_reg_pdo_entry_list(master->domain, master->pdo_entry_regs)) {
-      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s PDO entry registration failed\n", master->name);
-      goto fail2;
+    if (master->use_separate_lrd_lwr) {
+      if (lcec_split_pdo_domains(master) != 0) {
+        goto fail2;
+      }
+      if (ecrt_domain_reg_pdo_entry_list(master->domain, master->pdo_entry_regs)) {
+        rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s input PDO entry registration failed\n", master->name);
+        goto fail2;
+      }
+      if (master->pdo_entry_count_lwr > 0 && ecrt_domain_reg_pdo_entry_list(master->domain_lwr, master->pdo_entry_regs_lwr)) {
+        rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s output PDO entry registration failed\n", master->name);
+        goto fail2;
+      }
+    } else {
+      if (ecrt_domain_reg_pdo_entry_list(master->domain, master->pdo_entry_regs)) {
+        rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s PDO entry registration failed\n", master->name);
+        goto fail2;
+      }
     }
 
     // initialize dc sync
@@ -284,6 +403,10 @@ int rtapi_app_main(void) {
     // Get internal process data for domain
     master->process_data = ecrt_domain_data(master->domain);
     master->process_data_len = ecrt_domain_size(master->domain);
+    if (master->use_separate_lrd_lwr && master->domain_lwr != NULL) {
+      master->process_data_lwr = ecrt_domain_data(master->domain_lwr);
+      master->process_data_len_lwr = ecrt_domain_size(master->domain_lwr);
+    }
 
     // init hal data
     rtapi_snprintf(name, HAL_NAME_LEN, "%s.%s", LCEC_MODULE_NAME, master->name);
@@ -668,6 +791,9 @@ void lcec_clear_config(void) {
     // free PDO entry memory
     if (master->pdo_entry_regs != NULL) {
       lcec_free(master->pdo_entry_regs);
+    }
+    if (master->pdo_entry_regs_lwr != NULL) {
+      lcec_free(master->pdo_entry_regs_lwr);
     }
 
     // free master

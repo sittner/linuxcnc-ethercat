@@ -213,6 +213,7 @@ void lcec_el2904_read(struct lcec_slave *slave, long period) {
   lcec_master_t *master = slave->master;
   lcec_el2904_data_t *hal_data = (lcec_el2904_data_t *) slave->hal_data;
   uint8_t *pd = master->process_data;
+  uint8_t *pd_out = lcec_master_output_data(master);
 
   copy_fsoe_data(slave, hal_data->fsoe_slave_cmd_os, hal_data->fsoe_master_cmd_os);
 
@@ -220,9 +221,9 @@ void lcec_el2904_read(struct lcec_slave *slave, long period) {
   *(hal_data->fsoe_slave_crc) = EC_READ_U16(&pd[hal_data->fsoe_slave_crc_os]);
   *(hal_data->fsoe_slave_connid) = EC_READ_U16(&pd[hal_data->fsoe_slave_connid_os]);
 
-  *(hal_data->fsoe_master_cmd) = EC_READ_U8(&pd[hal_data->fsoe_master_cmd_os]);
-  *(hal_data->fsoe_master_crc) = EC_READ_U16(&pd[hal_data->fsoe_master_crc_os]);
-  *(hal_data->fsoe_master_connid) = EC_READ_U16(&pd[hal_data->fsoe_master_connid_os]);
+  *(hal_data->fsoe_master_cmd) = EC_READ_U8(&pd_out[hal_data->fsoe_master_cmd_os]);
+  *(hal_data->fsoe_master_crc) = EC_READ_U16(&pd_out[hal_data->fsoe_master_crc_os]);
+  *(hal_data->fsoe_master_connid) = EC_READ_U16(&pd_out[hal_data->fsoe_master_connid_os]);
 
   *(hal_data->fsoe_out_0) = EC_READ_BIT(&pd[hal_data->fsoe_out_0_os], hal_data->fsoe_out_0_bp);
   *(hal_data->fsoe_out_1) = EC_READ_BIT(&pd[hal_data->fsoe_out_1_os], hal_data->fsoe_out_1_bp);

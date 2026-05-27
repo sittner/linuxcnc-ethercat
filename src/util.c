@@ -436,7 +436,7 @@ lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index) {
 /**
  * @brief Copy FsoE (Fail-Safe over EtherCAT) process-data between domain offsets.
  *
- * Propagates the FsoE PDO payload bytes within the EtherCAT domain image:
+ * Propagates the FsoE PDO payload bytes within the EtherCAT process-data images:
  *   - Copies @p slave_offset → @c fsoe_slave_offset (slave-to-master direction).
  *   - Copies @c fsoe_master_offset → @p master_offset (master-to-slave direction).
  *
@@ -451,12 +451,13 @@ lcec_slave_t *lcec_slave_by_index(struct lcec_master *master, int index) {
  * @param slave_offset   Domain image byte offset of the raw slave-to-master data.
  * @param master_offset  Domain image byte offset of the raw master-to-slave data.
  *
- * @note Side effect: modifies bytes in @c master->process_data at the
- *       @c fsoe_slave_offset and @p master_offset locations.
+ * @note Side effect: modifies bytes in the master's output-domain process data
+ *       at the @c fsoe_slave_offset and @p master_offset locations.
  */
 void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigned int master_offset) {
   lcec_master_t *master = slave->master;
-  uint8_t *pd = master->process_data;
+  uint8_t *pd_in = master->process_data;
+  uint8_t *pd_out = lcec_master_output_data(master);
   const LCEC_CONF_FSOE_T *fsoeConf = slave->fsoeConf;
 
   if (fsoeConf == NULL) {
@@ -464,11 +465,11 @@ void copy_fsoe_data(struct lcec_slave *slave, unsigned int slave_offset, unsigne
   }
 
   if (slave->fsoe_slave_offset != NULL) {
-    memcpy(&pd[*(slave->fsoe_slave_offset)], &pd[slave_offset], LCEC_FSOE_SIZE(fsoeConf->data_channels, fsoeConf->slave_data_len));
+    memcpy(&pd_out[*(slave->fsoe_slave_offset)], &pd_in[slave_offset], LCEC_FSOE_SIZE(fsoeConf->data_channels, fsoeConf->slave_data_len));
   }
 
   if (slave->fsoe_master_offset != NULL) {
-    memcpy(&pd[master_offset], &pd[*(slave->fsoe_master_offset)], LCEC_FSOE_SIZE(fsoeConf->data_channels, fsoeConf->master_data_len));
+    memcpy(&pd_out[master_offset], &pd_in[*(slave->fsoe_master_offset)], LCEC_FSOE_SIZE(fsoeConf->data_channels, fsoeConf->master_data_len));
   }
 }
 
