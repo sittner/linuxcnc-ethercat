@@ -94,6 +94,9 @@ lcec_slave_t *lcec_create_slave(lcec_master_t *master, LCEC_CONF_SLAVE_T *slave_
   slave->type = slave_conf->type;
   strncpy(slave->name, slave_conf->name, LCEC_CONF_STR_MAXLEN);
   slave->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
+  strncpy(slave->sync_unit_name, slave_conf->syncUnit, LCEC_CONF_STR_MAXLEN);
+  slave->sync_unit_name[LCEC_CONF_STR_MAXLEN - 1] = 0;
+  slave->sync_unit_cycle = slave_conf->syncUnitCycle;
   slave->master = master;
 
   if (type != NULL) {

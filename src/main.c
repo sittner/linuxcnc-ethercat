@@ -107,6 +107,7 @@ int rtapi_app_main(void) {
   int slave_count;
   lcec_master_t *master;
   lcec_slave_t *slave;
+  lcec_sync_unit_t *sync_unit;
   char name[HAL_NAME_LEN + 1];
   ec_pdo_entry_reg_t *pdo_entry_regs;
   lcec_slave_sdoconf_t *sdo_config;
@@ -151,14 +152,19 @@ int rtapi_app_main(void) {
       goto fail2;
     }
 
-    // create domain
-    if (!(master->domain = ecrt_master_create_domain(master->master))) {
-      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s domain creation failed\n", master->name);
-      goto fail2;
+    // create one process-data domain per Sync Unit
+    for (sync_unit = master->first_sync_unit; sync_unit != NULL; sync_unit = sync_unit->next) {
+      if (!(sync_unit->domain = ecrt_master_create_domain(master->master))) {
+        rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s syncUnit %s domain creation failed\n",
+          master->name, sync_unit->name);
+        goto fail2;
+      }
+      if (master->domain == NULL) {
+        master->domain = sync_unit->domain;
+      }
     }
 
     // initialize slaves
-    pdo_entry_regs = master->pdo_entry_regs;
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
       // read slave config
       if (!(slave->config = ecrt_master_slave_config(master->master, 0, slave->index, slave->vid, slave->pid))) {
@@ -193,7 +199,12 @@ int rtapi_app_main(void) {
 
       // setup pdos
       if (slave->proc_init != NULL) {
-        ec_pdo_entry_reg_t *checkpoint = pdo_entry_regs;
+        ec_pdo_entry_reg_t *checkpoint;
+        pdo_entry_regs = slave->sync_unit->pdo_entry_regs;
+        while (pdo_entry_regs->index != 0) {
+          pdo_entry_regs++;
+        }
+        checkpoint = pdo_entry_regs;
         if ((slave->proc_init(comp_id, slave, &pdo_entry_regs)) != 0) {
           goto fail2;
         }
@@ -234,13 +245,13 @@ int rtapi_app_main(void) {
       }
     }
 
-    // terminate PDO entries
-    pdo_entry_regs->index = 0;
-
-    // register PDO entries
-    if (ecrt_domain_reg_pdo_entry_list(master->domain, master->pdo_entry_regs)) {
-      rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s PDO entry registration failed\n", master->name);
-      goto fail2;
+    // register PDO entries for every Sync Unit domain
+    for (sync_unit = master->first_sync_unit; sync_unit != NULL; sync_unit = sync_unit->next) {
+      if (ecrt_domain_reg_pdo_entry_list(sync_unit->domain, sync_unit->pdo_entry_regs)) {
+        rtapi_print_msg (RTAPI_MSG_ERR, LCEC_MSG_PFX "master %s syncUnit %s PDO entry registration failed\n",
+          master->name, sync_unit->name);
+        goto fail2;
+      }
     }
 
     // initialize dc sync
@@ -281,9 +292,19 @@ int rtapi_app_main(void) {
       goto fail2;
     }
 
-    // Get internal process data for domain
-    master->process_data = ecrt_domain_data(master->domain);
-    master->process_data_len = ecrt_domain_size(master->domain);
+    // Get internal process data for every domain
+    for (sync_unit = master->first_sync_unit; sync_unit != NULL; sync_unit = sync_unit->next) {
+      sync_unit->process_data = ecrt_domain_data(sync_unit->domain);
+      sync_unit->process_data_len = ecrt_domain_size(sync_unit->domain);
+      if (master->process_data == NULL) {
+        master->process_data = sync_unit->process_data;
+        master->process_data_len = sync_unit->process_data_len;
+      }
+      rtapi_print_msg(RTAPI_MSG_DBG,
+        LCEC_MSG_PFX "master %s syncUnit %s cycle=%u ns divider=%u process_data_len=%d\n",
+        master->name, sync_unit->name, sync_unit->cycle_time,
+        sync_unit->cycle_divider, sync_unit->process_data_len);
+    }
 
     // init hal data
     rtapi_snprintf(name, HAL_NAME_LEN, "%s.%s", LCEC_MODULE_NAME, master->name);
@@ -388,6 +409,7 @@ int lcec_parse_config(void) {
   int slave_count;
   lcec_master_t *master;
   lcec_slave_t *slave;
+  lcec_sync_unit_t *sync_unit;
   ec_pdo_entry_reg_t *pdo_entry_regs;
   LCEC_CONF_TYPE_T conf_type;
   LCEC_CONF_MASTER_T *master_conf;
@@ -472,6 +494,11 @@ int lcec_parse_config(void) {
 
         slave = lcec_create_slave(master, slave_conf, &slave_conf_state);
         if (slave == NULL) {
+          goto fail2;
+        }
+
+        slave->sync_unit = lcec_master_get_sync_unit(master, slave_conf->syncUnit, slave_conf->syncUnitCycle);
+        if (slave->sync_unit == NULL) {
           goto fail2;
         }
 
@@ -602,15 +629,23 @@ int lcec_parse_config(void) {
     // stage 3 preinit: sum required pdo mappings
     for (slave = master->first_slave; slave != NULL; slave = slave->next) {
       master->pdo_entry_count += slave->pdo_entry_count;
+      slave->sync_unit->pdo_entry_count += slave->pdo_entry_count;
     }
 
-    // alloc mem for pdo mappings
-    pdo_entry_regs = lcec_zalloc(sizeof(ec_pdo_entry_reg_t) * (master->pdo_entry_count + 1));
-    if (pdo_entry_regs == NULL) {
-      rtapi_print_msg(RTAPI_MSG_ERR, LCEC_MSG_PFX "Unable to allocate master %s PDO entry memory\n", master->name);
-      goto fail2;
+    // alloc mem for pdo mappings per Sync Unit/domain
+    for (sync_unit = master->first_sync_unit; sync_unit != NULL; sync_unit = sync_unit->next) {
+      pdo_entry_regs = lcec_zalloc(sizeof(ec_pdo_entry_reg_t) * (sync_unit->pdo_entry_count + 1));
+      if (pdo_entry_regs == NULL) {
+        rtapi_print_msg(RTAPI_MSG_ERR,
+          LCEC_MSG_PFX "Unable to allocate master %s syncUnit %s PDO entry memory\n",
+          master->name, sync_unit->name);
+        goto fail2;
+      }
+      sync_unit->pdo_entry_regs = pdo_entry_regs;
+      if (master->pdo_entry_regs == NULL) {
+        master->pdo_entry_regs = pdo_entry_regs;
+      }
     }
-    master->pdo_entry_regs = pdo_entry_regs;
   }
 
   return slave_count;
@@ -665,10 +700,8 @@ void lcec_clear_config(void) {
     // release master
     lcec_shutdown_master(master);
 
-    // free PDO entry memory
-    if (master->pdo_entry_regs != NULL) {
-      lcec_free(master->pdo_entry_regs);
-    }
+    // free Sync Unit/domain configuration
+    lcec_free_sync_units(master);
 
     // free master
     lcec_free(master);

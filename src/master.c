@@ -174,6 +174,71 @@ fail0:
   return NULL;
 }
 
+lcec_sync_unit_t *lcec_master_get_sync_unit(lcec_master_t *master, const char *name, uint32_t cycle_time) {
+  lcec_sync_unit_t *sync_unit;
+  unsigned int cycle_divider;
+
+  if (cycle_time == 0 || master->app_time_period == 0 || (cycle_time % master->app_time_period) != 0) {
+    rtapi_print_msg(RTAPI_MSG_ERR,
+      LCEC_MSG_PFX "master %s syncUnit %s cycle %u is not a positive multiple of appTimePeriod %u\n",
+      master->name, name, cycle_time, master->app_time_period);
+    return NULL;
+  }
+
+  cycle_divider = cycle_time / master->app_time_period;
+  if (cycle_divider == 0) {
+    cycle_divider = 1;
+  }
+
+  for (sync_unit = master->first_sync_unit; sync_unit != NULL; sync_unit = sync_unit->next) {
+    if (strncmp(sync_unit->name, name, LCEC_CONF_STR_MAXLEN) == 0) {
+      if (sync_unit->cycle_time != cycle_time) {
+        rtapi_print_msg(RTAPI_MSG_ERR,
+          LCEC_MSG_PFX "master %s syncUnit %s cycle mismatch (%u != %u)\n",
+          master->name, name, sync_unit->cycle_time, cycle_time);
+        return NULL;
+      }
+      return sync_unit;
+    }
+  }
+
+  sync_unit = lcec_zalloc(sizeof(lcec_sync_unit_t));
+  if (sync_unit == NULL) {
+    rtapi_print_msg(RTAPI_MSG_ERR,
+      LCEC_MSG_PFX "Unable to allocate master %s syncUnit %s memory\n",
+      master->name, name);
+    return NULL;
+  }
+
+  strncpy(sync_unit->name, name, LCEC_CONF_STR_MAXLEN);
+  sync_unit->name[LCEC_CONF_STR_MAXLEN - 1] = 0;
+  sync_unit->cycle_time = cycle_time;
+  sync_unit->cycle_divider = cycle_divider;
+  sync_unit->queued = 1;
+
+  LCEC_LIST_APPEND(master->first_sync_unit, master->last_sync_unit, sync_unit);
+  return sync_unit;
+}
+
+void lcec_free_sync_units(lcec_master_t *master) {
+  lcec_sync_unit_t *sync_unit, *prev_sync_unit;
+
+  sync_unit = master->last_sync_unit;
+  while (sync_unit != NULL) {
+    prev_sync_unit = sync_unit->prev;
+
+    if (sync_unit->pdo_entry_regs != NULL) {
+      lcec_free(sync_unit->pdo_entry_regs);
+    }
+
+    lcec_free(sync_unit);
+    sync_unit = prev_sync_unit;
+  }
+
+  master->first_sync_unit = NULL;
+  master->last_sync_unit = NULL;
+}
+
 #ifdef EC_USPACE_MASTER
 /**
  * @brief Open the EtherCAT master (userspace build).
@@ -350,6 +415,7 @@ void lcec_shutdown_master(lcec_master_t *master) {
 void lcec_read_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
   lcec_slave_t *slave;
+  lcec_sync_unit_t *sync_unit;
   int check_states;
 
   // check period
@@ -376,7 +442,13 @@ void lcec_read_master(void *arg, long period) {
   // receive process data & master state
   rtapi_mutex_get(&master->mutex);
   ecrt_master_receive(master->master);
-  ecrt_domain_process(master->domain);
+  for (sync_unit = master->first_sync_unit; sync_unit != NULL; sync_unit = sync_unit->next) {
+    sync_unit->process = sync_unit->queued;
+    if (sync_unit->process) {
+      ecrt_domain_process(sync_unit->domain);
+      sync_unit->queued = 0;
+    }
+  }
   if (check_states) {
     ecrt_master_state(master->master, &master->ms);
   }
@@ -403,7 +475,9 @@ void lcec_read_master(void *arg, long period) {
     }
 
     // process read function
-    if (slave->proc_read != NULL) {
+    if (slave->sync_unit->process && slave->proc_read != NULL) {
+      master->process_data = slave->sync_unit->process_data;
+      master->process_data_len = slave->sync_unit->process_data_len;
       slave->proc_read(slave, period);
     }
   }
@@ -431,10 +505,23 @@ void lcec_read_master(void *arg, long period) {
 void lcec_write_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
   lcec_slave_t *slave;
+  lcec_sync_unit_t *sync_unit;
+
+  for (sync_unit = master->first_sync_unit; sync_unit != NULL; sync_unit = sync_unit->next) {
+    if (sync_unit->cycle_counter == 0) {
+      sync_unit->write = 1;
+      sync_unit->cycle_counter = sync_unit->cycle_divider - 1;
+    } else {
+      sync_unit->write = 0;
+      sync_unit->cycle_counter--;
+    }
+  }
 
   // process slaves
   for (slave = master->first_slave; slave != NULL; slave = slave->next) {
-    if (slave->proc_write != NULL) {
+    if (slave->sync_unit->write && slave->proc_write != NULL) {
+      master->process_data = slave->sync_unit->process_data;
+      master->process_data_len = slave->sync_unit->process_data_len;
       slave->proc_write(slave, period);
     }
   }
@@ -442,7 +529,12 @@ void lcec_write_master(void *arg, long period) {
   rtapi_mutex_get(&master->mutex);
 
   // queue process data
-  ecrt_domain_queue(master->domain);
+  for (sync_unit = master->first_sync_unit; sync_unit != NULL; sync_unit = sync_unit->next) {
+    if (sync_unit->write) {
+      ecrt_domain_queue(sync_unit->domain);
+      sync_unit->queued = 1;
+    }
+  }
 
   // sync distributed clock just before master_send to set
   // most accurate master clock time

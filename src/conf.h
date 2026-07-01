@@ -318,6 +318,8 @@ typedef struct {
   size_t idnConfigLength;          /**< Cumulative byte size of all SoE IDN config data
                                     *   (including all @ref LCEC_CONF_IDNCONF_T headers). */
   unsigned int modParamCount;      /**< Number of @ref LCEC_CONF_MODPARAM_T records that follow. */
+  uint32_t syncUnitCycle;          /**< Process-data cycle time for this slave's Sync Unit (ns). */
+  char syncUnit[LCEC_CONF_STR_MAXLEN]; /**< Sync Unit name. Slaves with the same name share a domain. */
   char name[LCEC_CONF_STR_MAXLEN]; /**< Human-readable slave name used as the HAL pin prefix.
                                     *   Defaults to the decimal string of @c index. */
 } LCEC_CONF_SLAVE_T;

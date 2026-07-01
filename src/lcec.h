@@ -195,6 +195,7 @@ do {                        \
 
 struct lcec_master;
 struct lcec_slave;
+struct lcec_sync_unit;
 
 /**
  * @brief Callback invoked before slave initialisation to query PDO entry counts.
@@ -300,6 +301,23 @@ typedef struct lcec_master_data {
 #endif
 } lcec_master_data_t;
 
+typedef struct lcec_sync_unit {
+  struct lcec_sync_unit *prev;
+  struct lcec_sync_unit *next;
+  char name[LCEC_CONF_STR_MAXLEN];
+  uint32_t cycle_time;
+  unsigned int cycle_divider;
+  unsigned int cycle_counter;
+  int pdo_entry_count;
+  ec_pdo_entry_reg_t *pdo_entry_regs;
+  ec_domain_t *domain;
+  uint8_t *process_data;
+  int process_data_len;
+  int queued;
+  int process;
+  int write;
+} lcec_sync_unit_t;
+
 /**
  * @brief HAL pins exposing a single slave's EtherCAT application-layer (AL) state.
  *
@@ -348,6 +366,8 @@ typedef struct lcec_master {
   ec_domain_t *domain;             /**< EtherCAT process-data domain handle. */
   uint8_t *process_data;           /**< Pointer to the mapped process-data image for the domain. */
   int process_data_len;            /**< Size of the process-data image in bytes. */
+  lcec_sync_unit_t *first_sync_unit;
+  lcec_sync_unit_t *last_sync_unit;
   struct lcec_slave *first_slave;  /**< Head of the slave linked list for this master. */
   struct lcec_slave *last_slave;   /**< Tail of the slave linked list for this master. */
   lcec_master_data_t *hal_data;    /**< Per-master HAL state pins. */
@@ -472,9 +492,12 @@ typedef struct lcec_slave {
   struct lcec_slave  *prev;            /**< Previous slave in the master's list, or NULL if head. */
   struct lcec_slave  *next;            /**< Next slave in the master's list, or NULL if tail. */
   struct lcec_master *master;          /**< Back-pointer to the owning master. */
+  lcec_sync_unit_t   *sync_unit;
   int                 index;           /**< EtherCAT bus position of this slave (ring position). */
   LCEC_SLAVE_TYPE_T   type;            /**< Driver type identifier used to select the device driver. */
   char                name[LCEC_CONF_STR_MAXLEN]; /**< Human-readable slave name from the XML configuration. */
+  char                sync_unit_name[LCEC_CONF_STR_MAXLEN];
+  uint32_t            sync_unit_cycle;
   uint32_t            vid;             /**< EtherCAT vendor ID (must match the physical device). */
   uint32_t            pid;             /**< EtherCAT product code (must match the physical device). */
   int                 pdo_entry_count; /**< Number of PDO entries this slave requires in the domain. */

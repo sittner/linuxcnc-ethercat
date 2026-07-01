@@ -70,6 +70,10 @@ extern int64_t dc_time_offset;    /**< Nanosecond offset applied when computing 
 
 /** @brief Create and initialise an @c lcec_master_t. @see master.c */
 lcec_master_t * lcec_create_master(LCEC_CONF_MASTER_T *master_conf);
+/** @brief Find or create a master's Sync Unit and validate its cycle. @see master.c */
+lcec_sync_unit_t *lcec_master_get_sync_unit(lcec_master_t *master, const char *name, uint32_t cycle_time);
+/** @brief Free all Sync Units belonging to a master. @see master.c */
+void lcec_free_sync_units(lcec_master_t *master);
 /** @brief Open the EtherCAT master (userspace or kernel build). @see master.c */
 int lcec_startup_master(lcec_master_t *master);
 /** @brief Release the EtherCAT master and free transport resources. @see master.c */
