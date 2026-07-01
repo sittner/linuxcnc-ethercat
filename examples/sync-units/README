@@ -1,0 +1,15 @@
+Sync Unit example
+=================
+
+This example shows how to split one EtherCAT master into two process-data Sync
+Units:
+
+- "fast" is exchanged every master cycle.
+- "slow-io" is exchanged every four master cycles.
+
+The master appTimePeriod is 1 ms, so syncUnitCycle="*4" means a 4 ms PDO
+exchange period for the slow I/O group.
+
+All slaves in the same syncUnit must use the same syncUnitCycle. If syncUnit and
+syncUnitCycle are omitted, a slave is assigned to the default Sync Unit and is
+exchanged every master cycle, matching the old behavior.

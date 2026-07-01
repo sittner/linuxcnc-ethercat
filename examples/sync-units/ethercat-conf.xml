@@ -1,0 +1,39 @@
+<masters>
+  <master idx="0" appTimePeriod="1000000" refClockSyncCycles="1">
+
+    <!-- Fast Sync Unit: exchanged every servo cycle, 1 ms. -->
+    <slave idx="0" type="EK1100"
+           syncUnit="fast"
+           syncUnitCycle="*1"/>
+
+    <slave idx="1" type="EL7211"
+           name="x-drive"
+           syncUnit="fast"
+           syncUnitCycle="*1">
+      <dcConf assignActivate="0x0300"
+              sync0Cycle="*1"
+              sync0Shift="0"/>
+    </slave>
+
+    <slave idx="2" type="EL7211"
+           name="y-drive"
+           syncUnit="fast"
+           syncUnitCycle="*1">
+      <dcConf assignActivate="0x0300"
+              sync0Cycle="*1"
+              sync0Shift="0"/>
+    </slave>
+
+    <!-- Slow Sync Unit: exchanged every four servo cycles, 4 ms. -->
+    <slave idx="3" type="EL1809"
+           name="inputs"
+           syncUnit="slow-io"
+           syncUnitCycle="*4"/>
+
+    <slave idx="4" type="EL2809"
+           name="outputs"
+           syncUnit="slow-io"
+           syncUnitCycle="*4"/>
+
+  </master>
+</masters>

@@ -260,7 +260,65 @@ Each slave that supports Distributed Clocks can have a `<dcConf>` child element:
 | `sync1Cycle` | integer (ns) or `*N` | SYNC1 period (same integer-only `*N` syntax supported). |
 | `sync1Shift` | integer (ns) | SYNC1 phase shift relative to SYNC0. |
 
-### 6.3 Example Configuration
+### 6.3 Slave-Level Sync Unit Attributes
+
+Each `<slave>` can be assigned to a process-data Sync Unit. A Sync Unit owns a separate EtherCAT domain and can be exchanged at a slower integer multiple of the master's `appTimePeriod`.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `syncUnit` | string | Name of the Sync Unit/domain. Slaves with the same name share the same process-data domain. Default: `default`. |
+| `syncUnitCycle` | integer (ns) or `*N` | Process-data exchange period for the Sync Unit. Must be a positive multiple of `appTimePeriod`. Default: `*1`. |
+
+All slaves with the same `syncUnit` name must use the same `syncUnitCycle`. If these attributes are omitted, the slave behaves as before: it is placed in the `default` Sync Unit and exchanged every master cycle.
+
+`syncUnitCycle` controls when PDO data is queued, received, and when the slave's HAL read/write callbacks run. It does not replace Distributed Clock settings. For DC-capable slaves, keep `<dcConf>` aligned with the intended hardware sampling/update period.
+
+### 6.4 Sync Unit Example
+
+```xml
+<masters>
+  <master idx="0"
+          appTimePeriod="1000000"
+          refClockSyncCycles="1">
+
+    <!-- Fast Sync Unit: exchanged every servo cycle, 1 ms -->
+    <slave idx="0" type="EK1100"
+           syncUnit="fast"
+           syncUnitCycle="*1"/>
+
+    <slave idx="1" type="EL7211"
+           name="x-drive"
+           syncUnit="fast"
+           syncUnitCycle="*1">
+      <dcConf assignActivate="0x0300"
+              sync0Cycle="*1"
+              sync0Shift="0"/>
+    </slave>
+
+    <slave idx="2" type="EL7211"
+           name="y-drive"
+           syncUnit="fast"
+           syncUnitCycle="*1">
+      <dcConf assignActivate="0x0300"
+              sync0Cycle="*1"
+              sync0Shift="0"/>
+    </slave>
+
+    <!-- Slow Sync Unit: exchanged every four servo cycles, 4 ms -->
+    <slave idx="3" type="EL1809"
+           name="inputs"
+           syncUnit="slow-io"
+           syncUnitCycle="*4"/>
+
+    <slave idx="4" type="EL2809"
+           name="outputs"
+           syncUnit="slow-io"
+           syncUnitCycle="*4"/>
+  </master>
+</masters>
+```
+
+### 6.5 DC Example Configuration
 
 ```xml
 <masters>

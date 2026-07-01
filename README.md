@@ -80,6 +80,7 @@ EtherCAT bus configuration is done via XML files that are processed by `lcec_con
 - Slave devices and their vendor/product IDs
 - PDO mappings (process data object assignments)
 - DC sync settings (distributed clocks)
+- Sync Units for grouping slaves into separate process-data domains with different integer-multiple update rates
 - Init commands (CoE SDO / SoE IDN writes executed at startup)
 
 See the [`examples/`](examples/) directory for sample configurations.
