@@ -217,6 +217,15 @@ int rtapi_app_main(void) {
 
       // configure dc for this slave
       if (slave->dc_conf != NULL) {
+        if (slave->sync_unit->cycle_divider > 1 &&
+            slave->dc_conf->sync0Cycle > 0 &&
+            slave->dc_conf->sync0Cycle != slave->sync_unit->cycle_time) {
+          rtapi_print_msg(RTAPI_MSG_WARN,
+            LCEC_MSG_PFX "slave %s.%s syncUnit %s cycle=%u ns but DC sync0Cycle=%u ns; "
+            "set dcConf sync0Cycle to the slave hardware cycle or keep this slave in a matching syncUnit\n",
+            master->name, slave->name, slave->sync_unit->name, slave->sync_unit->cycle_time,
+            slave->dc_conf->sync0Cycle);
+        }
         ecrt_slave_config_dc(slave->config, slave->dc_conf->assignActivate,
           slave->dc_conf->sync0Cycle, slave->dc_conf->sync0Shift,
           slave->dc_conf->sync1Cycle, slave->dc_conf->sync1Shift);

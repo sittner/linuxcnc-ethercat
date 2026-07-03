@@ -118,6 +118,10 @@ void lcec_update_master_hal(lcec_master_data_t *hal_data, ec_master_state_t *ms)
   *(hal_data->all_op) = (ms->al_states == 0x08);
 }
 
+static int lcec_master_all_op(lcec_master_t *master) {
+  return master->ms.al_states == EC_AL_STATE_OP;
+}
+
 /**
  * @brief Create and initialise an @c lcec_master_t from its configuration.
  *
@@ -430,8 +434,11 @@ void lcec_read_master(void *arg, long period) {
   // set master time in nano-seconds
   master->dcsync_callbacks.cycle_start(master);
 
-  // get state check flag
-  if (master->state_update_timer > 0) {
+  // Poll state every cycle until OP so startup/fault recovery keeps all domains active.
+  if (!lcec_master_all_op(master)) {
+    check_states = 1;
+    master->state_update_timer = 0;
+  } else if (master->state_update_timer > 0) {
     check_states = 0;
     master->state_update_timer -= period;
   } else {
@@ -506,9 +513,14 @@ void lcec_write_master(void *arg, long period) {
   lcec_master_t *master = (lcec_master_t *) arg;
   lcec_slave_t *slave;
   lcec_sync_unit_t *sync_unit;
+  int force_cycle;
 
+  force_cycle = !lcec_master_all_op(master);
   for (sync_unit = master->first_sync_unit; sync_unit != NULL; sync_unit = sync_unit->next) {
-    if (sync_unit->cycle_counter == 0) {
+    if (force_cycle) {
+      sync_unit->write = 1;
+      sync_unit->cycle_counter = 0;
+    } else if (sync_unit->cycle_counter == 0) {
       sync_unit->write = 1;
       sync_unit->cycle_counter = sync_unit->cycle_divider - 1;
     } else {
