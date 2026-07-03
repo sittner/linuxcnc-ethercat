@@ -368,6 +368,7 @@ typedef struct lcec_master {
   int process_data_len;            /**< Size of the process-data image in bytes. */
   lcec_sync_unit_t *first_sync_unit;
   lcec_sync_unit_t *last_sync_unit;
+  int sync_units_started;           /**< Non-zero after OP was reached once and Sync Unit dividers may run. */
   struct lcec_slave *first_slave;  /**< Head of the slave linked list for this master. */
   struct lcec_slave *last_slave;   /**< Tail of the slave linked list for this master. */
   lcec_master_data_t *hal_data;    /**< Per-master HAL state pins. */
