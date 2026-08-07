@@ -4,15 +4,29 @@ LinuxCNC EtherCAT HAL driver
 
 ---
 
-## ⚠️ Important Notice
+## 📦 This Repository Is Archived
 
-This is the **personal repository** of Sascha Ittner (the primary author). It exists to fulfill the author's own needs and is **not** intended to compete with or replace the official community fork.
+This repository is **archived and no longer actively developed** by its author. It remains available in read-only form for historical reference. This is the logical next step of this repo's long-standing position — the author's *personal* repository, never intended to compete with or replace the official community fork. Its archival **does not affect** the community fork or the author's ongoing work in any way.
 
-**End users seeking stability and community support should use the official community fork instead:**
+### 👉 LinuxCNC users: use the community fork
+
+For LinuxCNC users seeking **stability**, broader device support, and active community maintenance, the actively maintained fork lives here and is **not affected by this archive in any way**:
 
 > **https://github.com/linuxcnc-ethercat/linuxcnc-ethercat**
 
-The community fork offers better stability, broader device support, and an active community. This repository **may contain experimental code** that is not production-ready. Use it at your own risk.
+This is the recommended home for production LinuxCNC EtherCAT users going forward.
+
+### 👉 Original author's continued work
+
+The original author (Sascha Ittner) now develops **StratuMAK**, a toolkit for building machine controls. The EtherCAT stack from this repository lives on there — the LinuxCNC-EtherCAT **`lcec` XML configuration format is deliberately carried forward** — re-homed into a single-process Go/C architecture with the IgH master built in:
+
+> **https://github.com/stratuMAK/stratumak**
+
+Note that StratuMAK is at **lab-prototype stage** and is *not yet suitable for unattended production use* — if you need a stable, production-ready EtherCAT driver today, use the community fork above. If you are following the author's development, head to StratuMAK.
+
+### 🙏 Thanks
+
+Sincere thanks to the LinuxCNC community and to everyone who contributed to, tested, and relied on this driver over the years.
 
 ---
 
